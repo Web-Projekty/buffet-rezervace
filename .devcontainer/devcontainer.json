@@ -10,7 +10,7 @@
         80,
         3000
     ],
-    "postCreateCommand": "sudo bash start.sh && bash npm.sh",
+    "postCreateCommand": "sudo bash start.sh && bash npm.sh && apt-get update && apt-get install -y supervisor",
     "portsAttributes": {
         "80": {
             "label": "Apache Server",

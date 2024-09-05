@@ -1,5 +1,9 @@
 ## declare variables
 containerWorkspace=$(pwd)
+export WORKSPACE_DIR=$(pwd)
+
+## npm service config
+sudo cp .devcontainer/npm_serv.conf /etc/supervisor/conf.d/
 
 ## apache config
 
