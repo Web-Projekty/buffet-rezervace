@@ -2,6 +2,9 @@
 containerWorkspace=$(pwd)
 export WORKSPACE_DIR=$(pwd)
 
+## changes rights
+sudo chown -R vscode:vscode $containerWorkspace
+
 ## npm service config
 apt-get update && apt-get install -y supervisor
 sudo cp /workspaces/buffet-rezervace/.devcontainer/npm_serv.conf /etc/supervisor/conf.d/
@@ -11,7 +14,6 @@ sudo supervisorctl update
 sudo supervisorctl start npm_serv
 
 ## apache config
-
 sudo a2enmod rewrite
 sudo a2enmod actions
 sudo a2enmod headers
