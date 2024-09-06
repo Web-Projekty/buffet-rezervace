@@ -5,7 +5,7 @@ export WORKSPACE_DIR=$(pwd)
 ## npm service config
 apt-get update && apt-get install -y supervisor
 sudo supervisord -c /etc/supervisor/supervisord.conf
-sudo cp .devcontainer/npm_serv.conf /etc/supervisor/conf.d/
+sudo cp $containerWorkspace/.devcontainer/npm_serv.conf /etc/supervisor/conf.d/
 
 ## apache config
 
