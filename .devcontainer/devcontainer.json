@@ -8,7 +8,7 @@
     },
     "forwardPorts": [
         80,
-        3000
+        5173
     ],
     "postCreateCommand": "sudo bash .devcontainer/start.sh",
     "portsAttributes": {
@@ -16,8 +16,8 @@
             "label": "Apache Server",
             "onAutoForward": "notify"
         },
-        "3000": {
-            "label": "React App",
+        "5173": {
+            "label": "Vite App",
             "onAutoForward": "notify"
         }
     },
