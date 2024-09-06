@@ -1,10 +1,10 @@
 # Working with devcontainers
 
-- You can cskldfsjdlkfj run devcontainer both locally and on the cloud with github codespaces.
+- You can run devcontainers both locally and on the cloud with github codespaces.
 
 ## Running locally
 
-### Requieriments (locally)
+### Requieriments
 
   1. Have the VScode [extention](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
   2. Have the docker deamon running with propper permissions (On both windows and linux the docker installation should have created a user group, so just add your user to it. For windows: "docker-users" on linux: "docker")
