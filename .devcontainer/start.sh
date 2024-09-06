@@ -4,8 +4,11 @@ export WORKSPACE_DIR=$(pwd)
 
 ## npm service config
 apt-get update && apt-get install -y supervisor
-sudo supervisord -c /etc/supervisor/supervisord.conf
 sudo cp /workspaces/buffet-rezervace/.devcontainer/npm_serv.conf /etc/supervisor/conf.d/
+sudo supervisord -c /etc/supervisor/supervisord.conf
+sudo supervisorctl reread
+sudo supervisorctl update
+sudo supervisorctl start npm_serv
 
 ## apache config
 
