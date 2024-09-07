@@ -7,13 +7,13 @@
         }
     },
     "forwardPorts": [
-        80,
+        8000,
         3000
     ],
     "postStartCommand": "sudo bash .devcontainer/start.sh",
     "portsAttributes": {
-        "80": {
-            "label": "Apache Server",
+        "8000": {
+            "label": "Laravel",
             "onAutoForward": "notify"
         },
         "3000": {
