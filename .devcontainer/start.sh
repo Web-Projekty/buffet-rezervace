@@ -21,4 +21,4 @@ sudo service apache2 restart
 
 ## html folder clone
 sudo rm -r /var/www/html
-ln -s $containerWorkspace/html /var/www/html
+ln -s $containerWorkspace/buffet-api /var/www/html
