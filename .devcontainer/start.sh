@@ -3,9 +3,9 @@ containerWorkspace=$(pwd)
 export WORKSPACE_DIR=$(pwd)
 
 ## changes rights
-sudo chown -R vscode:vscode $containerWorkspace
-sudo usermod -aG vscode www-data
-sudo chmod -R 770 $containerWorkspace
+#sudo chown -R www-data:www-data $containerWorkspace
+#sudo usermod -aG www-data vscode
+#sudo chmod -R 770 $containerWorkspace
 
 ## npm service config
 apt-get update && apt-get install -y supervisor
