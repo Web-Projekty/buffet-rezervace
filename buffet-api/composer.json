@@ -1,6 +1,21 @@
 {
+    "name": "idk/buffet-rezervace-api",
+    "description": "",
+    "type": "project",
     "require": {
         "slim/slim": "4.*",
         "slim/psr7": "^1.7"
-    }
+    },
+    "license": "none",
+    "autoload": {
+        "psr-4": {
+            "Buffet\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Adam Vlček",
+            "email": "vlcek-adam@seznam.cz"
+        }
+    ]
 }
