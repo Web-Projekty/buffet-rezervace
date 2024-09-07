@@ -4,6 +4,8 @@ export WORKSPACE_DIR=$(pwd)
 
 ## changes rights
 sudo chown -R vscode:vscode $containerWorkspace
+sudo usermod -aG vscode www-data
+sudo chmod -R 770 $containerWorkspace
 
 ## npm service config
 apt-get update && apt-get install -y supervisor
@@ -14,6 +16,7 @@ sudo supervisorctl update
 sudo supervisorctl start npm_serv
 
 ## apache config
+sudo su - vscode -c "cd /workspaces/buffet-rezervace/buffet-api && composer install"
 sudo a2enmod rewrite
 sudo a2enmod actions
 sudo a2enmod headers
