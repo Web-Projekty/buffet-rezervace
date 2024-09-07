@@ -1,6 +1,13 @@
 {
     "name": "PHP 8.3 & React Dev Environment for Buffet",
     "image": "mcr.microsoft.com/devcontainers/php:8.3",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ritwickdey.LiveServer"
+            ]
+        }
+    },
     "features": {
         "ghcr.io/devcontainers/features/node:1": {
             "version": "20"
@@ -13,7 +20,7 @@
     "postStartCommand": "sudo bash .devcontainer/start.sh",
     "portsAttributes": {
         "80": {
-            "label": "Apache Server",
+            "label": "Apache",
             "onAutoForward": "notify"
         },
         "3000": {
