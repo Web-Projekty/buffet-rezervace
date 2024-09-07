@@ -13,7 +13,7 @@ WORKDIR /workspaces/buffet-rezervace
 COPY --chown=vscode:vscode . /workspaces/buffet-rezervace
 
 # Expose ports 80 for Apache and 3000 for React
-EXPOSE 80
+EXPOSE 8000
 EXPOSE 3000
 
 # Set the user to vscode as specified in devcontainer.json
