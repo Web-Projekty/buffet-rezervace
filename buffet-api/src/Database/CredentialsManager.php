@@ -16,6 +16,8 @@ class CredentialsManager
      */
     function getCredentials(): array
     {
+        $this->envCheck();
+
         ## loads .env file
         $dotenv = Dotenv::createImmutable(__DIR__);
         $dotenv->load();
@@ -87,7 +89,12 @@ class CredentialsManager
         fclose($file);
     }
 
-    function envCheck() {
-        
+    function envCheck()
+    {
+        if (!file_exists(__DIR__ . "/.env")) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'error' => "no .env file for database credentials decryption"]);
+            die;
+        }
     }
 }
