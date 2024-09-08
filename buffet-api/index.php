@@ -27,7 +27,19 @@ $app->get('/cred', function (Request $request, Response $response, $args) {
 
     ob_start();
     $cred = new CredentialsManager;
+    echo "current settings:";
     var_dump($cred->getCredentials());
+    include __DIR__ . "/templates/creds.html";
+    $html = ob_get_clean();
+
+    $response->getBody()->write($html);
+    return $response;
+});
+$app->post('/credGen', function (Request $request, Response $response, $args) {
+
+    ob_start();
+    $cred = new CredentialsManager;
+    $cred->createCredentials($_POST['username'],$_POST['password']);
     $html = ob_get_clean();
 
     $response->getBody()->write($html);
