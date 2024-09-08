@@ -6,9 +6,45 @@
     <title>Test</title>
 </head>
 <body>
-    <form action="/api" method="post">
-        <input type="text" name="requestType" id="" placeholder="requestType">
-        <button type="submit">submit</button>
+    
+        <form id="myForm">
+            <input type="text" name="requestType" placeholder="requestType" required>
+            <input type="text" name="username" placeholder="username" >
+            <input type="text" name="password" placeholder="password" >
+            <input type="button" value="Submit" onclick="submitForm()">
+        </form>
+
+        <pre><code id="json"></code></pre>
+    
+        <script>
+            function submitForm() {
+                const form = document.getElementById('myForm');
+                const formData = new FormData(form);
+    
+                // Convert FormData to a plain object
+                const data = {};
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+    
+                // Send data as JSON
+                fetch('/api', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result);
+                    document.getElementById('json').innerHTML = JSON.stringify(result);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        </script>
     </form>
 </body>
 </html>
