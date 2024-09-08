@@ -26,7 +26,7 @@ sudo supervisorctl start npm_serv
 ## apache config
 
 # configure .env
-sudo su - vscode -c "bash $containerWorkspace/.devcontainer/env.sh"
+sudo su - vscode -c "bash $containerWorkspace/.devcontainer/env.sh $containerWorkspace"
 
 # configure php.ini
 sudo cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
