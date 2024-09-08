@@ -15,7 +15,7 @@ $app->addErrorMiddleware(true, true, true);
 $app->get('/', function (Request $request, Response $response, $args) {
 
     ob_start();
-    phpinfo();
+    //phpinfo();
     include __DIR__ . "/templates/test.html";
     $html = ob_get_clean();
 
@@ -26,9 +26,6 @@ $app->get('/', function (Request $request, Response $response, $args) {
 $app->get('/cred', function (Request $request, Response $response, $args) {
 
     ob_start();
-    $cred = new CredentialsManager;
-    echo "current settings:";
-    var_dump($cred->getCredentials());
     include __DIR__ . "/templates/creds.html";
     $html = ob_get_clean();
 
