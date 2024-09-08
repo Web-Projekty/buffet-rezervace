@@ -3,16 +3,26 @@ containerWorkspace=$(pwd)
 export WORKSPACE_DIR=$(pwd)
 
 ## change rights
-read -p "Set all user rights? [y/n]: " choice
-
-if [[ "$choice" == [Yy]* ]]; then
-    sudo chown -R vscode:vscode $containerWorkspace
+apply_permissions() {
+    sudo chown -R vscode:vscode "$containerWorkspace"
     sudo usermod -aG vscode www-data
-    sudo chmod -R 770 $containerWorkspace
-elif [[ "$choice" == [Nn]* ]]; then
-    echo "ok"
+    sudo chmod -R 770 "$containerWorkspace"
+}
+
+# Check if the first argument is 'd' or if user input is needed
+if [[ "$1" == "d" ]]; then
+    # Automatically apply permissions
+    apply_permissions
 else
-    echo "Invalid input. Please enter 'y' or 'n'."
+    # Prompt for user input
+    read -p "Do you want to set permissions? (y/n) " choice
+    if [[ "$choice" == [Yy]* ]]; then
+        apply_permissions
+    elif [[ "$choice" == [Nn]* ]]; then
+        echo "nice :-)"
+    else
+        echo "Invalid input. Please enter 'y' or 'n'."
+    fi
 fi
 
 ## npm service config
