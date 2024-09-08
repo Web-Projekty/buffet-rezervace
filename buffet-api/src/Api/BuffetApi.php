@@ -2,14 +2,25 @@
 
 namespace Buffet\Api;
 
+use mysqli;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class BuffetApi
 {
-    function api(RequestInterface $request, ResponseInterface $html): ResponseInterface
+    function main(RequestInterface $request, ResponseInterface $html): ResponseInterface
     {
-        $html->getBody()->write("<h1>Hi</h1>");
-        return $html;
+        $conn = new mysqli("vlastas.cc", "buffet", "prestizniBuffet2305", "buffet");
+        $res = $conn->query('SELECT text FROM test');
+        $dbTest = mb_convert_encoding($res->fetch_row()[0], 'UTF-8', 'auto');
+
+        $params = (array)$request->getParsedBody();
+        $response = ['requestType' => $params['requestType'], 'dbTest' => $dbTest];
+
+        $output = json_encode($response);
+
+
+        $html->getBody()->write($output);
+        return $html->withHeader('Content-type', 'application/json');
     }
 }
