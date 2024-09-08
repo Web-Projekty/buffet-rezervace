@@ -63,6 +63,8 @@ class CredentialsManager
      */
     function createCredentials($username, $password)
     {
+        $this->envCheck();
+
         ## loads .env file
         $dotenv = Dotenv::createImmutable(__DIR__);
         $dotenv->load();
@@ -79,10 +81,13 @@ class CredentialsManager
             'db_host' => 'localhost',
             'db_user' => $userH,
             'db_pass' => $passH,
-            'db_name' => 'database_name',
-            'success' => true
+            'db_name' => 'database_name'
         ];
         fwrite($file, json_encode($config, JSON_PRETTY_PRINT));
         fclose($file);
+    }
+
+    function envCheck() {
+        
     }
 }
