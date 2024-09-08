@@ -10,9 +10,21 @@ class BuffetApi
 {
     function main(RequestInterface $request, ResponseInterface $html): ResponseInterface
     {
-        $db = new Database;
-        $output = ['msg'=>"it works"];
+        $output = $this->handleApiCall();
+
         $html->getBody()->write(json_encode($output));
         return $html->withHeader('Content-type', 'application/json');
+    }
+
+    function handleApiCall()
+    {
+        return $this->getPostJson();
+    }
+
+    function getPostJson()
+    {
+        $post = file_get_contents('php://input');
+        $json = json_decode($post, true);
+        return $json;
     }
 }
