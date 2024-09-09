@@ -10,12 +10,14 @@ const Links = [
 const Navbar = () => {
   return (
     <nav>
-      <ul className="flex gap-10">
+      <ul className="flex flex-wrap gap-16">
         {Links.map((link) => {
           return (
             <li key={link.id}>
               <NavLink
-                className={({ isActive }) => (isActive ? "font-bold" : "")}
+                className={({ isActive }) =>
+                  isActive ? "rounded-full bg-white p-2 font-bold" : ""
+                }
                 to={link.path}
               >
                 {link.name}
