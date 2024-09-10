@@ -32,9 +32,15 @@ class BuffetApi
             case "test":
                 return $this->handleTest($request);
                 break;
+
             case "register";
                 return $this->handleRegister($request);
                 break;
+
+            case "login":
+                return $this->handleLogin($request);
+                break;
+
             default:
                 return ['success' => false, 'error' => "tried calling non-existent api requestType"];
                 break;
@@ -51,6 +57,18 @@ class BuffetApi
         $auth = new AuthApi;
 
         return $auth->register($username, $password);
+    }
+
+    function handleLogin($request)
+    {
+        $this->hasAllMembers($request, ["username", "password"]);
+
+        $username = $request['username'];
+        $password = $request['password'];
+
+        $auth = new AuthApi;
+
+        return $auth->login($username, $password);
     }
 
     function handleTest($request)
