@@ -33,6 +33,13 @@ class CredentialsManager
         $userH = $json->{'db_user'};
         $passH = $json->{'db_pass'};
 
+        if (empty($_ENV['DECRYPT_KEY']) || !isset($_ENV['DECRYPT_KEY'])) {
+            return [
+                'error' => "failed to decrypt credentials",
+                'success' => false
+            ];
+        }
+
         $username = openssl_decrypt($userH, $cipher, $_ENV['DECRYPT_KEY']);
         $password = openssl_decrypt($passH, $cipher, $_ENV['DECRYPT_KEY']);
 
