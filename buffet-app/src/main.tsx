@@ -4,12 +4,17 @@ import App from "./App.tsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import FoodList from "./components/FoodList.jsx";
+import ReviewList from "./components/ReviewList.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      {
+        path: "/",
+        element: <FoodList />,
+      },
       {
         path: "/menu",
         element: <FoodList />,
@@ -19,8 +24,8 @@ const router = createBrowserRouter([
         element: <FoodList />,
       },
       {
-        path: "/contact",
-        element: <FoodList />,
+        path: "/reviews",
+        element: <ReviewList />,
       },
     ],
   },

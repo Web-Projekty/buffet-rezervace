@@ -1,16 +1,15 @@
 import { NavLink } from "react-router-dom";
 
-interface NavLinksType {
+type NavLinksType = {
   id: number;
   name: string;
   path: string;
-}
+};
 
 const Links: NavLinksType[] = [
-  { id: 1, name: "Home", path: "/" },
-  { id: 2, name: "Menu", path: "/menu" },
-  { id: 3, name: "About", path: "/about" },
-  { id: 4, name: "Contact", path: "/contact" },
+  { id: 1, name: "Menu", path: "/" },
+  { id: 2, name: "About", path: "/about" },
+  { id: 3, name: "Reviews", path: "/reviews" },
 ];
 
 const Navbar = () => {

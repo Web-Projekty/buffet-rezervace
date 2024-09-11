@@ -1,12 +1,12 @@
 import { LuShoppingCart } from "react-icons/lu";
 
-interface DummyFoodType {
+type DummyFoodType = {
   id: number;
   image: string;
   name: string;
   price: number;
   description: string;
-}
+};
 
 const dummyFood: DummyFoodType[] = [
   {
