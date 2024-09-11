@@ -24,6 +24,7 @@ class AuthApi
     function login($username, $password)
     {
         $db = new Database;
+        $jwt = new JWTApi;
 
         $result = $db->query("SELECT `password` FROM `users` WHERE `username` = '$username'");
 
@@ -31,9 +32,9 @@ class AuthApi
 
         if (password_verify($password, $hash)) {
 
-            $jwt = "WIP";
+            $token = $jwt->getToken($username);
 
-            return ['success' => true, 'token' => $jwt];
+            return ['success' => true, 'token' => $token];
         } else {
             return ['success' => false, 'error' => "failed to login"];
         }
