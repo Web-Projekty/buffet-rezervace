@@ -41,10 +41,24 @@ class BuffetApi
                 return $this->handleLogin($request);
                 break;
 
+            case "verify":
+                return $this->handleVerify($request);
+                break;
+
             default:
                 return ['success' => false, 'error' => "tried calling non-existent api requestType"];
                 break;
         }
+    }
+
+    function handleVerify($request) {
+        $this->hasAllMembers($request,["token"]);
+
+        $token = $request['token'];
+
+        $jwt = new JWTApi;
+
+        return $jwt->validateToken($token);
     }
 
     function handleRegister($request)
