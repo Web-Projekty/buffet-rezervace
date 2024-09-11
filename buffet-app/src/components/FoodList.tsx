@@ -27,21 +27,23 @@ const dummyFood: DummyFoodType[] = [
   {
     id: 3,
     name: "Fries",
-    image: "https://cdn.britannica.com/34/206334-050-7637EB66/French-fries.jpg",
+    image:
+      "https://images.unsplash.com/photo-1593507369837-9adcc0c0bdc6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: 49.9,
     description: "Crispy fries with ketchup",
   },
   {
     id: 4,
-    name: "Soda",
+    name: "Cola Cola",
     image:
-      "https://cdn.myshoptet.com/usr/www.japafoods.cz/user/shop/big/23294_sangaria-hajikete-melon-soda-drink-250ml.jpg?6644c727",
+      "https://images.unsplash.com/photo-1592232583482-ec6367cfb786?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: 34.9,
-    description: "A refreshing soda",
+    description: "A refreshing coca cola",
   },
   {
     id: 5,
-    image: "https://www.pizzaplzen.cz/wp-content/uploads/2017/02/8-768x493.jpg",
+    image:
+      "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?q=80&w=2076&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     name: "Pizza",
     price: 129.9,
     description: "A delicious pizza with pepperoni",
@@ -57,17 +59,18 @@ const dummyFood: DummyFoodType[] = [
   {
     id: 7,
     name: "Fries",
-    image: "https://cdn.britannica.com/34/206334-050-7637EB66/French-fries.jpg",
+    image:
+      "https://images.unsplash.com/photo-1593507369837-9adcc0c0bdc6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: 49.9,
     description: "Crispy fries with ketchup",
   },
   {
     id: 8,
-    name: "Soda",
+    name: "Cola Cola",
     image:
-      "https://cdn.myshoptet.com/usr/www.japafoods.cz/user/shop/big/23294_sangaria-hajikete-melon-soda-drink-250ml.jpg?6644c727",
+      "https://images.unsplash.com/photo-1592232583482-ec6367cfb786?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: 34.9,
-    description: "A refreshing soda",
+    description: "A refreshing coca cola",
   },
   {
     id: 9,
@@ -87,17 +90,18 @@ const dummyFood: DummyFoodType[] = [
   {
     id: 11,
     name: "Fries",
-    image: "https://cdn.britannica.com/34/206334-050-7637EB66/French-fries.jpg",
+    image:
+      "https://images.unsplash.com/photo-1593507369837-9adcc0c0bdc6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: 49.9,
     description: "Crispy fries with ketchup",
   },
   {
     id: 12,
-    name: "Soda",
+    name: "Cola Cola",
     image:
-      "https://cdn.myshoptet.com/usr/www.japafoods.cz/user/shop/big/23294_sangaria-hajikete-melon-soda-drink-250ml.jpg?6644c727",
+      "https://images.unsplash.com/photo-1592232583482-ec6367cfb786?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: 34.9,
-    description: "A refreshing soda",
+    description: "A refreshing coca cola",
   },
 ];
 
@@ -114,7 +118,7 @@ const FoodList = () => {
               <img
                 src={food.image}
                 alt={food.name}
-                className="h-[15rem] w-[20rem] rounded-lg object-fill"
+                className="h-[15rem] w-[20rem] rounded-lg object-cover"
               />
               <div className="flex flex-col gap-3 rounded-lg bg-white p-2">
                 <div className="flex items-center gap-5">
@@ -127,8 +131,9 @@ const FoodList = () => {
                 </div>
                 <LuShoppingCart
                   size={36}
-                  className="absolute bottom-10 right-10 bg-white hover:cursor-pointer"
+                  className="absolute bottom-10 right-10 m-2 bg-white transition-colors duration-500 ease-in-out hover:cursor-pointer hover:bg-orange-200"
                 />
+
                 <p className="w-[240px] rounded-lg bg-white px-2">
                   {food.description}
                 </p>
