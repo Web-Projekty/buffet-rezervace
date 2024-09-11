@@ -109,7 +109,7 @@ const FoodList = () => {
           return (
             <div
               key={food.id}
-              className="relative flex flex-col justify-around gap-5 rounded-lg border-b-2 bg-orange-200 p-4 shadow-sm shadow-gray-500"
+              className="relative flex flex-col justify-around gap-5 rounded-lg border-b-2 bg-white p-4 shadow-sm shadow-gray-500"
             >
               <img
                 src={food.image}

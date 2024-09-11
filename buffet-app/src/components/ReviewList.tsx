@@ -55,18 +55,23 @@ const ReviewList = () => {
     return stars;
   };
   return (
-    <div className="text-white">
-      {DummyReviews.map((review) => {
-        return (
-          <div key={review.id}>
-            <h3>{review.name}</h3>
-            <p className="flex flex-row text-yellow-500">
-              {getReviewStars(review.rating)}
-            </p>
-            <p>{review.comment}</p>
-          </div>
-        );
-      })}
+    <div className="mb-[3rem] mt-[15rem] flex items-center justify-center">
+      <div className="grid grid-flow-row grid-cols-2 items-center gap-10 text-white">
+        {DummyReviews.map((review) => {
+          return (
+            <div
+              className="w-[200px] rounded-lg border-b-2 bg-white p-2 text-black"
+              key={review.id}
+            >
+              <h3>{review.name}</h3>
+              <p className="flex flex-row text-yellow-500">
+                {getReviewStars(review.rating)}
+              </p>
+              <p>{review.comment}</p>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
