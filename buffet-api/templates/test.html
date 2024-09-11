@@ -10,9 +10,16 @@
 <body>
 
     <form id="myForm">
-        <input type="text" name="requestType" placeholder="requestType" required>
+        <select name="requestType">
+            <option value="login">login</option>
+            <option value="register">register</option>
+            <option value="verify">verify</option>
+            <option value="test">test</option>
+            <option value="random_stuff_here">non-existent-call</option>
+        </select>
         <input type="text" name="username" placeholder="username">
         <input type="text" name="password" placeholder="password">
+        <input type="text" name="token" placeholder="token">
         <input type="button" value="Submit" onclick="submitForm()">
     </form>
 
