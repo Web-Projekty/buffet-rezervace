@@ -41,10 +41,10 @@ class JWTApi
             return ['success' => false, 'error' => "corrupted data or null"];
         } catch (DomainException $e) {
             return ['success' => false, 'error' => "corrupted data"];
-        } catch (UnexpectedValueException $e) {
-            return ['success' => false, 'error' => "unexpected value"];
         } catch (ExpiredException $e) {
             return ['success' => false, 'error' => "token expired"];
+        } catch (UnexpectedValueException $e) {
+            return ['success' => false, 'error' => "unexpected value"];
         }
         return $dec;
     }
@@ -52,7 +52,7 @@ class JWTApi
     function validateToken($token)
     {
         $jwt = $this->decodeToken($token);
-        if(is_array($jwt)){
+        if (is_array($jwt)) {
             return $jwt;
         }
 
