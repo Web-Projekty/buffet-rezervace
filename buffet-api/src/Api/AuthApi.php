@@ -7,6 +7,16 @@ use Buffet\Database\Database;
 class AuthApi
 {
 
+    /**
+     * Creates a user profile based on the credentials provided
+     *
+     * Returns errors when user profile cannot be created
+     *
+     * @param string $username
+     * @param string $password
+     * @return array Api response
+     */
+
     function register($username, $password)
     {
         $db = new Database;
@@ -20,6 +30,16 @@ class AuthApi
         $db->query("INSERT INTO `users` (`id`, `username`, `password`) VALUES (NULL, '$username', '$password')");
         return ['success' => true, 'error' => "registered successfully"];
     }
+
+    /**
+     * Verifies user credentials.
+     *
+     * Returns errors when user credentials are incorrect
+     *
+     * @param string $username
+     * @param string $password
+     * @return array Api response with JWT token
+     */
 
     function login($username, $password)
     {

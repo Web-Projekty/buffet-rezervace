@@ -8,6 +8,16 @@ use Psr\Http\Message\ResponseInterface;
 
 class BuffetApi
 {
+    /**
+     * Main API function called by router.
+     *
+     * Handles api request calls
+     *
+     * @param RequestInterface $request
+     * @param ResponseInterface $html
+     * @return ResponseInterface html code
+     */
+
     function main(RequestInterface $request, ResponseInterface $html): ResponseInterface
     {
         $output = $this->handleApiCall();
@@ -16,9 +26,23 @@ class BuffetApi
             $output = ['success' => false, 'error' => "api returned a null value"];
         }
 
-        $html->getBody()->write(json_encode($output));
+        if ($output = json_encode($output)) {
+            $html->getBody()->write($output);
+        } else {
+            $output = json_encode(['success' => false, 'error' => "failed to encode json"]);
+        }
+
+
         return $html->withHeader('Content-type', 'application/json');
     }
+
+    /**
+     * Main API handler.
+     *
+     * Calls specified requestType methods
+     *
+     * @return array API response
+     */
 
     function handleApiCall()
     {
@@ -51,8 +75,17 @@ class BuffetApi
         }
     }
 
-    function handleVerify($request) {
-        $this->hasAllMembers($request,["token"]);
+/**
+     * API handler for token verify
+     *
+     * @param array $request API request
+     * 
+     * @return array API response
+     */
+
+    function handleVerify($request)
+    {
+        $this->hasAllMembers($request, ["token"]);
 
         $token = $request['token'];
 
@@ -60,6 +93,14 @@ class BuffetApi
 
         return $jwt->validateToken($token);
     }
+
+/**
+     * API handler for user registration
+     *
+     * @param array $request API request
+     * 
+     * @return array API response
+     */
 
     function handleRegister($request)
     {
@@ -73,6 +114,14 @@ class BuffetApi
         return $auth->register($username, $password);
     }
 
+/**
+     * API handler for user lgoin
+     *
+     * @param array $request API request
+     * 
+     * @return array API response with JWT token
+     */
+
     function handleLogin($request)
     {
         $this->hasAllMembers($request, ["username", "password"]);
@@ -85,11 +134,27 @@ class BuffetApi
         return $auth->login($username, $password);
     }
 
+/**
+     * API handler for data transit testing
+     *
+     * @param array $request API request
+     * 
+     * @return array copy of the request
+     */
+
     function handleTest($request)
     {
         return $request;
     }
 
+/**
+     * Utility function for checking if all keys are present and carry data
+     *
+     * @param array $request API request
+     * @param array $members list of all the required members
+     * 
+     * @return bool|error if members missing kills the process and sends error otherwise true
+     */
 
     function hasAllMembers($request, $members)
     {
@@ -102,6 +167,14 @@ class BuffetApi
         }
         return true;
     }
+
+/**
+     * Utility function for retrieving data
+     * 
+     * Retrieves json data from POST method raw data and returns decode json
+     * 
+     * @return array decoded json from POST raw data
+     */
 
     function getPostJson()
     {

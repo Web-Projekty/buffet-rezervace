@@ -12,6 +12,15 @@ use UnexpectedValueException;
 
 class JWTApi
 {
+
+    /**
+     * Generates and returns a signed JWT token
+     *
+     * @param string $username username of the user generating this JWT
+     * 
+     * @return string generated JWT token
+     */
+
     function getToken($username)
     {
         $user_id = -1;
@@ -29,6 +38,14 @@ class JWTApi
 
         return $jwt;
     }
+
+    /**
+     * Decodes JWT token and returns an object with details (should be array (WIP))
+     *
+     * @param string $token JWT token to decode
+     * 
+     * @return object decoded JWT token
+     */
 
     function decodeToken($token)
     {
@@ -48,6 +65,15 @@ class JWTApi
         }
         return $dec;
     }
+
+/**
+     * Verifies JWT token
+     *
+     * @param string $token JWT token to verify
+     * 
+     * @return array API response
+     */
+
 
     function validateToken($token)
     {
