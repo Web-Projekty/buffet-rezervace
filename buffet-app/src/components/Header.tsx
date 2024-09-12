@@ -10,9 +10,10 @@ const Header = () => {
           src={Logo}
           width={100}
           alt="Hamburger Logo"
-          className="hover:animate-wiggle rounded-full bg-white p-1"
+          className="rounded-full bg-white p-1 hover:animate-wiggle"
         />
       </Link>
+
       <Navbar />
     </header>
   );

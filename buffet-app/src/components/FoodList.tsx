@@ -130,8 +130,8 @@ const FoodList = () => {
                   </p>
                 </div>
                 <LuShoppingCart
-                  size={36}
-                  className="absolute bottom-10 right-10 m-2 bg-white transition-colors duration-500 ease-in-out hover:cursor-pointer hover:bg-orange-200"
+                  size={48}
+                  className="bg-white p-2 hover:cursor-pointer"
                 />
 
                 <p className="w-[240px] rounded-lg bg-white px-2">

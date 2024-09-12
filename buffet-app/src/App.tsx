@@ -4,7 +4,7 @@ import Header from "./components/Header";
 
 const App = () => {
   return (
-    <div className="font-Lato min-h-screen overflow-x-hidden bg-white dark:bg-slate-700">
+    <div className="min-h-screen overflow-x-hidden bg-white font-Lato dark:bg-slate-700">
       <Header />
       <Outlet />
       <Footer />
