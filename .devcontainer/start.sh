@@ -9,15 +9,38 @@ apply_permissions() {
     sudo chmod -R 770 "$containerWorkspace"
 }
 
+new_config() {
+    # configure npm
+    apt-get update && apt-get install -y supervisor
+    sudo cp /workspaces/buffet-rezervace/.devcontainer/npm_serv.conf /etc/supervisor/conf.d/
+    sudo supervisord -c /etc/supervisor/supervisord.conf
+
+    # configure apache and php.ini
+    sudo cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+    sudo sed -i 's/;extension=mysqli/extension=mysqli/' /usr/local/etc/php/php.ini
+    sudo docker-php-ext-install mysqli # install mysqli extension
+
+    # configure apache2 directly
+    sudo a2enmod rewrite
+    sudo a2enmod actions
+    sudo service apache2 restart
+
+    # configure .env
+    sudo su - vscode -c "bash $containerWorkspace/.devcontainer/env.sh $containerWorkspace"
+}
+
 # Check if the first argument is 'd' or if user input is needed
 if [[ "$1" == "d" ]]; then
     # Automatically apply permissions
     apply_permissions
 else
     # Prompt for user input
-    read -p "Do you want to set permissions? (y/n) " choice
+    read -p "Do you want a complete config? (y/n) " choice
     if [[ "$choice" == [Yy]* ]]; then
+
+        new_config
         apply_permissions
+
     elif [[ "$choice" == [Nn]* ]]; then
         echo "nice :-)"
     else
@@ -26,30 +49,13 @@ else
 fi
 
 ## npm service config
-apt-get update && apt-get install -y supervisor
-sudo cp /workspaces/buffet-rezervace/.devcontainer/npm_serv.conf /etc/supervisor/conf.d/
-sudo supervisord -c /etc/supervisor/supervisord.conf
+
 sudo supervisorctl reread
 sudo supervisorctl update
 sudo supervisorctl start npm_serv
 
-## apache config
-
-# configure .env
-sudo su - vscode -c "bash $containerWorkspace/.devcontainer/env.sh $containerWorkspace"
-
-# configure php.ini
-sudo cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
-sudo sed -i 's/;extension=mysqli/extension=mysqli/' /usr/local/etc/php/php.ini
-sudo docker-php-ext-install mysqli # install mysqli extension
-
 # compose buffet-api
 sudo su - vscode -c "cd /workspaces/buffet-rezervace/buffet-api && composer install"
-
-# configure apache2 directly
-sudo a2enmod rewrite
-sudo a2enmod actions
-sudo service apache2 restart
 
 ## html folder clone
 sudo rm -r /var/www/html
