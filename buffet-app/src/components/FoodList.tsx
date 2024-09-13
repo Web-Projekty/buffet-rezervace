@@ -2,6 +2,7 @@ import { formatCurrency } from "../utils";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { LuBadgePlus } from "react-icons/lu";
+import { useFetch } from "../hooks/useFetch";
 
 type DummyFoodType = {
   id: number;
@@ -108,32 +109,19 @@ const dummyFood: DummyFoodType[] = [
   },
 ];
 
-const URL =
-  "https://didactic-space-yodel-v5wq7qxjxj5hxjp4-80.app.github.dev/api";
-
 const FoodList = () => {
-  const [data, setData] = useState<boolean>();
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          URL,
-          {},
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          },
-        );
-        console.log(response.data);
-        setData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const { isLoading, error, data } = useFetch({url: "http://localhost:80/api"}, []);
 
-    fetchData();
-  }, []);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error while fetching...</div>;
+  }
+
+  console.log(data);
+  
   return (
     <div className="mb-[3rem] mt-[15rem] flex flex-col items-center justify-center">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">

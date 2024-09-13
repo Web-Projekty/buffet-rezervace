@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 interface DependencyProps {
-  id: string;
   url: string;
-  page: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,16 +11,23 @@ export function useFetch(dependency: DependencyProps, initialValue: any) {
   const [error, setError] = useState<object>();
   const [data, setData] = useState(initialValue);
 
-  const { id, url, page } = dependency;
+  const { url } = dependency;
 
   useEffect(() => {
     setIsLoading(true);
 
     async function fetchData() {
       try {
-        const response = await axios.get(`${url}/${id}`);
+        const response = await axios.post(
+          "http://localhost:80/api",
+          {},
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        );
         setData([response.data]);
-        setError({});
         setIsLoading(false);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
@@ -32,7 +37,7 @@ export function useFetch(dependency: DependencyProps, initialValue: any) {
       }
     }
     fetchData();
-  }, [id, url, page]);
+  }, [url]);
 
   return { isLoading, error, data };
 }
