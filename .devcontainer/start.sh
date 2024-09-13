@@ -22,6 +22,7 @@ new_config() {
 
     # configure apache2 directly
     sudo a2enmod rewrite
+    sudo a2enmod headers
     sudo a2enmod actions
     sudo service apache2 restart
 
