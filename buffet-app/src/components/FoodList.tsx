@@ -1,7 +1,7 @@
-import { LuShoppingCart } from "react-icons/lu";
 import { formatCurrency } from "../utils";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { LuBadgePlus } from "react-icons/lu";
 
 type DummyFoodType = {
   id: number;
@@ -157,10 +157,12 @@ const FoodList = () => {
                     {formatCurrency(food.price)}
                   </p>
                 </div>
-                <LuShoppingCart
-                  size={48}
-                  className="bg-white p-2 hover:cursor-pointer"
-                />
+                <div>
+                  <LuBadgePlus
+                    size={48}
+                    className="bg-white p-2 hover:cursor-pointer"
+                  />
+                </div>
 
                 <p className="w-[240px] rounded-lg bg-white px-2">
                   {food.description}

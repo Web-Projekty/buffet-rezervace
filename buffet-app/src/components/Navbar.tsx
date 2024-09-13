@@ -1,17 +1,16 @@
-import { BiFoodMenu } from "react-icons/bi";
-import { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
-import { LuShoppingCart } from "react-icons/lu";
+import CartButton from "./cart/CartButton";
+import AccountButton from "./account/AccountButton";
+import { IoIosMenu } from "react-icons/io";
 
 type NavLinksType = {
   id: number;
   name: string;
   path: string;
-  image?: ReactNode;
 };
 
 const Links: NavLinksType[] = [
-  { id: 1, name: "Menu", path: "/", image: <BiFoodMenu /> },
+  { id: 1, name: "Menu", path: "/" },
   { id: 2, name: "About", path: "/about" },
   { id: 3, name: "Reviews", path: "/reviews" },
 ];
@@ -19,9 +18,9 @@ const Links: NavLinksType[] = [
 const Navbar = () => {
   return (
     <nav>
-      <div className="flex flex-row">
-        <ul className="relative flex flex-row items-center gap-5 text-xl text-black">
-          {Links.map(({ id, path, name, image }) => {
+      <div className="hidden flex-row md:flex">
+        <ul className="relative flex flex-row items-center gap-10 text-xl text-black">
+          {Links.map(({ id, path, name }) => {
             return (
               <li key={id}>
                 <NavLink
@@ -33,15 +32,18 @@ const Navbar = () => {
                   to={path}
                 >
                   {name}
-                  {image}
                 </NavLink>
               </li>
             );
           })}
-          <div className="rounded-full bg-white p-4 hover:cursor-pointer">
-            <LuShoppingCart size={24} />
+          <div className="flex flex-row gap-5">
+            <CartButton />
+            <AccountButton />
           </div>
         </ul>
+      </div>
+      <div className="flex flex-col rounded-full bg-white p-[18px] md:hidden">
+        <IoIosMenu size={64} />
       </div>
     </nav>
   );

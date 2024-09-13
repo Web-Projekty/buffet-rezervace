@@ -8,9 +8,8 @@ const Header = () => {
       <Link to={"/"}>
         <img
           src={Logo}
-          width={100}
           alt="Hamburger Logo"
-          className="rounded-full bg-white p-1 hover:animate-wiggle"
+          className="w-[100px] min-w-[100px] rounded-full bg-white p-1 hover:animate-wiggle"
         />
       </Link>
 
