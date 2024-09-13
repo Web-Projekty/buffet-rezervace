@@ -43,7 +43,7 @@ $app->post('/credGen', function (Request $request, Response $response, $args) {
     return $response;
 });
 
-// CORS Middleware
+// CORS Middleware (DO NOT!!!! LEAVE IN FINAL RELEASE)
 $corsMiddleware = function ($request, $handler) {
     $response = $handler->handle($request);
     return $response
