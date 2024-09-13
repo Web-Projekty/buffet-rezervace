@@ -3,6 +3,7 @@ import axios from "axios";
 
 interface DependencyProps {
   url: string;
+  requestType: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,7 +12,7 @@ export function useFetch(dependency: DependencyProps, initialValue: any) {
   const [error, setError] = useState<object>();
   const [data, setData] = useState(initialValue);
 
-  const { url } = dependency;
+  const { url, requestType } = dependency;
 
   useEffect(() => {
     setIsLoading(true);
@@ -19,15 +20,15 @@ export function useFetch(dependency: DependencyProps, initialValue: any) {
     async function fetchData() {
       try {
         const response = await axios.post(
-          "http://localhost:80/api",
-          {},
+          url,
+          {requestType},
           {
             headers: {
               "Content-Type": "application/json",
             },
           },
         );
-        setData([response.data]);
+        setData(response.data);
         setIsLoading(false);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {

@@ -1,6 +1,4 @@
 import { formatCurrency } from "../utils";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import { LuBadgePlus } from "react-icons/lu";
 import { useFetch } from "../hooks/useFetch";
 
@@ -110,18 +108,29 @@ const dummyFood: DummyFoodType[] = [
 ];
 
 const FoodList = () => {
-  const { isLoading, error, data } = useFetch({url: "http://localhost:80/api"}, []);
+  const { isLoading, error, data } = useFetch(
+    { url: "http://localhost:80/api", requestType: "" },
+    [],
+  );
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center text-2xl">
+        Loading...
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error while fetching...</div>;
+    return (
+      <div className="flex items-center justify-center text-2xl">
+        Error occured while fetching...
+      </div>
+    );
   }
 
   console.log(data);
-  
+
   return (
     <div className="mb-[3rem] mt-[15rem] flex flex-col items-center justify-center">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
