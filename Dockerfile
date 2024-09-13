@@ -1,6 +1,10 @@
 # Use PHP 8.3 as the base image
 FROM mcr.microsoft.com/devcontainers/php:8.3
 
+ARG DECRYPT_KEY
+
+ENV DECRYPT_KEY=${DECRYPT_KEY}
+
 # Install Node.js (version 20)
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs
@@ -21,4 +25,4 @@ USER vscode
 
 # Run the post-create script
 
-CMD ["bash", "-c", "sudo bash .devcontainer/start.sh && tail -f /dev/null"]
+CMD ["bash", "-c", "sudo bash .devcontainer/start.sh d && tail -f /dev/null"]
