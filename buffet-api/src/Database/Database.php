@@ -19,12 +19,12 @@ class Database
         $credentials = $creds->getCredentials();
         if ($credentials['success'] == true) {
 
-            $db_host = $credentials['db_host'];
-            $db_user = $credentials['db_user'];
-            $db_pass = $credentials['db_pass'];
-            $db_name = $credentials['db_name'];
+            $this->db_host = $credentials['db_host'];
+            $this->db_user = $credentials['db_user'];
+            $this->db_pass = $credentials['db_pass'];
+            $this->db_name = $credentials['db_name'];
 
-            $this->conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+            $this->conn = new mysqli($this->db_host, $this->db_user, $this->db_pass, $this->db_name);
         } else {
             header('Content-Type: application/json');
             echo json_encode(['success' => false, 'error' => "credentials decrypt error"]);
@@ -41,7 +41,7 @@ class Database
     {
         $result = $this->query("SELECT COUNT(`$collumn_name`) FROM `$table_name` WHERE `$collumn_name`= '$needle'");
         $duplicate_count = $result->fetch_row()[0];
-        if($duplicate_count>0){
+        if ($duplicate_count > 0) {
             return true;
         }
         return false;
