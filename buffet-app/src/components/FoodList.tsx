@@ -1,4 +1,7 @@
 import { LuShoppingCart } from "react-icons/lu";
+import { formatCurrency } from "../utils";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 type DummyFoodType = {
   id: number;
@@ -105,7 +108,32 @@ const dummyFood: DummyFoodType[] = [
   },
 ];
 
+const URL =
+  "https://didactic-space-yodel-v5wq7qxjxj5hxjp4-80.app.github.dev/api";
+
 const FoodList = () => {
+  const [data, setData] = useState<boolean>();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          URL,
+          {},
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        );
+        console.log(response.data);
+        setData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <div className="mb-[3rem] mt-[15rem] flex flex-col items-center justify-center">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
@@ -113,7 +141,7 @@ const FoodList = () => {
           return (
             <div
               key={food.id}
-              className="relative flex flex-col justify-around gap-5 rounded-lg border-b-2 bg-white p-4 shadow-sm shadow-gray-500"
+              className="relative flex w-[19rem] flex-col justify-around gap-5 rounded-lg border-b-2 bg-white p-4 shadow-sm shadow-gray-500"
             >
               <img
                 src={food.image}
@@ -126,7 +154,7 @@ const FoodList = () => {
                     {food.name}
                   </h2>
                   <p className="rounded-lg bg-white px-2 text-lg">
-                    {food.price} Kč
+                    {formatCurrency(food.price)}
                   </p>
                 </div>
                 <LuShoppingCart
