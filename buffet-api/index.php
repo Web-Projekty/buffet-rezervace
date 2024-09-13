@@ -36,12 +36,26 @@ $app->post('/credGen', function (Request $request, Response $response, $args) {
 
     ob_start();
     $cred = new CredentialsManager;
-    $cred->createCredentials($_POST['username'],$_POST['password']);
+    $cred->createCredentials($_POST['username'], $_POST['password']);
     $html = ob_get_clean();
 
     $response->getBody()->write($html);
     return $response;
 });
+
+// CORS Middleware
+$corsMiddleware = function ($request, $handler) {
+    $response = $handler->handle($request);
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', '*')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        ->withHeader('Access-Control-Allow-Credentials', 'true'); // If needed
+};
+
+// Add middleware to your Slim app
+$app->add($corsMiddleware);
+
 
 $app->post('/api', [BuffetApi::class, 'main']);
 
