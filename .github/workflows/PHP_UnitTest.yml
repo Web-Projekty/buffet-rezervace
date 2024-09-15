@@ -1,23 +1,13 @@
 name: Run PHPUnit Tests
 
 on:
-  push:   # Runs on any push event (to any branch)
-    branches:
-      - '**'   # This matches all branches
-  pull_request:  # Runs on any pull request event
-    branches:
-      - '**'   # This matches all branches
-  workflow_dispatch:  # Allows manual triggering of the workflow
-  pull_request_target:  # Runs tests when a PR is targeted to the repository
+  push:       # Runs on any push
+  pull_request:  # Runs on any pull request
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
   phpunit:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        php-version: ['7.4', '8.0', '8.1', '8.2']
-        os: [ubuntu-latest]
 
     steps:
       - name: Checkout code
@@ -26,27 +16,11 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-version }}
-          extensions: mbstring, intl, mysqli
-          ini-values: post_max_size=256M, upload_max_filesize=256M
-          coverage: none
+          php-version: '8.3'
+          extensions: mysqli
 
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-        shell: bash
-
-      - name: Cache Composer dependencies
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-php-${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-php-${{ matrix.php-version }}-composer-
-
-      - name: Install Composer dependencies
-        run: cd buffet-api && composer install --prefer-dist --no-progress --no-suggest
+      - name: Install dependencies
+        run: cd buffet-api && composer install
 
       - name: Run PHPUnit tests
         run: vendor/bin/phpunit --testdox
