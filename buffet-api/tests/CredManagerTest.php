@@ -1,13 +1,13 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use Dotenv\Dotenv;
 
 final class CredManagerTest extends TestCase
 {
-    public function testTest(): void
+    #[TestDox('It does something')]
+    public function testEnvClass(): void
     {
-        $string = '';
-
-        $this->assertSame($string, "");
+        $this->assertTrue(!class_exists("Dotenv"));
     }
 }
