@@ -20,7 +20,9 @@ jobs:
           extensions: mysqli
 
       - name: Install dependencies
-        run: cd buffet-api && composer install
+        working-directory: ./buffet-api
+        run: composer install
 
       - name: Run PHPUnit tests
+        working-directory: ./buffet-api
         run: vendor/bin/phpunit --testdox
