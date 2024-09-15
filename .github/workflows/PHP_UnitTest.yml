@@ -25,4 +25,4 @@ jobs:
 
       - name: Run PHPUnit tests
         working-directory: ./buffet-api
-        run: vendor/bin/phpunit --testdox
+        run: ./vendor/bin/phpunit tests
