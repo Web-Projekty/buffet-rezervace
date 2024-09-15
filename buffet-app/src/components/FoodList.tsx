@@ -108,28 +108,28 @@ const dummyFood: DummyFoodType[] = [
 ];
 
 const FoodList = () => {
-  const { isLoading, error, data } = useFetch(
-    { url: "http://localhost:80/api", requestType: "" },
-    [],
-  );
+  // const { isLoading, error, data } = useFetch(
+  //   { url: "http://localhost:80/api", requestType: "" },
+  //   [],
+  // );
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center text-2xl">
-        Loading...
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex items-center justify-center text-2xl">
+  //       Loading...
+  //     </div>
+  //   );
+  // }
 
-  if (error) {
-    return (
-      <div className="flex items-center justify-center text-2xl">
-        Error occured while fetching...
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className="flex items-center justify-center text-2xl">
+  //       Error occured while fetching...
+  //     </div>
+  //   );
+  // }
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <div className="mb-[3rem] mt-[15rem] flex flex-col items-center justify-center">
