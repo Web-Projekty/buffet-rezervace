@@ -46,7 +46,7 @@ jobs:
             ${{ runner.os }}-php-${{ matrix.php-version }}-composer-
 
       - name: Install Composer dependencies
-        run: cd buffet-adi && composer install --prefer-dist --no-progress --no-suggest
+        run: cd buffet-api && composer install --prefer-dist --no-progress --no-suggest
 
       - name: Run PHPUnit tests
         run: vendor/bin/phpunit --testdox
