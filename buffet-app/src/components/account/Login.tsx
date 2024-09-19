@@ -4,7 +4,7 @@ import useSignIn from "react-auth-kit/hooks/useSignIn";
 
 const Login = () => {
   const [error, setError] = useState("");
-  const login = useSignIn()
+  const login = useSignIn();
 
   const loginHandler = async () => {
     const loginData = {
@@ -18,13 +18,12 @@ const Login = () => {
       const success: boolean = response.data.success;
       console.log(response.data);
 
-
       if (success) {
         login({
           auth: {
             token: response.data.token,
           },
-          userState: {name: 'Manas Baroi', role: "admin"},
+          userState: { name: "Manas Baroi", role: "admin" },
         });
         console.log("Logged in");
       } else {
@@ -38,9 +37,7 @@ const Login = () => {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center text-2xl">
-        {error}
-      </div>
+      <div className="flex items-center justify-center text-2xl">{error}</div>
     );
   }
 
