@@ -24,7 +24,6 @@ new_config() {
     sudo a2enmod rewrite
     sudo a2enmod actions
     sudo a2enmod headers
-    sudo service apache2 restart
 
     # configure .env
     sudo su - vscode -c "bash $containerWorkspace/.devcontainer/env.sh $containerWorkspace"
@@ -61,3 +60,5 @@ sudo su - vscode -c "cd /workspaces/buffet-rezervace/buffet-api && composer inst
 ## html folder clone
 sudo rm -r /var/www/html
 ln -s $containerWorkspace/buffet-api /var/www/html
+
+sudo service apache2 restart
