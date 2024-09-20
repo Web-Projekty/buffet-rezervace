@@ -1,6 +1,4 @@
-import { formatCurrency } from "../utils";
-import { LuBadgePlus } from "react-icons/lu";
-import { useFetch } from "../hooks/useFetch";
+import Item from "./Item";
 
 type DummyFoodType = {
   id: number;
@@ -107,7 +105,7 @@ const dummyFood: DummyFoodType[] = [
   },
 ];
 
-const FoodList = () => {
+const ItemList = () => {
   // const { isLoading, error, data } = useFetch(
   //   { url: "http://localhost:80/api", requestType: "" },
   //   [],
@@ -135,42 +133,11 @@ const FoodList = () => {
     <div className="mb-[3rem] mt-[15rem] flex flex-col items-center justify-center">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {dummyFood.map((food) => {
-          return (
-            <div
-              key={food.id}
-              className="relative flex w-[19rem] flex-col justify-around gap-5 rounded-lg border-b-2 bg-white p-4 shadow-sm shadow-gray-500"
-            >
-              <img
-                src={food.image}
-                alt={food.name}
-                className="h-[15rem] w-[20rem] rounded-lg object-cover"
-              />
-              <div className="flex flex-col gap-3 rounded-lg bg-white p-2">
-                <div className="flex items-center gap-5">
-                  <h2 className="rounded-lg bg-white px-2 text-xl font-bold">
-                    {food.name}
-                  </h2>
-                  <p className="rounded-lg bg-white px-2 text-lg">
-                    {formatCurrency(food.price)}
-                  </p>
-                </div>
-                <div>
-                  <LuBadgePlus
-                    size={48}
-                    className="bg-white p-2 hover:cursor-pointer"
-                  />
-                </div>
-
-                <p className="w-[240px] rounded-lg bg-white px-2">
-                  {food.description}
-                </p>
-              </div>
-            </div>
-          );
+          return <Item key={food.id} {...food} />;
         })}
       </div>
     </div>
   );
 };
 
-export default FoodList;
+export default ItemList;

@@ -11,8 +11,8 @@ type NavLinksType = {
 
 const Links: NavLinksType[] = [
   { id: 1, name: "Menu", path: "/" },
-  { id: 2, name: "About", path: "/about" },
-  { id: 3, name: "Reviews", path: "/reviews" },
+  { id: 2, name: "Alergeny", path: "/alergeny" },
+  { id: 3, name: "Recenze", path: "/recenze" },
 ];
 
 const Navbar = () => {
