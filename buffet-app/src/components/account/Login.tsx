@@ -34,12 +34,18 @@ const Login = () => {
       console.log(response.data);
 
       if (success) {
+        
         login({
           auth: {
             token: response.data.token,
             type: "Bearer",
           },
-          userState: { name: "Manas Baroi", role: "admin" },
+          userState: {
+            fullName: response.data.fullName,
+            email: response.data.email,
+            role: response.data.role,
+            class: response.data.class,
+          },
         });
         console.log("Logged in");
         setLoading(false);

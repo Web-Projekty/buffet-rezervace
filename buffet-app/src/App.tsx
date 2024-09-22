@@ -9,24 +9,27 @@ import ReviewList from "./components/ReviewList";
 
 const App = () => {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-white font-Lato dark:bg-slate-700">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-white font-Lato dark:bg-black">
       <Header />
-      <Routes>
-        <Route path="/" element={<ItemList />} />
-        <Route path="/menu" element={<ItemList />} />
-        <Route path="/recenze" element={<ReviewList />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Login />} />
-        <Route
-          path="/account"
-          element={
-            <RequireAuth fallbackPath="/login">
-              <AccountDashboard />
-            </RequireAuth>
-          }
-        />
-        <Route path="*" element={<ItemList />} />
-      </Routes>
+      <div className="flex-1">
+        <Routes>
+          <Route path="/" element={<ItemList />} />
+          <Route path="/menu" element={<ItemList />} />
+          <Route path="/recenze" element={<ReviewList />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Login />} />
+          <Route
+            path="/account"
+            element={
+              <RequireAuth fallbackPath="/login">
+                <AccountDashboard />
+              </RequireAuth>
+            }
+          />
+          <Route path="*" element={<ItemList />} />
+        </Routes>
+      </div>
+
       <Footer />
     </div>
   );
