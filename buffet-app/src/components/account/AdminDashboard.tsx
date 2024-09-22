@@ -1,7 +1,12 @@
-import React from "react";
+import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 const AdminDashboard = () => {
-  return <div className="flex items-center justify-center">Admin Dashboard</div>;
+  const user: any = useAuthUser();
+  return (
+    <div className="flex items-center justify-center">
+      Hello, admin {user.name}
+    </div>
+  );
 };
 
 export default AdminDashboard;

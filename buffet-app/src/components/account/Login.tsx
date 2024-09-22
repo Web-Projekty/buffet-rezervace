@@ -37,6 +37,7 @@ const Login = () => {
         login({
           auth: {
             token: response.data.token,
+            type: "Bearer",
           },
           userState: { name: "Manas Baroi", role: "admin" },
         });
@@ -80,9 +81,19 @@ const Login = () => {
           />
         </div>
         {error ? (
-          <p className="text-center text-red-400">{error}</p>
+          <button
+            className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
+            disabled
+          >
+            {error}
+          </button>
         ) : loading ? (
-          <p className="text-center text-orange-400">Přihlašování...</p>
+          <button
+            className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
+            disabled
+          >
+            Přihlašování
+          </button>
         ) : (
           <button
             className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
