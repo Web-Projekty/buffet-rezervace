@@ -9,11 +9,10 @@ type ProtectedRouteProps = {
 
 const RequireAuth = ({ children }: ProtectedRouteProps) => {
   const user = useAuthUser();
-  console.log(user);
+  // console.log(user);
   if (!user) {
     return <Navigate to="/login" />;
   }
-
   return <>{children}</>;
 };
 
