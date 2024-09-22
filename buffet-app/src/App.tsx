@@ -9,7 +9,7 @@ import ReviewList from "./components/ReviewList";
 
 const App = () => {
   return (
-    <div className="flex min-h-screen flex-col overflow-x-hidden bg-white font-Lato dark:bg-black">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-white font-Lato dark:bg-slate-800">
       <Header />
       <div className="flex-1">
         <Routes>

@@ -2,7 +2,10 @@ import axios from "axios";
 import { useState } from "react";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useNavigate } from "react-router-dom";
+import { tailspin } from "ldrs";
+import { motion } from "framer-motion";
 
+tailspin.register();
 interface LoginFormType {
   username: string;
   password: string;
@@ -34,7 +37,6 @@ const Login = () => {
       console.log(response.data);
 
       if (success) {
-        
         login({
           auth: {
             token: response.data.token,
@@ -63,9 +65,14 @@ const Login = () => {
   };
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-10 text-white">
+    <motion.div
+      initial={{ opacity: 0, x: 50 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 1 }}
+      className="flex h-screen flex-col items-center justify-center gap-10 text-white"
+    >
       <h1 className="text-2xl">Příhlášení</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      <form onSubmit={handleSubmit} className="flex w-[300px] flex-col gap-5">
         <div className="flex flex-col gap-5">
           <input
             className="rounded-md border p-2 text-black"
@@ -87,29 +94,23 @@ const Login = () => {
           />
         </div>
         {error ? (
-          <button
-            className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
-            disabled
-          >
-            {error}
-          </button>
+          <div className="text-wrap rounded-md bg-red-500 p-2">
+            Špatné heslo nebo uživatelské jméno
+          </div>
         ) : loading ? (
-          <button
-            className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
-            disabled
-          >
-            Přihlašování
-          </button>
+          <div className="flex items-center justify-center">
+            <l-tailspin size="30" stroke="5" speed="0.9" color="white" />
+          </div>
         ) : (
           <button
-            className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
+            className="rounded-md border bg-orange-400 p-2 text-white hover:bg-orange-500"
             type="submit"
           >
             Přihlásit se
           </button>
         )}
       </form>
-    </div>
+    </motion.div>
   );
 };
 

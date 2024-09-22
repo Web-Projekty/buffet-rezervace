@@ -19,15 +19,15 @@ const Navbar = () => {
   return (
     <nav>
       <div className="hidden flex-row md:flex">
-        <ul className="relative flex flex-row items-center gap-10 text-xl text-black">
+        <ul className="relative flex w-[500px] flex-row items-center justify-between text-xl text-black">
           {Links.map(({ id, path, name }) => {
             return (
               <li key={id}>
                 <NavLink
                   className={({ isActive }) =>
                     isActive
-                      ? "flex flex-row items-center gap-2 rounded-lg bg-white p-2 font-bold"
-                      : "flex flex-row items-center gap-2"
+                      ? "flex cursor-default flex-row items-center justify-center rounded-lg bg-white p-2 font-bold"
+                      : "flex flex-row items-center justify-center p-2"
                   }
                   to={path}
                 >
