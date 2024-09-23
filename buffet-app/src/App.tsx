@@ -6,6 +6,7 @@ import AccountDashboard from "./components/account/Dashboard";
 import Login from "./components/account/Login";
 import RequireAuth from "@auth-kit/react-router/RequireAuth";
 import ReviewList from "./components/ReviewList";
+import Register from "./components/account/Register";
 
 const App = () => {
   return (
@@ -17,7 +18,7 @@ const App = () => {
           <Route path="/menu" element={<ItemList />} />
           <Route path="/recenze" element={<ReviewList />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route
             path="/account"
             element={
