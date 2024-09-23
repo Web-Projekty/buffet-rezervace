@@ -1,15 +1,16 @@
 import axios from "axios";
 import { useState } from "react";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
-import { useNavigate } from "react-router-dom";
-import { tailspin } from "ldrs";
+import { Navigate, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { tailspin } from "ldrs";
 
 tailspin.register();
-interface LoginFormType {
+
+type LoginFormType = {
   username: string;
   password: string;
-}
+};
 
 const Login = () => {
   const [formData, setFormData] = useState<LoginFormType>({
@@ -64,15 +65,19 @@ const Login = () => {
     }
   };
 
+  const handleRegister = () => {
+    navigate("/register");
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 1 }}
-      className="flex h-screen flex-col items-center justify-center gap-10 text-white"
+      className="flex h-screen flex-col items-center justify-center gap-5 text-white"
     >
       <h1 className="text-2xl">Příhlášení</h1>
-      <form onSubmit={handleSubmit} className="flex w-[300px] flex-col gap-5">
+      <form onSubmit={handleSubmit} className="flex w-[300px] flex-col gap-3">
         <div className="flex flex-col gap-5">
           <input
             className="rounded-md border p-2 text-black"
@@ -92,9 +97,19 @@ const Login = () => {
               setFormData({ ...formData, password: e.target.value })
             }
           />
+          <div className="text-center">
+            Ještě nejsi registrovaný?{" "}
+            <span
+              className="cursor-pointer text-orange-300"
+              onClick={handleRegister}
+            >
+              Registruj se
+            </span>
+            .
+          </div>
         </div>
         {error ? (
-          <div className="text-wrap rounded-md bg-red-500 p-2">
+          <div className="text-wrap rounded-md bg-red-500 p-2 text-center">
             Špatné heslo nebo uživatelské jméno
           </div>
         ) : loading ? (

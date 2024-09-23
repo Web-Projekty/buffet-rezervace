@@ -22,9 +22,9 @@ const App = () => {
           <Route
             path="/account"
             element={
-              <AccountDashboard />
-              // <RequireAuth fallbackPath="/login">
-              // </RequireAuth>
+              <RequireAuth fallbackPath="/login">
+                <AccountDashboard />
+              </RequireAuth>
             }
           />
           <Route path="*" element={<ItemList />} />

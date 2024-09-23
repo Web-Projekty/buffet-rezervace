@@ -20,6 +20,7 @@ const Order = ({ order }: OrderType) => {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 1 }}
       className="w-[45rem] rounded-lg bg-slate-900 p-4"
+      onClick={handleOpen}
     >
       <div className="flex flex-row items-center justify-between gap-2 text-xl">
         <div className="flex flex-row gap-2 text-xl">
@@ -28,20 +29,33 @@ const Order = ({ order }: OrderType) => {
         </div>
 
         {isOpen ? (
-          <MdKeyboardArrowDown onClick={handleOpen} size={32} />
+          <MdKeyboardArrowDown size={32} />
         ) : (
-          <MdKeyboardArrowLeft onClick={handleOpen} size={32} />
+          <MdKeyboardArrowLeft size={32} />
         )}
       </div>
 
       {isOpen ? (
-        <ul className="flex flex-col">
-          {order.items.map((item: any) => (
-            <li key={item.id} className="flex flex-row gap-2">
-              <h3>{item.name}</h3>
-              <p>{formatCurrency(item.price)}</p>
-            </li>
-          ))}
+        <ul className="flex flex-col gap-2">
+          <div className="flex flex-col">
+            {order.items.map((item: any) => (
+              <li key={item.id} className="flex flex-row gap-2">
+                <h3>{item.name}</h3>
+                <p>{formatCurrency(item.price)}</p>
+              </li>
+            ))}
+          </div>
+          <hr />
+
+          <div className="flex flex-row gap-2">
+            <span>Celkem</span>
+            {formatCurrency(
+              order.items.reduce(
+                (acc: number, item: any) => acc + item.price,
+                0,
+              ),
+            )}
+          </div>
         </ul>
       ) : null}
     </motion.div>
