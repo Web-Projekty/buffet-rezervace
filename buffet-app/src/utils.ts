@@ -5,11 +5,9 @@ export const formatCurrency = (number: number): string => {
   }).format(number);
 };
 
-export const formatTime = (date: Date): string => {
-  return new Intl.DateTimeFormat("cs-CZ", {
-    hour: "numeric",
-    minute: "numeric",
-  }).format(date);
+export const formatDate = (date: string): string => {
+  const dateObject = new Date(date);
+  return dateObject.toLocaleDateString("cs-CZ");
 };
 
 export const matchValues = (text: any, text2: any): boolean => {

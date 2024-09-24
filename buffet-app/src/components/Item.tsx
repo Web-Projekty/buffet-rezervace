@@ -15,7 +15,7 @@ const Item = ({ image, name, price, description }: ItemType) => {
       initial={{ opacity: 0, x: 50 }}
       whileInView={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative flex w-[19rem] flex-col justify-around gap-5 rounded-lg border-b-2 bg-white p-4 shadow-sm shadow-gray-500"
+      className="relative flex w-[20rem] flex-col justify-around gap-5 rounded-lg border-b-2 bg-white p-4 shadow-sm shadow-gray-500"
     >
       <img
         src={image}
