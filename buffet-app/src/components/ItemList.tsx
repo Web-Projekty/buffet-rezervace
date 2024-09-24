@@ -130,7 +130,7 @@ const ItemList = () => {
   // console.log(data);
 
   return (
-    <div className="mb-[3rem] mt-[15rem] flex flex-col items-center justify-center">
+    <div className="mb-[3rem] mt-[10rem] flex flex-col items-center justify-center">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {dummyFood.map((food) => {
           return <Item key={food.id} {...food} />;

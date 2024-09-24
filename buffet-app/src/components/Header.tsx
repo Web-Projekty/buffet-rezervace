@@ -4,7 +4,7 @@ import Navbar from "./Navbar";
 
 const Header = () => {
   return (
-    <header className="fixed z-50 flex h-28 w-full flex-row items-center justify-between bg-orange-300 px-32 text-xl text-black shadow-sm shadow-gray-500">
+    <header className="fixed z-50 flex h-28 w-full flex-row items-center justify-between bg-primary px-32 text-xl text-black shadow-lg shadow-black">
       <Link to={"/"}>
         <img
           src={Logo}

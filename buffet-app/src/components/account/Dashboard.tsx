@@ -20,9 +20,9 @@ const AccountDashboard = () => {
       {/* {user.role === "admin" ? <AdminDashboard /> : <UserDashboard />} */}
       <div className="flex flex-col gap-5">
         <div>
-          <h2 className="text-2xl font-bold">{user.fullName}</h2>
-          <p className="text-lg">Email: {user.email}</p>
-          <p className="text-lg">Třída: {user.class}</p>
+          <h2 className="text-2xl font-bold">User</h2>
+          <p className="text-lg">Email: user@mail.com</p>
+          <p className="text-lg">Třída: 1.Y</p>
         </div>
 
         <button

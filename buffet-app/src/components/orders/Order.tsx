@@ -28,36 +28,49 @@ const Order = ({ order }: OrderType) => {
           <p>{order.date}</p>
         </div>
 
-        {isOpen ? (
-          <MdKeyboardArrowDown size={32} />
-        ) : (
-          <MdKeyboardArrowLeft size={32} />
-        )}
+        <MdKeyboardArrowLeft
+          size={32}
+          className={`${isOpen ? "-rotate-90" : null} transition-transform duration-300 ease-in-out`}
+        />
       </div>
 
-      {isOpen ? (
-        <ul className="flex flex-col gap-2">
-          <div className="flex flex-col">
-            {order.items.map((item: any) => (
-              <li key={item.id} className="flex flex-row gap-2">
-                <h3>{item.name}</h3>
-                <p>{formatCurrency(item.price)}</p>
-              </li>
-            ))}
-          </div>
-          <hr />
+      <motion.ul
+        initial="closed"
+        animate={isOpen ? "open" : "closed"}
+        variants={{
+          open: { height: "auto", opacity: 1 },
+          closed: { height: 0, opacity: 0 },
+        }}
+        transition={{ duration: 0.3 }}
+        className="flex flex-col gap-3 overflow-hidden"
+      >
+        <div className="flex flex-col">
+          {order.items.map((item: any) => (
+            <li
+              key={item.id}
+              className="flex w-[240px] flex-row items-center justify-center gap-2"
+            >
+              <h3>{item.name}</h3>
+              <div className="mt-4 flex-1 border-b-2 border-dotted border-white"></div>
+              <p>{formatCurrency(item.price)}</p>
+            </li>
+          ))}
+        </div>
+        <hr />
 
-          <div className="flex flex-row gap-2">
-            <span>Celkem</span>
+        <div className="flex w-[240px] flex-row items-center justify-center gap-2">
+          <span>Celkem</span>
+          <div className="mt-4 flex-1 border-b-2 border-dotted border-white"></div>
+          <p>
             {formatCurrency(
               order.items.reduce(
                 (acc: number, item: any) => acc + item.price,
                 0,
               ),
             )}
-          </div>
-        </ul>
-      ) : null}
+          </p>
+        </div>
+      </motion.ul>
     </motion.div>
   );
 };
