@@ -16,9 +16,9 @@ const AccountDashboard = () => {
   };
 
   return (
-    <div className="mb-[3rem] mt-[15rem] flex flex-col items-center justify-evenly gap-10 text-white md:flex-row md:gap-0">
+    <div className="mb-[3rem] mt-[15rem] flex flex-col justify-evenly gap-10 text-white md:flex-row md:gap-0">
       {/* {user.role === "admin" ? <AdminDashboard /> : <UserDashboard />} */}
-      <div className="flex flex-col gap-5 rounded-md bg-slate-900 p-8">
+      <div className="flex h-[220px] flex-col justify-center gap-5 rounded-md bg-slate-900 px-10">
         <div>
           <h2 className="text-2xl font-bold">User</h2>
           <p className="text-lg">Email: user@mail.com</p>
