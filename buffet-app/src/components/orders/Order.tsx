@@ -40,7 +40,7 @@ const Order = ({ order }: OrderType) => {
       transition={{ duration: 1 }}
       className="w-[45rem] rounded-lg bg-slate-900 p-4"
     >
-      <div className="flex flex-row items-center justify-between gap-2 text-xl">
+      <div className="flex w-[380px] flex-row items-center justify-between gap-2 text-xl md:w-auto">
         <div className="flex flex-row gap-2 text-xl">
           <h2>Objednávka #{order.id}</h2>
           <p>{formatDate(order.date)}</p>
