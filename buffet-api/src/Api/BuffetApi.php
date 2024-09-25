@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Buffet\Api;
 
 use Buffet\Api\AuthApi;
