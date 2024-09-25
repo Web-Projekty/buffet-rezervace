@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { tailspin } from "ldrs";
 

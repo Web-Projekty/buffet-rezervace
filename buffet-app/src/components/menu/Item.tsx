@@ -1,15 +1,9 @@
 import { LuBadgePlus } from "react-icons/lu";
-import { formatCurrency } from "../utils";
+import { formatCurrency } from "../../utils";
 import { motion } from "framer-motion";
+import { Item as ItemType } from "../../types";
 
-type ItemType = {
-  image: string;
-  name: string;
-  price: number;
-  description: string;
-};
-
-const Item = ({ image, name, price, description }: ItemType) => {
+const Item = ({ id, image, name, price, description }: ItemType) => {
   return (
     <motion.div
       initial={{ opacity: 0, x: 50 }}

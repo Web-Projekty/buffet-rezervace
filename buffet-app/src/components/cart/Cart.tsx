@@ -1,12 +1,6 @@
-type DummyFoodType = {
-  id: number;
-  image: string;
-  name: string;
-  price: number;
-  description: string;
-};
+import { Item } from "../../types";
 
-const dummyFood: DummyFoodType[] = [
+const dummyFood: Item[] = [
   {
     id: 1,
     image: "https://www.pizzaplzen.cz/wp-content/uploads/2017/02/8-768x493.jpg",
@@ -42,7 +36,7 @@ const dummyFood: DummyFoodType[] = [
 
 const Cart = () => {
   return (
-    <dialog>
+    <dialog className="z-50 bg-black">
       <h1>Your Cart</h1>
       <div className="grid grid-cols-3 gap-4">
         {dummyFood.map((food) => {
