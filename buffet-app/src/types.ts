@@ -12,7 +12,7 @@ export type Order = {
   status: "pending" | "pickedup" | "notpickedup";
   date: string;
   items: Item[];
-  user: User | "this";
+  user: User | null;
 };
 
 export type Item = {

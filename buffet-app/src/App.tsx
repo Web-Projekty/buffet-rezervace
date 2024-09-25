@@ -4,10 +4,12 @@ import Header from "./components/Header";
 import ItemList from "./components/menu/ItemList";
 import AccountDashboard from "./components/account/AccountDashboard";
 import Login from "./components/account/Login";
-import RequireAuth from "@auth-kit/react-router/RequireAuth";
 import ReviewList from "./components/ReviewList";
 import Register from "./components/account/Register";
 import Cart from "./components/cart/Cart";
+import RequireAuth from "./components/RequireAuth";
+import OrderHistory from "./components/orders/OrderHistory";
+import AdminOrderHistory from "./components/orders/AdminOrderHistory";
 
 const App = () => {
   return (
@@ -18,17 +20,28 @@ const App = () => {
         <Routes>
           <Route path="/" element={<ItemList />} />
           <Route path="/menu" element={<ItemList />} />
+          <Route
+            path="/menu/edit"
+            element={
+              <RequireAuth requireAdmin={true}>
+                <Register />
+              </RequireAuth>
+            }
+          />
+          <Route path="/alergeny" element={<ItemList />} />
+          <Route path="/objednavky" element={<AdminOrderHistory />} />
           <Route path="/recenze" element={<ReviewList />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
             path="/account"
             element={
-              <AccountDashboard />
-              /*<RequireAuth fallbackPath="/login">
-              </RequireAuth>*/
+              <RequireAuth requireAdmin={false}>
+                <AccountDashboard />
+              </RequireAuth>
             }
           />
+
           <Route path="*" element={<ItemList />} />
         </Routes>
       </div>

@@ -5,7 +5,7 @@ const dummyUserOrders: Order[] = [
     id: 1,
     date: "1727244375",
     status: "pickedup",
-    user: "this",
+    user: null,
     items: [
       {
         id: 1,
@@ -29,7 +29,7 @@ const dummyUserOrders: Order[] = [
     id: 2,
     date: "1727244375",
     status: "pickedup",
-    user: "this",
+    user: null,
     items: [
       {
         id: 1,
@@ -71,7 +71,7 @@ export const dummyUser: User = {
   id: 1,
   name: "John Doe",
   email: "john@doe.com",
-  class: "3A",
+  class: "4. A",
   isAdmin: true,
   orders: dummyUserOrders,
 };
@@ -241,7 +241,8 @@ export const dummyOrders: Order[] = [
   {
     id: 3,
     date: "1727244375",
-    status: "NOTPICKEDUP",
+    status: "notpickedup",
+    user: dummyUser,
     items: [
       {
         id: 1,
@@ -280,7 +281,8 @@ export const dummyOrders: Order[] = [
   {
     id: 4,
     date: "1727244375",
-    status: "PENDING",
+    status: "notpickedup",
+    user: dummyUser,
     items: [
       {
         id: 1,
@@ -304,7 +306,7 @@ export const dummyOrders: Order[] = [
   {
     id: 5,
     date: "1727244375",
-    status: "pickedup",
+    status: "notpickedup",
     user: dummyUser,
     items: [
       {
@@ -329,8 +331,8 @@ export const dummyOrders: Order[] = [
   {
     id: 6,
     date: "1727244375",
-    status: "pickedup",
-    user: dummyUser,
+    status: "notpickedup",
+    user: null,
     items: [
       {
         id: 1,

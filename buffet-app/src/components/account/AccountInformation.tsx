@@ -3,6 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { User } from "../../types";
 
+const AdminButtons = ({ handleMenuEdit }: { handleMenuEdit: () => void }) => {
+  return (
+    <div className="grid grid-cols-2 gap-5">
+      <button
+        className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
+        onClick={handleMenuEdit}
+      >
+        Upravit menu
+      </button>
+    </div>
+  );
+};
+
 const AccountInformation = ({ user }: { user: User }) => {
   const logout = useSignOut();
   const navigate = useNavigate();
@@ -12,8 +25,12 @@ const AccountInformation = ({ user }: { user: User }) => {
     navigate("/login");
   };
 
+  const handleMenuEdit = () => {
+    navigate("/menu/edit");
+  };
+
   return (
-    <div className="flex h-[220px] flex-col justify-center gap-5">
+    <div className="flex h-[220px] w-[300px] flex-col justify-center gap-5">
       <h1 className="text-2xl">
         {user.isAdmin ? "Administrátor" : "Uživatel"}
       </h1>
@@ -34,6 +51,7 @@ const AccountInformation = ({ user }: { user: User }) => {
       >
         Logout
       </button>
+      {user.isAdmin && <AdminButtons handleMenuEdit={handleMenuEdit} />}
     </div>
   );
 };

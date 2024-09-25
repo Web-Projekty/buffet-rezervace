@@ -37,6 +37,7 @@ const Order = ({ order }: { order: OrderType }) => {
         <div className="flex flex-row gap-2 text-xl">
           <h2>Objednávka #{order.id}</h2>
           <p>{formatUnixDate(order.date)}</p>
+          {order.user && <p>{order.user.name}</p>}
         </div>
         <div className="flex flex-row items-center">
           {!isOpen && <StatusBadge status={order.status} />}
@@ -95,7 +96,7 @@ const Order = ({ order }: { order: OrderType }) => {
                     ? "Vyzvednuto"
                     : "Nevyzvednuto"}
               </span>
-              <StatusBadge order={order} />
+              <StatusBadge status={order.status} />
             </div>
           </div>
         </div>
