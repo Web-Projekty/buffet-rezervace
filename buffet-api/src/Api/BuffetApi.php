@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Buffet\Api;
 
+use Buffet\Types\Status;
+use Buffet\Types\ApiResponse;
 use Buffet\Api\AuthApi;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use Psr\Http\Message\ResponseInterface;
