@@ -11,11 +11,11 @@ export type Order = {
   id: number;
   status: "pending" | "pickedup" | "notpickedup";
   date: string;
-  items: Item[];
+  items: MenuItem[];
   user: User | null;
 };
 
-export type Item = {
+export type MenuItem = {
   id: number;
   name: string;
   price: number;

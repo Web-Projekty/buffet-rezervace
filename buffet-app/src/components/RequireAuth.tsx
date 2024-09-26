@@ -11,7 +11,7 @@ type ProtectedRouteProps = {
 };
 
 const RequireAuth = ({ children, requireAdmin }: ProtectedRouteProps) => {
-  const user: User = dummyUser;
+  const user: any = useAuthUser();
 
   if (!user) {
     return <Navigate to="/login" />;

@@ -19,7 +19,7 @@ const StatusBadge = ({ status }: { status: OrderType["status"] }) => {
   );
 };
 
-const Order = ({ order }: { order: OrderType }) => {
+const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleOpen = () => {
@@ -30,15 +30,20 @@ const Order = ({ order }: { order: OrderType }) => {
     <motion.div
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 1 }}
-      className="w-[45rem] rounded-lg bg-slate-900 p-4"
+      transition={{ duration: 0.5 }}
+      className={`flex w-[45rem] flex-col rounded-lg bg-slate-900 p-4`}
     >
-      <div className="flex w-[380px] flex-row items-center justify-between gap-2 text-xl md:w-auto">
-        <div className="flex flex-row gap-2 text-xl">
+      <div className="flex w-[380px] flex-row items-center justify-between text-xl md:w-auto">
+        <div className="flex flex-row items-center gap-2 text-xl">
           <h2>Objednávka #{order.id}</h2>
           <p>{formatUnixDate(order.date)}</p>
-          {order.user && <p>{order.user.name}</p>}
+          {isAdmin && order.user && (
+            <p className="text-base">
+              {order.user?.name}, {order.user?.class}, {order.user?.email}
+            </p>
+          )}
         </div>
+
         <div className="flex flex-row items-center">
           {!isOpen && <StatusBadge status={order.status} />}
           <MdKeyboardArrowLeft

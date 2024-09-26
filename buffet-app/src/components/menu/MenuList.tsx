@@ -1,12 +1,11 @@
 import { dummyFood } from "../../dummyData";
 import { usePaging } from "../../hooks/usePaging";
-import Item from "./Item";
+import MenuItem from "./MenuItem";
 
 const ItemList = () => {
   const {
     currentPage,
     totalPagesCount,
-    totalListCount,
     displayedList,
     handleNextPage,
     handlePreviousPage,
@@ -16,7 +15,7 @@ const ItemList = () => {
     <div className="mb-[3rem] mt-[10rem] flex flex-col items-center justify-center">
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3">
         {displayedList.map((food) => {
-          return <Item key={food.id} {...food} />;
+          return <MenuItem key={food.id} {...food} />;
         })}
       </div>
       {totalPagesCount > 1 && (

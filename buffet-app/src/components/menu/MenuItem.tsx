@@ -1,9 +1,9 @@
 import { LuBadgePlus } from "react-icons/lu";
 import { formatCurrency } from "../../utils";
 import { motion } from "framer-motion";
-import { Item as ItemType } from "../../types";
+import { MenuItem as MenuItemType } from "../../types";
 
-const Item = ({ id, image, name, price, description }: ItemType) => {
+const MenuItem = ({ image, name, price, description }: MenuItemType) => {
   return (
     <motion.div
       initial={{ opacity: 0, x: 50 }}
@@ -31,4 +31,4 @@ const Item = ({ id, image, name, price, description }: ItemType) => {
   );
 };
 
-export default Item;
+export default MenuItem;

@@ -37,7 +37,7 @@ const AccountInformation = ({ user }: { user: User }) => {
       <motion.div
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.5 }}
         className="rounded-md bg-slate-900 p-4"
       >
         <h2 className="text-2xl font-bold">{user.name}</h2>

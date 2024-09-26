@@ -41,13 +41,14 @@ const Login = () => {
         login({
           auth: {
             token: response.data.token,
-            type: "Bearer",
+            // type: "Bearer",
           },
           userState: {
             fullName: response.data.fullName,
             email: response.data.email,
-            role: response.data.role,
+            isAdmin: response.data.role === "admin",
             class: response.data.class,
+            orders: {},
           },
         });
         console.log("Logged in");
