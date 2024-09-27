@@ -5,8 +5,12 @@ import { dummyOrders } from "../../dummyData";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import PagingButtons from "../PagingButtons";
+import Calendar from "./Calendar";
 
 const AdminOrderHistory = () => {
+  const [orderStatus, setOrderStatus] =
+    useState<OrderType["status"]>("pickedup");
+  const [orders, setOrders] = useState<OrderType[]>(dummyOrders);
   const {
     currentPage,
     totalPagesCount,
@@ -14,10 +18,7 @@ const AdminOrderHistory = () => {
     displayedList,
     handleNextPage,
     handlePreviousPage,
-  } = usePaging(dummyOrders, 4);
-
-  const [orderStatus, setOrderStatus] =
-    useState<OrderType["status"]>("pickedup");
+  } = usePaging(orders, 4);
 
   return (
     <motion.div
@@ -42,7 +43,20 @@ const AdminOrderHistory = () => {
           handlePreviousPage={handlePreviousPage}
         />
       </div>
-      <div className="flex h-[200px] w-[250px] flex-col items-start justify-center gap-5 rounded-md bg-slate-900 p-10">
+      <div className="flex h-auto w-[250px] flex-col items-start justify-center gap-5 rounded-md bg-slate-900 p-10">
+        <h2 className="text-2xl">Filtr</h2>
+        <div>
+          <label htmlFor="pickedup">Jméno</label>
+          <input
+            type="text"
+            name="names"
+            id="names"
+            placeholder="Zadejte jméno"
+            className="placeholder-slate-400"
+            onChange={(e) => console.log(e.target.value)}
+          />
+        </div>
+        <Calendar />
         <div className="flex flex-row gap-2">
           <label htmlFor="onlyPending">Čeká na vyzvednutí</label>
           <input type="checkbox" name="onlyPending" id="onlyPending" />
