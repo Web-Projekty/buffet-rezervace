@@ -4,6 +4,7 @@ import { Order as OrderType } from "../../types";
 import { dummyOrders } from "../../dummyData";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import PagingButtons from "../PagingButtons";
 
 const AdminOrderHistory = () => {
   const {
@@ -34,24 +35,12 @@ const AdminOrderHistory = () => {
               <Order key={order.id} order={order} isAdmin />
             ))}
         </ul>
-        {totalPagesCount > 1 && (
-          <div className="flex flex-row gap-2">
-            <button
-              onClick={handlePreviousPage}
-              disabled={currentPage === 1}
-              className="rounded-md border bg-cyan-500 p-2 hover:bg-cyan-700"
-            >
-              Předchozí
-            </button>
-            <button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPagesCount}
-              className="rounded-md border bg-cyan-500 p-2 hover:bg-cyan-700"
-            >
-              Další
-            </button>
-          </div>
-        )}
+        <PagingButtons
+          currentPage={currentPage}
+          totalPagesCount={totalPagesCount}
+          handleNextPage={handleNextPage}
+          handlePreviousPage={handlePreviousPage}
+        />
       </div>
       <div className="flex h-[200px] w-[250px] flex-col items-start justify-center gap-5 rounded-md bg-slate-900 p-10">
         <div className="flex flex-row gap-2">

@@ -5,13 +5,14 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
-import ItemList from "./components/menu/MenuList.tsx";
-import RequireAuth from "./components/RequireAuth.tsx";
+import Menu from "./components/menu/Menu.tsx";
+import RequireAuth from "./components/account/RequireAuth.tsx";
 import MenuEdit from "./components/menu/MenuEdit.tsx";
 import AdminOrderHistory from "./components/orders/AdminOrderHistory.tsx";
 import Login from "./components/account/Login.tsx";
 import Register from "./components/account/Register.tsx";
 import AccountDashboard from "./components/account/AccountDashboard.tsx";
+import Alergens from "./components/alergens/Alergens.tsx";
 
 const store = createStore({
   authName: "_auth",
@@ -28,12 +29,12 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <ItemList />,
+        element: <Menu />,
         //loader: () => import("./components/menu/MenuList.tsx"),
       },
       {
         path: "/menu",
-        element: <ItemList />,
+        element: <Menu />,
         //loader: () => import("./components/menu/MenuList.tsx"),
       },
       {
@@ -47,7 +48,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/alergeny",
-        element: <ItemList />,
+        element: <Alergens />,
         //loader: () => import("./components/menu/MenuList.tsx"),
       },
       {

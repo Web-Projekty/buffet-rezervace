@@ -1,4 +1,4 @@
-import { MenuItem, Order, User } from "./types";
+import { Alergen, MenuItem, Order, User } from "./types";
 
 export const dummyUser: User = {
   id: 1,
@@ -225,3 +225,86 @@ export const dummyOrders: Order[] = [
   dummyUser2.orders,
   dummyUser3.orders,
 ].flat();
+
+export const alergens: Alergen[] = [
+  {
+    id: 1,
+    name: "Gluten",
+    description: "This product contains gluten",
+  },
+  {
+    id: 2,
+    name: "Lactose",
+    description: "This product contains lactose",
+  },
+  {
+    id: 3,
+    name: "Nuts",
+    description: "This product contains nuts",
+  },
+  {
+    id: 4,
+    name: "Soy",
+    description: "This product contains soy",
+  },
+  {
+    id: 5,
+    name: "Eggs",
+    description: "This product contains eggs",
+  },
+  {
+    id: 6,
+    name: "Fish",
+    description: "This product contains fish",
+  },
+  {
+    id: 7,
+    name: "Shellfish",
+    description: "This product contains shellfish",
+  },
+  {
+    id: 8,
+    name: "Celery",
+    description: "This product contains celery",
+  },
+  {
+    id: 9,
+    name: "Mustard",
+    description: "This product contains mustard",
+  },
+  {
+    id: 10,
+    name: "Sesame",
+    description: "This product contains sesame",
+  },
+  {
+    id: 11,
+    name: "Sulphites",
+    description: "This product contains sulphites",
+  },
+  {
+    id: 12,
+    name: "Peanuts",
+    description: "This product contains peanuts",
+  },
+  {
+    id: 13,
+    name: "Milk",
+    description: "This product contains milk",
+  },
+  {
+    id: 14,
+    name: "Sulphur dioxide",
+    description: "This product contains sulphur dioxide",
+  },
+  {
+    id: 15,
+    name: "Lupin",
+    description: "This product contains lupin",
+  },
+  {
+    id: 16,
+    name: "Molluscs",
+    description: "This product contains molluscs",
+  },
+];

@@ -22,3 +22,11 @@ export type MenuItem = {
   description: string;
   image: string;
 };
+
+export type MenuItemEdit = Omit<MenuItem, "id">;
+
+export type Alergen = {
+  id: number;
+  name: string;
+  description: string;
+};
