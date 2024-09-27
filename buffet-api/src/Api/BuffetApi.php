@@ -11,6 +11,9 @@ use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
 class BuffetApi
 {
+    function __construct(public ApiResponse $response)
+    {}
+
     /**
      * Main API function called by router.
      *
@@ -30,11 +33,12 @@ class BuffetApi
         }
 
         if ($output = json_encode($output)) {
-            $html->getBody()->write($output);
+
         } else {
             $output = json_encode(['success' => false, 'error' => "failed to encode json"]);
         }
 
+        $html->getBody()->write($output);
 
         return $html->withHeader('Content-type', 'application/json');
     }
@@ -47,7 +51,7 @@ class BuffetApi
      * @return array API response
      */
 
-    function handleApiCall()
+    function handleApiCall(): ApiResponse
     {
         $request = $this->getPostJson();
 
