@@ -15,6 +15,11 @@ export const formatUnixDate = (date: string): string => {
   return dateObject.toLocaleDateString("cs-CZ");
 };
 
+export const formatToUnixDate = (date: string): string => {
+  const dateObject = new Date(date);
+  return Math.floor(dateObject.getTime() / 1000).toString();
+};
+
 export const matchValues = (text: any, text2: any): boolean => {
   return text === text2;
 };

@@ -21,9 +21,8 @@ export type MenuItem = {
   price: number;
   description: string;
   image: string;
+  alergens: Alergen[];
 };
-
-export type MenuItemEdit = Omit<MenuItem, "id">;
 
 export type Alergen = {
   id: number;

@@ -51,7 +51,7 @@ export const dummyUser2: User = {
     {
       id: 3,
       date: "1727244375",
-      status: "pickedup",
+      status: "pending",
       user: {
         id: 2,
         name: "Cid Kagenou",
@@ -68,6 +68,7 @@ export const dummyUser2: User = {
           name: "Pizza",
           price: 129.9,
           description: "A delicious pizza with pepperoni",
+          alergens: [],
         },
         {
           id: 3,
@@ -76,6 +77,7 @@ export const dummyUser2: User = {
           name: "Burger",
           price: 89.9,
           description: "A juicy burger with cheese",
+          alergens: [],
         },
       ],
     },
@@ -92,7 +94,7 @@ export const dummyUser3: User = {
     {
       id: 4,
       date: "1727244375",
-      status: "pickedup",
+      status: "notpickedup",
       user: {
         id: 5,
         name: "Naruto Uzumaki",
@@ -109,6 +111,7 @@ export const dummyUser3: User = {
           name: "Pizza",
           price: 129.9,
           description: "A delicious pizza with pepperoni",
+          alergens: [],
         },
         {
           id: 2,
@@ -117,6 +120,7 @@ export const dummyUser3: User = {
           name: "Burger",
           price: 89.9,
           description: "A juicy burger with cheese",
+          alergens: [],
         },
       ],
     },
@@ -130,6 +134,9 @@ export const dummyFood: MenuItem[] = [
     name: "Pizza",
     price: 129.9,
     description: "A delicious pizza with pepperoni",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
   },
   {
     id: 2,
@@ -138,6 +145,9 @@ export const dummyFood: MenuItem[] = [
     name: "Burger",
     price: 89.9,
     description: "A juicy burger with cheese",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
   },
   {
     id: 3,
@@ -146,6 +156,9 @@ export const dummyFood: MenuItem[] = [
       "https://images.unsplash.com/photo-1593507369837-9adcc0c0bdc6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: 49.9,
     description: "Crispy fries with ketchup",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
   },
   {
     id: 4,
@@ -154,6 +167,9 @@ export const dummyFood: MenuItem[] = [
       "https://images.unsplash.com/photo-1592232583482-ec6367cfb786?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: 34.9,
     description: "A refreshing coca cola",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
   },
   {
     id: 5,
@@ -162,6 +178,9 @@ export const dummyFood: MenuItem[] = [
     name: "Pizza",
     price: 129.9,
     description: "A delicious pizza with pepperoni",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
   },
   {
     id: 6,
@@ -170,6 +189,9 @@ export const dummyFood: MenuItem[] = [
     name: "Burger",
     price: 89.9,
     description: "A juicy burger with cheese",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
   },
   {
     id: 7,
@@ -178,6 +200,9 @@ export const dummyFood: MenuItem[] = [
       "https://images.unsplash.com/photo-1593507369837-9adcc0c0bdc6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: 49.9,
     description: "Crispy fries with ketchup",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
   },
   {
     id: 8,
@@ -186,6 +211,9 @@ export const dummyFood: MenuItem[] = [
       "https://images.unsplash.com/photo-1592232583482-ec6367cfb786?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: 34.9,
     description: "A refreshing coca cola",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
   },
   {
     id: 9,
@@ -193,6 +221,9 @@ export const dummyFood: MenuItem[] = [
     name: "Pizza",
     price: 129.9,
     description: "A delicious pizza with pepperoni",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
   },
   {
     id: 10,
@@ -201,6 +232,9 @@ export const dummyFood: MenuItem[] = [
     name: "Burger",
     price: 89.9,
     description: "A juicy burger with cheese",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
   },
   {
     id: 11,
@@ -209,6 +243,9 @@ export const dummyFood: MenuItem[] = [
       "https://images.unsplash.com/photo-1593507369837-9adcc0c0bdc6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: 49.9,
     description: "Crispy fries with ketchup",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
   },
   {
     id: 12,
@@ -217,6 +254,9 @@ export const dummyFood: MenuItem[] = [
       "https://images.unsplash.com/photo-1592232583482-ec6367cfb786?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: 34.9,
     description: "A refreshing coca cola",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
   },
 ];
 

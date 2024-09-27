@@ -17,8 +17,8 @@ const MenuItem = ({ image, name, price, description }: MenuItemType) => {
         className="h-[15rem] w-[20rem] rounded-lg object-cover"
       />
       <div className="flex flex-col gap-3 rounded-lg p-2">
-        <div className="flex items-center">
-          <h2 className="rounded-lg px-2 text-xl font-bold">{name}</h2>
+        <div className="flex items-center font-bold">
+          <h1 className="rounded-lg px-2 text-xl">{name}</h1>
           <div className="mt-4 flex-1 border-b-2 border-dotted border-white"></div>
           <p className="rounded-lg px-2 text-lg">{formatCurrency(price)}</p>
         </div>
