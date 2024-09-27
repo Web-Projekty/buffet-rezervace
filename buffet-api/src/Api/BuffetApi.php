@@ -1,14 +1,13 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace Buffet\Api;
 
-use Buffet\Types\Status;
-use Buffet\Types\ApiResponse;
 use Buffet\Api\AuthApi;
-use Psr\Http\Message\ServerRequestInterface as RequestInterface;
+use Buffet\Types\ApiResponse;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
 class BuffetApi
 {
@@ -58,34 +57,34 @@ class BuffetApi
 
         switch ($request['requestType']) {
             case "test":
-                return $this->handleTest($request);
+                //return $this->handleTest($request);
                 break;
 
             case "register";
-                return $this->handleRegister($request);
+                //return $this->handleRegister($request);
                 break;
 
             case "login":
-                return $this->handleLogin($request);
+                //return $this->handleLogin($request);
                 break;
 
             case "verify":
-                return $this->handleVerify($request);
+                //return $this->handleVerify($request);
                 break;
 
             default:
-                return ['success' => false, 'error' => "tried calling non-existent api requestType"];
+                //return ['success' => false, 'error' => "tried calling non-existent api requestType"];
                 break;
         }
     }
 
 /**
-     * API handler for token verify
-     *
-     * @param array $request API request
-     * 
-     * @return array API response
-     */
+ * API handler for token verify
+ *
+ * @param array $request API request
+ *
+ * @return array API response
+ */
 
     function handleVerify($request)
     {
@@ -99,12 +98,12 @@ class BuffetApi
     }
 
 /**
-     * API handler for user registration
-     *
-     * @param array $request API request
-     * 
-     * @return array API response
-     */
+ * API handler for user registration
+ *
+ * @param array $request API request
+ *
+ * @return array API response
+ */
 
     function handleRegister($request)
     {
@@ -119,12 +118,12 @@ class BuffetApi
     }
 
 /**
-     * API handler for user lgoin
-     *
-     * @param array $request API request
-     * 
-     * @return array API response with JWT token
-     */
+ * API handler for user lgoin
+ *
+ * @param array $request API request
+ *
+ * @return array API response with JWT token
+ */
 
     function handleLogin($request)
     {
@@ -139,12 +138,12 @@ class BuffetApi
     }
 
 /**
-     * API handler for data transit testing
-     *
-     * @param array $request API request
-     * 
-     * @return array copy of the request
-     */
+ * API handler for data transit testing
+ *
+ * @param array $request API request
+ *
+ * @return array copy of the request
+ */
 
     function handleTest($request)
     {
@@ -152,13 +151,13 @@ class BuffetApi
     }
 
 /**
-     * Utility function for checking if all keys are present and carry data
-     *
-     * @param array $request API request
-     * @param array $members list of all the required members
-     * 
-     * @return bool|error if members missing kills the process and sends error otherwise true
-     */
+ * Utility function for checking if all keys are present and carry data
+ *
+ * @param array $request API request
+ * @param array $members list of all the required members
+ *
+ * @return bool|error if members missing kills the process and sends error otherwise true
+ */
 
     function hasAllMembers($request, $members)
     {
@@ -173,12 +172,12 @@ class BuffetApi
     }
 
 /**
-     * Utility function for retrieving data
-     * 
-     * Retrieves json data from POST method raw data and returns decode json
-     * 
-     * @return array decoded json from POST raw data
-     */
+ * Utility function for retrieving data
+ *
+ * Retrieves json data from POST method raw data and returns decode json
+ *
+ * @return array decoded json from POST raw data
+ */
 
     function getPostJson()
     {
