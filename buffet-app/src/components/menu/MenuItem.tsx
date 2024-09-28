@@ -2,8 +2,11 @@ import { LuBadgePlus } from "react-icons/lu";
 import { formatCurrency } from "../../utils";
 import { motion } from "framer-motion";
 import { MenuItem as MenuItemType } from "../../types";
+import { CartContext, useCart } from "../../store/CartContext";
+import { useContext } from "react";
 
-const MenuItem = ({ image, name, price, description }: MenuItemType) => {
+const MenuItem = ({ id, image, name, price, description }: MenuItemType) => {
+  const cartContext = useContext(CartContext);
   return (
     <motion.div
       initial={{ opacity: 0, x: 50 }}
@@ -23,7 +26,12 @@ const MenuItem = ({ image, name, price, description }: MenuItemType) => {
           <p className="rounded-lg px-2 text-lg">{formatCurrency(price)}</p>
         </div>
         <p className="w-[240px] rounded-lg px-2">{description}</p>
-        <div className="flex items-center justify-center">
+        <div
+          className="flex items-center justify-center"
+          onClick={() => {
+            cartContext.addItem(id);
+          }}
+        >
           <LuBadgePlus size={48} className="p-2 hover:cursor-pointer" />
         </div>
       </div>
