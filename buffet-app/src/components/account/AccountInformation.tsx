@@ -5,7 +5,7 @@ import { User } from "../../types";
 
 const AdminButtons = ({ handleMenuEdit }: { handleMenuEdit: () => void }) => {
   return (
-    <div className="grid grid-cols-2 gap-5">
+    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
       <button
         className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
         onClick={handleMenuEdit}
@@ -30,7 +30,7 @@ const AccountInformation = ({ user }: { user: User }) => {
   };
 
   return (
-    <div className="flex h-[220px] w-[300px] flex-col justify-center gap-5">
+    <div className="flex h-[220px] w-full flex-col justify-center gap-5 md:w-[300px]">
       <h1 className="text-2xl">
         {user.isAdmin ? "Administrátor" : "Uživatel"}
       </h1>

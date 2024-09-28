@@ -31,7 +31,7 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
-      className={`flex w-[45rem] flex-col rounded-lg bg-slate-900 p-4`}
+      className={`flex w-auto flex-col rounded-lg bg-slate-900 p-4 md:w-[45rem]`}
     >
       <div className="flex w-[380px] flex-row items-center justify-between text-xl md:w-auto">
         <div className="flex flex-row items-center gap-2 text-xl">

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import PagingButtons from "../PagingButtons";
 import { isSameDay, parseISO } from "date-fns";
+import Input from "../../Input";
 
 const AdminOrderHistory = () => {
   const [orders, setOrders] = useState<OrderType[]>(dummyOrders);
@@ -15,6 +16,7 @@ const AdminOrderHistory = () => {
     status: OrderType["status"] | "all";
   }>({
     name: "",
+    //date: new Date().toISOString().split("T")[0],
     date: "",
     status: "all",
   });
@@ -64,7 +66,7 @@ const AdminOrderHistory = () => {
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
-      className="mb-[3rem] mt-[15rem] flex flex-row items-center justify-center gap-5 text-white md:flex-row"
+      className="m-auto mb-[3rem] mt-[10rem] flex flex-col-reverse items-center justify-between gap-5 text-white md:mt-[15rem] md:w-[1200px] md:flex-row md:items-start"
     >
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl">Objednávky ({totalListCount})</h1>
@@ -84,23 +86,24 @@ const AdminOrderHistory = () => {
         <h2 className="text-2xl">Filtr</h2>
         <div className="flex flex-row items-center gap-2">
           <label htmlFor="pickedup">Jméno</label>
-          <input
+          <Input
             type="text"
             name="name"
             id="name"
-            placeholder="Zadejte jméno"
-            className="rounded-md p-1 text-black placeholder-slate-400"
+            value={ordersFilter.name}
             onChange={handleFilter}
+            className="rounded-md p-1 text-black placeholder-slate-400"
           />
         </div>
         <div className="flex flex-row items-center gap-2">
           <label htmlFor="pickedup">Datum</label>
-          <input
+          <Input
             type="date"
             name="date"
             id="date"
-            className="rounded-md p-1 text-black"
+            value={ordersFilter.date}
             onChange={handleFilter}
+            className="rounded-md p-1 text-black placeholder-slate-400"
           />
         </div>
         <div className="flex flex-row gap-2">
