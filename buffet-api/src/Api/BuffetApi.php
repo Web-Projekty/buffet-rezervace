@@ -11,9 +11,6 @@ use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
 class BuffetApi
 {
-     */
-    function __construct(public ApiResponse $response)
-    {}
 
     /**
      * Main API function called by router.
@@ -27,19 +24,16 @@ class BuffetApi
 
     function main(RequestInterface $request, ResponseInterface $html): ResponseInterface
     {
-        $output = $this->handleApiCall();
-
-        if ($output == null || !isset($output) || empty($output)) {
-            $output = ['success' => false, 'error' => "api returned a null value"];
+        /**
+         * @var ApiResponse
+         */
+        $response = $this->handleApiCall();
+        if ($response == null || !isset($response) || empty($response) || get_class($response) != "Buffet\Types\ApiResponse") {
+            $response = new ApiResponse();
+            $response->setError("Handling api call resulted in invalid data type");
         }
 
-        if ($output = json_encode($output)) {
-
-        } else {
-            $output = json_encode(['success' => false, 'error' => "failed to encode json"]);
-        }
-
-        $html->getBody()->write($output);
+        $html->getBody()->write((string) $response);
 
         return $html->withHeader('Content-type', 'application/json');
     }
@@ -56,13 +50,14 @@ class BuffetApi
     {
         $request = $this->getPostJson();
 
-        if (empty($request['requestType']) || !isset($request['requestType'])) {
-            return ['success' => false, 'error' => "undefined requestType"];
-        }
+        /**
+         * @var ApiResponse
+         */
+        $response = new ApiResponse($request);
 
         switch ($request['requestType']) {
             case "test":
-                //return $this->handleTest($request);
+                return $this->handleTest($response);
                 break;
 
             case "register";
@@ -78,7 +73,7 @@ class BuffetApi
                 break;
 
             default:
-                //return ['success' => false, 'error' => "tried calling non-existent api requestType"];
+                $response->setError("Api returned an invalid value");
                 break;
         }
     }
@@ -146,11 +141,11 @@ class BuffetApi
  * API handler for data transit testing
  *
  *
- * @param  array $request API request
- * @return array copy of the request
+ * @param  ApiResponse $request API request
+ * @return ApiResponse copy of the request
  */
 
-    function handleTest($request)
+    function handleTest(ApiResponse $request): ApiResponse
     {
         return $request;
     }
