@@ -4,8 +4,9 @@ import { motion } from "framer-motion";
 const Alergen = ({ alergen }: { alergen: AlergenType }) => {
   return (
     <motion.li
-      initial={{ opacity: 0, x: 50 }}
-      whileInView={{ opacity: 1, x: 0 }}
+      initial={{ opacity: 0, scale: 0.8 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.5 }}
       className="flex items-center gap-2 rounded-md bg-slate-900 p-2"
     >

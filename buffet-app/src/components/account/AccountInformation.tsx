@@ -35,8 +35,9 @@ const AccountInformation = ({ user }: { user: User }) => {
         {user.isAdmin ? "Administrátor" : "Uživatel"}
       </h1>
       <motion.div
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.8 }}
         transition={{ duration: 0.5 }}
         className="rounded-md bg-slate-900 p-4"
       >
