@@ -62,7 +62,7 @@ class BuffetApi
                 break;
 
             case "register";
-                //return $this->handleRegister($request);
+                return $this->handleRegister($response);
                 break;
 
             case "login":
@@ -104,19 +104,20 @@ class BuffetApi
  * API handler for user registration
  *
  *
- * @param  array $request API request
- * @return array API response
+ * @param  ApiResponse $request API request
+ * @return ApiResponse API response
  */
 
-    function handleRegister($request)
+    function handleRegister(ApiResponse $response): ApiResponse
     {
-        $this->hasAllMembers($request, ["username", "password"]);
-
-        $username = $request['username'];
-        $password = $request['password'];
+        $response->setRequestKeys(["username", "password"]);
+        $response->setPayloadKeys(["msg"]);
 
         $auth = new AuthApi;
-        return $auth->register($username, $password);
+        if($response->hasRequestKeys()){
+            return $auth->register($response);
+        }
+        return $response;
     }
 
 /**

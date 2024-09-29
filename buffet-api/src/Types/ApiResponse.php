@@ -7,14 +7,18 @@ namespace Buffet\Types;
 class ApiResponse
 {
     public Status $status = Status::Pending;
+
+    private array $requestKeys = [];
+
+    private array $payloadKeys = [];
     private array $payload = [];
 
     /**
      * @param array $request
-     * @param array $keys
+     * @param array $payloadKeys
      */
 
-    public function __construct(public array $request = [], private array $keys = [])
+    public function __construct(public array $request = [])
     {}
 
     /**
@@ -70,6 +74,15 @@ class ApiResponse
     }
 
     /**
+     * @param  string  $key
+     * @return mixed
+     */
+    public function getRequestByKey(string $key)
+    {
+        return $this->request[$key] ?? null;
+    }
+
+    /**
      * @param string $key
      */
     public function removePayload(string $key): void
@@ -94,12 +107,43 @@ class ApiResponse
     }
 
     /**
-     * @param array $keys
+     * @param  Success $msg
+     * @return null
      */
-    public function setKeys(array $keys): void
+    public function setSuccess(Success $msg): void
     {
-        unset($this->keys);
-        $this->keys = $keys;
+        if ($this->status === Status::Failed) {
+            return;
+        }
+        $this->status = Status::Success;
+        unset($this->payload);
+        $this->payload["msg"] = $msg->getValue() ?? null;
+    }
+
+    /**
+     * @param array $payloadKeys
+     */
+    public function setRequestKeys(array $requestKeys): void
+    {
+        unset($this->requestKeys);
+        $this->requestKeys = $requestKeys;
+    }
+
+    /**
+     * @param array $payloadKeys
+     */
+    public function setPayloadKeys(array $payloadKeys): void
+    {
+        unset($this->payloadKeys);
+        $this->payloadKeys = $payloadKeys;
+    }
+
+    public function getStatus(): bool
+    {
+        if ($this->status === Status::Failed) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -113,9 +157,19 @@ class ApiResponse
     /**
      * @return bool
      */
-    public function checkKeys(): bool
+    public function hasRequestKeys(): bool
     {
-        foreach ($this->keys as $key) {
+        foreach ($this->requestKeys as $key) {
+            if (!isset($this->request[$key]) || empty($this->request[$key])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function hasPayloadKeys(): bool
+    {
+        foreach ($this->payloadKeys as $key) {
             if (!isset($this->payload[$key])) {
                 return false;
             }
@@ -125,9 +179,18 @@ class ApiResponse
 
     public function __toString()
     {
+        if (!$this->hasRequestKeys()) {
+            $this->setError(Error::MissingRequestKeys);
+        }
+
+        if (!$this->hasPayloadKeys()) {
+            $this->setError(Error::MissingPayloadKeys);
+        }
+
         if ($this->status === Status::Pending) {
             $this->setError(Error::StatusPending);
         }
+
         return json_encode(['status' => $this->status, 'payload' => $this->payload]);
     }
 

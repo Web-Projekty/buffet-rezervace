@@ -1,8 +1,13 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace Buffet\Api;
 
 use Buffet\Database\Database;
+use Buffet\Types\ApiResponse;
+use Buffet\Types\Error;
+use Buffet\Types\Success;
 
 class AuthApi
 {
@@ -12,23 +17,27 @@ class AuthApi
      *
      * Returns errors when user profile cannot be created
      *
-     * @param string $username
-     * @param string $password
-     * @return array Api response
+     * @param  ApiResponse
+     * @return ApiResponse   Api response
      */
 
-    function register($username, $password)
+    function register(ApiResponse $response): ApiResponse
     {
+        $username = $response->getRequestByKey("username");
+        $password = $response->getRequestByKey("password");
         $db = new Database;
 
         $password = password_hash($password, PASSWORD_BCRYPT);
 
         if ($db->isDuplicate("users", "username", $username)) {
-            return ['success' => false, 'error' => "username is in use"];
+
+            $response->setError(Error::UserInUse);
+            return $response;
         }
 
         $db->query("INSERT INTO `users` (`id`, `username`, `password`,`isAdmin`) VALUES (NULL, '$username', '$password',0)");
-        return ['success' => true, 'error' => "registered successfully"];
+        $response->setSuccess(Success::Registration);
+        return $response;
     }
 
     /**
@@ -36,9 +45,9 @@ class AuthApi
      *
      * Returns errors when user credentials are incorrect
      *
-     * @param string $username
-     * @param string $password
-     * @return array Api response with JWT token and account information
+     * @param  string $username
+     * @param  string $password
+     * @return array  Api response with JWT token and account information
      */
 
     function login($username, $password)
