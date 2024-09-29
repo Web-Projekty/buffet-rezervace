@@ -20,13 +20,13 @@ type CartProviderProps = {
 
 export const CartContext = createContext<CartContext>({
   cartItems: [],
-  addToCart: () => {},
-  removeFromCart: () => {},
+  addToCart: (item: MenuItem) => {},
+  removeFromCart: (item: MenuItem) => {},
   clearCart: () => {},
   getCartTotal: () => 0,
   getCartQuantity: () => 0,
-  isItemInCart: () => false,
-  getItemQuantity: () => 0,
+  isItemInCart: (item: MenuItem) => false,
+  getItemQuantity: (item: MenuItem) => 0,
 });
 
 export const CartProvider = ({ children }: CartProviderProps) => {

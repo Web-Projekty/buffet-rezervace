@@ -171,6 +171,7 @@ export const dummyFood: MenuItem[] = [
     description: "A delicious pizza with pepperoni",
     alergens: [
       { id: 1, name: "Gluten", description: "This product contains gluten" },
+      { id: 2, name: "Lactose", description: "This product contains lactose" },
     ],
   },
   {

@@ -27,7 +27,14 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
             {formatCurrency(item.price)}
           </p>
         </div>
-        <p className="w-[240px] rounded-lg px-2">{item.description}</p>
+        <div className="flex flex-col items-start px-2">
+          <p className="rounded-lg">{item.description}</p>
+          <p className="rounded-lg">
+            <span>Alergeny: </span>
+            {item.alergens.map((alergen) => alergen.id).join(", ")}
+          </p>
+        </div>
+
         {cartCtx.isItemInCart(item) ? (
           <div className="flex items-center justify-center gap-10">
             <LuBadgeMinus
