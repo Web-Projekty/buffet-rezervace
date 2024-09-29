@@ -16,8 +16,8 @@ const RequireAuth = ({
   requireAdmin,
   fallbackPath,
 }: ProtectedRouteProps) => {
-  // const user: User = dummyUser;
-  const user: User | null = useAuthUser();
+  const user: User = dummyUser;
+  // const user: User | null = useAuthUser();
 
   if (!user) {
     console.log("User not authenticated");

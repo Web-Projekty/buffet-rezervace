@@ -4,7 +4,7 @@ export type User = {
   email: string;
   class: string;
   isAdmin: boolean;
-  // orders: Order[];
+  orders: Order[];
 };
 
 export type Order = {
