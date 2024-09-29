@@ -20,34 +20,27 @@ class ApiResponse
      */
     private array $payload = [];
 
-    public function __construct(
-        public array $request,
-        private array $keys = []
-    ) {
-
-    }
+    public function __construct(public array $request, private array $keys = [])
+    {}
 
     /**
      * @param string $key
      * @param mixed  $payload
      */
-    public function addPayload(
-        string $key,
-        mixed $payload = ''
-    ): void {
+    public function addPayload(string $key, mixed $payload = ''): void
+    {
         if (!key_exists($key, $this->payload)) {
             $this->payload[$key] = $payload;
         }
+
     }
 
     /**
      * @param string $key
      * @param mixed  $payload
      */
-    public function setPayload(
-        string $key,
-        mixed $payload = ''
-    ): void {
+    public function setPayload(string $key, mixed $payload = ''): void
+    {
         $payload[$key] = $payload;
     }
 
