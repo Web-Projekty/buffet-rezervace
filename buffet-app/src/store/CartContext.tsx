@@ -6,12 +6,12 @@ type CartItem = MenuItem & { quantity: number };
 type CartContext = {
   cartItems: CartItem[];
   addToCart: (item: MenuItem) => void;
-  removeFromCart: (item: MenuItem) => void;
+  removeFromCart: (id: number) => void;
   clearCart: () => void;
   getCartTotal: () => number;
   getCartQuantity: () => number;
-  isItemInCart: (item: MenuItem) => boolean;
-  getItemQuantity: (item: MenuItem) => number;
+  isItemInCart: (id: number) => boolean;
+  getItemQuantity: (id: number) => number;
 };
 
 type CartProviderProps = {
@@ -21,12 +21,12 @@ type CartProviderProps = {
 export const CartContext = createContext<CartContext>({
   cartItems: [],
   addToCart: (item: MenuItem) => {},
-  removeFromCart: (item: MenuItem) => {},
+  removeFromCart: (id: number) => {},
   clearCart: () => {},
   getCartTotal: () => 0,
   getCartQuantity: () => 0,
-  isItemInCart: (item: MenuItem) => false,
-  getItemQuantity: (item: MenuItem) => 0,
+  isItemInCart: (id: number) => false,
+  getItemQuantity: (id: number) => 0,
 });
 
 export const CartProvider = ({ children }: CartProviderProps) => {
@@ -54,17 +54,15 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     }
   };
 
-  const removeFromCart = (item: MenuItem): void => {
-    const isAlreadyInCart = cartItems.find(
-      (cartItem) => cartItem.id === item.id,
-    );
+  const removeFromCart = (id: number): void => {
+    const isAlreadyInCart = cartItems.find((cartItem) => cartItem.id === id);
 
     if (isAlreadyInCart?.quantity === 1) {
-      setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id));
+      setCartItems(cartItems.filter((cartItem) => cartItem.id !== id));
     } else {
       setCartItems(
         cartItems.map((cartItem) =>
-          cartItem.id === item.id
+          cartItem.id === id
             ? { ...cartItem, quantity: cartItem.quantity - 1 }
             : cartItem,
         ),
@@ -87,12 +85,12 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     return cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0);
   };
 
-  const isItemInCart = (item: MenuItem): boolean => {
-    return cartItems.some((cartItem) => cartItem.id === item.id);
+  const isItemInCart = (id: number): boolean => {
+    return cartItems.some((cartItem) => cartItem.id === id);
   };
 
-  const getItemQuantity = (item: MenuItem): number => {
-    const cartItem = cartItems.find((cartItem) => cartItem.id === item.id);
+  const getItemQuantity = (id: number): number => {
+    const cartItem = cartItems.find((cartItem) => cartItem.id === id);
 
     return cartItem ? cartItem.quantity : 0;
   };

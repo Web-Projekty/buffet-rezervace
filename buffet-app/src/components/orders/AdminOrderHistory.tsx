@@ -62,13 +62,7 @@ const AdminOrderHistory = () => {
   }, [ordersFilter]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.5 }}
-      className="m-auto mb-[3rem] mt-[10rem] flex flex-col-reverse items-center justify-between gap-5 text-white md:mt-[15rem] md:w-[1200px] md:flex-row md:items-start"
-    >
+    <div className="m-auto mb-[3rem] mt-[10rem] flex flex-col-reverse items-center justify-between gap-5 text-white md:mt-[15rem] md:w-[1200px] md:flex-row md:items-start">
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl">Objednávky ({totalListCount})</h1>
         <ul className="flex flex-col gap-2">
@@ -83,7 +77,13 @@ const AdminOrderHistory = () => {
           handlePreviousPage={handlePreviousPage}
         />
       </div>
-      <div className="flex h-auto w-[320px] flex-col items-start justify-center gap-5 rounded-md bg-slate-900 p-10">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.8 }}
+        transition={{ duration: 0.5 }}
+        className="flex h-auto w-[320px] flex-col items-start justify-center gap-5 rounded-md bg-slate-900 p-10"
+      >
         <h2 className="text-2xl">Filtr</h2>
         <div className="flex flex-row items-center gap-2">
           <label htmlFor="pickedup">Jméno</label>
@@ -121,8 +121,8 @@ const AdminOrderHistory = () => {
             <option value="notpickedup">Nevyzvenduto</option>
           </select>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 };
 

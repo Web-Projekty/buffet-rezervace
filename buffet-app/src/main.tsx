@@ -6,14 +6,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
 import Menu from "./components/menu/Menu.tsx";
-import RequireAuth from "./components/account/RequireAuth.tsx";
 import MenuEdit from "./components/menu/MenuEdit.tsx";
 import AdminOrderHistory from "./components/orders/AdminOrderHistory.tsx";
 import Login from "./components/account/Login.tsx";
 import Register from "./components/account/Register.tsx";
-import AccountDashboard from "./components/account/AccountDashboard.tsx";
+import Dashboard from "./components/account/Dashboard.tsx";
 import Alergens from "./components/alergens/Alergens.tsx";
 import { CartProvider } from "./store/CartContext.tsx";
+import RequireAuth from "./components/account/RequireAuth.tsx";
 
 const store = createStore({
   authName: "_auth",
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
       {
         path: "/menu/edit",
         element: (
-          <RequireAuth requireAdmin={true}>
+          <RequireAuth requireAdmin={true} fallbackPath="/menu">
             <MenuEdit />
           </RequireAuth>
         ),
@@ -55,11 +55,20 @@ const router = createBrowserRouter([
       {
         path: "/objednavky",
         element: (
-          <RequireAuth requireAdmin={true}>
+          <RequireAuth requireAdmin={true} fallbackPath="/login">
             <AdminOrderHistory />
           </RequireAuth>
         ),
         //loader: () => import("./components/orders/AdminOrderHistory.tsx"),
+      },
+      {
+        path: "/account",
+        element: (
+          <RequireAuth requireAdmin={false} fallbackPath="/login">
+            <Dashboard />
+          </RequireAuth>
+        ),
+        //loader: () => import("./components/account/AccountDashboard.tsx"),
       },
       {
         path: "/login",
@@ -70,15 +79,6 @@ const router = createBrowserRouter([
         path: "/register",
         element: <Register />,
         //loader: () => import("./components/account/Register.tsx"),
-      },
-      {
-        path: "/account",
-        element: (
-          <RequireAuth requireAdmin={false}>
-            <AccountDashboard />
-          </RequireAuth>
-        ),
-        //loader: () => import("./components/account/AccountDashboard.tsx"),
       },
     ],
   },

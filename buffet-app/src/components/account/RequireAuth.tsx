@@ -8,17 +8,25 @@ import { dummyUser } from "../../dummyData";
 type ProtectedRouteProps = {
   children: ReactNode;
   requireAdmin: boolean;
+  fallbackPath: string;
 };
 
-const RequireAuth = ({ children, requireAdmin }: ProtectedRouteProps) => {
-  //const user: any = useAuthUser();
-  const user: User = dummyUser;
+const RequireAuth = ({
+  children,
+  requireAdmin,
+  fallbackPath,
+}: ProtectedRouteProps) => {
+  // const user: User = dummyUser;
+  const user: User | null = useAuthUser();
 
   if (!user) {
-    return <Navigate to="/login" />;
+    console.log("User not authenticated");
+    return <Navigate to={fallbackPath} />;
   }
 
-  if (requireAdmin && !user?.isAdmin) {
+  console.log("User authenticated", user);
+
+  if (requireAdmin && !user.isAdmin) {
     return <Navigate to="/menu" />;
   }
 

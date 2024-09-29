@@ -23,7 +23,8 @@ const Links: NavLinksType[] = [
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const user: User = dummyUser; //useAuthUser();
+  // const user: User = dummyUser; //useAuthUser();
+  const user: User = useAuthUser()!;
 
   const handleOpenMobileMenu = (): void => {
     setIsOpen(!isOpen);

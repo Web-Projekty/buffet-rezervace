@@ -3,7 +3,7 @@ import { formatCurrency, formatUnixDate } from "../../utils";
 import { useState } from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { LuBadgeCheck, LuBadgeX, LuBadgeInfo } from "react-icons/lu";
-import { Item, Order as OrderType } from "../../types";
+import { MenuItem, Order as OrderType } from "../../types";
 
 const StatusBadge = ({ status }: { status: OrderType["status"] }) => {
   return status === "pickedup" ? (
@@ -28,9 +28,8 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
+      initial={{ y: 100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
       className={`flex w-auto flex-col rounded-lg bg-slate-900 p-4 md:w-[45rem]`}
     >
@@ -66,7 +65,7 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
         className="flex flex-col gap-3 overflow-hidden"
       >
         <div className="flex flex-col">
-          {order.items.map((item: Item) => (
+          {order.items.map((item: MenuItem) => (
             <li
               key={item.id}
               className="flex w-[240px] flex-row items-center justify-center gap-2"

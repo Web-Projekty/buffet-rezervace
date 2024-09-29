@@ -9,9 +9,8 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
   const cartCtx = useContext(CartContext);
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
+      initial={{ x: 100, opacity: 0 }}
+      whileInView={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
       className="relative flex w-[20rem] flex-col justify-around gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black"
     >
@@ -42,7 +41,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
         </div>
 
         <div className="flex flex-row items-center justify-center">
-          {cartCtx.isItemInCart(item) ? (
+          {cartCtx.isItemInCart(item.id) ? (
             <AnimatePresence>
               <motion.div
                 key="remove-from-cart"
@@ -54,9 +53,9 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
                 <LuBadgeMinus
                   size={48}
                   className="p-2 hover:cursor-pointer"
-                  onClick={() => cartCtx.removeFromCart(item)}
+                  onClick={() => cartCtx.removeFromCart(item.id)}
                 />
-                <span>{cartCtx.getItemQuantity(item)}</span>
+                <span>{cartCtx.getItemQuantity(item.id)}</span>
                 <LuBadgePlus
                   size={48}
                   className="p-2 hover:cursor-pointer"

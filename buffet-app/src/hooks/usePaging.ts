@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Item, Order } from "../types";
 
 type PagingReturn = {
   currentPage: number;
@@ -16,10 +15,10 @@ export function usePaging(data: any[], itemsPerPage: number): PagingReturn {
   const totalPagesCount: number = Math.ceil(data.length / itemsPerPage);
   const totalListCount: number = data.length;
 
-  const displayedList: Order[] | Item[] = data.slice(
+  const displayedList: any[] = data ? data.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
-  );
+  ) : [];
   const displayedListCount: number = displayedList.length;
 
   const handleNextPage = (): void => {

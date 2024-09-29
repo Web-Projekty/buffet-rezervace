@@ -41,12 +41,12 @@ const Login = () => {
         login({
           auth: {
             token: response.data.token,
-            // type: "Bearer",
+            type: "Bearer",
           },
           userState: {
             fullName: response.data.fullName,
             email: response.data.email,
-            isAdmin: response.data.role === "admin",
+            isAdmin: response.data.isAdmin,
             class: response.data.class,
             orders: {},
           },
