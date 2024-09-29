@@ -62,6 +62,14 @@ class ApiResponse
     }
 
     /**
+     * @return array
+     */
+    public function getRequest(): array
+    {
+        return $this->request ?? null;
+    }
+
+    /**
      * @param string $key
      */
     public function removePayload(string $key): void
@@ -73,9 +81,9 @@ class ApiResponse
     }
 
     /**
-     * @param string $msg
+     * @param Error $msg
      */
-    public function setError(string $msg): void
+    public function setError(Error $msg): void
     {
         if ($this->status === Status::Failed) {
             return;
@@ -94,7 +102,18 @@ class ApiResponse
         $this->keys = $keys;
     }
 
-    public function checkKeys()
+    /**
+     * @param bool $status
+     */
+    public function setStatus(bool $status): void
+    {
+        $this->status = $status ? Status::Success : Status::Failed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkKeys(): bool
     {
         foreach ($this->keys as $key) {
             if (!isset($this->payload[$key])) {
@@ -107,7 +126,7 @@ class ApiResponse
     public function __toString()
     {
         if ($this->status === Status::Pending) {
-            $this->setError("Status is still pending");
+            $this->setError(Error::StatusPending);
         }
         return json_encode(['status' => $this->status, 'payload' => $this->payload]);
     }

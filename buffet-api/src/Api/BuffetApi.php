@@ -6,6 +6,7 @@ namespace Buffet\Api;
 
 use Buffet\Api\AuthApi;
 use Buffet\Types\ApiResponse;
+use Buffet\Types\Error;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
@@ -30,7 +31,7 @@ class BuffetApi
         $response = $this->handleApiCall();
         if ($response == null || !isset($response) || empty($response) || get_class($response) != "Buffet\Types\ApiResponse") {
             $response = new ApiResponse();
-            $response->setError("Handling api call resulted in invalid data type");
+            $response->setError(Error::InvalidDataType);
         }
 
         $html->getBody()->write((string) $response);
@@ -72,8 +73,10 @@ class BuffetApi
                 //return $this->handleVerify($request);
                 break;
 
+            case null:
             default:
-                $response->setError("Api returned an invalid value");
+                $response->setError(Error::NonExistentMethod);
+                return $response;
                 break;
         }
     }
@@ -113,7 +116,6 @@ class BuffetApi
         $password = $request['password'];
 
         $auth = new AuthApi;
-
         return $auth->register($username, $password);
     }
 
@@ -145,9 +147,15 @@ class BuffetApi
  * @return ApiResponse copy of the request
  */
 
-    function handleTest(ApiResponse $request): ApiResponse
+    function handleTest(ApiResponse $response): ApiResponse
     {
-        return $request;
+        $request = $response->getRequest();
+
+        foreach ($request as $key => $value) {
+            $response->addPayload($key, $value);
+        }
+        $response->setStatus(true);
+        return $response;
     }
 
 /**
