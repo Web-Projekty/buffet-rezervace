@@ -13,6 +13,7 @@ import Login from "./components/account/Login.tsx";
 import Register from "./components/account/Register.tsx";
 import AccountDashboard from "./components/account/AccountDashboard.tsx";
 import Alergens from "./components/alergens/Alergens.tsx";
+import { CartProvider } from "./store/CartContext.tsx";
 
 const store = createStore({
   authName: "_auth",
@@ -86,7 +87,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider store={store}>
-      <RouterProvider router={router} />
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
     </AuthProvider>
   </StrictMode>,
 );
