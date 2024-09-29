@@ -82,7 +82,7 @@ class ApiResponse
         }
         $this->status = Status::Failed;
         unset($this->payload);
-        $this->payload["msg"] = $msg ?? null;
+        $this->payload["msg"] = $msg->getValue() ?? null;
     }
 
     /**
