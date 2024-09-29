@@ -45,7 +45,7 @@ class ApiResponse
         if ($this->status == Status::Failed) {
             return;
         }
-        $payload[$key] = $payload;
+        $this->payload[$key] = $payload;
     }
 
     /**
@@ -116,8 +116,7 @@ class ApiResponse
             return;
         }
         $this->status = Status::Success;
-        unset($this->payload);
-        $this->payload["msg"] = $msg->getValue() ?? null;
+        $this->addPayload("msg", $msg->getValue() ?? null);
     }
 
     /**
@@ -127,6 +126,14 @@ class ApiResponse
     {
         unset($this->requestKeys);
         $this->requestKeys = $requestKeys;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPayloadKeys(): array
+    {
+        return $this->payloadKeys ?? null;
     }
 
     /**

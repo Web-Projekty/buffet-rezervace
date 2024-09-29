@@ -66,7 +66,7 @@ class BuffetApi
                 break;
 
             case "login":
-                //return $this->handleLogin($request);
+                return $this->handleLogin($response);
                 break;
 
             case "verify":
@@ -114,7 +114,7 @@ class BuffetApi
         $response->setPayloadKeys(["msg"]);
 
         $auth = new AuthApi;
-        if($response->hasRequestKeys()){
+        if ($response->hasRequestKeys()) {
             return $auth->register($response);
         }
         return $response;
@@ -124,20 +124,20 @@ class BuffetApi
  * API handler for user lgoin
  *
  *
- * @param  array $request API request
- * @return array API response with JWT token
+ * @param  ApiResponse $request API request
+ * @return ApiResponse API response with JWT token
  */
 
-    function handleLogin($request)
+    function handleLogin(ApiResponse $response): ApiResponse
     {
-        $this->hasAllMembers($request, ["username", "password"]);
-
-        $username = $request['username'];
-        $password = $request['password'];
+        $response->setRequestKeys(["username", "password"]);
+        $response->setPayloadKeys(["token", "username", "isAdmin", "fullName", "email", "class"]);
 
         $auth = new AuthApi;
-
-        return $auth->login($username, $password);
+        if ($response->hasRequestKeys()) {
+            return $auth->login($response);
+        }
+        return $response;
     }
 
 /**

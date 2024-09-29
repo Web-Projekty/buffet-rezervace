@@ -11,6 +11,7 @@ enum Success: string {
     ############################ Auth ############################
     // registration
     case Registration = 'Registered successfully';
+    case Login = 'Logged in successfully';
 
     /**
      * @return string

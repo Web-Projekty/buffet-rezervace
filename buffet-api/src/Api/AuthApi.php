@@ -45,15 +45,17 @@ class AuthApi
      *
      * Returns errors when user credentials are incorrect
      *
-     * @param  string $username
-     * @param  string $password
-     * @return array  Api response with JWT token and account information
+     * @param  ApiResponse $response
+     * @return ApiResponse Api response with JWT token and account information
      */
 
-    function login($username, $password)
+    function login($response)
     {
         $db = new Database;
         $jwt = new JWTApi;
+
+        $username = $response->getRequestByKey("username");
+        $password = $response->getRequestByKey("password");
 
         $result = $db->query("SELECT `password`,`isAdmin`,`fullName`,`email`,`class` FROM `users` WHERE `username` = '$username'");
 
@@ -68,7 +70,11 @@ class AuthApi
 
             $token = $jwt->getToken($username);
 
-            return ['success' => true, 'token' => $token, 'username' => $username, 'isAdmin' => $isAdmin ? true : false, 'fullName' => $fullName, 'email' => $email, 'class' => $class];
+            foreach ($response->getPayloadKeys() as $key) {
+                $response->setPayload($key, $$key);
+            }
+            $response->setSuccess(Success::Login);
+            return $response;
         } else {
             return ['success' => false, 'error' => "failed to login"];
         }
