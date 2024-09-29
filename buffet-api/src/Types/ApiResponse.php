@@ -61,6 +61,17 @@ class ApiResponse
         unset($this->payload[$key]);
     }
 
+    /**
+     * @param string $msg
+     */
+    public function setError(string $msg): void
+    {
+        $this->status = Status::Failed;
+        unset($this->payload);
+        $payload["msg"] = $msg ?? null;
+
+    }
+
     public function checkKeys()
     {
         foreach ($this->keys as $key) {

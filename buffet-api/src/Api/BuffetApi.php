@@ -11,6 +11,7 @@ use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
 class BuffetApi
 {
+     */
     function __construct(public ApiResponse $response)
     {}
 
@@ -19,8 +20,8 @@ class BuffetApi
      *
      * Handles api request calls
      *
-     * @param RequestInterface $request
-     * @param ResponseInterface $html
+     * @param  RequestInterface  $request
+     * @param  ResponseInterface $html
      * @return ResponseInterface html code
      */
 
@@ -85,8 +86,8 @@ class BuffetApi
 /**
  * API handler for token verify
  *
- * @param array $request API request
  *
+ * @param  array $request API request
  * @return array API response
  */
 
@@ -104,8 +105,8 @@ class BuffetApi
 /**
  * API handler for user registration
  *
- * @param array $request API request
  *
+ * @param  array $request API request
  * @return array API response
  */
 
@@ -124,8 +125,8 @@ class BuffetApi
 /**
  * API handler for user lgoin
  *
- * @param array $request API request
  *
+ * @param  array $request API request
  * @return array API response with JWT token
  */
 
@@ -144,8 +145,8 @@ class BuffetApi
 /**
  * API handler for data transit testing
  *
- * @param array $request API request
  *
+ * @param  array $request API request
  * @return array copy of the request
  */
 
@@ -157,9 +158,9 @@ class BuffetApi
 /**
  * Utility function for checking if all keys are present and carry data
  *
- * @param array $request API request
- * @param array $members list of all the required members
  *
+ * @param  array      $request API request
+ * @param  array      $members list of all the required members
  * @return bool|error if members missing kills the process and sends error otherwise true
  */
 
