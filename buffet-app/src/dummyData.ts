@@ -2,7 +2,8 @@ import { Alergen, MenuItem, Order, User } from "./types";
 
 export const dummyUser: User = {
   id: 1,
-  name: "Oreki Houtarou",
+  username: "houtarouo",
+  fullName: "Oreki Houtarou",
   email: "john@doe.com",
   class: "4. H",
   isAdmin: true,
@@ -13,7 +14,8 @@ export const dummyUser: User = {
       status: "pickedup",
       user: {
         id: 1,
-        name: "Oreki Houtarou",
+        username: "houtarouo",
+        fullName: "Oreki Houtarou",
         email: "john@doe.com",
         class: "4. H",
         isAdmin: true,
@@ -46,7 +48,8 @@ export const dummyUser: User = {
       status: "pending",
       user: {
         id: 1,
-        name: "Oreki Houtarou",
+        username: "houtarouo",
+        fullName: "Oreki Houtarou",
         email: "john@doe.com",
         class: "4. H",
         isAdmin: true,
@@ -78,7 +81,8 @@ export const dummyUser: User = {
 
 export const dummyUser2: User = {
   id: 2,
-  name: "Cid Kagenou",
+  username: "cidkagenou",
+  fullName: "Cid Kagenou",
   email: "john@doe.com",
   class: "2. C",
   isAdmin: false,
@@ -89,7 +93,8 @@ export const dummyUser2: User = {
       status: "pending",
       user: {
         id: 2,
-        name: "Cid Kagenou",
+        username: "cidkagenou",
+        fullName: "Cid Kagenou",
         email: "john@doe.com",
         class: "2. C",
         isAdmin: false,
@@ -121,7 +126,8 @@ export const dummyUser2: User = {
 
 export const dummyUser3: User = {
   id: 3,
-  name: "Naruto Uzumaki",
+  username: "narutouzumaki",
+  fullName: "Naruto Uzumaki",
   email: "john@doe.com",
   class: "3. B",
   isAdmin: false,
@@ -132,7 +138,8 @@ export const dummyUser3: User = {
       status: "notpickedup",
       user: {
         id: 5,
-        name: "Naruto Uzumaki",
+        username: "narutouzumaki",
+        fullName: "Naruto Uzumaki",
         email: "john@doe.com",
         class: "3. B",
         isAdmin: false,

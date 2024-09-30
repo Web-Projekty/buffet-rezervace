@@ -41,7 +41,7 @@ const AccountInformation = ({ user }: { user: User }) => {
         transition={{ duration: 0.5 }}
         className="rounded-md bg-slate-900 p-4"
       >
-        <h2 className="text-2xl font-bold">{user.name}</h2>
+        <h2 className="text-2xl font-bold">{user.fullName}</h2>
         <p className="text-lg">Email: {user.email}</p>
         <p className="text-lg">Třída: {user.class}</p>
       </motion.div>

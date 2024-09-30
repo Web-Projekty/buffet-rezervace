@@ -13,7 +13,7 @@ const UserOrderHistory = ({ list }: { list: OrderType[] }) => {
     handlePreviousPage,
   } = usePaging(list, 4);
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 md:w-[45rem]">
       <h1 className="text-2xl">Tvá historie objednávek ({totalListCount})</h1>
       <ul className="flex flex-col gap-2">
         {displayedList.map((order) => (

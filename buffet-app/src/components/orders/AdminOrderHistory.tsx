@@ -3,10 +3,9 @@ import { usePaging } from "../../hooks/usePaging";
 import { Order as OrderType } from "../../types";
 import { dummyOrders } from "../../dummyData";
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import PagingButtons from "../PagingButtons";
 import { isSameDay, parseISO } from "date-fns";
-import Input from "../../Input";
+import AdminOrderFilter from "./AdminOrderFilter";
 
 const AdminOrderHistory = () => {
   const [orders, setOrders] = useState<OrderType[]>(dummyOrders);
@@ -30,11 +29,7 @@ const AdminOrderHistory = () => {
     handlePreviousPage,
   } = usePaging(orders, 4);
 
-  const handleSaveNewOrders = () => {
-    // Save new orders to the server
-  };
-
-  const handleFilter = (e) => {
+  const handleFilter = (e: React.ChangeEvent<any>) => {
     const { name, value, type, checked } = e.target;
     setOrdersFilter((prevFilters) => ({
       ...prevFilters,
@@ -44,7 +39,7 @@ const AdminOrderHistory = () => {
 
   const applyFilters = () => {
     const filteredOrders = dummyOrders.filter((order) => {
-      const matchesName = order.user?.name
+      const matchesName = order.user?.fullName
         .toLowerCase()
         .includes(ordersFilter.name.toLowerCase());
       const matchesDate = ordersFilter.date
@@ -77,51 +72,11 @@ const AdminOrderHistory = () => {
           handlePreviousPage={handlePreviousPage}
         />
       </div>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
-        transition={{ duration: 0.5 }}
-        className="flex h-auto w-[320px] flex-col items-start justify-center gap-5 rounded-md bg-slate-900 p-10"
-      >
-        <h2 className="text-2xl">Filtr</h2>
-        <div className="flex flex-row items-center gap-2">
-          <label htmlFor="pickedup">Jméno</label>
-          <Input
-            type="text"
-            name="name"
-            id="name"
-            value={ordersFilter.name}
-            onChange={handleFilter}
-            className="rounded-md p-1 text-black placeholder-slate-400"
-          />
-        </div>
-        <div className="flex flex-row items-center gap-2">
-          <label htmlFor="pickedup">Datum</label>
-          <Input
-            type="date"
-            name="date"
-            id="date"
-            value={ordersFilter.date}
-            onChange={handleFilter}
-            className="rounded-md p-1 text-black placeholder-slate-400"
-          />
-        </div>
-        <div className="flex flex-row gap-2">
-          <label htmlFor="pickedup">Podle</label>
-          <select
-            name="status"
-            id="status"
-            className="rounded-md p-1 text-black"
-            onChange={handleFilter}
-          >
-            <option value="all">Všechny</option>
-            <option value="pickedup">Vyzvednuto</option>
-            <option value="pending">Čeká na vyzvednutí</option>
-            <option value="notpickedup">Nevyzvenduto</option>
-          </select>
-        </div>
-      </motion.div>
+      <AdminOrderFilter
+        ordersFilter={ordersFilter}
+        handleFilter={handleFilter}
+        // handleSaveNewOrders={handleSaveNewOrders}
+      />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { formatCurrency, formatUnixDate } from "../../utils";
 import { useState } from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
@@ -19,11 +19,62 @@ const StatusBadge = ({ status }: { status: OrderType["status"] }) => {
   );
 };
 
+const CancelButton = ({ handleCancel }: { handleCancel: () => void }) => {
+  return (
+    <button
+      className="rounded-md border bg-red-500 p-2 text-white hover:bg-red-700"
+      onClick={handleCancel}
+    >
+      Zrušit
+    </button>
+  );
+};
+
+const PickupButton = ({ handlePickup }: { handlePickup: () => void }) => {
+  return (
+    <button
+      className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
+      onClick={handlePickup}
+    >
+      Vyzvednuto
+    </button>
+  );
+};
+
 const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [status, setStatus] = useState<OrderType["status"]>(order.status);
 
   const handleOpen = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleCancel = () => {
+    setStatus("notpickedup");
+  };
+
+  const handlePickup = () => {
+    setStatus("pickedup");
+  };
+
+  const AnimationWrapper = ({
+    children,
+    key,
+  }: {
+    children: React.ReactNode;
+    key: string;
+  }) => {
+    return (
+      <motion.div
+        key={key}
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.5 }}
+        transition={{ duration: 0.3 }}
+      >
+        {children}
+      </motion.div>
+    );
   };
 
   return (
@@ -39,13 +90,19 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
           <p>{formatUnixDate(order.date)}</p>
           {isAdmin && order.user && (
             <p className="text-base">
-              {order.user?.name}, {order.user?.class}, {order.user?.email}
+              {order.user?.fullName}, {order.user?.class}, {order.user?.email}
             </p>
           )}
         </div>
 
         <div className="flex flex-row items-center">
-          {!isOpen && <StatusBadge status={order.status} />}
+          <AnimatePresence>
+            {!isOpen && (
+              <AnimationWrapper key="pickedup">
+                <StatusBadge status={status} />
+              </AnimationWrapper>
+            )}
+          </AnimatePresence>
           <MdKeyboardArrowLeft
             size={32}
             className={`${isOpen ? "-rotate-90" : null} cursor-pointer transition-transform duration-300 ease-in-out`}
@@ -86,23 +143,33 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
             <p>
               {formatCurrency(
                 order.items.reduce(
-                  (acc: number, item: Item) => acc + item.price,
+                  (acc: number, item: MenuItem) => acc + item.price,
                   0,
                 ),
               )}
             </p>
           </div>
-          <div>
-            <div className="flex flex-row items-center gap-2">
-              <span>
-                {order.status === "pending"
-                  ? "Čeká na vyzvednutí"
-                  : order.status === "pickedup"
-                    ? "Vyzvednuto"
-                    : "Nevyzvednuto"}
-              </span>
-              <StatusBadge status={order.status} />
-            </div>
+          <div className="flex flex-row items-center gap-2">
+            {status === "pending" && isAdmin && (
+              <PickupButton handlePickup={handlePickup} />
+            )}
+            {status === "pending" && (
+              <CancelButton handleCancel={handleCancel} />
+            )}
+            <AnimatePresence>
+              <AnimationWrapper key="status">
+                <div className="flex flex-row items-center gap-2">
+                  <span>
+                    {status === "pending"
+                      ? "Čeká na vyzvednutí"
+                      : status === "pickedup"
+                        ? "Vyzvednuto"
+                        : "Nevyzvednuto"}
+                  </span>
+                  <StatusBadge status={status} />
+                </div>
+              </AnimationWrapper>
+            </AnimatePresence>
           </div>
         </div>
       </motion.ul>

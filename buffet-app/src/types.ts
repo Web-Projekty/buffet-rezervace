@@ -1,6 +1,7 @@
 export type User = {
   id: number;
-  name: string;
+  username: string;
+  fullName: string;
   email: string;
   class: string;
   isAdmin: boolean;
