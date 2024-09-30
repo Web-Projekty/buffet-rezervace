@@ -8,9 +8,7 @@ type AdminOrderFilterProps = {
     date: string;
     status: Order["status"] | "all";
   };
-  handleFilter: (
-    e: React.ChangeEvent<any>,
-  ) => void;
+  handleFilter: (e: React.ChangeEvent<any>) => void;
 };
 
 const AdminOrderFilter = ({
@@ -34,6 +32,7 @@ const AdminOrderFilter = ({
           id="name"
           value={ordersFilter.name}
           onChange={handleFilter}
+          placeholder="Zadejte jméno"
           className="rounded-md p-1 text-black placeholder-slate-400"
         />
       </div>

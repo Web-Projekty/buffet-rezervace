@@ -28,6 +28,7 @@ type InputProps = {
   required?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  placeholder?: string;
 };
 
 const Input = ({
@@ -38,6 +39,7 @@ const Input = ({
   required = false,
   onChange,
   className,
+  placeholder,
 }: InputProps) => {
   return (
     <input
@@ -48,6 +50,7 @@ const Input = ({
       required={required}
       onChange={onChange}
       className={className}
+      placeholder={placeholder}
     />
   );
 };
