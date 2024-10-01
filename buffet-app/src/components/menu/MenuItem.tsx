@@ -57,7 +57,16 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
                     onClick={() => cartCtx.removeFromCart(item.id)}
                   />
                 </motion.div>
-                <span>{cartCtx.getItemQuantity(item.id)}</span>
+                <motion.span
+                  key={cartCtx.getItemQuantity(item.id)}
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: 10, opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="rounded-lg px-2 text-lg"
+                >
+                  {cartCtx.getItemQuantity(item.id)}
+                </motion.span>
                 <motion.div initial={{ scale: 1 }} whileTap={{ scale: 0.8 }}>
                   <LuBadgePlus
                     size={48}
