@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type PagingReturn = {
   currentPage: number;
@@ -10,15 +10,17 @@ type PagingReturn = {
   handlePreviousPage: () => void;
 };
 
-export function usePaging(data: any[], itemsPerPage: number): PagingReturn {
+export function usePaging(
+  data: any[] = [],
+  itemsPerPage: number,
+): PagingReturn {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const totalPagesCount: number = Math.ceil(data.length / itemsPerPage);
   const totalListCount: number = data.length;
 
-  const displayedList: any[] = data ? data.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  ) : [];
+  const displayedList: any[] = data
+    ? data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+    : [];
   const displayedListCount: number = displayedList.length;
 
   const handleNextPage = (): void => {
@@ -28,6 +30,11 @@ export function usePaging(data: any[], itemsPerPage: number): PagingReturn {
   const handlePreviousPage = (): void => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentPage]);
+
   return {
     currentPage,
     totalPagesCount,
