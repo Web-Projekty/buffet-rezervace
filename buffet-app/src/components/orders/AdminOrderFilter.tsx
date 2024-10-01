@@ -25,7 +25,7 @@ const AdminOrderFilter = ({
     >
       <h2 className="text-2xl">Filtr</h2>
       <div className="flex flex-row items-center gap-2">
-        <label htmlFor="pickedup">Jméno</label>
+        <label htmlFor="name">Jméno</label>
         <Input
           type="text"
           name="name"
@@ -37,7 +37,7 @@ const AdminOrderFilter = ({
         />
       </div>
       <div className="flex flex-row items-center gap-2">
-        <label htmlFor="pickedup">Datum</label>
+        <label htmlFor="date">Datum</label>
         <Input
           type="date"
           name="date"
@@ -48,7 +48,7 @@ const AdminOrderFilter = ({
         />
       </div>
       <div className="flex flex-row gap-2">
-        <label htmlFor="pickedup">Podle</label>
+        <label htmlFor="status">Podle</label>
         <select
           name="status"
           id="status"
