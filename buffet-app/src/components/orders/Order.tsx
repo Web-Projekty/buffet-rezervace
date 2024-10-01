@@ -59,14 +59,14 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
 
   const AnimationWrapper = ({
     children,
-    key,
+    keyValue,
   }: {
     children: React.ReactNode;
-    key: string;
+    keyValue: string;
   }) => {
     return (
       <motion.div
-        key={key}
+        key={keyValue}
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.5 }}
@@ -98,7 +98,7 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
         <div className="flex flex-row items-center">
           <AnimatePresence>
             {!isOpen && (
-              <AnimationWrapper key="pickedup">
+              <AnimationWrapper keyValue="pickedup">
                 <StatusBadge status={status} />
               </AnimationWrapper>
             )}
@@ -157,7 +157,7 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
               <CancelButton handleCancel={handleCancel} />
             )}
             <AnimatePresence>
-              <AnimationWrapper key="status">
+              <AnimationWrapper keyValue="status-button">
                 <div className="flex flex-row items-center gap-2">
                   <span>
                     {status === "pending"

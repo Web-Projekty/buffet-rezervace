@@ -50,17 +50,21 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
                 exit={{ opacity: 0, scale: 0.8 }}
                 className="flex transform flex-row items-center gap-3"
               >
-                <LuBadgeMinus
-                  size={48}
-                  className="p-2 hover:cursor-pointer"
-                  onClick={() => cartCtx.removeFromCart(item.id)}
-                />
+                <motion.div initial={{ scale: 1 }} whileTap={{ scale: 0.8 }}>
+                  <LuBadgeMinus
+                    size={48}
+                    className="p-2 hover:cursor-pointer"
+                    onClick={() => cartCtx.removeFromCart(item.id)}
+                  />
+                </motion.div>
                 <span>{cartCtx.getItemQuantity(item.id)}</span>
-                <LuBadgePlus
-                  size={48}
-                  className="p-2 hover:cursor-pointer"
-                  onClick={() => cartCtx.addToCart(item)}
-                />
+                <motion.div initial={{ scale: 1 }} whileTap={{ scale: 0.8 }}>
+                  <LuBadgePlus
+                    size={48}
+                    className="p-2 hover:cursor-pointer"
+                    onClick={() => cartCtx.addToCart(item)}
+                  />
+                </motion.div>
               </motion.div>
             </AnimatePresence>
           ) : (

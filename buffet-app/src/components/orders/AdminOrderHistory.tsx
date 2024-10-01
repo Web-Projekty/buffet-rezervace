@@ -29,7 +29,7 @@ const AdminOrderHistory = () => {
     handlePreviousPage,
   } = usePaging(orders, 4);
 
-  const handleFilter = (e: React.ChangeEvent<any>) => {
+  const handleFilter = (e: React.ChangeEvent<any>): void => {
     const { name, value, type, checked } = e.target;
     setOrdersFilter((prevFilters) => ({
       ...prevFilters,
@@ -37,7 +37,7 @@ const AdminOrderHistory = () => {
     }));
   };
 
-  const applyFilters = () => {
+  const applyFilters = (): void => {
     const filteredOrders = dummyOrders.filter((order) => {
       const matchesName = order.user?.fullName
         .toLowerCase()
