@@ -11,7 +11,12 @@ enum Success: string {
     ############################ Auth ############################
     // registration
     case Registration = 'Registered successfully';
+
+    // login
     case Login = 'Logged in successfully';
+
+    // JWT
+    case Verification = 'Token verified succesfully';
 
     /**
      * @return string

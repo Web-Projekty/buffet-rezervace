@@ -70,13 +70,13 @@ class BuffetApi
                 break;
 
             case "verify":
-                //return $this->handleVerify($request);
+                return $this->handleVerify($response);
                 break;
 
             case null:
             default:
-                $response->setError(Error::NonExistentMethod);
-                return $response;
+                return $response->setError(Error::NonExistentMethod);
+
                 break;
         }
     }
@@ -85,19 +85,17 @@ class BuffetApi
  * API handler for token verify
  *
  *
- * @param  array $request API request
- * @return array API response
+ * @param  ApiResponse $response API request
+ * @return ApiResponse API response
  */
 
-    function handleVerify($request)
+    function handleVerify(ApiResponse $response): ApiResponse
     {
-        $this->hasAllMembers($request, ["token"]);
-
-        $token = $request['token'];
+        $response->setRequestKeys(['token']);
 
         $jwt = new JWTApi;
 
-        return $jwt->validateToken($token);
+        return $jwt->validateToken($response);
     }
 
 /**

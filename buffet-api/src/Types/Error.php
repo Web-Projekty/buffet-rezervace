@@ -22,6 +22,16 @@ enum Error: string {
     case NonexistentUser = 'User doesn\'t exist';
     case WrongPassword = 'Wrong password';
 
+    // JWT
+
+    case BadDomain = "This JWT has been generated for a different domain";
+    case TooEarly = "Used token before it's designated usage period";
+    case TokenExpired = "This token has expired";
+    case TamperedSign = "Token signature or data have been tampered with";
+    case Corrupted = "Token's data have been corrupted";
+    case CorruptedOrNull = "Token's data have been corrupted or are null";
+    case UnexpectedValue = "Token value is unexpected";
+
     /**
      * @return string
      */
