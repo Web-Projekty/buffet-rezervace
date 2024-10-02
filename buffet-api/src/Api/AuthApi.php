@@ -18,7 +18,7 @@ class AuthApi
      * Returns errors when user profile cannot be created
      *
      * @param  ApiResponse
-     * @return ApiResponse   Api response
+     * @return ApiResponse    Api response
      */
 
     function register(ApiResponse $response): ApiResponse
@@ -74,9 +74,10 @@ class AuthApi
                 $response->setPayload($key, $$key);
             }
             $response->setSuccess(Success::Login);
-            return $response;
         } else {
-            return ['success' => false, 'error' => "failed to login"];
+            $response->setError(Error::LoginFailed);
+            //return ['success' => false, 'error' => "failed to login"];
         }
+        return $response;
     }
 }

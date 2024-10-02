@@ -18,6 +18,9 @@ enum Error: string {
     // registration
     case UserInUse = 'Username is in use';
 
+    // login
+    case LoginFailed = 'Failed to login';
+
     /**
      * @return string
      */
