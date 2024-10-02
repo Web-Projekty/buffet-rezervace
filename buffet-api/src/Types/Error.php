@@ -19,7 +19,8 @@ enum Error: string {
     case UserInUse = 'Username is in use';
 
     // login
-    case LoginFailed = 'Failed to login';
+    case NonexistentUser = 'User doesn\'t exist';
+    case WrongPassword = 'Wrong password';
 
     /**
      * @return string

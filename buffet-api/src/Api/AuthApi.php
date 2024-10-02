@@ -60,11 +60,15 @@ class AuthApi
         $result = $db->query("SELECT `password`,`isAdmin`,`fullName`,`email`,`class` FROM `users` WHERE `username` = '$username'");
 
         $assoc = $result->fetch_assoc();
-        $hash = $assoc['password'];
-        $isAdmin = $assoc['isAdmin'];
-        $fullName = $assoc['fullName'];
-        $email = $assoc['email'];
-        $class = $assoc['class'];
+        if (isset($assoc['password'])) {
+            $hash = $assoc['password'];
+            $isAdmin = $assoc['isAdmin'];
+            $fullName = $assoc['fullName'];
+            $email = $assoc['email'];
+            $class = $assoc['class'];
+        } else {
+            $response->setError(Error::NonexistentUser);
+        }
 
         if (password_verify($password, $hash)) {
 
@@ -75,7 +79,7 @@ class AuthApi
             }
             $response->setSuccess(Success::Login);
         } else {
-            $response->setError(Error::LoginFailed);
+            $response->setError(Error::WrongPassword);
             //return ['success' => false, 'error' => "failed to login"];
         }
         return $response;
