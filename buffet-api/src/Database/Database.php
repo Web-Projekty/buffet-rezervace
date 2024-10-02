@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Buffet\Database;
 
 use Buffet\Database\CredentialsManager;
@@ -41,7 +43,7 @@ class Database
     {
         $result = $this->query("SELECT COUNT(`$collumn_name`) FROM `$table_name` WHERE `$collumn_name`= '$needle'");
         $duplicate_count = $result->fetch_row()[0];
-        if($duplicate_count>0){
+        if ($duplicate_count > 0) {
             return true;
         }
         return false;
