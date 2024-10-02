@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -12,14 +13,9 @@ export function useFetch(url: string, values: any, initialValue: any = []) {
 
     async function fetchData() {
       try {
-        const response = await axios.post(url, values, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        setData(response.data);
+        const { data } = await axios.post(url, values);
+        setData(data);
         setIsLoading(false);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         setError({ message: "Failed to fetch data." });
         setData(initialValue);

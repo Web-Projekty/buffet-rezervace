@@ -2,6 +2,7 @@ import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { User } from "../../types";
+import { scaleUp } from "../../animations";
 
 const AdminButtons = ({ handleMenuEdit }: { handleMenuEdit: () => void }) => {
   return (
@@ -34,13 +35,7 @@ const AccountInformation = ({ user }: { user: User }) => {
       <h1 className="text-2xl">
         {user.isAdmin ? "Administrátor" : "Uživatel"}
       </h1>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
-        transition={{ duration: 0.5 }}
-        className="rounded-md bg-slate-900 p-4"
-      >
+      <motion.div {...scaleUp} className="rounded-md bg-slate-900 p-4">
         <h2 className="text-2xl font-bold">{user.fullName}</h2>
         <p className="text-lg">Email: {user.email}</p>
         <p className="text-lg">Třída: {user.class}</p>

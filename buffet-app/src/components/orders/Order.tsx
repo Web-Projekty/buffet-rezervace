@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { LuBadgeCheck, LuBadgeX, LuBadgeInfo } from "react-icons/lu";
 import { MenuItem, Order as OrderType } from "../../types";
+import { scaleUp } from "../../animations";
 
 const StatusBadge = ({ status }: { status: OrderType["status"] }) => {
   return status === "pickedup" ? (
@@ -21,23 +22,25 @@ const StatusBadge = ({ status }: { status: OrderType["status"] }) => {
 
 const CancelButton = ({ handleCancel }: { handleCancel: () => void }) => {
   return (
-    <button
+    <motion.button
+      {...scaleUp}
       className="rounded-md border bg-red-500 p-2 text-white hover:bg-red-700"
       onClick={handleCancel}
     >
       Zrušit
-    </button>
+    </motion.button>
   );
 };
 
 const PickupButton = ({ handlePickup }: { handlePickup: () => void }) => {
   return (
-    <button
+    <motion.button
+      {...scaleUp}
       className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
       onClick={handlePickup}
     >
       Vyzvednuto
-    </button>
+    </motion.button>
   );
 };
 
@@ -49,13 +52,7 @@ const AnimationWrapper = ({
   keyValue: string;
 }) => {
   return (
-    <motion.div
-      key={keyValue}
-      initial={{ opacity: 0, scale: 0.5 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.5 }}
-      transition={{ duration: 0.3 }}
-    >
+    <motion.div key={keyValue} {...scaleUp}>
       {children}
     </motion.div>
   );
@@ -85,7 +82,7 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
       transition={{ duration: 0.5 }}
       className={`flex w-auto flex-col rounded-lg bg-slate-900 p-4 md:w-[45rem]`}
     >
-      <div className="flex w-[380px] flex-row items-center justify-between text-xl md:w-auto">
+      <div className="flex flex-row items-center justify-between text-xl">
         <div className="flex flex-row items-center gap-2 text-xl">
           <h2>Objednávka #{order.id}</h2>
           <p>{formatUnixDate(order.date)}</p>
@@ -151,12 +148,18 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
             </p>
           </div>
           <div className="flex flex-row items-center gap-2">
-            {status === "pending" && isAdmin && (
-              <PickupButton handlePickup={handlePickup} />
-            )}
-            {status === "pending" && (
-              <CancelButton handleCancel={handleCancel} />
-            )}
+            <AnimatePresence>
+              {status === "pending" && isAdmin && (
+                <PickupButton handlePickup={handlePickup} />
+              )}
+              {status === "pending" && (
+                <CancelButton
+                  key={"cancel-button"}
+                  handleCancel={handleCancel}
+                />
+              )}
+            </AnimatePresence>
+
             <AnimatePresence>
               <AnimationWrapper keyValue="status-button">
                 <div className="flex flex-row items-center gap-2">

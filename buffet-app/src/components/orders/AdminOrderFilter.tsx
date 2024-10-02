@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Input from "../../Input";
 import { Order } from "../../types";
+import { scaleUp } from "../../animations";
 
 type AdminOrderFilterProps = {
   ordersFilter: {
@@ -17,11 +18,8 @@ const AdminOrderFilter = ({
 }: AdminOrderFilterProps) => {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.5 }}
-      className="flex h-auto w-[320px] flex-col items-start justify-center gap-5 rounded-md bg-slate-900 p-10"
+      {...scaleUp}
+      className="flex h-auto w-auto flex-col items-start justify-center gap-5 rounded-md bg-slate-900 p-10 md:w-[320px]"
     >
       <h2 className="text-2xl">Filtr</h2>
       <div className="flex flex-row items-center gap-2">

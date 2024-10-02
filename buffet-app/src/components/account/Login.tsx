@@ -32,36 +32,35 @@ const Login = () => {
     };
     try {
       setLoading(true);
-      const response = await axios.post("http://localhost/api", loginData);
+      const { data } = await axios.post("http://localhost/api", loginData);
 
-      const success: boolean = response.data.success;
-      console.log(response.data);
+      const success: boolean = data.success;
+      console.log(data);
 
       if (success) {
         login({
           auth: {
-            token: response.data.token,
+            token: data.token,
             type: "Bearer",
           },
           userState: {
-            fullName: response.data.fullName,
-            email: response.data.email,
-            isAdmin: response.data.isAdmin,
-            class: response.data.class,
+            fullName: data.fullName,
+            email: data.email,
+            isAdmin: data.isAdmin,
+            class: data.class,
             orders: {},
           },
         });
         console.log("Logged in");
-        setLoading(false);
-        navigate("/account");
+        navigate("/menu");
       } else {
         setError("Error occured");
         console.log("Error occured");
-        setLoading(false);
       }
     } catch (error) {
       setError("Error occured");
       console.log(error);
+    } finally {
       setLoading(false);
     }
   };

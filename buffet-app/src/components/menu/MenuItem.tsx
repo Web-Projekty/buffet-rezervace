@@ -6,14 +6,15 @@ import { CartContext } from "../../store/CartContext";
 import { useContext } from "react";
 
 const MenuItem = ({ item }: { item: MenuItemType }) => {
-  const cartCtx = useContext(CartContext);
+  const { addToCart, removeFromCart, getItemQuantity, isItemInCart } =
+    useContext(CartContext);
 
   const handleAddToCart = () => {
-    cartCtx.addToCart(item);
+    addToCart(item);
   };
 
   const handleRemoveFromCart = () => {
-    cartCtx.removeFromCart(item.id);
+    removeFromCart(item.id);
   };
 
   return (
@@ -37,6 +38,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
           ))}
         </ul>
       </div>
+
       <div className="flex flex-col gap-3 rounded-lg p-2">
         <div className="flex items-center font-bold">
           <h1 className="rounded-lg px-2 text-xl">{item.name}</h1>
@@ -45,18 +47,16 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
             {formatCurrency(item.price)}
           </p>
         </div>
+
         <div className="flex flex-col items-start px-2">
           <p className="rounded-lg">{item.description}</p>
         </div>
 
         <div className="flex flex-row items-center justify-center">
-          {cartCtx.isItemInCart(item.id) ? (
+          {isItemInCart(item.id) ? (
             <AnimatePresence>
               <motion.div
                 key="remove-from-cart"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
                 className="flex transform flex-row items-center gap-3"
               >
                 <motion.div initial={{ scale: 1 }} whileTap={{ scale: 0.8 }}>
@@ -67,14 +67,14 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
                   />
                 </motion.div>
                 <motion.span
-                  key={cartCtx.getItemQuantity(item.id)}
+                  key={getItemQuantity(item.id)}
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: 10, opacity: 0 }}
                   transition={{ duration: 0.5 }}
                   className="rounded-lg px-2 text-lg"
                 >
-                  {cartCtx.getItemQuantity(item.id)}
+                  {getItemQuantity(item.id)}
                 </motion.span>
                 <motion.div initial={{ scale: 1 }} whileTap={{ scale: 0.8 }}>
                   <LuBadgePlus
@@ -96,7 +96,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
               <LuBadgePlus
                 size={48}
                 className="p-2 hover:cursor-pointer"
-                onClick={() => cartCtx.addToCart(item)}
+                onClick={handleAddToCart}
               />
             </motion.div>
           )}
