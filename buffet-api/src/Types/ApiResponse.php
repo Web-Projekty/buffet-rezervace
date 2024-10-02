@@ -96,27 +96,29 @@ class ApiResponse
     /**
      * @param Error $msg
      */
-    public function setError(Error $msg): void
+    public function setError(Error $msg): ApiResponse
     {
-        if ($this->status === Status::Failed) {
-            return;
+        if ($this->status !== Status::Failed) {
+            $this->status = Status::Failed;
+            unset($this->payload);
+            $this->payload["msg"] = $msg->getValue() ?? null;
         }
-        $this->status = Status::Failed;
-        unset($this->payload);
-        $this->payload["msg"] = $msg->getValue() ?? null;
+
+        return $this;
     }
 
     /**
      * @param  Success $msg
      * @return null
      */
-    public function setSuccess(Success $msg): void
+    public function setSuccess(Success $msg): ApiResponse
     {
-        if ($this->status === Status::Failed) {
-            return;
+        if ($this->status !== Status::Failed) {
+            $this->status = Status::Success;
+            $this->addPayload("msg", $msg->getValue() ?? null);
         }
-        $this->status = Status::Success;
-        $this->addPayload("msg", $msg->getValue() ?? null);
+        
+        return $this;
     }
 
     /**
