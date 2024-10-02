@@ -41,6 +41,26 @@ const PickupButton = ({ handlePickup }: { handlePickup: () => void }) => {
   );
 };
 
+const AnimationWrapper = ({
+  children,
+  keyValue,
+}: {
+  children: React.ReactNode;
+  keyValue: string;
+}) => {
+  return (
+    <motion.div
+      key={keyValue}
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.5 }}
+      transition={{ duration: 0.3 }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [status, setStatus] = useState<OrderType["status"]>(order.status);
@@ -57,30 +77,11 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
     setStatus("pickedup");
   };
 
-  const AnimationWrapper = ({
-    children,
-    keyValue,
-  }: {
-    children: React.ReactNode;
-    keyValue: string;
-  }) => {
-    return (
-      <motion.div
-        key={keyValue}
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.5 }}
-        transition={{ duration: 0.3 }}
-      >
-        {children}
-      </motion.div>
-    );
-  };
-
   return (
     <motion.div
       initial={{ y: 100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
+      exit={{ y: 0, opacity: 0 }}
       transition={{ duration: 0.5 }}
       className={`flex w-auto flex-col rounded-lg bg-slate-900 p-4 md:w-[45rem]`}
     >

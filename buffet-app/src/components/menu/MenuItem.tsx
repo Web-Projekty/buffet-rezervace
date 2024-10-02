@@ -7,6 +7,15 @@ import { useContext } from "react";
 
 const MenuItem = ({ item }: { item: MenuItemType }) => {
   const cartCtx = useContext(CartContext);
+
+  const handleAddToCart = () => {
+    cartCtx.addToCart(item);
+  };
+
+  const handleRemoveFromCart = () => {
+    cartCtx.removeFromCart(item.id);
+  };
+
   return (
     <motion.div
       initial={{ x: 100, opacity: 0 }}
@@ -54,7 +63,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
                   <LuBadgeMinus
                     size={48}
                     className="p-2 hover:cursor-pointer"
-                    onClick={() => cartCtx.removeFromCart(item.id)}
+                    onClick={handleRemoveFromCart}
                   />
                 </motion.div>
                 <motion.span
@@ -71,7 +80,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
                   <LuBadgePlus
                     size={48}
                     className="p-2 hover:cursor-pointer"
-                    onClick={() => cartCtx.addToCart(item)}
+                    onClick={handleAddToCart}
                   />
                 </motion.div>
               </motion.div>
