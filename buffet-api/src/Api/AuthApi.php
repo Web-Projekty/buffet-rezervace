@@ -5,6 +5,7 @@ declare (strict_types = 1);
 namespace Buffet\Api;
 
 use Buffet\Database\Database;
+use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\Types\Success;
@@ -57,9 +58,8 @@ class AuthApi
         $username = $response->getRequestByKey("username");
         $password = $response->getRequestByKey("password");
 
-        $result = $db->query("SELECT `password`,`isAdmin`,`fullName`,`email`,`class` FROM `users` WHERE `username` = '$username'");
-
-        $assoc = $result->fetch_assoc();
+        $assoc = UserModel::getUserByName($username);
+        
         if (isset($assoc['password'])) {
             $hash = $assoc['password'];
             $isAdmin = $assoc['isAdmin'];

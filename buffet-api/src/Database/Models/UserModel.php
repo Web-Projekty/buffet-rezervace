@@ -33,4 +33,16 @@ class UserModel extends Model
             return false;
         }
     }
+
+    /**
+     * @param  $username
+     * @return mixed
+     */
+    public static function getUserByName($username)
+    {
+        if (UserModel::where('username', $username)->exists()) {
+            return UserModel::where('username', $username)->toArray();
+        }
+        return [];
+    }
 }

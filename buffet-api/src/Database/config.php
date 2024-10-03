@@ -9,6 +9,20 @@ $manager = new CredentialsManager;
 
 $creds = $manager->getCredentials();
 
+/**if ($credentials['success'] == true) {
+
+$db_host = $credentials['db_host'];
+$db_user = $credentials['db_user'];
+$db_pass = $credentials['db_pass'];
+$db_name = $credentials['db_name'];
+
+$this->conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
+} else {
+header('Content-Type: application/json');
+echo json_encode(['success' => false, 'error' => "credentials decrypt error"]);
+die;
+} */
+
 // Eloquent ORM Capsule setup
 $capsule = new Capsule;
 
