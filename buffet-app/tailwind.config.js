@@ -32,6 +32,7 @@ export default {
         tertiary: "#FFB400",
         quaternary: "#787878",
         quinary: "#FFFFFF",
+        transparentBlack: "rgba(0, 0, 0, 0.5)",
       },
     },
   },
