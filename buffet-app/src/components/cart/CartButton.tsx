@@ -2,14 +2,10 @@ import { useContext } from "react";
 import { PiShoppingCartSimple } from "react-icons/pi";
 import { CartContext } from "../../store/CartContext";
 import { motion } from "framer-motion";
-import { scaleUp } from "../../animations";
 
 const CartButton = () => {
-  const { getCartQuantity } = useContext(CartContext);
+  const { getCartQuantity, handleOpenCart } = useContext(CartContext);
 
-  const handleOpenCart = () => {
-    console.log("Opening cart...");
-  };
   return (
     <div
       className="relative rounded-full bg-white p-2 hover:cursor-pointer"

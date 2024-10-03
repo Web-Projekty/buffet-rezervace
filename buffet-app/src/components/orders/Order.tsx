@@ -78,7 +78,6 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
     <motion.div
       initial={{ y: 100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      exit={{ y: 0, opacity: 0 }}
       transition={{ duration: 0.5 }}
       className={`flex w-auto flex-col rounded-lg bg-slate-900 p-4 md:w-[45rem]`}
     >

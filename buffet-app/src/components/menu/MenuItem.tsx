@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { MenuItem as MenuItemType } from "../../types";
 import { CartContext } from "../../store/CartContext";
 import { useContext } from "react";
+import { scaleUp } from "../../animations";
 
 const MenuItem = ({ item }: { item: MenuItemType }) => {
   const { addToCart, removeFromCart, getItemQuantity, isItemInCart } =
@@ -52,11 +53,12 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
           <p className="rounded-lg">{item.description}</p>
         </div>
 
-        <div className="flex flex-row items-center justify-center">
-          {isItemInCart(item.id) ? (
-            <AnimatePresence>
+        <AnimatePresence>
+          <div className="flex flex-row items-center justify-center">
+            {isItemInCart(item.id) ? (
               <motion.div
                 key="remove-from-cart"
+                {...scaleUp}
                 className="flex transform flex-row items-center gap-3"
               >
                 <motion.div initial={{ scale: 1 }} whileTap={{ scale: 0.8 }}>
@@ -71,7 +73,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: 10, opacity: 0 }}
-                  transition={{ duration: 0.5 }}
+                  transition={{ duration: 0.2 }}
                   className="rounded-lg px-2 text-lg"
                 >
                   {getItemQuantity(item.id)}
@@ -84,23 +86,23 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
                   />
                 </motion.div>
               </motion.div>
-            </AnimatePresence>
-          ) : (
-            <motion.div
-              key="add-to-cart"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="flex transform items-center justify-center"
-            >
-              <LuBadgePlus
-                size={48}
-                className="p-2 hover:cursor-pointer"
-                onClick={handleAddToCart}
-              />
-            </motion.div>
-          )}
-        </div>
+            ) : (
+              <motion.div
+                key="add-to-cart"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                className="flex transform items-center justify-center"
+              >
+                <LuBadgePlus
+                  size={48}
+                  className="p-2 hover:cursor-pointer"
+                  onClick={handleAddToCart}
+                />
+              </motion.div>
+            )}
+          </div>
+        </AnimatePresence>
       </div>
     </motion.div>
   );

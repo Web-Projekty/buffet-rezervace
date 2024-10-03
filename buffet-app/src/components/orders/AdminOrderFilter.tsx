@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import Input from "../../Input";
+import Input from "../Input";
 import { Order } from "../../types";
 import { scaleUp } from "../../animations";
 

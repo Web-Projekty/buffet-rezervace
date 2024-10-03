@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import PagingButtons from "../PagingButtons";
 import { isSameDay, parseISO } from "date-fns";
 import AdminOrderFilter from "./AdminOrderFilter";
+import { AnimatePresence, motion } from "framer-motion";
 
 const AdminOrderHistory = () => {
   const [orders, setOrders] = useState<OrderType[]>(dummyOrders);
@@ -61,9 +62,20 @@ const AdminOrderHistory = () => {
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl">Objednávky ({totalListCount})</h1>
         <ul className="flex flex-col gap-2">
-          {displayedList.map((order) => (
-            <Order key={order.id} order={order} isAdmin />
-          ))}
+          <AnimatePresence>
+            {displayedList.map((order) => (
+              <motion.div
+                key={order.id}
+                layout
+                initial={{ opacity: 0, x: 0 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 50 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Order order={order} isAdmin />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </ul>
         <PagingButtons
           currentPage={currentPage}

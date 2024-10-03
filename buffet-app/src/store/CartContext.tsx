@@ -4,6 +4,8 @@ import { MenuItem } from "../types";
 type CartItem = MenuItem & { quantity: number };
 
 type CartContext = {
+  isOpen: boolean;
+  handleOpenCart: () => void;
   cartItems: CartItem[];
   addToCart: (item: MenuItem) => void;
   removeFromCart: (id: number) => void;
@@ -19,14 +21,16 @@ type CartProviderProps = {
 };
 
 export const CartContext = createContext<CartContext>({
+  isOpen: false,
+  handleOpenCart: (): void => {},
   cartItems: [],
-  addToCart: (item: MenuItem) => {},
-  removeFromCart: (id: number) => {},
-  clearCart: () => {},
-  getCartTotal: () => 0,
-  getCartQuantity: () => 0,
-  isItemInCart: (id: number) => false,
-  getItemQuantity: (id: number) => 0,
+  addToCart: (item: MenuItem): void => {},
+  removeFromCart: (id: number): void => {},
+  clearCart: (): void => {},
+  getCartTotal: (): number => 0,
+  getCartQuantity: (): number => 0,
+  isItemInCart: (id: number): boolean => false,
+  getItemQuantity: (id: number): number => 0,
 });
 
 export const CartProvider = ({ children }: CartProviderProps) => {
@@ -35,6 +39,11 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       ? JSON.parse(localStorage.getItem("cartItems")!)
       : [],
   );
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const handleOpenCart = (): void => {
+    setIsOpen(!isOpen);
+  };
 
   const addToCart = (item: MenuItem): void => {
     const isAlreadyInCart = cartItems.find(
@@ -111,6 +120,8 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     <CartContext.Provider
       value={{
         cartItems,
+        handleOpenCart,
+        isOpen,
         addToCart,
         removeFromCart,
         clearCart,
