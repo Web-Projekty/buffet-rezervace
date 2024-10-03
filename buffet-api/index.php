@@ -7,6 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
 require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/src/Database/config.php'; // Databse config file
 
 $app = AppFactory::create();
 
@@ -55,7 +56,6 @@ $corsMiddleware = function ($request, $handler) {
 
 // Add middleware to your Slim app
 $app->add($corsMiddleware);
-
 
 $app->post('/api', [BuffetApi::class, 'main']);
 
