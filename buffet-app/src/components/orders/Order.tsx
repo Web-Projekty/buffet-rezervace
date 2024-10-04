@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { LuBadgeCheck, LuBadgeX, LuBadgeInfo } from "react-icons/lu";
 import { MenuItem, Order as OrderType } from "../../types";
-import { scaleUp } from "../../animations";
+import { scaleUpAnimation } from "../../animations";
 
 const StatusBadge = ({ status }: { status: OrderType["status"] }) => {
   return status === "pickedup" ? (
@@ -23,7 +23,7 @@ const StatusBadge = ({ status }: { status: OrderType["status"] }) => {
 const CancelButton = ({ handleCancel }: { handleCancel: () => void }) => {
   return (
     <motion.button
-      {...scaleUp}
+      {...scaleUpAnimation}
       className="rounded-md border bg-red-500 p-2 text-white hover:bg-red-700"
       onClick={handleCancel}
     >
@@ -35,7 +35,7 @@ const CancelButton = ({ handleCancel }: { handleCancel: () => void }) => {
 const PickupButton = ({ handlePickup }: { handlePickup: () => void }) => {
   return (
     <motion.button
-      {...scaleUp}
+      {...scaleUpAnimation}
       className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
       onClick={handlePickup}
     >
@@ -52,7 +52,7 @@ const AnimationWrapper = ({
   keyValue: string;
 }) => {
   return (
-    <motion.div key={keyValue} {...scaleUp}>
+    <motion.div key={keyValue} {...scaleUpAnimation}>
       {children}
     </motion.div>
   );

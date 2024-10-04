@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Input from "../Input";
 import { Order } from "../../types";
-import { scaleUp } from "../../animations";
+import { scaleUpAnimation } from "../../animations";
 
 type AdminOrderFilterProps = {
   ordersFilter: {
@@ -18,7 +18,7 @@ const AdminOrderFilter = ({
 }: AdminOrderFilterProps) => {
   return (
     <motion.div
-      {...scaleUp}
+      {...scaleUpAnimation}
       className="flex h-auto w-auto flex-col items-start justify-center gap-5 rounded-md bg-slate-900 p-10 md:w-[320px]"
     >
       <h2 className="text-2xl">Filtr</h2>

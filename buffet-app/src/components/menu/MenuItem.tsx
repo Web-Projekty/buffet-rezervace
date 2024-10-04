@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { MenuItem as MenuItemType } from "../../types";
 import { CartContext } from "../../store/CartContext";
 import { useContext } from "react";
-import { scaleUp } from "../../animations";
+import { scaleUpAnimation, tapScaleAnimation } from "../../animations";
 
 const MenuItem = ({ item }: { item: MenuItemType }) => {
   const { addToCart, removeFromCart, getItemQuantity, isItemInCart } =
@@ -58,10 +58,10 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
             {isItemInCart(item.id) ? (
               <motion.div
                 key="remove-from-cart"
-                {...scaleUp}
+                {...scaleUpAnimation}
                 className="flex transform flex-row items-center gap-3"
               >
-                <motion.div initial={{ scale: 1 }} whileTap={{ scale: 0.8 }}>
+                <motion.div {...tapScaleAnimation}>
                   <LuBadgeMinus
                     size={48}
                     className="p-2 hover:cursor-pointer"
@@ -78,7 +78,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
                 >
                   {getItemQuantity(item.id)}
                 </motion.span>
-                <motion.div initial={{ scale: 1 }} whileTap={{ scale: 0.8 }}>
+                <motion.div {...tapScaleAnimation}>
                   <LuBadgePlus
                     size={48}
                     className="p-2 hover:cursor-pointer"
