@@ -11,6 +11,10 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
     useContext(CartContext);
 
   const handleAddToCart = () => {
+    if (getItemQuantity(item.id) >= 5) {
+      return;
+    }
+
     addToCart(item);
   };
 

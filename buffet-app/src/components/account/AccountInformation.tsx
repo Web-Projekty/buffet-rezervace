@@ -35,7 +35,10 @@ const AccountInformation = ({ user }: { user: User }) => {
       <h1 className="text-2xl">
         {user.isAdmin ? "Administrátor" : "Uživatel"}
       </h1>
-      <motion.div {...scaleUpAnimation} className="rounded-md bg-slate-900 p-4">
+      <motion.div
+        {...scaleUpAnimation(0.5)}
+        className="rounded-md bg-slate-900 p-4"
+      >
         <h2 className="text-2xl font-bold">{user.fullName}</h2>
         <p className="text-lg">Email: {user.email}</p>
         <p className="text-lg">Třída: {user.class}</p>

@@ -33,13 +33,16 @@ const CartModal = ({ setIsOpen }: CartModalProps) => {
         transition={{ duration: 0.3 }}
         className="fixed left-[50%] top-[50%] z-50 h-screen w-screen -translate-x-1/2 -translate-y-1/2 transform bg-transparentBlack"
       >
-        <div className="fixed left-[50%] top-[50%] z-50 -translate-x-1/2 -translate-y-1/2 transform text-white">
+        <div className="fixed left-[50%] top-[50%] z-50 -translate-x-1/2 -translate-y-1/2 transform">
           <motion.div
-            {...scaleUpAnimation}
-            className="flex h-[300px] flex-col items-center justify-between rounded-lg bg-slate-800 p-5"
+            {...scaleUpAnimation(0.3)}
+            className="flex h-[300px] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black"
           >
-            <h1>Your Cart</h1>
-            <div className="grid w-full grid-cols-3 gap-5">
+            <div className="flex h-10 w-full items-center justify-center rounded-t-lg bg-primary text-center text-xl text-black">
+              <h1>Your Cart</h1>
+            </div>
+
+            <div className="grid w-full grid-cols-3 gap-5 px-5">
               {cartCtx.cartItems.length === 0 && (
                 <p className="text-white">Your cart is empty</p>
               )}

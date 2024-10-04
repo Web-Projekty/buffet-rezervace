@@ -18,7 +18,7 @@ const AdminOrderFilter = ({
 }: AdminOrderFilterProps) => {
   return (
     <motion.div
-      {...scaleUpAnimation}
+      {...scaleUpAnimation(0.5)}
       className="flex h-auto w-auto flex-col items-start justify-center gap-5 rounded-md bg-slate-900 p-10 md:w-[320px]"
     >
       <h2 className="text-2xl">Filtr</h2>

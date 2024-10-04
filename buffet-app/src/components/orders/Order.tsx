@@ -23,7 +23,7 @@ const StatusBadge = ({ status }: { status: OrderType["status"] }) => {
 const CancelButton = ({ handleCancel }: { handleCancel: () => void }) => {
   return (
     <motion.button
-      {...scaleUpAnimation}
+      {...scaleUpAnimation()}
       className="rounded-md border bg-red-500 p-2 text-white hover:bg-red-700"
       onClick={handleCancel}
     >
@@ -35,7 +35,7 @@ const CancelButton = ({ handleCancel }: { handleCancel: () => void }) => {
 const PickupButton = ({ handlePickup }: { handlePickup: () => void }) => {
   return (
     <motion.button
-      {...scaleUpAnimation}
+      {...scaleUpAnimation()}
       className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
       onClick={handlePickup}
     >
@@ -52,7 +52,7 @@ const AnimationWrapper = ({
   keyValue: string;
 }) => {
   return (
-    <motion.div key={keyValue} {...scaleUpAnimation}>
+    <motion.div key={keyValue} {...scaleUpAnimation()}>
       {children}
     </motion.div>
   );
@@ -83,7 +83,7 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
     >
       <div className="flex flex-row items-center justify-between text-xl">
         <div className="flex flex-row items-center gap-2 text-xl">
-          <h2>Objednávka #{order.id}</h2>
+          <h2>#{order.id}</h2>
           <p>{formatUnixDate(order.date)}</p>
           {isAdmin && order.user && (
             <p className="text-base">
