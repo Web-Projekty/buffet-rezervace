@@ -58,7 +58,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
         </div>
 
         <AnimatePresence>
-          <div className="flex flex-row items-center justify-center">
+          <div className="relative flex flex-row items-center justify-center">
             {isItemInCart(item.id) ? (
               <motion.div
                 key="remove-from-cart"
@@ -72,6 +72,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
                     onClick={handleRemoveFromCart}
                   />
                 </motion.div>
+
                 <motion.span
                   key={getItemQuantity(item.id)}
                   initial={{ y: 10, opacity: 0 }}
@@ -106,6 +107,15 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
               </motion.div>
             )}
           </div>
+          {getItemQuantity(item.id) === 5 ? (
+            <motion.div
+              key="limit-reached"
+              {...scaleUpAnimation(0.2)}
+              className="absolute bottom-0 left-28"
+            >
+              <p className="text-red-400">Limit dosažen</p>
+            </motion.div>
+          ) : null}
         </AnimatePresence>
       </div>
     </motion.div>

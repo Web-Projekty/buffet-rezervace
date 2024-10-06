@@ -16,21 +16,7 @@ const Cart = () => {
   };
 
   return (
-    <motion.div
-      initial={{
-        opacity: 0,
-        scale: 0,
-      }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-      }}
-      exit={{
-        opacity: 0,
-        scale: 0,
-      }}
-      className="fixed z-50 m-auto bg-black"
-    >
+    <div className="mb-[3rem] mt-[10rem] flex flex-col items-center justify-center">
       <h1>Your Cart</h1>
       <div className="grid grid-cols-3 gap-4">
         {cartCtx.cartItems.length === 0 && (
@@ -69,7 +55,7 @@ const Cart = () => {
         <button>Close</button>
         <button>Continue</button>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { CartContext } from "../../store/CartContext";
 import { formatCurrency } from "../../utils";
 import { MenuItem } from "../../types";
+import { useNavigate } from "react-router-dom";
 
 type CartModalProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -11,6 +12,7 @@ type CartModalProps = {
 
 const CartModal = ({ setIsOpen }: CartModalProps) => {
   const cartCtx = useContext(CartContext);
+  const navigate = useNavigate();
 
   const handleAddItem = (item: MenuItem) => {
     cartCtx.addToCart(item);
@@ -22,6 +24,11 @@ const CartModal = ({ setIsOpen }: CartModalProps) => {
 
   const handleClose = () => {
     setIsOpen(false);
+  };
+
+  const handleContinue = () => {
+    setIsOpen(false);
+    navigate("/cart");
   };
 
   return (
@@ -36,13 +43,13 @@ const CartModal = ({ setIsOpen }: CartModalProps) => {
         <div className="fixed left-[50%] top-[50%] z-50 -translate-x-1/2 -translate-y-1/2 transform">
           <motion.div
             {...scaleUpAnimation(0.3)}
-            className="flex h-[300px] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black"
+            className="flex h-[500px] w-[800px] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black"
           >
             <div className="flex h-10 w-full items-center justify-center rounded-t-lg bg-primary text-center text-xl text-black">
               <h1>Your Cart</h1>
             </div>
 
-            <div className="grid w-full grid-cols-3 gap-5 px-5">
+            <div className="flex w-full flex-col gap-5 overflow-hidden px-5">
               {cartCtx.cartItems.length === 0 && (
                 <p className="text-white">Your cart is empty</p>
               )}
@@ -55,7 +62,7 @@ const CartModal = ({ setIsOpen }: CartModalProps) => {
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="object-fit h-20 w-20 rounded-md"
+                      className="h-20 w-20 rounded-md object-cover"
                     />
                     <div className="flex w-full flex-col justify-center">
                       <h1 className="text-xl font-bold">{item.name}</h1>
@@ -78,9 +85,14 @@ const CartModal = ({ setIsOpen }: CartModalProps) => {
                 );
               })}
             </div>
-            <div className="flex flex-row items-center justify-center gap-5">
+            <div className="flex flex-row items-center justify-center gap-5 text-white">
               <button onClick={handleClose}>Close</button>
-              <button>Continue</button>
+              <button
+                disabled={cartCtx.getCartQuantity() === 0}
+                onClick={handleContinue}
+              >
+                Continue
+              </button>
             </div>
           </motion.div>
         </div>

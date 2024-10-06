@@ -14,6 +14,8 @@ import Dashboard from "./components/account/Dashboard.tsx";
 import Alergens from "./components/alergens/Alergens.tsx";
 import { CartProvider } from "./store/CartContext.tsx";
 import RequireAuth from "./components/account/RequireAuth.tsx";
+import PageNotFound from "./components/error/PageNotFound.tsx";
+import Cart from "./components/cart/Cart.tsx";
 
 const store = createStore({
   authName: "_auth",
@@ -30,11 +32,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Menu />,
-        //loader: () => import("./components/menu/MenuList.tsx"),
-      },
-      {
-        path: "/menu",
+        index: true,
         element: <Menu />,
         //loader: () => import("./components/menu/MenuList.tsx"),
       },
@@ -79,6 +77,14 @@ const router = createBrowserRouter([
         path: "/register",
         element: <Register />,
         //loader: () => import("./components/account/Register.tsx"),
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
+      },
+      {
+        path: "/*",
+        element: <PageNotFound />,
       },
     ],
   },
