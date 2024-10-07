@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # PHP and Apache Web Server
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php-apache
+    volumes:
+      - ./buffet-api:/var/www/html
+      - ./buffet-api:/workspace     # Mount the backend for VSCode
+    ports:
+      - "8080:80"   # Access Apache via http://localhost:8080
+    depends_on:
+      - db
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+
+  # MariaDB Database Service
+  db:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: prestizniBuffet2305
+      MYSQL_DATABASE: buffet
+      MYSQL_USER: buffet
+      MYSQL_PASSWORD: prestizniBuffet2305
+    volumes:
+      - db_data:/var/lib/mysql
+    #ports:
+    #  - "3306:3306"
+
+  # phpMyAdmin for managing MariaDB
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: prestizniBuffet2305
+    ports:
+      - "8081:80"  # Access phpMyAdmin via http://localhost:8081
+    depends_on:
+      - db
+
+  # Node.js for React.js development (optional)
+  frontend:
+    image: node:latest
+    container_name: react-app
+    working_dir: /usr/src/app
+    volumes:
+      - ./buffet-app:/usr/src/app
+    ports:
+      - "3000:3000"   # Access React app via http://localhost:3000
+    command: ["bash", "-c", "npm install && npm run dev"]  # Runs `npm dev start` to serve the React app
+    depends_on:
+      - web
+
+volumes:
+  db_data:

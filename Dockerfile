@@ -1,28 +1,32 @@
 # Use PHP 8.3 as the base image
-FROM mcr.microsoft.com/devcontainers/php:8.3
+FROM php:8.3-apache-bookworm
 
-ARG DECRYPT_KEY
+# Původní php image s devcontainery
+#FROM mcr.microsoft.com/devcontainers/php:8.3
 
-ENV DECRYPT_KEY=${DECRYPT_KEY}
+# Enable Apache rewrite module
+RUN a2enmod rewrite
 
-# Install Node.js (version 20)
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs
+# Install composer
+RUN apt-get update && apt-get install -y git unzip zip curl
 
+# Install necessary PHP extensions
+RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 # Set the working directory inside the container
-WORKDIR /workspaces/buffet-rezervace
+WORKDIR /var/www/html
 
-# Copy the entire repository into the container's /app directory
-COPY --chown=vscode:vscode . /workspaces/buffet-rezervace
+# Copy the contents of the backend (PHP app) to the container
+COPY ./buffet-api/ /var/www/html/
 
-# Expose ports 80 for Apache and 3000 for React
+# Expose port 80 for the web server
 EXPOSE 80
-EXPOSE 3000
 
-# Set the user to vscode as specified in devcontainer.json
-USER vscode
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer install
 
 # Run the post-create script
+#RUN bash .devcontainer/start.sh d
 
-CMD ["bash", "-c", "sudo bash .devcontainer/start.sh d && tail -f /dev/null"]
+#CMD ["bash", "-c", "tail -f /dev/null"]

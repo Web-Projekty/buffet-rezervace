@@ -1,12 +1,23 @@
 {
     "name": "PHP 8.3 & React Dev Environment for Buffet",
-    "image": "mcr.microsoft.com/devcontainers/php:8.3",
+    "dockerComposeFile": ["../compose.yaml"],
+    "service": "web",  // Specify the primary service where development will happen
+    "workspaceFolder": "/var/www/html",
     "customizations": {
         "vscode": {
             "extensions": [
                 "ritwickdey.LiveServer",
-                "foxundermoon.shell-format"
-            ]
+                "foxundermoon.shell-format",
+                "ms-php.php-pack",         // PHP extensions for development
+                "bmewburn.vscode-intelephense-client", // PHP IntelliSense
+                "esbenp.prettier-vscode",  // Prettier for code formatting
+                "dbaeumer.vscode-eslint",  // ESLint for JS/React
+                "xabikos.javascriptsnippets" // JS/React snippets
+            ],
+            "settings": {
+                "php.validate.executablePath": "/usr/local/bin/php", // Ensure PHP validation works
+                "terminal.integrated.shell.linux": "/bin/bash"
+            }
         }
     },
     "features": {
@@ -18,7 +29,6 @@
         80,
         3000
     ],
-    "postStartCommand": "sudo bash .devcontainer/start.sh i",
     "portsAttributes": {
         "80": {
             "label": "Apache",
@@ -29,5 +39,7 @@
             "onAutoForward": "notify"
         }
     },
-    "remoteUser": "vscode"
-}
+    "postCreateCommand": "composer install", // Run after container is built, if using Composer
+    "postStartCommand": "sudo bash .devcontainer/start.sh i",
+    "remoteUser": "www-data"  // Set the user to match your web server's user
+  }
