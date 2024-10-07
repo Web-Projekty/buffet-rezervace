@@ -41,6 +41,8 @@ const useCart = create<cartItems>((set, get) => ({
         cartItems: [...state.cartItems, { ...item, quantity: 1 }],
       }));
     }
+
+    localStorage.setItem("cartItems", JSON.stringify(get().cartItems));
   },
   removeFromCart: (id: number) => {
     const isAlreadyInCart = get().cartItems.find(
@@ -60,8 +62,13 @@ const useCart = create<cartItems>((set, get) => ({
         ),
       }));
     }
+
+    localStorage.setItem("cartItems", JSON.stringify(get().cartItems));
   },
-  clearCart: () => set({ cartItems: [] }),
+  clearCart: () => {
+    set({ cartItems: [] });
+    localStorage.removeItem("cartItems");
+  },
   getCartTotal: () =>
     get().cartItems.reduce(
       (total, cartItem) => total + cartItem.price * cartItem.quantity,
