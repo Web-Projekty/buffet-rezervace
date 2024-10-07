@@ -2,13 +2,12 @@ import { LuBadgePlus, LuBadgeMinus } from "react-icons/lu";
 import { formatCurrency } from "../../utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { MenuItem as MenuItemType } from "../../types";
-import { CartContext } from "../../store/CartContext";
-import { useContext } from "react";
 import { scaleUpAnimation, tapScaleAnimation } from "../../animations";
+import useCart from "../../store/CartZustand";
 
 const MenuItem = ({ item }: { item: MenuItemType }) => {
   const { addToCart, removeFromCart, getItemQuantity, isItemInCart } =
-    useContext(CartContext);
+    useCart();
 
   const handleAddToCart = () => {
     if (getItemQuantity(item.id) >= 5) {

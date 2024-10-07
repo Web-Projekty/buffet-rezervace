@@ -1,29 +1,31 @@
 import { motion } from "framer-motion";
 import { scaleUpAnimation } from "../../animations";
-import { useContext } from "react";
-import { CartContext } from "../../store/CartContext";
 import { formatCurrency } from "../../utils";
 import { MenuItem } from "../../types";
 import { useNavigate } from "react-router-dom";
+import useCart from "../../store/CartZustand";
 
 type CartModalProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const CartModal = ({ setIsOpen }: CartModalProps) => {
-  const cartCtx = useContext(CartContext);
+  const {
+    handleOpenCart,
+    cartItems,
+    addToCart,
+    removeFromCart,
+    getCartQuantity,
+    getItemQuantity,
+  } = useCart();
   const navigate = useNavigate();
 
   const handleAddItem = (item: MenuItem) => {
-    cartCtx.addToCart(item);
+    addToCart(item);
   };
 
   const handleRemoveItem = (id: number) => {
-    cartCtx.removeFromCart(id);
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
+    removeFromCart(id);
   };
 
   const handleContinue = () => {
@@ -50,10 +52,10 @@ const CartModal = ({ setIsOpen }: CartModalProps) => {
             </div>
 
             <div className="flex w-full flex-col gap-5 overflow-hidden px-5">
-              {cartCtx.cartItems.length === 0 && (
-                <p className="text-white">Your cart is empty</p>
+              {cartItems.length === 0 && (
+                <p className="text-center text-white">Your cart is empty</p>
               )}
-              {cartCtx.cartItems.map((item) => {
+              {cartItems.map((item) => {
                 return (
                   <div
                     key={item.id}
@@ -68,16 +70,14 @@ const CartModal = ({ setIsOpen }: CartModalProps) => {
                       <h1 className="text-xl font-bold">{item.name}</h1>
 
                       <p className="font-bold text-gray-700">
-                        {formatCurrency(
-                          item.price * cartCtx.getItemQuantity(item.id),
-                        )}
+                        {formatCurrency(item.price * getItemQuantity(item.id))}
                       </p>
 
                       <div className="flex w-full flex-row items-center gap-2 text-black">
                         <button onClick={() => handleRemoveItem(item.id)}>
                           -
                         </button>
-                        <span>{cartCtx.getItemQuantity(item.id)}</span>
+                        <span>{getItemQuantity(item.id)}</span>
                         <button onClick={() => handleAddItem(item)}>+</button>
                       </div>
                     </div>
@@ -86,9 +86,9 @@ const CartModal = ({ setIsOpen }: CartModalProps) => {
               })}
             </div>
             <div className="flex flex-row items-center justify-center gap-5 text-white">
-              <button onClick={handleClose}>Close</button>
+              <button onClick={handleOpenCart}>Close</button>
               <button
-                disabled={cartCtx.getCartQuantity() === 0}
+                disabled={getCartQuantity() === 0}
                 onClick={handleContinue}
               >
                 Continue

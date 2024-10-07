@@ -1,10 +1,9 @@
-import { useContext } from "react";
 import { PiShoppingCartSimple } from "react-icons/pi";
-import { CartContext } from "../../store/CartContext";
 import { motion } from "framer-motion";
+import useCart from "../../store/CartZustand";
 
 const CartButton = () => {
-  const { getCartQuantity, handleOpenCart } = useContext(CartContext);
+  const { getCartQuantity, handleOpenCart } = useCart();
 
   return (
     <div

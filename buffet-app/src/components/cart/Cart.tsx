@@ -1,28 +1,26 @@
-import { useContext } from "react";
-import { CartContext } from "../../store/CartContext";
 import { formatCurrency } from "../../utils";
 import { MenuItem } from "../../types";
-import { motion } from "framer-motion";
+import useCart from "../../store/CartZustand";
 
 const Cart = () => {
-  const cartCtx = useContext(CartContext);
+  const { cartItems, getItemQuantity, removeFromCart, addToCart } = useCart();
 
   const handleAddItem = (item: MenuItem) => {
-    cartCtx.addToCart(item);
+    addToCart(item);
   };
 
   const handleRemoveItem = (id: number) => {
-    cartCtx.removeFromCart(id);
+    removeFromCart(id);
   };
 
   return (
     <div className="mb-[3rem] mt-[10rem] flex flex-col items-center justify-center">
       <h1>Your Cart</h1>
       <div className="grid grid-cols-3 gap-4">
-        {cartCtx.cartItems.length === 0 && (
+        {cartItems.length === 0 && (
           <p className="text-white">Your cart is empty</p>
         )}
-        {cartCtx.cartItems.map((item) => {
+        {cartItems.map((item) => {
           return (
             <div
               key={item.id}
@@ -37,14 +35,12 @@ const Cart = () => {
                 <h1 className="text-xl font-bold">{item.name}</h1>
 
                 <p className="font-bold text-gray-700">
-                  {formatCurrency(
-                    item.price * cartCtx.getItemQuantity(item.id),
-                  )}
+                  {formatCurrency(item.price * getItemQuantity(item.id))}
                 </p>
               </div>
               <div className="flex flex-row gap-2">
                 <button onClick={() => handleRemoveItem(item.id)}>-</button>
-                <span>{cartCtx.getItemQuantity(item.id)}</span>
+                <span>{getItemQuantity(item.id)}</span>
                 <button onClick={() => handleAddItem(item)}>+</button>
               </div>
             </div>
