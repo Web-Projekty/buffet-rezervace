@@ -23,7 +23,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
 
   return (
     <motion.div
-      initial={{ x: 100, opacity: 0 }}
+      initial={{ x: 50, opacity: 0 }}
       whileInView={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
       className="relative flex w-[20rem] flex-col justify-around gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black"
@@ -34,7 +34,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
           alt={item.name}
           className="h-[15rem] w-[20rem] rounded-lg object-cover"
         />
-        <ul className="absolute top-0 m-1 flex flex-row gap-1">
+        <ul className="absolute bottom-0 m-1 flex flex-row gap-1">
           {item.alergens.map((alergen) => (
             <li key={alergen.id} className="rounded-full bg-slate-600 p-1 px-3">
               {alergen.id}
