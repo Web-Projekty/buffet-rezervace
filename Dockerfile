@@ -13,11 +13,15 @@ RUN apt-get update && apt-get install -y git unzip zip curl
 # Install necessary PHP extensions
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
+USER www-data
+
 # Set the working directory inside the container
 WORKDIR /var/www/html
 
 # Copy the contents of the backend (PHP app) to the container
 COPY ./buffet-api/ /var/www/html/
+
+USER root
 
 # Expose port 80 for the web server
 EXPOSE 80
