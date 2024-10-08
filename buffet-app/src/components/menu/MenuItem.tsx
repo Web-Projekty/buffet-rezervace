@@ -3,7 +3,7 @@ import { formatCurrency } from "../../utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { MenuItem as MenuItemType } from "../../types";
 import { scaleUpAnimation, tapScaleAnimation } from "../../animations";
-import useCart from "../../store/CartZustand";
+import useCart from "../../store/CartStore";
 
 const MenuItem = ({ item }: { item: MenuItemType }) => {
   const { addToCart, removeFromCart, getItemQuantity, isItemInCart } =

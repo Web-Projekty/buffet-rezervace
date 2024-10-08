@@ -3,7 +3,7 @@ import { scaleUpAnimation } from "../../animations";
 import { formatCurrency } from "../../utils";
 import { MenuItem } from "../../types";
 import { useNavigate } from "react-router-dom";
-import useCart from "../../store/CartZustand";
+import useCart from "../../store/CartStore";
 
 const CartModal = () => {
   const {

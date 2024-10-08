@@ -1,6 +1,6 @@
 import { PiShoppingCartSimple } from "react-icons/pi";
 import { motion } from "framer-motion";
-import useCart from "../../store/CartZustand";
+import useCart from "../../store/CartStore";
 
 const CartButton = () => {
   const { getCartQuantity, handleOpenCart } = useCart();

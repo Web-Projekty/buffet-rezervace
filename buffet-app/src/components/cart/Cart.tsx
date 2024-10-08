@@ -1,6 +1,6 @@
 import { formatCurrency } from "../../utils";
 import { MenuItem } from "../../types";
-import useCart from "../../store/CartZustand";
+import useCart from "../../store/CartStore";
 
 const Cart = () => {
   const { cartItems, getItemQuantity, removeFromCart, addToCart } = useCart();
