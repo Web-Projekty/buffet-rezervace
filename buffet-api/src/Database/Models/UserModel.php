@@ -41,8 +41,30 @@ class UserModel extends Model
     public static function getUserByName($username)
     {
         if (UserModel::where('username', $username)->exists()) {
-            return UserModel::where('username', $username)->toArray();
+            return UserModel::where('username', $username)->first();
         }
         return [];
+    }
+
+    /**
+     * @param string $haystack
+     * @param string $needle
+     */
+    public static function isDuplicate(string $haystack, string $needle)
+    {
+        return UserModel::where($haystack, $needle)->exists();
+    }
+
+    /**
+     * @param string $username
+     * @param string $password
+     */
+    public static function createUser(string $username, string $password)
+    {
+        UserModel::create([
+            'username' => $username,
+            'password' => $password,
+            'isAdmin' => false
+        ]);
     }
 }

@@ -2,7 +2,6 @@
 
 use Buffet\Api\BuffetApi;
 use Buffet\Database\CredentialsManager;
-use Buffet\Database\Models\UserModel;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -18,7 +17,6 @@ $app->get('/', function (Request $request, Response $response, $args) {
 
     ob_start();
     //phpinfo();
-   var_dump( UserModel::getUserByName("adkfjlksdfjla"));
     include __DIR__ . "/templates/test.html";
     $html = ob_get_clean();
 

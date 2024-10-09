@@ -13,10 +13,7 @@ class Database
      * @param string $haystack
      * @param string $needle
      */
-    function isDuplicate(string $haystack, string $needle)
-    {
-        return UserModel::where($haystack, $needle)->exists();
-    }
+    
 
     /**
      * @param  $sql

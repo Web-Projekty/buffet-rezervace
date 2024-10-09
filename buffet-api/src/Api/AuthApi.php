@@ -26,17 +26,16 @@ class AuthApi
     {
         $username = $response->getRequestByKey("username");
         $password = $response->getRequestByKey("password");
-        $db = new Database;
 
         $password = password_hash($password, PASSWORD_BCRYPT);
 
-        if ($db->isDuplicate("users", "username", $username)) {
+        if (UserModel::isDuplicate("username", $username)) {
 
             $response->setError(Error::UserInUse);
             return $response;
         }
 
-        $db->query("INSERT INTO `users` (`id`, `username`, `password`,`isAdmin`) VALUES (NULL, '$username', '$password',0)");
+        UserModel::createUser($username, $password);
         $response->setSuccess(Success::Registration);
         return $response;
     }
@@ -52,14 +51,13 @@ class AuthApi
 
     function login($response)
     {
-        $db = new Database;
         $jwt = new JWTApi;
 
         $username = $response->getRequestByKey("username");
         $password = $response->getRequestByKey("password");
 
         $assoc = UserModel::getUserByName($username);
-        
+
         if (isset($assoc['password'])) {
             $hash = $assoc['password'];
             $isAdmin = $assoc['isAdmin'];
@@ -67,7 +65,7 @@ class AuthApi
             $email = $assoc['email'];
             $class = $assoc['class'];
         } else {
-            $response->setError(Error::NonexistentUser);
+            return $response->setError(Error::NonexistentUser);
         }
 
         if (password_verify($password, $hash)) {
