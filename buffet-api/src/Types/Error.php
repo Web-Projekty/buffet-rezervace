@@ -15,6 +15,10 @@ enum Error: string {
     case MissingPayloadKeys = 'Some or all of the payload kays have been left undefined';
 
     ############################ Auth ############################
+    // credManager
+    case NoEnv = 'The enviromental variable for credManager is corrupted or missing.';
+    case FailedDecrypt = 'Failed decryption of database credentials';
+
     // registration
     case UserInUse = 'Username is in use';
 

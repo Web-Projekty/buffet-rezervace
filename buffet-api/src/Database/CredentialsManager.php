@@ -3,6 +3,9 @@
 namespace Buffet\Database;
 
 ## uses external library to parse .env file
+
+use Buffet\Types\ApiResponse;
+use Buffet\Types\Error;
 use Dotenv\Dotenv;
 
 class CredentialsManager
@@ -34,10 +37,7 @@ class CredentialsManager
         $passH = $json->{'db_pass'};
 
         if (empty($_ENV['DECRYPT_KEY']) || !isset($_ENV['DECRYPT_KEY'])) {
-            return [
-                'error' => "failed to decrypt credentials",
-                'success' => false,
-            ];
+            return (new ApiResponse())->setError(Error::FailedDecrypt);
         }
 
         $username = openssl_decrypt($userH, $cipher, $_ENV['DECRYPT_KEY']);
