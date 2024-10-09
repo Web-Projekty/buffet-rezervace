@@ -8,18 +8,37 @@ import { dummyUser } from "../dummyData";
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-type NavLinksType = {
+type NavLinks = {
   id: number;
   name: string;
   path: string;
   requireAdmin?: boolean;
 };
 
-const Links: NavLinksType[] = [
+const NavLinks: NavLinks[] = [
   { id: 1, name: "Menu", path: "/" },
   { id: 2, name: "Alergeny", path: "/alergeny" },
   { id: 3, name: "Objednávky", path: "/objednavky", requireAdmin: true },
 ];
+
+const Links = ({ user }: { user: User }) => {
+  return NavLinks.map(({ id, path, name, requireAdmin }) => {
+    return requireAdmin && !user?.isAdmin ? null : (
+      <li key={id}>
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? "flex cursor-default flex-row items-center justify-center rounded-lg p-2 font-bold md:bg-white"
+              : "flex flex-row items-center justify-center p-2"
+          }
+          to={path}
+        >
+          {name}
+        </NavLink>
+      </li>
+    );
+  });
+};
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -34,22 +53,7 @@ const Navbar = () => {
     <nav className="relative">
       <div className="hidden flex-row md:flex">
         <ul className="relative flex w-auto flex-row items-center justify-between gap-5 text-xl text-black">
-          {Links.map(({ id, path, name, requireAdmin }) => {
-            return requireAdmin && !user?.isAdmin ? null : (
-              <li key={id}>
-                <NavLink
-                  className={({ isActive }) =>
-                    isActive
-                      ? "flex cursor-default flex-row items-center justify-center rounded-lg bg-white p-2 font-bold"
-                      : "flex flex-row items-center justify-center p-2"
-                  }
-                  to={path}
-                >
-                  {name}
-                </NavLink>
-              </li>
-            );
-          })}
+          <Links user={user} />
           <div className="flex flex-row gap-5">
             <CartButton />
             <AccountButton />
@@ -73,19 +77,7 @@ const Navbar = () => {
         <li className="absolute right-5 top-5">
           <IoIosClose size={64} onClick={handleOpenMobileMenu} />
         </li>
-        {Links.map(({ id, path, name, requireAdmin }) => {
-          return requireAdmin && !user?.isAdmin ? null : (
-            <li key={id}>
-              <NavLink
-                className="flex flex-row items-center justify-center p-2"
-                to={path}
-                onClick={handleOpenMobileMenu}
-              >
-                {name}
-              </NavLink>
-            </li>
-          );
-        })}
+        <Links user={user} />
       </motion.ul>
     </nav>
   );
