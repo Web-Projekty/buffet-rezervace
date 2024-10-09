@@ -1,7 +1,12 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace Buffet\Api;
 
+use Buffet\Types\ApiResponse;
+use Buffet\Types\Error;
+use Buffet\Types\Success;
 use DomainException;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
@@ -16,12 +21,11 @@ class JWTApi
     /**
      * Generates and returns a signed JWT token
      *
-     * @param string $username username of the user generating this JWT
-     * 
+     * @param  string $username username of the user generating this JWT
      * @return string generated JWT token
      */
 
-    function getToken($username)
+    function getToken(string $username): string
     {
         $user_id = -1;
         $key = 'example_key';
@@ -42,55 +46,58 @@ class JWTApi
     /**
      * Decodes JWT token and returns an object with details (should be array (WIP))
      *
-     * @param string $token JWT token to decode
-     * 
-     * @return object decoded JWT token
+     * @param  ApiResponse $token  JWT token to decode
+     * @return mixed       decoded JWT token
      */
 
-    function decodeToken($token)
+    function decodeToken(ApiResponse $response)
     {
+        $token = $response->getRequestByKey('token');
         $key = 'example_key';
         try {
             $dec = JWT::decode($token, new Key($key, 'HS384'));
         } catch (SignatureInvalidException $e) {
-            return ['success' => false, 'error' => "tampered signature"];
+            return $response->setError(Error::TamperedSign);
         } catch (InvalidArgumentException $e) {
-            return ['success' => false, 'error' => "corrupted data or null"];
+            return $response->setError(Error::CorruptedOrNull);
         } catch (DomainException $e) {
-            return ['success' => false, 'error' => "corrupted data"];
+            return $response->setError(Error::Corrupted);
         } catch (ExpiredException $e) {
-            return ['success' => false, 'error' => "token expired"];
+            return $response->setError(Error::TokenExpired);
         } catch (UnexpectedValueException $e) {
-            return ['success' => false, 'error' => "unexpected value"];
+            return $response->setError(Error::UnexpectedValue);
         }
         return $dec;
     }
 
 /**
-     * Verifies JWT token
-     *
-     * @param string $token JWT token to verify
-     * 
-     * @return array API response
-     */
+ * Verifies JWT token
+ *
+ * @param  ApiResponse $response JWT token to verify
+ * @return ApiResponse API response
+ */
 
-
-    function validateToken($token)
+    function validateToken(ApiResponse $response): ApiResponse
     {
-        $jwt = $this->decodeToken($token);
-        if (is_array($jwt)) {
-            return $jwt;
+
+        $jwt = $this->decodeToken($response);
+
+        if ($jwt instanceof ApiResponse) {
+            return $response;
         }
 
-        if ($jwt->iss != $_SERVER['HTTP_HOST'])
-            return ['success' => false, 'error' => "bad domain"];
+        if ($jwt->iss != $_SERVER['HTTP_HOST']) {
+            return $response->setError(Error::BadDomain);
+        }
 
-        if ($jwt->iat > time())
-            return ['success' => false, 'error' => "too early"];
+        if ($jwt->iat > time()) {
+            return $response->setError(Error::TooEarly);
+        }
 
-        if ($jwt->exp < time())
-            return ['success' => false, 'error' => "too late"];
+        if ($jwt->exp < time()) {
+            return $response->setError(Error::TokenExpired);
+        }
 
-        return ['success' => true, 'error' => "verification successuful"];
+        return $response->setSuccess(Success::Verification);
     }
 }

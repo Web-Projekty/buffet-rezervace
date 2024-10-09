@@ -36,7 +36,7 @@ class CredentialsManager
         if (empty($_ENV['DECRYPT_KEY']) || !isset($_ENV['DECRYPT_KEY'])) {
             return [
                 'error' => "failed to decrypt credentials",
-                'success' => false
+                'success' => false,
             ];
         }
 
@@ -49,12 +49,12 @@ class CredentialsManager
                 'db_user' => $username,
                 'db_pass' => $password,
                 'db_name' => $json->{'db_name'},
-                'success' => true
+                'success' => true,
             ];
         } else {
             $out = [
                 'error' => "failed to decrypt credentials",
-                'success' => false
+                'success' => false,
             ];
         }
 
@@ -62,7 +62,7 @@ class CredentialsManager
     }
 
     /**
-     * Takes two parameters, encrypts them and saves them to a json file 
+     * Takes two parameters, encrypts them and saves them to a json file
      *
      * Uses openssl encryption
      *
@@ -90,7 +90,7 @@ class CredentialsManager
             'db_host' => 'localhost',
             'db_user' => $userH,
             'db_pass' => $passH,
-            'db_name' => 'database_name'
+            'db_name' => 'database_name',
         ];
         fwrite($file, json_encode($config, JSON_PRETTY_PRINT));
         fclose($file);

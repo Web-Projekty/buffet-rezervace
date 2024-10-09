@@ -1,0 +1,17 @@
+version: 2
+updates:
+    # Composer updates
+    - package-ecosystem: "composer"
+      directory: "/buffet-api" # Adjust this to your composer project directory
+      schedule:
+          interval: "monthly"
+      commit-message:
+          prefix: "composer"
+
+    # npm updates
+    - package-ecosystem: "npm"
+      directory: "/buffet-app" # Adjust this to your npm project directory
+      schedule:
+          interval: "monthly"
+      commit-message:
+          prefix: "npm"

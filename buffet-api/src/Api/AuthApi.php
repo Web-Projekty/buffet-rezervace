@@ -1,8 +1,14 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace Buffet\Api;
 
 use Buffet\Database\Database;
+use Buffet\Database\Models\UserModel;
+use Buffet\Types\ApiResponse;
+use Buffet\Types\Error;
+use Buffet\Types\Success;
 
 class AuthApi
 {
@@ -12,23 +18,26 @@ class AuthApi
      *
      * Returns errors when user profile cannot be created
      *
-     * @param string $username
-     * @param string $password
-     * @return array Api response
+     * @param  ApiResponse
+     * @return ApiResponse    Api response
      */
 
-    function register($username, $password)
+    function register(ApiResponse $response): ApiResponse
     {
-        $db = new Database;
+        $username = $response->getRequestByKey("username");
+        $password = $response->getRequestByKey("password");
 
         $password = password_hash($password, PASSWORD_BCRYPT);
 
-        if ($db->isDuplicate("users", "username", $username)) {
-            return ['success' => false, 'error' => "username is in use"];
+        if (UserModel::isDuplicate("username", $username)) {
+
+            $response->setError(Error::UserInUse);
+            return $response;
         }
 
-        $db->query("INSERT INTO `users` (`id`, `username`, `password`) VALUES (NULL, '$username', '$password')");
-        return ['success' => true, 'error' => "registered successfully"];
+        UserModel::createUser($username, $password);
+        $response->setSuccess(Success::Registration);
+        return $response;
     }
 
     /**
@@ -36,27 +45,41 @@ class AuthApi
      *
      * Returns errors when user credentials are incorrect
      *
-     * @param string $username
-     * @param string $password
-     * @return array Api response with JWT token
+     * @param  ApiResponse $response
+     * @return ApiResponse Api response with JWT token and account information
      */
 
-    function login($username, $password)
+    function login($response)
     {
-        $db = new Database;
         $jwt = new JWTApi;
 
-        $result = $db->query("SELECT `password` FROM `users` WHERE `username` = '$username'");
+        $username = $response->getRequestByKey("username");
+        $password = $response->getRequestByKey("password");
 
-        $hash = $result->fetch_row()[0];
+        $assoc = UserModel::getUserByName($username);
+
+        if (isset($assoc['password'])) {
+            $hash = $assoc['password'];
+            $isAdmin = $assoc['isAdmin'];
+            $fullName = $assoc['fullName'];
+            $email = $assoc['email'];
+            $class = $assoc['class'];
+        } else {
+            return $response->setError(Error::NonexistentUser);
+        }
 
         if (password_verify($password, $hash)) {
 
             $token = $jwt->getToken($username);
 
-            return ['success' => true, 'token' => $token];
+            foreach ($response->getPayloadKeys() as $key) {
+                $response->setPayload($key, $$key);
+            }
+            $response->setSuccess(Success::Login);
         } else {
-            return ['success' => false, 'error' => "failed to login"];
+            $response->setError(Error::WrongPassword);
+            //return ['success' => false, 'error' => "failed to login"];
         }
+        return $response;
     }
 }
