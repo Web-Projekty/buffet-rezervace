@@ -49,7 +49,7 @@ const CartModal = () => {
                 <h1>Your Cart</h1>
               </div>
 
-              <div className="flex w-full flex-col gap-5 overflow-hidden px-5">
+              <div className="grid w-full grid-cols-3 gap-5 overflow-hidden px-5">
                 {cartItems.length === 0 && (
                   <p className="text-center text-white">Your cart is empty</p>
                 )}
@@ -73,7 +73,7 @@ const CartModal = () => {
                           )}
                         </p>
 
-                        <div className="flex w-full flex-row items-center gap-2 text-black">
+                        <div className="flex w-full flex-row items-center gap-2 font-semibold text-black">
                           <button onClick={() => handleRemoveItem(item.id)}>
                             -
                           </button>
