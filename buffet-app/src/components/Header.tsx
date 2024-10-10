@@ -16,8 +16,6 @@ const Header = () => {
       }
     };
 
-    console.log("Reseting scroll");
-
     window.addEventListener("scroll", handleScroll);
 
     return () => {
