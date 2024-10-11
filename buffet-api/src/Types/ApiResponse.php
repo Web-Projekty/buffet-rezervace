@@ -186,6 +186,10 @@ class ApiResponse
         return true;
     }
 
+    public function hasFailed(){
+        return $this->status === Status::Failed;
+    }
+
     public function __toString()
     {
         if (!$this->hasRequestKeys()) {

@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
 require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/src/Database/config.php'; // Databse config file
+//require __DIR__ . '/src/Database/config.php'; // Databse config file
 
 $app = AppFactory::create();
 

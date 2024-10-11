@@ -5,6 +5,7 @@ declare (strict_types = 1);
 namespace Buffet\Api;
 
 use Buffet\Api\AuthApi;
+use Buffet\Database\DatabaseManager;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Psr\Http\Message\ResponseInterface;
@@ -55,6 +56,13 @@ class BuffetApi
          * @var ApiResponse
          */
         $response = new ApiResponse($request);
+
+        $dbMan = new DatabaseManager($response);
+        $dbMan->setupConnection();
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
 
         switch ($request['requestType']) {
             case "test":

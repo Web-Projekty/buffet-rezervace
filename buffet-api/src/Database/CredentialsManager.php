@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Buffet\Database;
 
 ## uses external library to parse .env file
@@ -11,6 +13,12 @@ use Dotenv\Dotenv;
 class CredentialsManager
 {
     /**
+     * @param ApiResponse $response
+     */
+    function __construct(private ApiResponse $response)
+    {}
+
+    /**
      * Returns decrypted database credentials or an error msg
      *
      * Uses openssl decryption
@@ -19,7 +27,9 @@ class CredentialsManager
      */
     function getCredentials(): array
     {
-        $this->envCheck();
+        if (!$this->envExists()) {
+            return ['success' => false];
+        }
 
         ## loads .env file
         $dotenv = Dotenv::createImmutable(__DIR__);
@@ -37,7 +47,7 @@ class CredentialsManager
         $passH = $json->{'db_pass'};
 
         if (empty($_ENV['DECRYPT_KEY']) || !isset($_ENV['DECRYPT_KEY'])) {
-            return (new ApiResponse())->setError(Error::FailedDecrypt);
+            return $this->response->setError(Error::FailedDecrypt);
         }
 
         $username = openssl_decrypt($userH, $cipher, $_ENV['DECRYPT_KEY']);
@@ -49,13 +59,10 @@ class CredentialsManager
                 'db_user' => $username,
                 'db_pass' => $password,
                 'db_name' => $json->{'db_name'},
-                'success' => true,
+                'success' => true
             ];
         } else {
-            $out = [
-                'error' => "failed to decrypt credentials",
-                'success' => false,
-            ];
+            $out = ['success' => false];
         }
 
         return $out;
@@ -66,13 +73,13 @@ class CredentialsManager
      *
      * Uses openssl encryption
      *
-     * @param string $username Username to encrypt.
-     * @param string $password Password to encrypt.
-     * @return array Description of the return value.
+     * @param  string $username   Username to encrypt.
+     * @param  string $password   Password to encrypt.
+     * @return array  Description of the return value.
      */
     function createCredentials($username, $password)
     {
-        $this->envCheck();
+        $this->envExists();
 
         ## loads .env file
         $dotenv = Dotenv::createImmutable(__DIR__);
@@ -90,18 +97,18 @@ class CredentialsManager
             'db_host' => 'localhost',
             'db_user' => $userH,
             'db_pass' => $passH,
-            'db_name' => 'database_name',
+            'db_name' => 'database_name'
         ];
         fwrite($file, json_encode($config, JSON_PRETTY_PRINT));
         fclose($file);
     }
 
-    function envCheck()
+    function envExists(): bool
     {
         if (!file_exists(__DIR__ . "/.env")) {
-            header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'error' => "no .env file for database credentials decryption"]);
-            die;
+            $this->response->setError(Error::NoEnv);
+            return false;
         }
+return true;
     }
 }
