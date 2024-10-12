@@ -4,6 +4,8 @@ stages:
 phpunit:
     stage: PHP Unit Tests
     image: php:8.3-alpine
+    volumes:
+      - ./buffet-api:/var/www/html:rw
     before_script:
         - apk add --no-cache bash git unzip libzip-dev oniguruma-dev
         - docker-php-ext-install mysqli
