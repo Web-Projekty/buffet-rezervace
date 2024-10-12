@@ -3,9 +3,9 @@ stages:
 
 phpunit:
   stage: PHP Unit Tests
-  image: php:8.3
+  image: php:8.3-alpine
   before_script:
-    - apt-get update && apt-get install -y bash git unzip libzip-dev libonig-dev
+    - apt-get update && apt-get install -y git unzip libzip-dev libonig-dev
     - docker-php-ext-install mysqli
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - cd buffet-api
