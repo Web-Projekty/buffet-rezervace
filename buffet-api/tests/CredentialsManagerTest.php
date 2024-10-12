@@ -9,6 +9,9 @@ require __DIR__ . '/../vendor/autoload.php';
 class CredentialsManagerTest extends TestCase
 {
 
+    /**
+     * @var mixed
+     */
     protected $credentialsManager;
 
     protected function setUp(): void
@@ -22,7 +25,7 @@ class CredentialsManagerTest extends TestCase
     #[TestDox('Test getCredentials() with success')]
     public function testGetCredentialsSuccess()
     {
-
+        $this->assertTrue(false);
     }
 
 }
