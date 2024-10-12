@@ -5,11 +5,10 @@ phpunit:
     stage: PHP Unit Tests
     image: php:8.3-alpine
     before_script:
-        - apk add --no-cache bash git unzip libzip-dev oniguruma-dev
-        - docker-php-ext-install mysqli
+        - apk add --no-cache bash git unzip libzip-dev oniguruma-dev sudo
+        - sudo docker-php-ext-install mysqli
         - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
         - cd buffet-api
         - composer install
     script:
         - ./vendor/bin/phpunit tests --testdox --colors=always
-    user: root
