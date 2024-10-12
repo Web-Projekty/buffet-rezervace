@@ -23,7 +23,7 @@ WORKDIR /var/www/html
 COPY ./buffet-api/ /var/www/html/
 
 # Install composer
-RUN composer install
+RUN composer install --no-interaction
 
 # Expose port 80 for the web server
 EXPOSE 80
