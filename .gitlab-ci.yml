@@ -2,7 +2,7 @@ stages:
   - PHP Unit Tests
 
 phpunit:
-  stage: Tests
+  stage: PHP Unit Tests
   image: php:8.3
   before_script:
     - apt-get update && apt-get install -y git unzip libzip-dev libonig-dev
