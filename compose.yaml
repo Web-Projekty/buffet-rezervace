@@ -15,7 +15,7 @@ services:
             - db
         environment:
             - APACHE_DOCUMENT_ROOT=/var/www/html
-        command: ["bash", "-c", "composer install && apache2-foreground"]
+        command: ["bash", "-c", "composer update && apache2-foreground"]
 
     # MariaDB Database Service
     db:
