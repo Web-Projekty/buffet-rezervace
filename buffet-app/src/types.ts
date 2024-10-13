@@ -29,4 +29,5 @@ export type Alergen = {
   id: number;
   name: string;
   description: string;
+  image: string;
 };
