@@ -20,5 +20,8 @@
             "name": "Adam Vlček",
             "email": "vlcek-adam@seznam.cz"
         }
-    ]
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^11"
+    }
 }

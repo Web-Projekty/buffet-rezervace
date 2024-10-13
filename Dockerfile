@@ -20,10 +20,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 WORKDIR /var/www/html
 
 # Copy the contents of the backend (PHP app) to the container
-COPY ./buffet-api/ /var/www/html/
+#COPY ./buffet-api/ /var/www/html/
 
 # Install composer
-RUN composer install --no-interaction
+#RUN composer install --no-interaction
 
 # Expose port 80 for the web server
 EXPOSE 80
