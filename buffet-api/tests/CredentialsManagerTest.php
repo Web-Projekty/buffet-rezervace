@@ -16,7 +16,7 @@ class CredentialsManagerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->credentialsManager = new CredentialsManager();
+        //$this->credentialsManager = new CredentialsManager();
 
         // Set up a mock .env environment for testing
 
