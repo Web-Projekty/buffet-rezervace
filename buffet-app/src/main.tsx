@@ -93,9 +93,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider store={store}>
-      <CartProvider>
-        <RouterProvider router={router} />
-      </CartProvider>
+      {/* <CartProvider> */}
+      <RouterProvider router={router} />
+      {/* </CartProvider> */}
     </AuthProvider>
   </StrictMode>,
 );
