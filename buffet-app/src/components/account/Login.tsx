@@ -69,6 +69,11 @@ const Login = () => {
     navigate("/register");
   };
 
+  const handleResetLogin = () => {
+    setError("");
+    setFormData({ username: "", password: "" });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 50 }}
@@ -84,6 +89,7 @@ const Login = () => {
             type="text"
             placeholder="Username"
             value={formData.username}
+            disabled={loading || error !== ""}
             onChange={(e) =>
               setFormData({ ...formData, username: e.target.value })
             }
@@ -93,6 +99,7 @@ const Login = () => {
             type="password"
             placeholder="Password"
             value={formData.password}
+            disabled={loading || error !== ""}
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
             }
@@ -109,8 +116,13 @@ const Login = () => {
           </div>
         </div>
         {error ? (
-          <div className="text-wrap rounded-md bg-red-500 p-2 text-center">
-            Špatné heslo nebo uživatelské jméno
+          <div className="flex w-full flex-col items-center gap-2 text-center">
+            <span className="text-wrap rounded-md bg-red-500 p-2">
+              Špatné heslo nebo uživatelské jméno
+            </span>
+            <span onClick={handleResetLogin} className="hover:cursor-pointer">
+              Znovu
+            </span>
           </div>
         ) : loading ? (
           <div className="flex items-center justify-center">
