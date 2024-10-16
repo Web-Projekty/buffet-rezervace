@@ -25,14 +25,13 @@ const loadCartItems = (): CartItem[] => {
 const useCart = create<cartItems>((set, get) => ({
   cartItems: loadCartItems(),
   addToCart: (item: MenuItem) => {
-    const isAlreadyInCart = get().cartItems.find(
-      (cartItem) => cartItem.id === item.id,
-    );
+    const isAlreadyInCart = get().isItemInCart(item.id);
 
     if (isAlreadyInCart) {
-      if (isAlreadyInCart?.quantity >= maxItems) {
+      if (get().getItemQuantity(item.id) >= maxItems) {
         return;
       }
+
       set((state) => ({
         cartItems: state.cartItems.map((cartItem) =>
           cartItem.id === item.id
@@ -49,11 +48,13 @@ const useCart = create<cartItems>((set, get) => ({
     localStorage.setItem("cartItems", JSON.stringify(get().cartItems));
   },
   removeFromCart: (id: number) => {
-    const isAlreadyInCart = get().cartItems.find(
-      (cartItem) => cartItem.id === id,
-    );
+    const isAlreadyInCart = get().isItemInCart(id);
 
-    if (isAlreadyInCart?.quantity === 1) {
+    if (!isAlreadyInCart) {
+      return;
+    }
+
+    if (get().getItemQuantity(id) === 1) {
       set((state) => ({
         cartItems: state.cartItems.filter((cartItem) => cartItem.id !== id),
       }));
