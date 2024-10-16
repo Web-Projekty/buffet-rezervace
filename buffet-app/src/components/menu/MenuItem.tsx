@@ -26,7 +26,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
       initial={{ x: 50, opacity: 0 }}
       whileInView={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="relative flex w-[20rem] flex-col justify-around gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black"
+      className="relative flex h-[26rem] w-[18rem] flex-col justify-around gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black"
     >
       <div className="relative">
         <img
