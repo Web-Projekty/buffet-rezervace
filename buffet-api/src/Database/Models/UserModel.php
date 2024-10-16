@@ -11,7 +11,7 @@ class UserModel extends Model
     /**
      * @var string
      */
-    protected $table = 'users';
+    protected $table = 'Users';
 
     // Define the columns that are mass assignable
     /**
