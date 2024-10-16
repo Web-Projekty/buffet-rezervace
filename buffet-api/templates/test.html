@@ -37,7 +37,7 @@
             });
 
             // Send data as JSON
-            fetch('/api', {
+            fetch(window.location.href+'/api', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
