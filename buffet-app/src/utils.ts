@@ -20,6 +20,6 @@ export const formatToUnixDate = (date: string): string => {
   return Math.floor(dateObject.getTime() / 1000).toString();
 };
 
-export const matchValues = (text: any, text2: any): boolean => {
+export const matchValues = (text: string, text2: string): boolean => {
   return text === text2;
 };
