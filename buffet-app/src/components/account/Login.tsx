@@ -72,7 +72,11 @@ const Login = () => {
 
   const handleResetLogin = () => {
     setError("");
-    setFormData({ username: "", password: "" });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (error) handleResetLogin();
   };
 
   const LoginError = () => {
@@ -80,9 +84,6 @@ const Login = () => {
       <div className="flex w-full flex-col items-center gap-2 text-center">
         <span className="text-wrap rounded-md bg-red-500 p-2">
           Špatné heslo nebo uživatelské jméno
-        </span>
-        <span onClick={handleResetLogin} className="hover:cursor-pointer">
-          Znovu
         </span>
       </div>
     );
@@ -112,11 +113,9 @@ const Login = () => {
             name="username"
             value={formData.username}
             required={true}
-            onChange={(e) =>
-              setFormData({ ...formData, username: e.target.value })
-            }
+            onChange={handleChange}
             className="rounded-md border p-2 text-black"
-            placeholder="Username"
+            placeholder="Uživatelské jméno"
           />
           <Input
             type="password"
@@ -124,11 +123,9 @@ const Login = () => {
             name="password"
             value={formData.password}
             required={true}
-            onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
+            onChange={handleChange}
             className="rounded-md border p-2 text-black"
-            placeholder="Password"
+            placeholder="Heslo"
           />
           <div className="text-center">
             Ještě nejsi registrovaný?{" "}
