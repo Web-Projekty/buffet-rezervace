@@ -33,27 +33,30 @@ const Login = () => {
     };
     try {
       setLoading(true);
-      const { data } = await axios.post("http://localhost/api", loginData);
+      const { data } = await axios.post(
+        "https://wlczak.vlastas.cc/backend/api",
+        loginData,
+      );
 
-      const success: boolean = data.success;
+      const success: boolean = data.status === "success";
       console.log(data);
 
       if (success) {
         login({
           auth: {
-            token: data.token,
+            token: data.payload.token,
             type: "Bearer",
           },
           userState: {
-            fullName: data.fullName,
-            email: data.email,
-            isAdmin: data.isAdmin,
-            class: data.class,
-            orders: {},
+            fullName: data.payload.fullName,
+            email: data.payload.email,
+            isAdmin: data.payload.isAdmin === 1 ? true : false,
+            class: data.payload.class,
+            orders: [],
           },
         });
         console.log("Logged in");
-        navigate("/menu");
+        navigate("/");
       } else {
         setError("Error occured");
         console.log("Error occured");
