@@ -42,8 +42,8 @@ const Links = ({ user }: { user: User }) => {
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const user: User = dummyUser;
-  // const user: User = useAuthUser()!;
+  //const user: User = dummyUser;
+  const user: User = useAuthUser()!;
 
   const handleOpenMobileMenu = (): void => {
     setIsOpen(!isOpen);
