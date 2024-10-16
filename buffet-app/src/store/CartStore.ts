@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { MenuItem } from "../types";
+import { maxItems } from "../constants";
 
 type CartItem = MenuItem & { quantity: number };
 
@@ -29,6 +30,9 @@ const useCart = create<cartItems>((set, get) => ({
     );
 
     if (isAlreadyInCart) {
+      if (isAlreadyInCart?.quantity >= maxItems) {
+        return;
+      }
       set((state) => ({
         cartItems: state.cartItems.map((cartItem) =>
           cartItem.id === item.id
