@@ -3,7 +3,6 @@ import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 import { Navigate } from "react-router-dom";
 import { User } from "../../types";
-import { dummyUser } from "../../dummyData";
 
 type ProtectedRouteProps = {
   children: ReactNode;
@@ -27,7 +26,7 @@ const RequireAuth = ({
   console.log("User authenticated", user);
 
   if (requireAdmin && !user.isAdmin) {
-    return <Navigate to="/menu" />;
+    return <Navigate to="/" />;
   }
 
   return <>{children}</>;
