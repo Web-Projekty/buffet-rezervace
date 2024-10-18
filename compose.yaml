@@ -22,10 +22,10 @@ services:
         image: mariadb:latest
         container_name: mariadb
         environment:
-            MYSQL_ROOT_PASSWORD: prestizniBuffet2305
-            MYSQL_DATABASE: buffet
-            MYSQL_USER: buffet
-            MYSQL_PASSWORD: prestizniBuffet2305
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         volumes:
             - db_data:/var/lib/mysql
         #ports:
@@ -37,7 +37,7 @@ services:
         container_name: phpmyadmin
         environment:
             PMA_HOST: db
-            MYSQL_ROOT_PASSWORD: prestizniBuffet2305
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
         ports:
             - "8081:80" # Access phpMyAdmin via http://localhost:8081
         depends_on:
