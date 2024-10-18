@@ -17,6 +17,8 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
     removeFromCart(item.id);
   };
 
+  const isMaxQuantity = getItemQuantity(item.id) === 5;
+
   return (
     <motion.div
       initial={{ x: 50, opacity: 0 }}
@@ -74,14 +76,14 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: 10, opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className={`rounded-lg px-2 text-lg ${getItemQuantity(item.id) >= 5 ? "bg-red-400" : "bg-slate-800"}`}
+                  className={`rounded-lg px-2 text-lg ${isMaxQuantity ? "bg-red-400" : "bg-slate-800"}`}
                 >
                   {getItemQuantity(item.id)}
                 </motion.span>
                 <motion.div {...tapScaleAnimation}>
                   <LuBadgePlus
                     size={48}
-                    className="p-2 hover:cursor-pointer"
+                    className={`p-2 hover:cursor-pointer ${isMaxQuantity ? "text-gray-400" : ""}`}
                     onClick={handleAddToCart}
                   />
                 </motion.div>
