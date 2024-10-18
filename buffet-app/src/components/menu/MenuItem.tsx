@@ -64,6 +64,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
               >
                 <motion.div {...tapScaleAnimation}>
                   <LuBadgeMinus
+                    key={"remove-from-cart"}
                     size={48}
                     className="p-2 hover:cursor-pointer"
                     onClick={handleRemoveFromCart}
@@ -82,6 +83,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
                 </motion.span>
                 <motion.div {...tapScaleAnimation}>
                   <LuBadgePlus
+                    key={"add-to-cart"}
                     size={48}
                     className={`p-2 hover:cursor-pointer ${isMaxQuantity ? "text-gray-400" : ""}`}
                     onClick={handleAddToCart}
