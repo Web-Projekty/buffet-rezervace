@@ -1,5 +1,4 @@
-export const setTokenExpiration = (): void => {
-  const expiresIn = 10;
+export const setTokenExpiration = (expiresIn: number): void => {
   const expirationTime = new Date().getTime() + expiresIn * 1000;
   console.log("Expiration time", expirationTime);
 
@@ -11,4 +10,8 @@ export const isTokenExpired = (): boolean => {
   if (!expirationTime) return true;
 
   return new Date().getTime() > parseInt(expirationTime, 10);
+};
+
+export const removeTokenExpiration = (): void => {
+  localStorage.removeItem("tokenExpiration");
 };

@@ -5,8 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { tailspin } from "ldrs";
 import Input from "../Input";
-import { refresh } from "../../refresh";
-import { isTokenExpired, setTokenExpiration } from "./loginExpiration";
+import { setTokenExpiration } from "./login";
 
 tailspin.register();
 
@@ -58,7 +57,7 @@ const Login = () => {
             orders: [],
           },
         });
-        setTokenExpiration();
+        setTokenExpiration(3600);
         navigate("/");
       } else {
         setError("Error occured");

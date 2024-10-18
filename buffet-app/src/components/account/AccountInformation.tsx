@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { User } from "../../types";
 import { scaleUpAnimation } from "../../animations";
+import { removeTokenExpiration } from "./login";
 
 const AdminButtons = ({ handleMenuEdit }: { handleMenuEdit: () => void }) => {
   return (
@@ -23,6 +24,7 @@ const AccountInformation = ({ user }: { user: User }) => {
 
   const handleLogout = () => {
     logout();
+    removeTokenExpiration();
     navigate("/login");
   };
 

@@ -2,7 +2,7 @@ import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import AccountInformation from "./AccountInformation";
 import { User } from "../../types";
 import UserOrderHistory from "../orders/UserOrderHistory";
-import { isTokenExpired } from "./loginExpiration";
+import { isTokenExpired } from "./login";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
