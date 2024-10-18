@@ -20,7 +20,7 @@ const CartModal = () => {
     <Modal isOpen={isOpen} darkBackground>
       <motion.div
         {...scaleUpAnimation(0.3)}
-        className="flex h-[500px] w-[800px] flex-col items-center justify-around rounded-lg bg-slate-800 shadow-md shadow-black"
+        className="flex h-[500px] w-[800px] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black"
       >
         <div className="flex h-10 w-full items-center justify-center rounded-t-lg bg-primary text-center text-xl text-black">
           <h1>Váš košík</h1>
