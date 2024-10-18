@@ -9,3 +9,8 @@ RewriteRule ^ index.php [QSA,L]
     Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
     Header always set Access-Control-Allow-Credentials "true"
 </IfModule>
+
+<Files .env>
+    Order allow,deny
+    Deny from all
+</Files>

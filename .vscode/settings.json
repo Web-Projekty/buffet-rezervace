@@ -1,0 +1,13 @@
+{
+    "phpfmt.passes": [
+        "GeneratePHPDoc",
+        "AlignComments",
+        "StripExtraCommaInArray",
+        "AlignDoubleSlashComments",
+        "OrderAndRemoveUseClauses",
+        "PrettyPrintDocBlocks",
+        "ReindentSwitchBlocks",
+        "SpaceBetweenMethods",
+        "AlignTypehint"
+    ]
+}
