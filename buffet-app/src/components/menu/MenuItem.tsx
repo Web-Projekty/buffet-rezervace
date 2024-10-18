@@ -10,10 +10,6 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
     useCart();
 
   const handleAddToCart = () => {
-    if (getItemQuantity(item.id) >= 5) {
-      return;
-    }
-
     addToCart(item);
   };
 
