@@ -1,30 +1,13 @@
 import { motion } from "framer-motion";
 import { scaleUpAnimation } from "../../animations";
-import { formatCurrency } from "../../utils";
-import { MenuItem } from "../../types";
 import { useNavigate } from "react-router-dom";
 import useCart from "../../store/CartStore";
 import Modal from "../Modal";
+import CartItem from "./CartItem";
 
 const CartModal = () => {
-  const {
-    isOpen,
-    handleOpenCart,
-    cartItems,
-    addToCart,
-    removeFromCart,
-    getCartQuantity,
-    getItemQuantity,
-  } = useCart();
+  const { isOpen, handleOpenCart, cartItems, getCartQuantity } = useCart();
   const navigate = useNavigate();
-
-  const handleAddItem = (item: MenuItem) => {
-    addToCart(item);
-  };
-
-  const handleRemoveItem = (id: number) => {
-    removeFromCart(id);
-  };
 
   const handleContinue = () => {
     handleOpenCart();
@@ -37,14 +20,14 @@ const CartModal = () => {
     <Modal isOpen={isOpen} darkBackground>
       <motion.div
         {...scaleUpAnimation(0.3)}
-        className="flex h-[500px] w-[800px] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black"
+        className="flex h-[500px] w-[800px] flex-col items-center justify-around rounded-lg bg-slate-800 shadow-md shadow-black"
       >
         <div className="flex h-10 w-full items-center justify-center rounded-t-lg bg-primary text-center text-xl text-black">
           <h1>Váš košík</h1>
         </div>
 
         <div
-          className={`grid w-full ${isCartEmpty ? "grid-cols-1" : "grid-cols-2"} gap-5 overflow-auto p-5`}
+          className={`flex ${isCartEmpty ? "flex-col" : "flex-row"} flex-wrap justify-center gap-5 overflow-auto px-10 py-5`}
         >
           {isCartEmpty && (
             <div className="flex flex-row items-center justify-center gap-1 text-xl text-white">
@@ -53,41 +36,19 @@ const CartModal = () => {
             </div>
           )}
           {cartItems.map((item) => {
-            return (
-              <div
-                key={item.id}
-                className="flex w-full flex-row items-center justify-between rounded-lg bg-white p-4 text-black shadow-md"
-              >
-                <div className="flex w-full flex-row items-center gap-2">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="h-20 w-20 rounded-md object-cover"
-                  />
-                  <div className="flex flex-col">
-                    <h1 className="text-xl font-bold">{item.name}</h1>
-
-                    <p className="font-bold text-gray-700">
-                      {formatCurrency(item.price * getItemQuantity(item.id))}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex flex-col justify-center">
-                  <div className="flex w-full flex-row items-center gap-2 font-semibold text-black">
-                    <button onClick={() => handleRemoveItem(item.id)}>-</button>
-                    <span>{getItemQuantity(item.id)}</span>
-                    <button onClick={() => handleAddItem(item)}>+</button>
-                  </div>
-                </div>
-              </div>
-            );
+            return <CartItem key={item.id} item={item} />;
           })}
         </div>
-        <div className="flex flex-row items-center justify-center gap-5 text-white">
-          <button onClick={handleOpenCart}>Close</button>
-          <button disabled={getCartQuantity() === 0} onClick={handleContinue}>
-            Continue
+        <div className="grid h-10 w-full grid-cols-2 grid-rows-1 gap-10 bg-slate-900 text-white">
+          <button onClick={handleOpenCart} className="mb-2">
+            Zavřít
+          </button>
+          <button
+            disabled={getCartQuantity() === 0}
+            onClick={handleContinue}
+            className="mb-2"
+          >
+            Pokračovat
           </button>
         </div>
       </motion.div>
