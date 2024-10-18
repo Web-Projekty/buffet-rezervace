@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { tailspin } from "ldrs";
 import Input from "../Input";
 import { refresh } from "../../refresh";
+import { isTokenExpired, setTokenExpiration } from "./loginExpiration";
 
 tailspin.register();
 
@@ -49,7 +50,6 @@ const Login = () => {
             token: data.payload.token,
             type: "Bearer",
           },
-          /*refresh: data.payload.token,*/
           userState: {
             fullName: data.payload.fullName,
             email: data.payload.email,
@@ -58,7 +58,7 @@ const Login = () => {
             orders: [],
           },
         });
-        console.log("Logged in");
+        setTokenExpiration();
         navigate("/");
       } else {
         setError("Error occured");

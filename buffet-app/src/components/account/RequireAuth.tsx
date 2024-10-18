@@ -3,6 +3,8 @@ import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 import { Navigate } from "react-router-dom";
 import { User } from "../../types";
+import { isTokenExpired } from "./loginExpiration";
+import useSignOut from "react-auth-kit/hooks/useSignOut";
 
 type ProtectedRouteProps = {
   children: ReactNode;
@@ -17,9 +19,16 @@ const RequireAuth = ({
 }: ProtectedRouteProps) => {
   // const user: User = dummyUser;
   const user: User = useAuthUser()!;
+  const logout = useSignOut();
 
   if (!user) {
     console.log("User not authenticated");
+    return <Navigate to={fallbackPath} />;
+  }
+
+  if (isTokenExpired()) {
+    console.log("Token expired");
+    logout();
     return <Navigate to={fallbackPath} />;
   }
 

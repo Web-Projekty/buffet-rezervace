@@ -15,14 +15,12 @@ import Alergens from "./components/alergens/Alergens.tsx";
 import RequireAuth from "./components/account/RequireAuth.tsx";
 import PageNotFound from "./components/error/PageNotFound.tsx";
 import Cart from "./components/cart/Cart.tsx";
-import { refresh } from "./refresh.ts";
 
 const store = createStore({
   authName: "_auth",
   authType: "cookie",
   cookieDomain: window.location.hostname,
   cookieSecure: window.location.protocol === "https:",
-  /*refresh: refresh,*/
 });
 
 const router = createBrowserRouter([
