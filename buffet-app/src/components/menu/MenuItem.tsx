@@ -78,7 +78,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: 10, opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="rounded-lg px-2 text-lg"
+                  className={`rounded-lg px-2 text-lg ${getItemQuantity(item.id) >= 5 ? "bg-red-400" : "bg-slate-800"}`}
                 >
                   {getItemQuantity(item.id)}
                 </motion.span>
@@ -106,15 +106,6 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
               </motion.div>
             )}
           </div>
-          {getItemQuantity(item.id) === 5 ? (
-            <motion.div
-              key="limit-reached"
-              {...scaleUpAnimation(0.2)}
-              className="absolute bottom-0 left-28"
-            >
-              <p className="text-red-400">Limit dosažen</p>
-            </motion.div>
-          ) : null}
         </AnimatePresence>
       </div>
     </motion.div>
