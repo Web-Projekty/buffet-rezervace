@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { tailspin } from "ldrs";
 import Input from "../Input";
+import { refresh } from "../../refresh";
 
 tailspin.register();
 
@@ -48,6 +49,7 @@ const Login = () => {
             token: data.payload.token,
             type: "Bearer",
           },
+          /*refresh: data.payload.token,*/
           userState: {
             fullName: data.payload.fullName,
             email: data.payload.email,

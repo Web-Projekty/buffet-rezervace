@@ -12,16 +12,17 @@ import Login from "./components/account/Login.tsx";
 import Register from "./components/account/Register.tsx";
 import Dashboard from "./components/account/Dashboard.tsx";
 import Alergens from "./components/alergens/Alergens.tsx";
-import { CartProvider } from "./store/CartContext.tsx";
 import RequireAuth from "./components/account/RequireAuth.tsx";
 import PageNotFound from "./components/error/PageNotFound.tsx";
 import Cart from "./components/cart/Cart.tsx";
+import { refresh } from "./refresh.ts";
 
 const store = createStore({
   authName: "_auth",
   authType: "cookie",
   cookieDomain: window.location.hostname,
   cookieSecure: window.location.protocol === "https:",
+  /*refresh: refresh,*/
 });
 
 const router = createBrowserRouter([
@@ -93,9 +94,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider store={store}>
-      {/* <CartProvider> */}
       <RouterProvider router={router} />
-      {/* </CartProvider> */}
     </AuthProvider>
   </StrictMode>,
 );
