@@ -4,7 +4,6 @@ import AccountButton from "./account/AccountButton";
 import { IoIosMenu, IoIosClose } from "react-icons/io";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { User } from "../types";
-import { dummyUser } from "../dummyData";
 import { useState } from "react";
 import { motion } from "framer-motion";
 
@@ -42,7 +41,6 @@ const Links = ({ user }: { user: User }) => {
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  //const user: User = dummyUser;
   const user: User = useAuthUser()!;
 
   const handleOpenMobileMenu = (): void => {
