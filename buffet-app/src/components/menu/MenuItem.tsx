@@ -5,7 +5,31 @@ import { MenuItem as MenuItemType } from "../../types";
 import { scaleUpAnimation, tapScaleAnimation } from "../../animations";
 import useCart from "../../store/CartStore";
 
-const MenuItem = ({ item }: { item: MenuItemType }) => {
+type MenuItem = {
+  item: MenuItemType;
+};
+
+const menuItemShowAnimation = {
+  initial: { x: 50, opacity: 0 },
+  whileInView: { x: 0, opacity: 1 },
+  transition: { duration: 0.5 },
+};
+
+const quantChangeAnimation = {
+  initial: { y: 10, opacity: 0 },
+  animate: { y: 0, opacity: 1 },
+  exit: { y: 10, opacity: 0 },
+  transition: { duration: 0.2 },
+};
+
+const quantButtonShowAnimation = {
+  initial: { opacity: 0, scale: 0.8 },
+  animate: { opacity: 1, scale: 1 },
+  exit: { opacity: 0, scale: 0.8 },
+  transition: { duration: 0.2 },
+};
+
+const MenuItem = ({ item }: MenuItem) => {
   const { addToCart, removeFromCart, getItemQuantity, isItemInCart } =
     useCart();
 
@@ -21,9 +45,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
 
   return (
     <motion.div
-      initial={{ x: 50, opacity: 0 }}
-      whileInView={{ x: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      {...menuItemShowAnimation}
       className="relative flex h-[26rem] w-[18rem] flex-col justify-around gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black"
     >
       <div className="relative">
@@ -73,10 +95,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
 
                 <motion.span
                   key={getItemQuantity(item.id)}
-                  initial={{ y: 10, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: 10, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
+                  {...quantChangeAnimation}
                   className={`rounded-lg px-2 text-lg ${isMaxQuantity ? "bg-red-400" : "bg-slate-800"}`}
                 >
                   {getItemQuantity(item.id)}
@@ -93,9 +112,7 @@ const MenuItem = ({ item }: { item: MenuItemType }) => {
             ) : (
               <motion.div
                 key="add-to-cart"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
+                {...quantButtonShowAnimation}
                 className="flex transform items-center justify-center"
               >
                 <LuBadgePlus

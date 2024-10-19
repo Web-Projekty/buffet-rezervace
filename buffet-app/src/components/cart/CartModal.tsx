@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import useCart from "../../store/CartStore";
 import Modal from "../Modal";
 import CartItem from "./CartItem";
+import Button from "../Button";
 
 const CartModal = () => {
   const { isOpen, handleOpenCart, cartItems, getCartQuantity } = useCart();
@@ -39,17 +40,11 @@ const CartModal = () => {
             return <CartItem key={item.id} item={item} />;
           })}
         </div>
-        <div className="grid h-10 w-full grid-cols-2 grid-rows-1 gap-10 bg-slate-900 text-white">
-          <button onClick={handleOpenCart} className="mb-2">
-            Zavřít
-          </button>
-          <button
-            disabled={getCartQuantity() === 0}
-            onClick={handleContinue}
-            className="mb-2"
-          >
+        <div className="grid h-10 grid-cols-2 grid-rows-1 justify-between gap-10 text-white">
+          <Button onClick={handleOpenCart}>Zavřít</Button>
+          <Button onClick={handleContinue} disabled={isCartEmpty}>
             Pokračovat
-          </button>
+          </Button>
         </div>
       </motion.div>
     </Modal>

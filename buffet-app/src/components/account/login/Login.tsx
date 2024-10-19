@@ -3,19 +3,25 @@ import { useState } from "react";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { tailspin } from "ldrs";
-import Input from "../Input";
+import Input from "../../Input";
 import { setTokenExpiration } from "./login";
+import Button from "../../Button";
+import LoginError from "./LoginError";
+import LoginLoading from "./LoginLoading";
 
-tailspin.register();
-
-type LoginFormType = {
+type LoginForm = {
   username: string;
   password: string;
 };
 
+const loginShowAnimation = {
+  initial: { opacity: 0, x: 50 },
+  animate: { opacity: 1, x: 0 },
+  transition: { duration: 0.5 },
+};
+
 const Login = () => {
-  const [formData, setFormData] = useState<LoginFormType>({
+  const [formData, setFormData] = useState<LoginForm>({
     username: "user4",
     password: "u",
   });
@@ -27,16 +33,18 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     const loginData = {
       requestType: "login",
       username: "user4",
       password: "u",
     };
+
     try {
       setLoading(true);
       const { data } = await axios.post(
-        // "http://localhost:8080/api",
-        "https://wlczak.vlastas.cc/backend/api",
+        "http://localhost:8080/api",
+        // "https://wlczak.vlastas.cc/backend/api",
         loginData,
       );
 
@@ -84,29 +92,9 @@ const Login = () => {
     if (error) handleResetLogin();
   };
 
-  const LoginError = () => {
-    return (
-      <div className="flex w-full flex-col items-center gap-2 text-center">
-        <span className="text-wrap rounded-md bg-red-500 p-2">
-          Špatné heslo nebo uživatelské jméno
-        </span>
-      </div>
-    );
-  };
-
-  const LoginLoading = () => {
-    return (
-      <div className="flex items-center justify-center">
-        <l-tailspin size="30" stroke="5" speed="0.9" color="white" />
-      </div>
-    );
-  };
-
   return (
     <motion.div
-      initial={{ opacity: 0, x: 50 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 1 }}
+      {...loginShowAnimation}
       className="flex h-screen flex-col items-center justify-center gap-5 text-white"
     >
       <h1 className="text-2xl">Příhlášení</h1>
@@ -121,6 +109,7 @@ const Login = () => {
             onChange={handleChange}
             className="rounded-md border p-2 text-black"
             placeholder="Uživatelské jméno"
+            disabled={loading}
           />
           <Input
             type="password"
@@ -131,11 +120,12 @@ const Login = () => {
             onChange={handleChange}
             className="rounded-md border p-2 text-black"
             placeholder="Heslo"
+            disabled={loading}
           />
           <div className="text-center">
             Ještě nejsi registrovaný?{" "}
             <span
-              className="cursor-pointer text-orange-300"
+              className="cursor-pointer text-cyan-500"
               onClick={handleRegister}
             >
               Registruj se
@@ -143,18 +133,17 @@ const Login = () => {
             .
           </div>
         </div>
-        {error ? (
-          <LoginError />
-        ) : loading ? (
-          <LoginLoading />
-        ) : (
-          <button
-            className="rounded-md border bg-orange-400 p-2 text-white hover:bg-orange-500"
-            type="submit"
-          >
-            Přihlásit se
-          </button>
-        )}
+        <div className="flex w-full items-center justify-center">
+          {error ? (
+            <LoginError />
+          ) : loading ? (
+            <LoginLoading />
+          ) : (
+            <Button type="submit" additionalStyles="w-full">
+              Přihlásit se
+            </Button>
+          )}
+        </div>
       </form>
     </motion.div>
   );

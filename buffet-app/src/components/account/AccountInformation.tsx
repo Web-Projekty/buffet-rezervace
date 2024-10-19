@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { User } from "../../types";
 import { scaleUpAnimation } from "../../animations";
-import { removeTokenExpiration } from "./login";
+import { removeTokenExpiration } from "./login/login";
+import Button from "../Button";
+
+type AccountInformation = {
+  user: User;
+};
 
 const AdminButtons = ({ handleMenuEdit }: { handleMenuEdit: () => void }) => {
   return (
@@ -18,7 +23,7 @@ const AdminButtons = ({ handleMenuEdit }: { handleMenuEdit: () => void }) => {
   );
 };
 
-const AccountInformation = ({ user }: { user: User }) => {
+const AccountInformation = ({ user }: AccountInformation) => {
   const logout = useSignOut();
   const navigate = useNavigate();
 
@@ -46,12 +51,7 @@ const AccountInformation = ({ user }: { user: User }) => {
         <p className="text-lg">Třída: {user.class}</p>
       </motion.div>
 
-      <button
-        className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
-        onClick={handleLogout}
-      >
-        Logout
-      </button>
+      <Button onClick={handleLogout}>Odhlásit</Button>
       {user.isAdmin && <AdminButtons handleMenuEdit={handleMenuEdit} />}
     </div>
   );
