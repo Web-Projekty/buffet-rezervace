@@ -1,5 +1,3 @@
-import React from "react";
-
 type Button = {
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
@@ -17,7 +15,7 @@ const Button = ({
 }: Button) => {
   return (
     <button
-      className={`rounded-md border border-cyan-900 bg-cyan-500 p-2 text-white hover:bg-cyan-600 ${additionalStyles}`}
+      className={`rounded-md border border-cyan-900 bg-cyan-500 p-2 text-white hover:bg-cyan-600 ${additionalStyles} ${disabled ? "bg-cyan-600" : ""}`}
       type={type}
       onClick={onClick}
       disabled={disabled}

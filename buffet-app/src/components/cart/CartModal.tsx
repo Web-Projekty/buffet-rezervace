@@ -15,7 +15,7 @@ const CartModal = () => {
     navigate("/cart");
   };
 
-  const isCartEmpty = cartItems.length === 0;
+  const isCartEmpty = getCartQuantity() === 0;
 
   return (
     <Modal isOpen={isOpen} darkBackground>
