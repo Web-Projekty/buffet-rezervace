@@ -13,6 +13,7 @@ type cartItems = {
   clearCart: () => void;
   getCartTotal: () => number;
   getCartQuantity: () => number;
+  isCartEmpty: () => boolean;
   isItemInCart: (id: number) => boolean;
   getItemQuantity: (id: number) => number;
 };
@@ -81,6 +82,7 @@ const useCart = create<cartItems>((set, get) => ({
     ),
   getCartQuantity: () =>
     get().cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0),
+  isCartEmpty: () => get().cartItems.length === 0,
   isItemInCart: (id: number) =>
     get().cartItems.some((cartItem) => cartItem.id === id),
   getItemQuantity: (id: number) => {
