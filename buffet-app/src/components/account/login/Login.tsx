@@ -1,13 +1,11 @@
-import axios from "axios";
 import { useState } from "react";
-import useSignIn from "react-auth-kit/hooks/useSignIn";
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Input from "../../Input";
-import { setTokenExpiration } from "./login";
 import Button from "../../Button";
 import LoginError from "./LoginError";
 import LoginLoading from "./LoginLoading";
+import useLogin from "../../../hooks/useLogin";
+import { useNavigate } from "react-router-dom";
 
 type LoginForm = {
   username: string;
@@ -26,57 +24,16 @@ const Login = () => {
     password: "u",
   });
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-  const login = useSignIn();
   const navigate = useNavigate();
+
+  const { loading, error, setError, login } = useLogin(
+    { requestType: "login", ...formData },
+    "https://wlczak.vlastas.cc/backend/api",
+  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const loginData = {
-      requestType: "login",
-      username: "user4",
-      password: "u",
-    };
-
-    try {
-      setLoading(true);
-      const { data } = await axios.post(
-        // "http://localhost:8080/api",
-        "https://wlczak.vlastas.cc/backend/api",
-        loginData,
-      );
-
-      const success: boolean = data.status === "success";
-      console.log(data);
-
-      if (success) {
-        login({
-          auth: {
-            token: data.payload.token,
-            type: "Bearer",
-          },
-          userState: {
-            fullName: data.payload.fullName,
-            email: data.payload.email,
-            isAdmin: data.payload.isAdmin === 1 ? true : false,
-            class: data.payload.class,
-            orders: [],
-          },
-        });
-        setTokenExpiration(3600);
-        navigate("/");
-      } else {
-        setError("Error occured");
-        console.log("Error occured");
-      }
-    } catch (error) {
-      setError("Error occured");
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    login();
   };
 
   const handleRegister = () => {
