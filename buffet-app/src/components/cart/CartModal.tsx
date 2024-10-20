@@ -8,15 +8,13 @@ import Button from "../Button";
 import EmptyCart from "./EmptyCart";
 
 const CartModal = () => {
-  const { isOpen, handleOpenCart, cartItems, getCartQuantity } = useCart();
+  const { isOpen, handleOpenCart, cartItems, isCartEmpty } = useCart();
   const navigate = useNavigate();
 
   const handleContinue = () => {
     handleOpenCart();
     navigate("/cart");
   };
-
-  const isCartEmpty = getCartQuantity() === 0;
 
   return (
     <Modal isOpen={isOpen} darkBackground>
@@ -29,16 +27,16 @@ const CartModal = () => {
         </div>
 
         <div
-          className={`flex ${isCartEmpty ? "flex-col" : "flex-row"} flex-wrap justify-center gap-5 overflow-auto px-10 py-5`}
+          className={`flex ${isCartEmpty() ? "flex-col" : "flex-row"} flex-wrap justify-center gap-5 overflow-auto px-10 py-5`}
         >
-          {isCartEmpty && <EmptyCart />}
+          {isCartEmpty() && <EmptyCart />}
           {cartItems.map((item) => {
             return <CartItem key={item.id} item={item} />;
           })}
         </div>
         <div className="grid h-10 grid-cols-2 grid-rows-1 justify-between gap-10 text-white">
           <Button onClick={handleOpenCart}>Zavřít</Button>
-          <Button onClick={handleContinue} disabled={isCartEmpty}>
+          <Button onClick={handleContinue} disabled={isCartEmpty()}>
             Pokračovat
           </Button>
         </div>
