@@ -6,7 +6,7 @@ import CartModal from "./components/cart/CartModal";
 
 const App = () => {
   return (
-    <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-slate-800 font-Lato">
+    <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-slate-800 font-sans">
       <Header />
       <RouteScrollToTop />
       <CartModal />
