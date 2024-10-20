@@ -5,6 +5,7 @@ import useCart from "../../store/CartStore";
 import Modal from "../Modal";
 import CartItem from "./CartItem";
 import Button from "../Button";
+import EmptyCart from "./EmptyCart";
 
 const CartModal = () => {
   const { isOpen, handleOpenCart, cartItems, getCartQuantity } = useCart();
@@ -30,12 +31,7 @@ const CartModal = () => {
         <div
           className={`flex ${isCartEmpty ? "flex-col" : "flex-row"} flex-wrap justify-center gap-5 overflow-auto px-10 py-5`}
         >
-          {isCartEmpty && (
-            <div className="flex flex-row items-center justify-center gap-1 text-xl text-white">
-              <p className="text-center text-white">Váš košík je prázdný.</p>
-              <span className="text-2xl">😢</span>
-            </div>
-          )}
+          {isCartEmpty && <EmptyCart />}
           {cartItems.map((item) => {
             return <CartItem key={item.id} item={item} />;
           })}
