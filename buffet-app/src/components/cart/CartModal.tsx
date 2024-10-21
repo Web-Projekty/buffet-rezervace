@@ -20,7 +20,7 @@ const CartModal = () => {
     <Modal isOpen={isOpen} darkBackground>
       <motion.div
         {...scaleUpAnimation(0.3)}
-        className="flex h-[500px] w-[800px] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black"
+        className="relative flex h-[500px] w-[800px] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black"
       >
         <div className="flex h-10 w-full items-center justify-center rounded-t-lg bg-primary text-center text-xl text-black">
           <h1>Váš košík</h1>
@@ -34,7 +34,7 @@ const CartModal = () => {
             return <CartItem key={item.id} item={item} />;
           })}
         </div>
-        <div className="grid h-10 grid-cols-2 grid-rows-1 justify-between gap-10 text-white">
+        <div className="my-2 grid h-10 grid-cols-2 grid-rows-1 justify-between gap-10 text-white">
           <Button onClick={handleOpenCart}>Zavřít</Button>
           <Button onClick={handleContinue} disabled={isCartEmpty()}>
             Pokračovat
