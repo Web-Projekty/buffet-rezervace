@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { dummyFood } from "../../dummyData";
-import { MenuItem as MenuItemType } from "../../types";
 import { usePaging } from "../../hooks/usePaging";
 import PagingButtons from "../PagingButtons";
 import MenuItem from "./MenuItem";
+import { MenuItem as MenuItemType } from "../../types";
 
 const Menu = () => {
   const [menu, setMenu] = useState<MenuItemType[]>([]);
