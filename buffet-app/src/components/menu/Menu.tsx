@@ -1,16 +1,24 @@
+import { useEffect, useState } from "react";
 import { dummyFood } from "../../dummyData";
+import { MenuItem as MenuItemType } from "../../types";
 import { usePaging } from "../../hooks/usePaging";
 import PagingButtons from "../PagingButtons";
 import MenuItem from "./MenuItem";
 
 const Menu = () => {
+  const [menu, setMenu] = useState<MenuItemType[]>([]);
+
   const {
     currentPage,
     totalPagesCount,
     displayedList,
     handleNextPage,
     handlePreviousPage,
-  } = usePaging(dummyFood, 9);
+  } = usePaging(menu, 9);
+
+  useEffect(() => {
+    setMenu(dummyFood);
+  }, []);
 
   return (
     <div className="mb-[3rem] mt-[10rem] flex flex-col items-center justify-center gap-5">
