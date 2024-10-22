@@ -2,10 +2,25 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function useFetch(url: string, values: any, initialValue: any = []) {
+type UseFetchReturn = {
+  isLoading: boolean;
+  error: string;
+  setError: (error: string) => void;
+  data: any;
+};
+
+type Values = {
+  requestType: string;
+  token: string;
+};
+
+const useFetch = (
+  url: string,
+  values: Values,
+  initialValue: any = [],
+): UseFetchReturn => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<object>();
+  const [error, setError] = useState<string>("");
   const [data, setData] = useState<any>(initialValue);
 
   useEffect(() => {
@@ -17,13 +32,15 @@ export function useFetch(url: string, values: any, initialValue: any = []) {
         setData(data);
         setIsLoading(false);
       } catch (e) {
-        setError({ message: "Failed to fetch data." });
+        setError("Failed to fetch data.");
         setData(initialValue);
         setIsLoading(false);
       }
     }
     fetchData();
-  }, [url, values, initialValue]);
+  }, []);
 
-  return { isLoading, error, data };
-}
+  return { isLoading, error, setError, data };
+};
+
+export default useFetch;

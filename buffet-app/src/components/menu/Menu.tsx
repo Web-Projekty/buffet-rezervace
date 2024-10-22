@@ -4,9 +4,14 @@ import { usePaging } from "../../hooks/usePaging";
 import PagingButtons from "../PagingButtons";
 import MenuItem from "./MenuItem";
 import { MenuItem as MenuItemType } from "../../types";
+import useFetch from "../../hooks/useFetch";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 const Menu = () => {
+  // const token = useAuthHeader();
   const [menu, setMenu] = useState<MenuItemType[]>([]);
+
+  // console.log(token?.split(" ")[1]);
 
   const {
     currentPage,
@@ -15,6 +20,12 @@ const Menu = () => {
     handleNextPage,
     handlePreviousPage,
   } = usePaging(menu, 9);
+
+  // const { data, isLoading, error, setError } = useFetch(
+  //   "https://wlczak.vlastas.cc/backend/api",
+  //   { requestType: "menu", token: token! },
+  //   [],
+  // );
 
   useEffect(() => {
     setMenu(dummyFood);
