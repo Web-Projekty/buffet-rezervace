@@ -1,6 +1,6 @@
 import { alergens } from "../../dummyData";
-import { Alergen as AlergenType } from "../../types";
-import Alergen from "./Alergen";
+import { Allergen as AlergenType } from "../../types";
+import Alergen from "./Allergen";
 
 const Alergens = () => {
   return (

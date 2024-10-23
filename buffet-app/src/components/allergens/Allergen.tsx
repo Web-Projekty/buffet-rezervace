@@ -1,5 +1,5 @@
 import { scaleUpAnimation } from "../../animations";
-import { Alergen as AlergenType } from "../../types";
+import { Allergen as AlergenType } from "../../types";
 import { motion } from "framer-motion";
 
 const Alergen = ({ alergen }: { alergen: AlergenType }) => {
