@@ -2,33 +2,33 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-type UseFetchReturn = {
+type UseFetchReturn<T> = {
   isLoading: boolean;
   error: string;
   setError: (error: string) => void;
-  data: any;
+  data: T;
 };
 
-type Values = {
+type RequestData = {
   requestType: string;
   token: string;
 };
 
-const useFetch = (
+const useFetch = <T>(
   url: string,
-  values: Values,
-  initialValue: any = [],
-): UseFetchReturn => {
+  requestData: RequestData,
+  initialValue: T,
+): UseFetchReturn<T> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [data, setData] = useState<any>(initialValue);
+  const [data, setData] = useState<T>(initialValue);
 
   useEffect(() => {
     setIsLoading(true);
 
     async function fetchData() {
       try {
-        const { data } = await axios.post(url, values);
+        const { data } = await axios.post(url, requestData);
         setData(data);
         setIsLoading(false);
       } catch (e) {

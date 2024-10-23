@@ -9,7 +9,7 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 const Menu = () => {
   // const token = useAuthHeader();
-  const [menu, setMenu] = useState<MenuItemType[]>([]);
+  const [menu, setMenu] = useState<MenuItemType[]>();
 
   // console.log(token?.split(" ")[1]);
 
@@ -23,7 +23,7 @@ const Menu = () => {
 
   // const { data, isLoading, error, setError } = useFetch(
   //   "https://wlczak.vlastas.cc/backend/api",
-  //   { requestType: "menu", token: token! },
+  //   { requestType: "menu" },
   //   [],
   // );
 
