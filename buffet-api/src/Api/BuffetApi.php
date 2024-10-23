@@ -6,6 +6,7 @@ namespace Buffet\Api;
 
 use Buffet\Api\AuthApi;
 use Buffet\Database\DatabaseManager;
+use Buffet\Database\Models\ItemModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Psr\Http\Message\ResponseInterface;
@@ -79,6 +80,10 @@ class BuffetApi
 
             case "verify":
                 return $this->handleVerify($response);
+                break;
+
+            case "getMenu":
+                return $this->handleGetMenu($response);
                 break;
 
             case null:
@@ -157,6 +162,20 @@ class BuffetApi
         if ($response->hasRequestKeys()) {
             return $auth->login($response);
         }
+        return $response;
+    }
+
+    /**
+     * @param ApiResponse $response
+     */
+    function handleGetMenu(ApiResponse $response): ApiResponse
+    {
+        $response->setPayloadKeys(["menuItems"]);
+        //var_dump(ItemModel::getAll()->toArray());
+        // if()
+        //$response->setPayload("menuItems", ItemModel::getAll()->toArray());
+        phpinfo();
+        $response->setStatus(true);
         return $response;
     }
 
