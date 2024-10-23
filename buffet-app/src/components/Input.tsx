@@ -30,6 +30,8 @@ type InputProps = {
   className?: string;
   placeholder?: string;
   disabled?: boolean;
+  min?: number;
+  max?: number;
 };
 
 const Input = ({
@@ -42,6 +44,8 @@ const Input = ({
   className,
   placeholder,
   disabled,
+  min = 0,
+  max = Infinity,
 }: InputProps) => {
   return (
     <input
@@ -55,6 +59,8 @@ const Input = ({
       placeholder={placeholder}
       autoComplete="off"
       disabled={disabled}
+      min={min}
+      max={max}
     />
   );
 };
