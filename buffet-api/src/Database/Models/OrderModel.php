@@ -5,7 +5,7 @@ namespace Buffet\Database\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 
-class DefaultModel extends Model
+class OrderModel extends Model
 {
     // Specify the table if it's not the pluralized form of the class name
     /**
@@ -27,7 +27,7 @@ class DefaultModel extends Model
     public static function getAll()
     {
         try {
-            return DefaultModel::all();
+            return OrderModel::all();
         } catch (QueryException $e) {
             return false;
         }

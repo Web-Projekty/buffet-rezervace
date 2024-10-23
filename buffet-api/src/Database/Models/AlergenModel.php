@@ -5,13 +5,13 @@ namespace Buffet\Database\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 
-class DefaultModel extends Model
+class AllergenModel extends Model
 {
     // Specify the table if it's not the pluralized form of the class name
     /**
      * @var string
      */
-    protected $table = 'Alergens';
+    protected $table = 'Allergens';
 
     // Define the columns that are mass assignable
     /**
@@ -27,7 +27,7 @@ class DefaultModel extends Model
     public static function getAll()
     {
         try {
-            return DefaultModel::all();
+            return AllergenModel::all();
         } catch (QueryException $e) {
             return false;
         }
