@@ -3,9 +3,9 @@ import { motion } from "framer-motion";
 import Input from "../../Input";
 import Button from "../../Button";
 import LoginError from "./LoginError";
-import LoginLoading from "./LoginLoading";
 import useLogin from "../../../hooks/useLogin";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../Loading";
 
 type LoginForm = {
   username: string;
@@ -94,7 +94,7 @@ const Login = () => {
           {error ? (
             <LoginError />
           ) : loading ? (
-            <LoginLoading />
+            <Loading />
           ) : (
             <Button type="submit" additionalStyles="w-full">
               Přihlásit se

@@ -10,7 +10,7 @@ type UseFetchReturn<T> = {
 
 type RequestData = {
   requestType: string;
-  token: string;
+  token?: string | undefined;
 };
 
 const useFetch = <T>(
