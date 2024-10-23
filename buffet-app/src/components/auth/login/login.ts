@@ -1,12 +1,15 @@
 import Cookies from "js-cookie";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 
-export const setTokenExpiration = (expiresIn: number): void => {
-  const expirationTime = new Date().getTime() + expiresIn * 1000;
-  console.log("Expiration time", expirationTime);
+export const setTokenExpiration = (token: string): void => {
+  //const expirationTime = new Date().getTime() + expiresIn * 1000;
+  const decoded: JwtPayload = jwtDecode(token);
+  const expiration: number | undefined = decoded.exp;
+  console.log("Expiration time", expiration);
 
   // localStorage.setItem("tokenExpiration", expirationTime.toString());
-  Cookies.set("tokenExpiration", expirationTime.toString(), {
-    expires: expiresIn / 86400,
+  Cookies.set("tokenExpiration", expiration!.toString(), {
+    expires: expiration! / 86400,
   });
 };
 

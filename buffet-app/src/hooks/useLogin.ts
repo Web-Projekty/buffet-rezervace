@@ -118,7 +118,7 @@ const useLogin = (loginData: LoginData, url: string): UseLoginReturn => {
             ],
           },
         });
-        setTokenExpiration(3600);
+        setTokenExpiration(data.payload.token);
         navigate("/");
       } else {
         setError("Error occured");
