@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -6,7 +5,7 @@ type UseFetchReturn<T> = {
   isLoading: boolean;
   error: string;
   setError: (error: string) => void;
-  data: T;
+  data: T | null;
 };
 
 type RequestData = {
@@ -21,7 +20,7 @@ const useFetch = <T>(
 ): UseFetchReturn<T> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [data, setData] = useState<T>(initialValue);
+  const [data, setData] = useState<T | null>(initialValue);
 
   useEffect(() => {
     setIsLoading(true);
@@ -29,7 +28,7 @@ const useFetch = <T>(
     async function fetchData() {
       try {
         const { data } = await axios.post(url, requestData);
-        setData(data);
+        setData(data as T);
         setIsLoading(false);
       } catch (e) {
         setError("Failed to fetch data.");
