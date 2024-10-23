@@ -22,7 +22,11 @@ const NavLinks: NavLinks[] = [
 
 const Links = ({ user }: { user: User }) => {
   return NavLinks.map(({ id, path, name, requireAdmin }) => {
-    return requireAdmin && !user?.isAdmin ? null : (
+    if (requireAdmin && (!user || !user?.isAdmin)) {
+      return null;
+    }
+
+    return (
       <li key={id}>
         <NavLink
           className={({ isActive }) =>
@@ -41,7 +45,7 @@ const Links = ({ user }: { user: User }) => {
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const user: User = useAuthUser()!;
+  const user: User | null = useAuthUser()!;
 
   const handleOpenMobileMenu = (): void => {
     setIsOpen(!isOpen);
