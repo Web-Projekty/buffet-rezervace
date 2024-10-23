@@ -31,7 +31,8 @@ const useFetch = <T>(
         setData(data as T);
         setIsLoading(false);
       } catch (e) {
-        setError("Failed to fetch data.");
+        console.log(e);
+        setError("Chyba načítání dat ze serveru.");
         setData(initialValue);
         setIsLoading(false);
       }
