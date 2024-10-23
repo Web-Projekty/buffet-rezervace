@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useNavigate } from "react-router-dom";
-import { setTokenExpiration } from "../components/account/login/login";
+import { setTokenExpiration } from "../components/auth/login/login";
 
 type UseLoginReturn = {
   loading: boolean;
@@ -11,10 +11,13 @@ type UseLoginReturn = {
   login: () => void;
 };
 
-const useLogin = (
-  loginData: { requestType: string; username: string; password: string },
-  url: string,
-): UseLoginReturn => {
+type LoginData = {
+  requestType: string;
+  username: string;
+  password: string;
+};
+
+const useLogin = (loginData: LoginData, url: string): UseLoginReturn => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const signIn = useSignIn();

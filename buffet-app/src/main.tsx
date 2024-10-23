@@ -8,11 +8,11 @@ import createStore from "react-auth-kit/createStore";
 import Menu from "./components/menu/Menu.tsx";
 import MenuEdit from "./components/menu/MenuEdit.tsx";
 import AdminOrderHistory from "./components/orders/AdminOrderHistory.tsx";
-import Login from "./components/account/login/Login.tsx";
-import Register from "./components/account/Register.tsx";
-import Dashboard from "./components/account/Dashboard.tsx";
-import Alergens from "./components/alergens/Alergens.tsx";
-import RequireAuth from "./components/account/RequireAuth.tsx";
+import Login from "./components/auth/login/Login.tsx";
+import Register from "./components/auth/Register.tsx";
+import Dashboard from "./components/auth/Dashboard.tsx";
+import Alergens from "./components/allergens/Allergens.tsx";
+import RequireAuth from "./components/auth/RequireAuth.tsx";
 import PageNotFound from "./components/error/PageNotFound.tsx";
 import Cart from "./components/cart/Cart.tsx";
 

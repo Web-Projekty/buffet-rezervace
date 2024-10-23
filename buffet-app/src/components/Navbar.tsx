@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import CartButton from "./cart/CartButton";
-import AccountButton from "./account/AccountButton";
+import AccountButton from "./auth/AccountButton";
 import { IoIosMenu, IoIosClose } from "react-icons/io";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { User } from "../types";
