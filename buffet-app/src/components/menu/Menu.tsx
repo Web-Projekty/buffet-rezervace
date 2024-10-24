@@ -10,7 +10,7 @@ import Loading from "../Loading";
 
 const Menu = () => {
   // const token = useAuthHeader();
-  const [menu, setMenu] = useState<MenuItemType[]>();
+  const [menu, setMenu] = useState<MenuItemType[]>([]);
 
   // console.log(token?.split(" ")[1]);
 
@@ -20,7 +20,7 @@ const Menu = () => {
     displayedList,
     handleNextPage,
     handlePreviousPage,
-  } = usePaging(menu!, 9);
+  } = usePaging<MenuItemType>(menu, 9);
 
   // const { data, isLoading, error } = useFetch<MenuItemType[]>(
   //   "https://wlczak.vlastas.cc/backend/api",

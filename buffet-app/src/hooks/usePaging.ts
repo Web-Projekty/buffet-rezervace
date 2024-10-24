@@ -1,24 +1,24 @@
 import { useEffect, useState } from "react";
 
-type PagingReturn = {
+type PagingReturn<T> = {
   currentPage: number;
   totalPagesCount: number;
   totalListCount: number;
-  displayedList: any[];
+  displayedList: T[];
   displayedListCount: number;
   handleNextPage: () => void;
   handlePreviousPage: () => void;
 };
 
-export function usePaging(
-  data: any[] = [],
+export function usePaging<T>(
+  data: T[] = [],
   itemsPerPage: number,
-): PagingReturn {
+): PagingReturn<T> {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const totalPagesCount: number = Math.ceil(data.length / itemsPerPage);
   const totalListCount: number = data.length;
 
-  const displayedList: any[] = data
+  const displayedList: T[] = data
     ? data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
     : [];
   const displayedListCount: number = displayedList.length;
