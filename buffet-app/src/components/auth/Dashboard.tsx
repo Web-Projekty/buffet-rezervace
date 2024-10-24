@@ -6,7 +6,6 @@ import UserOrderHistory from "../orders/UserOrderHistory";
 const Dashboard = () => {
   const user: User = useAuthUser()!;
   // const user: User = dummyUser;
-
   /*const header = useAuthHeader();
   console.log(header?.split(" ")[1]);*/
 

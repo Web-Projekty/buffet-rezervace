@@ -15,6 +15,7 @@ import Alergens from "./components/allergens/Allergens.tsx";
 import RequireAuth from "./components/auth/RequireAuth.tsx";
 import PageNotFound from "./components/error/PageNotFound.tsx";
 import Cart from "./components/cart/Cart.tsx";
+import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
 
 const store = createStore({
   authName: "_auth",
@@ -26,27 +27,41 @@ const store = createStore({
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: (
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    ),
     //loader: () => import("./App.tsx"),
     children: [
       {
         path: "/",
         index: true,
-        element: <Menu />,
+        element: (
+          <ErrorBoundary>
+            <Menu />
+          </ErrorBoundary>
+        ),
         //loader: () => import("./components/menu/MenuList.tsx"),
       },
       {
         path: "/menu/edit",
         element: (
           <RequireAuth requireAdmin={true} fallbackPath="/menu">
-            <MenuEdit />
+            <ErrorBoundary>
+              <MenuEdit />
+            </ErrorBoundary>
           </RequireAuth>
         ),
         //loader: () => import("./components/menu/MenuEdit.tsx"),
       },
       {
         path: "/alergeny",
-        element: <Alergens />,
+        element: (
+          <ErrorBoundary>
+            <Alergens />
+          </ErrorBoundary>
+        ),
         //loader: () => import("./components/menu/MenuList.tsx"),
       },
       {
@@ -69,21 +84,37 @@ const router = createBrowserRouter([
       },
       {
         path: "/login",
-        element: <Login />,
+        element: (
+          <ErrorBoundary>
+            <Login />
+          </ErrorBoundary>
+        ),
         //loader: () => import("./components/account/Login.tsx"),
       },
       {
         path: "/register",
-        element: <Register />,
+        element: (
+          <ErrorBoundary>
+            <Register />
+          </ErrorBoundary>
+        ),
         //loader: () => import("./components/account/Register.tsx"),
       },
       {
         path: "/cart",
-        element: <Cart />,
+        element: (
+          <ErrorBoundary>
+            <Cart />
+          </ErrorBoundary>
+        ),
       },
       {
         path: "/*",
-        element: <PageNotFound />,
+        element: (
+          <ErrorBoundary>
+            <PageNotFound />
+          </ErrorBoundary>
+        ),
       },
     ],
   },
