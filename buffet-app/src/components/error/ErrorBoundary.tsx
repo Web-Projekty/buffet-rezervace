@@ -3,13 +3,13 @@ import Logo from "../../assets/images/logo.svg";
 import { Link } from "react-router-dom";
 import Button from "../Button";
 
-interface ErrorBoundaryProps {
+type ErrorBoundaryProps = {
   children: ReactNode;
-}
+};
 
-interface ErrorBoundaryState {
+type ErrorBoundaryState = {
   hasError: boolean;
-}
+};
 
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
