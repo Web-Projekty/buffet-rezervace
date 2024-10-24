@@ -11,6 +11,7 @@ export default {
         fadeOut: "fadeOut 0.5s ease-in-out",
         "one-spin": "spin 0.5s ease-in-out",
         wiggle: "wiggle 0.5s ease-in-out infinite",
+        slowWiggle: "wiggle 1s ease-in-out infinite",
       },
       keyframes: {
         fadeIn: {
