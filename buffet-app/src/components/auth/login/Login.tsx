@@ -52,7 +52,7 @@ const Login = () => {
   return (
     <motion.div
       {...loginShowAnimation}
-      className="flex h-screen flex-col items-center justify-center gap-5 text-white"
+      className="flex flex-col items-center justify-center gap-5 text-white"
     >
       <h1 className="text-2xl">Příhlášení</h1>
       <form onSubmit={handleSubmit} className="flex w-[300px] flex-col gap-3">

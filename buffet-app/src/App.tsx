@@ -10,7 +10,7 @@ const App = () => {
       <Header />
       <RouteScrollToTop />
       <CartModal />
-      <div className="flex-1">
+      <div className="mb-[3rem] mt-[10rem] flex-1">
         <Outlet />
       </div>
       <Footer />

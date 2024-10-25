@@ -64,7 +64,7 @@ const Register = () => {
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 1 }}
-      className="flex h-screen flex-col items-center justify-center gap-10 text-white"
+      className="flex flex-col items-center justify-center gap-10 text-white"
     >
       <h1 className="text-2xl">Registrace</h1>
       <form onSubmit={handleSubmit} className="flex w-[300px] flex-col gap-3">

@@ -41,7 +41,7 @@ const Menu = () => {
   );
 
   return (
-    <div className="mb-[3rem] mt-[10rem] flex flex-col items-center justify-center gap-5">
+    <div className="flex flex-col items-center justify-center gap-5">
       <h1 className="text-3xl font-bold text-white">Menu</h1>
       {/* {isLoading && <Loading size={30} />} */}
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3">
