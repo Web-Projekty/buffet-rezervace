@@ -16,6 +16,7 @@ import RequireAuth from "./components/auth/RequireAuth.tsx";
 import PageNotFound from "./components/error/PageNotFound.tsx";
 import Cart from "./components/cart/Cart.tsx";
 import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
+import SuccessOrder from "./components/cart/SuccessOrder.tsx";
 
 const store = createStore({
   authName: "_auth",
@@ -105,6 +106,16 @@ const router = createBrowserRouter([
         element: (
           <ErrorBoundary>
             <Cart />
+          </ErrorBoundary>
+        ),
+      },
+      {
+        path: "/order",
+        element: (
+          <ErrorBoundary>
+            {/*<RequireAuth requireAdmin={false} fallbackPath="/menu">*/}
+            <SuccessOrder />
+            {/*</RequireAuth>*/}
           </ErrorBoundary>
         ),
       },
