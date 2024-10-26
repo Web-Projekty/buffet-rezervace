@@ -33,7 +33,7 @@ const useFetch = <T>(
       } catch (e) {
         console.log(e);
         setError("Chyba načítání dat ze serveru.");
-        setData(initialValue);
+        setData(initialValue as T);
         setIsLoading(false);
       }
     }
