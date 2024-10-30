@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
-import Input from "../../Input";
-import { Order } from "../../../types";
-import { scaleUpAnimation } from "../../../animations";
+import Input from "../Input";
+import { Order } from "../../types";
+import { scaleUpAnimation } from "../../animations";
 
 type AdminOrderFilterProps = {
   ordersFilter: {
