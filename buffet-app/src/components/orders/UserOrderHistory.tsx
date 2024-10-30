@@ -3,6 +3,7 @@ import { usePaging } from "../../hooks/usePaging";
 import { Order as OrderType } from "../../types";
 import PagingButtons from "../PagingButtons";
 import { AnimatePresence, motion } from "framer-motion";
+import { ordersPerPage } from "../../constants";
 
 const UserOrderHistory = ({ list }: { list: OrderType[] }) => {
   const {
@@ -12,7 +13,7 @@ const UserOrderHistory = ({ list }: { list: OrderType[] }) => {
     displayedList,
     handleNextPage,
     handlePreviousPage,
-  } = usePaging(list, 4);
+  } = usePaging(list, ordersPerPage);
   return (
     <div className="flex flex-col gap-2 md:w-[45rem]">
       <h1 className="text-2xl">Tvá historie objednávek ({totalListCount})</h1>

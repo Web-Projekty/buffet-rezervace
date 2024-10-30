@@ -7,6 +7,7 @@ import { MenuItem as MenuItemType } from "../../types";
 import useFetch from "../../hooks/useFetch";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Loading from "../Loading";
+import { itemsPerPage } from "../../constants";
 
 const Menu = () => {
   // const token = useAuthHeader();
@@ -20,7 +21,7 @@ const Menu = () => {
     displayedList,
     handleNextPage,
     handlePreviousPage,
-  } = usePaging<MenuItemType>(menu, 9);
+  } = usePaging<MenuItemType>(menu, itemsPerPage);
 
   // const { data, isLoading, error } = useFetch<MenuItemType[]>(
   //   "https://wlczak.vlastas.cc/backend/api",
@@ -33,7 +34,7 @@ const Menu = () => {
       // if (data) {
       //   setMenu(data);
       // }
-      setMenu(dummyFood);
+      setMenu(dummyFood as MenuItemType[]);
     },
     [
       /*data*/
