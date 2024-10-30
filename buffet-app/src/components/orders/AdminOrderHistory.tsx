@@ -7,6 +7,7 @@ import PagingButtons from "../PagingButtons";
 import { isSameDay, parseISO } from "date-fns";
 import AdminOrderFilter from "./AdminOrderFilter";
 import { AnimatePresence, motion } from "framer-motion";
+import { adminOrdersPerPage } from "../../constants";
 
 const AdminOrderHistory = () => {
   const [orders, setOrders] = useState<OrderType[]>(dummyOrders);
@@ -28,9 +29,9 @@ const AdminOrderHistory = () => {
     displayedList,
     handleNextPage,
     handlePreviousPage,
-  } = usePaging(orders, 4);
+  } = usePaging(orders, adminOrdersPerPage);
 
-  const handleFilter = (e: React.ChangeEvent<any>): void => {
+  const handleFilter = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value, type, checked } = e.target;
     setOrdersFilter((prevFilters) => ({
       ...prevFilters,
