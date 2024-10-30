@@ -1,7 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from "react";
-import Logo from "../../assets/images/logo.svg";
-import { Link } from "react-router-dom";
-import Button from "../Button";
+
+import ErrorComponent from "./ErrorComponent";
 
 type ErrorBoundaryProps = {
   children: ReactNode;
@@ -29,25 +28,11 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex flex-col items-center justify-center gap-5 overflow-x-hidden bg-slate-800 font-sans text-white">
-          <img
-            src={Logo}
-            alt="Hamburger Logo"
-            className={`w-[248px] min-w-[248px] animate-slowWiggle rounded-full bg-white p-1`}
-          />
-          <div className="flex flex-col items-center gap-1">
-            <h1 className="text-2xl">Omlouváme se, něco se pokazilo.</h1>
-            <h2 className="text-xl">Pracujeme na opravě.</h2>
-            {/* <span className="text-4xl">🛠️👷</span> */}
-            <span className="text-4xl">🧑‍💻</span>
-          </div>
-          <Link
-            to="/"
-            onClick={() => setTimeout(() => window.location.reload(), 0)}
-          >
-            <Button>Zpět na hlavní stránku</Button>
-          </Link>
-        </div>
+        <ErrorComponent
+          title="Omlouváme se, něco se pokazilo."
+          subtitle="🛠️👷"
+          onBack={() => setTimeout(() => window.location.reload(), 0)}
+        />
       );
     }
 

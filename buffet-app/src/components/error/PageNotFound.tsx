@@ -1,9 +1,7 @@
+import ErrorComponent from "./ErrorComponent";
+
 const PageNotFound = () => {
-  return (
-    <div className="mb-[3rem] mt-[10rem] w-full text-center text-2xl font-bold text-white">
-      Page Not Found
-    </div>
-  );
+  return <ErrorComponent title="Tato stránka neexistuje." subtitle="🕵️‍♂️" />;
 };
 
 export default PageNotFound;
