@@ -31,8 +31,11 @@ const AdminOrderHistory = () => {
     handlePreviousPage,
   } = usePaging(orders, adminOrdersPerPage);
 
-  const handleFilter = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { name, value, type, checked } = e.target;
+  const handleFilter = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ): void => {
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
     setOrdersFilter((prevFilters) => ({
       ...prevFilters,
       [name]: type === "checkbox" ? checked : value,

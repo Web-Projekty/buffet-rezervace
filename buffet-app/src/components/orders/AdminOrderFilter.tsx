@@ -9,7 +9,9 @@ type AdminOrderFilterProps = {
     date: string;
     status: Order["status"] | "all";
   };
-  handleFilter: (e: React.ChangeEvent<any>) => void;
+  handleFilter: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => void;
 };
 
 const AdminOrderFilter = ({
