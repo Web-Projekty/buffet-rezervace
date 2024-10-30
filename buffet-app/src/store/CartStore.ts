@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { MenuItem } from "../types";
-import { maxItems } from "../constants";
+import { cartLocalStorageKey, maxItems } from "../constants";
+import { getItem, removeItem, setItem } from "../components/utils/localStorage";
 
 type CartItem = MenuItem & { quantity: number };
 
@@ -19,8 +20,8 @@ type cartItems = {
 };
 
 const loadCartItems = (): CartItem[] => {
-  const cartItems = localStorage.getItem("cartItems");
-  return cartItems ? JSON.parse(cartItems) : [];
+  const cartItems = getItem(cartLocalStorageKey);
+  return cartItems ? (cartItems as CartItem[]) : [];
 };
 
 const useCart = create<cartItems>((set, get) => ({
@@ -46,7 +47,7 @@ const useCart = create<cartItems>((set, get) => ({
       }));
     }
 
-    localStorage.setItem("cartItems", JSON.stringify(get().cartItems));
+    setItem(cartLocalStorageKey, get().cartItems);
   },
   removeFromCart: (id: number) => {
     const isAlreadyInCart = get().isItemInCart(id);
@@ -69,11 +70,11 @@ const useCart = create<cartItems>((set, get) => ({
       }));
     }
 
-    localStorage.setItem("cartItems", JSON.stringify(get().cartItems));
+    setItem(cartLocalStorageKey, get().cartItems);
   },
   clearCart: () => {
     set({ cartItems: [] });
-    localStorage.removeItem("cartItems");
+    removeItem(cartLocalStorageKey);
   },
   getCartTotal: () =>
     get().cartItems.reduce(
