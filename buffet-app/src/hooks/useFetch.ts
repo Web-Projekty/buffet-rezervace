@@ -29,16 +29,16 @@ const useFetch = <T>(
       try {
         const { data } = await axios.post(url, requestData);
         setData(data as T);
-        setIsLoading(false);
       } catch (e) {
         console.log(e);
         setError("Chyba načítání dat ze serveru.");
-        setData(initialValue as T);
+        setData(initialValue);
+      } finally {
         setIsLoading(false);
       }
     }
     fetchData();
-  }, []);
+  }, [url, requestData]);
 
   return { isLoading, error, setError, data };
 };
