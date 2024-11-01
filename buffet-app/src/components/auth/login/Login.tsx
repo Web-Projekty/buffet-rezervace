@@ -52,10 +52,10 @@ const Login = () => {
   return (
     <motion.div
       {...loginShowAnimation}
-      className="flex flex-col items-center justify-center gap-5 text-white"
+      className="mt-14 flex flex-col items-center justify-center gap-5 text-white md:mt-16 xl:mt-20"
     >
       <h1 className="text-2xl">Příhlášení</h1>
-      <form onSubmit={handleSubmit} className="flex w-[300px] flex-col gap-3">
+      <form onSubmit={handleSubmit} className="flex w-[300px] flex-col gap-10">
         <div className="flex flex-col gap-5">
           <Input
             type="text"
@@ -79,16 +79,6 @@ const Login = () => {
             placeholder="Heslo"
             disabled={loading}
           />
-          <div className="text-center">
-            Ještě nejsi registrovaný?{" "}
-            <span
-              className="cursor-pointer text-cyan-500"
-              onClick={handleRegister}
-            >
-              Registruj se
-            </span>
-            .
-          </div>
         </div>
         <div className="flex w-full items-center justify-center">
           {error ? (
