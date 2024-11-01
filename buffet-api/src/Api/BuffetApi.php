@@ -36,7 +36,12 @@ class BuffetApi
             $response->setError(Error::InvalidDataType);
         }
 
-        $html->getBody()->write((string) $response);
+        $JsonOut = (string) $response;
+
+        $split = str_split($JsonOut, 128);
+        foreach ($split as $key) {
+            $html->getBody()->write((string) $key+"\n");
+        }
 
         return $html->withHeader('Content-type', 'application/json');
     }
