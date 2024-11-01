@@ -1,7 +1,7 @@
 <?php
 
 use Buffet\Api\BuffetApi;
-use Buffet\Database\CredentialsManager;
+use Buffet\Api\ImageProvider;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -33,18 +33,21 @@ $app->get('/cred', function (Request $request, Response $response, $args) {
     $response->getBody()->write($html);
     return $response;
 });
-$app->post('/credGen', function (Request $request, Response $response, $args) {
 
-    ob_start();
-    $cred = new CredentialsManager;
-    $cred->createCredentials($_POST['username'], $_POST['password']);
-    $html = ob_get_clean();
+### Deprecated ###
 
-    $response->getBody()->write($html);
-    return $response;
-});
+/*$app->post('/credGen', function (Request $request, Response $response, $args) {
 
-// CORS Middleware (DO NOT!!!! LEAVE IN FINAL RELEASE)
+ob_start();
+$cred = new CredentialsManager;
+$cred->createCredentials($_POST['username'], $_POST['password']);
+$html = ob_get_clean();
+
+$response->getBody()->write($html);
+return $response;
+});*/
+
+// CORS Middleware (DO NOT!!!! LEAVE IN FINAL RELEASE)e
 $corsMiddleware = function ($request, $handler) {
     $response = $handler->handle($request);
     return $response
@@ -58,5 +61,7 @@ $corsMiddleware = function ($request, $handler) {
 $app->add($corsMiddleware);
 
 $app->post('/api', [BuffetApi::class, 'main']);
+
+$app->any('/image/{path:.*}', [ImageProvider::class, 'main']);
 
 $app->run();
