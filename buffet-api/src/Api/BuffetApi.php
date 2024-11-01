@@ -40,7 +40,7 @@ class BuffetApi
 
         $split = str_split($JsonOut, 128);
         foreach ($split as $key) {
-            $html->getBody()->write((string) $key+"\n");
+            $html->getBody()->write((string) $key . PHP_EOL);
         }
 
         return $html->withHeader('Content-type', 'application/json');
