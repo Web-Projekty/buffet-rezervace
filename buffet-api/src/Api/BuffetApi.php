@@ -173,8 +173,8 @@ class BuffetApi
         $response->setPayloadKeys(["menuItems"]);
         //var_dump(ItemModel::getAll()->toArray());
         // if()
-        //$response->setPayload("menuItems", ItemModel::getAll()->toArray());
-        phpinfo();
+        $response->setPayload("menuItems", ItemModel::getAll()->toArray());
+        // phpinfo();
         $response->setStatus(true);
         return $response;
     }
