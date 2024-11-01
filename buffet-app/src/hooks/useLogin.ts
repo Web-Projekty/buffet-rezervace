@@ -3,6 +3,7 @@ import axios from "axios";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useNavigate } from "react-router-dom";
 import { setTokenExpiration } from "../components/auth/login/login";
+import { Order } from "../types";
 
 type UseLoginReturn = {
   loading: boolean;
@@ -17,10 +18,18 @@ type LoginData = {
   password: string;
 };
 
+type UserData = {
+  fullName: string;
+  email: string;
+  isAdmin: boolean;
+  class: string;
+  orders: Order[];
+};
+
 const useLogin = (loginData: LoginData, url: string): UseLoginReturn => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const signIn = useSignIn();
+  const signIn = useSignIn<UserData>();
   const navigate = useNavigate();
 
   const login = async () => {
@@ -41,6 +50,8 @@ const useLogin = (loginData: LoginData, url: string): UseLoginReturn => {
             token: data.payload.token,
             type: "Bearer",
           },
+          refresh:
+            "5iQldrf4LwmkgVPoiVBCSRzDu4qeIFOyKdqT3OtJbXJI1Vxmzge0Au11dGmMbeuI",
           userState: {
             fullName: data.payload.fullName,
             email: data.payload.email,
