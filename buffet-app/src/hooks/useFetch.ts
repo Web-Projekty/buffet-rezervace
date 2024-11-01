@@ -16,11 +16,13 @@ type RequestData = {
 const useFetch = <T>(
   url: string,
   requestData: RequestData,
-  initialValue: T,
+  initialValue?: T,
 ): UseFetchReturn<T> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const [data, setData] = useState<T | null>(initialValue);
+  const [data, setData] = useState<T | null>(
+    initialValue ? initialValue : null,
+  );
 
   useEffect(() => {
     setIsLoading(true);
@@ -32,13 +34,13 @@ const useFetch = <T>(
       } catch (e) {
         console.log(e);
         setError("Chyba načítání dat ze serveru.");
-        setData(initialValue);
+        setData(data as T);
       } finally {
         setIsLoading(false);
       }
     }
     fetchData();
-  }, [url, requestData]);
+  }, []);
 
   return { isLoading, error, setError, data };
 };

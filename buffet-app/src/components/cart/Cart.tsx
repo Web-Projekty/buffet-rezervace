@@ -9,7 +9,7 @@ const Cart = () => {
   const navigate = useNavigate();
 
   const handleSubmitOrder = (id: number) => {
-    navigate("/order/?id=" + id);
+    navigate("/order?id=" + id);
   };
 
   return (
