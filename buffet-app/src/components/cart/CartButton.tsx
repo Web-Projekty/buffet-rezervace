@@ -1,6 +1,6 @@
-import { PiShoppingCartSimple } from "react-icons/pi";
 import { motion } from "framer-motion";
 import useCart from "../../store/CartStore";
+import { ShoppingCartIcon } from "lucide-react";
 
 const CartButton = () => {
   const { getCartQuantity, handleOpenCart } = useCart();
@@ -19,7 +19,7 @@ const CartButton = () => {
       >
         {getCartQuantity()}
       </motion.span>
-      <PiShoppingCartSimple size={36} />
+      <ShoppingCartIcon size={36} />
     </div>
   );
 };

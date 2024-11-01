@@ -1,4 +1,4 @@
-import { LuBadgePlus, LuBadgeMinus } from "react-icons/lu";
+import { BadgePlus, BadgeMinus } from "lucide-react";
 import { formatCurrency } from "../../utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { MenuItem as MenuItemType } from "../../types";
@@ -46,7 +46,7 @@ const MenuItem = ({ item }: MenuItem) => {
   return (
     <motion.div
       {...menuItemShowAnimation}
-      className="relative flex h-[26rem] w-[18rem] flex-col justify-around gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black"
+      className="relative flex h-[26rem] w-[18rem] flex-col justify-start gap-2 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black"
     >
       <div className="relative">
         <img
@@ -77,7 +77,7 @@ const MenuItem = ({ item }: MenuItem) => {
         </div>
 
         <AnimatePresence>
-          <div className="relative flex flex-row items-center justify-center">
+          <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 transform flex-row items-center justify-center">
             {isItemInCart(item.id) ? (
               <motion.div
                 key="remove-from-cart"
@@ -85,7 +85,7 @@ const MenuItem = ({ item }: MenuItem) => {
                 className="flex transform flex-row items-center gap-3"
               >
                 <motion.div {...tapScaleAnimation}>
-                  <LuBadgeMinus
+                  <BadgeMinus
                     key={"remove-from-cart"}
                     size={48}
                     className="p-2 hover:cursor-pointer"
@@ -101,7 +101,7 @@ const MenuItem = ({ item }: MenuItem) => {
                   {getItemQuantity(item.id)}
                 </motion.span>
                 <motion.div {...tapScaleAnimation}>
-                  <LuBadgePlus
+                  <BadgePlus
                     key={"add-to-cart"}
                     size={48}
                     className={`p-2 hover:cursor-pointer ${isMaxQuantity ? "text-gray-400" : ""}`}
@@ -115,7 +115,7 @@ const MenuItem = ({ item }: MenuItem) => {
                 {...quantButtonShowAnimation}
                 className="flex transform items-center justify-center"
               >
-                <LuBadgePlus
+                <BadgePlus
                   size={48}
                   className="p-2 hover:cursor-pointer"
                   onClick={handleAddToCart}

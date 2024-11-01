@@ -1,22 +1,17 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { formatCurrency, formatUnixDate } from "../../utils";
 import { useState } from "react";
-import { MdKeyboardArrowLeft } from "react-icons/md";
-import { LuBadgeCheck, LuBadgeX, LuBadgeInfo } from "react-icons/lu";
 import { MenuItem, Order as OrderType } from "../../types";
 import { scaleUpAnimation } from "../../animations";
+import { ArrowLeft, BadgeCheck, BadgeInfo, BadgeX } from "lucide-react";
 
 const StatusBadge = ({ status }: { status: OrderType["status"] }) => {
   return status === "pickedup" ? (
-    <LuBadgeCheck size={32} className="text-green-500" title="Vyzvednuto" />
+    <BadgeCheck size={32} className="text-green-500" />
   ) : status === "notpickedup" ? (
-    <LuBadgeX size={32} className="text-red-500" title="Nevyzvednuto" />
+    <BadgeX size={32} className="text-red-500" />
   ) : (
-    <LuBadgeInfo
-      size={32}
-      className="text-yellow-300"
-      title="Čeká na vyzvednutí"
-    />
+    <BadgeInfo size={32} className="text-yellow-300" />
   );
 };
 
@@ -100,7 +95,7 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
               </AnimationWrapper>
             )}
           </AnimatePresence>
-          <MdKeyboardArrowLeft
+          <ArrowLeft
             size={32}
             className={`${isOpen ? "-rotate-90" : null} cursor-pointer transition-transform duration-300 ease-in-out`}
             onClick={handleOpen}
