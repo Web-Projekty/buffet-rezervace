@@ -38,10 +38,7 @@ class BuffetApi
 
         $JsonOut = (string) $response;
 
-        $split = str_split($JsonOut, 128);
-        foreach ($split as $key) {
-            $html->getBody()->write((string) $key);
-        }
+        $html->getBody()->write((string) $JsonOut);
 
         return $html->withHeader('Content-type', 'application/json');
     }
