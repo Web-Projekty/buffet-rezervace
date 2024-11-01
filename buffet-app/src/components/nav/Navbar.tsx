@@ -1,11 +1,11 @@
 import { NavLink } from "react-router-dom";
-import CartButton from "./cart/CartButton";
-import AccountButton from "./auth/AccountButton";
-import { IoIosMenu, IoIosClose } from "react-icons/io";
+import CartButton from "../cart/CartButton";
+import AccountButton from "../auth/AccountButton";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-import { User } from "../types";
+import { User } from "../../types";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
 
 type NavLinks = {
   id: number;
@@ -43,6 +43,10 @@ const Links = ({ user }: { user: User }) => {
   });
 };
 
+const MobileNavbar = () => {
+  return;
+};
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const user: User | null = useAuthUser()!;
@@ -63,7 +67,7 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="z-50 flex flex-col rounded-full bg-white p-[18px] md:hidden">
-        <IoIosMenu size={64} onClick={handleOpenMobileMenu} />
+        <Menu size={64} onClick={handleOpenMobileMenu} />
       </div>
 
       <motion.ul
@@ -77,7 +81,7 @@ const Navbar = () => {
         className="fixed bottom-0 left-0 right-0 top-0 z-40 flex h-screen w-screen flex-col items-center justify-center gap-5 bg-primary text-xl text-white"
       >
         <li className="absolute right-5 top-5">
-          <IoIosClose size={64} onClick={handleOpenMobileMenu} />
+          <X size={64} onClick={handleOpenMobileMenu} />
         </li>
         <Links user={user} />
       </motion.ul>

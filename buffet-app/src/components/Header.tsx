@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Logo from "../assets/images/logo.svg";
-import Navbar from "./Navbar";
+import Navbar from "./nav/Navbar";
 import { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 
