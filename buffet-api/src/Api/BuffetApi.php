@@ -6,6 +6,7 @@ namespace Buffet\Api;
 
 use Buffet\Api\AuthApi;
 use Buffet\Database\DatabaseManager;
+use Buffet\Database\Models\ItemModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Psr\Http\Message\ResponseInterface;
@@ -35,7 +36,9 @@ class BuffetApi
             $response->setError(Error::InvalidDataType);
         }
 
-        $html->getBody()->write((string) $response);
+        $JsonOut = (string) $response;
+
+        $html->getBody()->write((string) $JsonOut);
 
         return $html->withHeader('Content-type', 'application/json');
     }
@@ -81,6 +84,10 @@ class BuffetApi
                 return $this->handleVerify($response);
                 break;
 
+            case "getMenu":
+                return $this->handleGetMenu($response);
+                break;
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -103,7 +110,21 @@ class BuffetApi
 
         $jwt = new JWTApi;
 
-        return $jwt->validateToken($response);
+        $jwt->validateToken($response);
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $decodedToken = $jwt->decodeToken($response);
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $response->addPayload("newToken", $jwt->getToken($decodedToken->name));
+
+        return $response;
     }
 
 /**
@@ -143,6 +164,20 @@ class BuffetApi
         if ($response->hasRequestKeys()) {
             return $auth->login($response);
         }
+        return $response;
+    }
+
+    /**
+     * @param ApiResponse $response
+     */
+    function handleGetMenu(ApiResponse $response): ApiResponse
+    {
+        $response->setPayloadKeys(["menuItems"]);
+        //var_dump(ItemModel::getAll()->toArray());
+        // if()
+        $response->setPayload("menuItems", ItemModel::getAll()->toArray());
+        // phpinfo();
+        $response->setStatus(true);
         return $response;
     }
 
