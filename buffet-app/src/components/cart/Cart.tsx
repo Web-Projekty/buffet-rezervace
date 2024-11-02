@@ -8,8 +8,9 @@ const Cart = () => {
   const { cartItems, isCartEmpty } = useCart();
   const navigate = useNavigate();
 
-  const handleSubmitOrder = (id: number) => {
-    navigate("/order?id=" + id);
+  const handleSubmitOrder = () => {
+    // TODO: process the order
+    navigate("/order?id=" + 5);
   };
 
   return (
@@ -25,7 +26,7 @@ const Cart = () => {
       </div>
       <div className="grid h-10 grid-cols-2 grid-rows-1 justify-between gap-10 text-white">
         <Button>Zpět</Button>
-        <Button disabled={isCartEmpty()} onClick={() => handleSubmitOrder(5)}>
+        <Button disabled={isCartEmpty()} onClick={handleSubmitOrder}>
           Pokračovat
         </Button>
       </div>
