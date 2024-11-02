@@ -77,7 +77,7 @@ const MenuItem = ({ item }: MenuItem) => {
         </div>
 
         <AnimatePresence>
-          <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 transform flex-row items-center justify-center">
+          <div className="absolute bottom-[0.30rem] left-1/2 flex -translate-x-1/2 transform flex-row items-center justify-center">
             {isItemInCart(item.id) ? (
               <motion.div
                 key="remove-from-cart"
@@ -100,6 +100,7 @@ const MenuItem = ({ item }: MenuItem) => {
                 >
                   {getItemQuantity(item.id)}
                 </motion.span>
+
                 <motion.div {...tapScaleAnimation}>
                   <BadgePlus
                     key={"add-to-cart"}
