@@ -18,8 +18,12 @@ class ApiResponse
      * @param array $payloadKeys
      */
 
-    public function __construct(public array $request = [])
-    {}
+    public function __construct(public ?array $request = [])
+    {
+        if (!isset($this->request['requestType'])) {
+            $this->setError(Error::MissingRequestType);
+        }
+    }
 
     /**
      * @param string $key
@@ -60,7 +64,7 @@ class ApiResponse
     /**
      * @return mixed
      */
-    public function getRequestType(): string
+    public function getRequestType(): string | null
     {
         return $this->request['requestType'] ?? null;
     }
@@ -117,7 +121,7 @@ class ApiResponse
             $this->status = Status::Success;
             $this->addPayload("msg", $msg->getValue() ?? null);
         }
-        
+
         return $this;
     }
 
@@ -186,7 +190,11 @@ class ApiResponse
         return true;
     }
 
-    public function hasFailed(){
+    /**
+     * @return mixed
+     */
+    public function hasFailed()
+    {
         return $this->status === Status::Failed;
     }
 
