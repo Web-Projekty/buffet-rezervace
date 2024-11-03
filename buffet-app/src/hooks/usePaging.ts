@@ -33,7 +33,7 @@ export function usePaging<T>(
   const displayedListCount: number = displayedList.length;
 
   const setCurrentPage = (page: number): void => {
-    setSearchParams({ page: page.toString() });
+    setSearchParams({ [paramsName ? paramsName : "page"]: page.toString() });
   };
 
   const handlePage = (page: number): void => {
