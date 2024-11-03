@@ -22,13 +22,8 @@ const AdminOrderHistory = () => {
     status: "all",
   });
 
-  const {
-    currentPage,
-    totalPagesCount,
-    displayedList,
-    listOfPages,
-    handlePage,
-  } = usePaging(orders, adminOrdersPerPage);
+  const { currentPage, totalPagesCount, dataList, arrayOfPages, handlePage } =
+    usePaging(orders, adminOrdersPerPage);
 
   const handleFilter = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -63,10 +58,10 @@ const AdminOrderHistory = () => {
   return (
     <div className="m-auto mb-[3rem] mt-[10rem] flex flex-col-reverse items-center justify-between gap-5 text-white md:mt-[15rem] md:w-[1200px] md:flex-row md:items-start">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl">Objednávky ({listOfPages.length})</h1>
+        <h1 className="text-2xl">Objednávky ({arrayOfPages.length})</h1>
         <ul className="flex flex-col gap-2">
           <AnimatePresence>
-            {displayedList.map((order) => (
+            {dataList.map((order) => (
               <motion.div
                 key={order.id}
                 layout
@@ -83,7 +78,7 @@ const AdminOrderHistory = () => {
         <PagingButtons
           currentPage={currentPage}
           totalPagesCount={totalPagesCount}
-          listOfPages={listOfPages}
+          listOfPages={arrayOfPages}
           handlePage={handlePage}
         />
       </div>

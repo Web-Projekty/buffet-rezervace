@@ -10,18 +10,10 @@ import Loading from "../Loading";
 import { itemsPerPage } from "../../constants";
 
 const Menu = () => {
-  // const token = useAuthHeader();
   const [menu, setMenu] = useState<MenuItemType[]>([]);
 
-  // console.log(token?.split(" ")[1]);
-
-  const {
-    currentPage,
-    totalPagesCount,
-    displayedList,
-    listOfPages,
-    handlePage,
-  } = usePaging<MenuItemType>(menu, itemsPerPage);
+  const { currentPage, totalPagesCount, dataList, arrayOfPages, handlePage } =
+    usePaging<MenuItemType>(menu, itemsPerPage);
 
   // const { data, isLoading, error } = useFetch<MenuItemType[]>(
   //   "https://wlczak.vlastas.cc/backend/api",
@@ -46,14 +38,14 @@ const Menu = () => {
       <h1 className="text-3xl font-bold text-white">Menu</h1>
       {/* {isLoading && <Loading size={30} />} */}
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3">
-        {displayedList.map((item) => {
+        {dataList.map((item) => {
           return <MenuItem key={item.id} item={item} />;
         })}
       </div>
       <PagingButtons
         currentPage={currentPage}
         totalPagesCount={totalPagesCount}
-        listOfPages={listOfPages}
+        listOfPages={arrayOfPages}
         handlePage={handlePage}
       />
     </div>

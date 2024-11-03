@@ -4,9 +4,9 @@ import { useSearchParams } from "react-router-dom";
 type PagingReturn<T> = {
   currentPage: number;
   totalPagesCount: number;
-  displayedList: T[];
-  displayedListCount: number;
-  listOfPages: number[];
+  dataList: T[];
+  dataListLength: number;
+  arrayOfPages: number[];
   handlePage: (page: number) => void;
 };
 
@@ -21,16 +21,19 @@ export function usePaging<T>(
     searchParams.get(paramsName ? paramsName : "page") || "1",
     10,
   );
+
+  const dataList: T[] = data
+    ? data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+    : [];
+
+  const dataListLength: number = dataList.length;
+
   const totalPagesCount: number = Math.ceil(data.length / itemsPerPage);
-  const listOfPages: number[] = Array.from(
+
+  const arrayOfPages: number[] = Array.from(
     { length: totalPagesCount },
     (_, index) => index + 1,
   );
-
-  const displayedList: T[] = data
-    ? data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-    : [];
-  const displayedListCount: number = displayedList.length;
 
   const setCurrentPage = (page: number): void => {
     setSearchParams({ [paramsName ? paramsName : "page"]: page.toString() });
@@ -47,9 +50,9 @@ export function usePaging<T>(
   return {
     currentPage,
     totalPagesCount,
-    displayedList,
-    displayedListCount,
-    listOfPages,
+    dataList,
+    dataListLength,
+    arrayOfPages,
     handlePage,
   };
 }
