@@ -9,14 +9,15 @@ const UserOrderHistory = ({ list }: { list: OrderType[] }) => {
   const {
     currentPage,
     totalPagesCount,
-    totalListCount,
     displayedList,
-    handleNextPage,
-    handlePreviousPage,
+    listOfPages,
+    handlePage,
   } = usePaging(list, ordersPerPage);
   return (
     <div className="flex flex-col gap-2 md:w-[45rem]">
-      <h1 className="text-2xl">Tvá historie objednávek ({totalListCount})</h1>
+      <h1 className="text-2xl">
+        Tvá historie objednávek ({listOfPages.length})
+      </h1>
       <AnimatePresence>
         <ul className="flex flex-col gap-2">
           {displayedList.map((order) => (
@@ -36,8 +37,8 @@ const UserOrderHistory = ({ list }: { list: OrderType[] }) => {
       <PagingButtons
         currentPage={currentPage}
         totalPagesCount={totalPagesCount}
-        handleNextPage={handleNextPage}
-        handlePreviousPage={handlePreviousPage}
+        listOfPages={listOfPages}
+        handlePage={handlePage}
       />
     </div>
   );

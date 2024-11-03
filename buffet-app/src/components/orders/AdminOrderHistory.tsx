@@ -25,10 +25,9 @@ const AdminOrderHistory = () => {
   const {
     currentPage,
     totalPagesCount,
-    totalListCount,
     displayedList,
-    handleNextPage,
-    handlePreviousPage,
+    listOfPages,
+    handlePage,
   } = usePaging(orders, adminOrdersPerPage);
 
   const handleFilter = (
@@ -64,7 +63,7 @@ const AdminOrderHistory = () => {
   return (
     <div className="m-auto mb-[3rem] mt-[10rem] flex flex-col-reverse items-center justify-between gap-5 text-white md:mt-[15rem] md:w-[1200px] md:flex-row md:items-start">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl">Objednávky ({totalListCount})</h1>
+        <h1 className="text-2xl">Objednávky ({listOfPages.length})</h1>
         <ul className="flex flex-col gap-2">
           <AnimatePresence>
             {displayedList.map((order) => (
@@ -84,8 +83,8 @@ const AdminOrderHistory = () => {
         <PagingButtons
           currentPage={currentPage}
           totalPagesCount={totalPagesCount}
-          handleNextPage={handleNextPage}
-          handlePreviousPage={handlePreviousPage}
+          listOfPages={listOfPages}
+          handlePage={handlePage}
         />
       </div>
       <AdminOrderFilter

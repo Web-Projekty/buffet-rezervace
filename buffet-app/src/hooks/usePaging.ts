@@ -1,34 +1,39 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 type PagingReturn<T> = {
   currentPage: number;
   totalPagesCount: number;
-  totalListCount: number;
   displayedList: T[];
   displayedListCount: number;
-  handleNextPage: () => void;
-  handlePreviousPage: () => void;
+  listOfPages: number[];
+  handlePage: (page: number) => void;
 };
 
 export function usePaging<T>(
   data: T[] = [],
   itemsPerPage: number,
 ): PagingReturn<T> {
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchParams, setSearchParams] = useSearchParams("");
+
+  const currentPage: number = parseInt(searchParams.get("page") || "1", 10);
   const totalPagesCount: number = Math.ceil(data.length / itemsPerPage);
-  const totalListCount: number = data.length;
+  const listOfPages: number[] = Array.from(
+    { length: totalPagesCount },
+    (_, index) => index + 1,
+  );
 
   const displayedList: T[] = data
     ? data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
     : [];
   const displayedListCount: number = displayedList.length;
 
-  const handleNextPage = (): void => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPagesCount));
+  const setCurrentPage = (page: number): void => {
+    setSearchParams({ page: page.toString() });
   };
 
-  const handlePreviousPage = (): void => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  const handlePage = (page: number): void => {
+    setCurrentPage(page);
   };
 
   useEffect(() => {
@@ -38,10 +43,9 @@ export function usePaging<T>(
   return {
     currentPage,
     totalPagesCount,
-    totalListCount,
     displayedList,
     displayedListCount,
-    handleNextPage,
-    handlePreviousPage,
+    listOfPages,
+    handlePage,
   };
 }

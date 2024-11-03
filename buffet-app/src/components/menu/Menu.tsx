@@ -19,8 +19,8 @@ const Menu = () => {
     currentPage,
     totalPagesCount,
     displayedList,
-    handleNextPage,
-    handlePreviousPage,
+    listOfPages,
+    handlePage,
   } = usePaging<MenuItemType>(menu, itemsPerPage);
 
   // const { data, isLoading, error } = useFetch<MenuItemType[]>(
@@ -53,8 +53,8 @@ const Menu = () => {
       <PagingButtons
         currentPage={currentPage}
         totalPagesCount={totalPagesCount}
-        handleNextPage={handleNextPage}
-        handlePreviousPage={handlePreviousPage}
+        listOfPages={listOfPages}
+        handlePage={handlePage}
       />
     </div>
   );
