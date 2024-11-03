@@ -1,4 +1,4 @@
-import { Alergen, MenuItem, Order, User } from "./types";
+import { Allergen, MenuItem, Order, User } from "./types";
 
 export const dummyUser: User = {
   id: 1,
@@ -301,6 +301,102 @@ export const dummyFood: MenuItem[] = [
       { id: 1, name: "Gluten", description: "This product contains gluten" },
     ],
   },
+  {
+    id: 13,
+    image: "https://www.pizzaplzen.cz/wp-content/uploads/2017/02/8-768x493.jpg",
+    name: "Pizza",
+    price: 129.9,
+    description: "A delicious pizza with pepperoni",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
+  },
+  {
+    id: 14,
+    image:
+      "https://www.foodandwine.com/thmb/pwFie7NRkq4SXMDJU6QKnUKlaoI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Ultimate-Veggie-Burgers-FT-Recipe-0821-5d7532c53a924a7298d2175cf1d4219f.jpg",
+    name: "Burger",
+    price: 89.9,
+    description: "A juicy burger with cheese",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
+  },
+  {
+    id: 15,
+    name: "Fries",
+    image:
+      "https://images.unsplash.com/photo-1593507369837-9adcc0c0bdc6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    price: 49.9,
+    description: "Crispy fries with ketchup",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
+  },
+  {
+    id: 16,
+    image: "https://www.pizzaplzen.cz/wp-content/uploads/2017/02/8-768x493.jpg",
+    name: "Pizza",
+    price: 129.9,
+    description: "A delicious pizza with pepperoni",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
+  },
+  {
+    id: 17,
+    image:
+      "https://www.foodandwine.com/thmb/pwFie7NRkq4SXMDJU6QKnUKlaoI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Ultimate-Veggie-Burgers-FT-Recipe-0821-5d7532c53a924a7298d2175cf1d4219f.jpg",
+    name: "Burger",
+    price: 89.9,
+    description: "A juicy burger with cheese",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
+  },
+  {
+    id: 18,
+    name: "Fries",
+    image:
+      "https://images.unsplash.com/photo-1593507369837-9adcc0c0bdc6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    price: 49.9,
+    description: "Crispy fries with ketchup",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
+  },
+  {
+    id: 19,
+    image: "https://www.pizzaplzen.cz/wp-content/uploads/2017/02/8-768x493.jpg",
+    name: "Pizza",
+    price: 129.9,
+    description: "A delicious pizza with pepperoni",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
+  },
+  {
+    id: 20,
+    image:
+      "https://www.foodandwine.com/thmb/pwFie7NRkq4SXMDJU6QKnUKlaoI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Ultimate-Veggie-Burgers-FT-Recipe-0821-5d7532c53a924a7298d2175cf1d4219f.jpg",
+    name: "Burger",
+    price: 89.9,
+    description: "A juicy burger with cheese",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
+  },
+  {
+    id: 21,
+    name: "Fries",
+    image:
+      "https://images.unsplash.com/photo-1593507369837-9adcc0c0bdc6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    price: 49.9,
+    description: "Crispy fries with ketchup",
+    alergens: [
+      { id: 1, name: "Gluten", description: "This product contains gluten" },
+    ],
+  },
 ];
 
 export const dummyOrders: Order[] = [
@@ -309,7 +405,7 @@ export const dummyOrders: Order[] = [
   dummyUser3.orders,
 ].flat();
 
-export const alergens: Alergen[] = [
+export const alergens: Allergen[] = [
   {
     id: 1,
     name: "Gluten",
