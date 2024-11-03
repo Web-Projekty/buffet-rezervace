@@ -12,7 +12,7 @@ const UserOrderHistory = ({ list }: { list: OrderType[] }) => {
     displayedList,
     listOfPages,
     handlePage,
-  } = usePaging(list, ordersPerPage);
+  } = usePaging(list, ordersPerPage, "orderPage");
   return (
     <div className="flex flex-col gap-2 md:w-[45rem]">
       <h1 className="text-2xl">
