@@ -11,12 +11,13 @@ enum Error: string {
     case StatusPending = 'Status is still pending';
     case InvalidDataType = 'Handling api call resulted in invalid data type';
     // api keys
-    case MissingRequestKeys = 'Some or all of the request kays have been left undefined';
-    case MissingPayloadKeys = 'Some or all of the payload kays have been left undefined';
+    case MissingRequestKeys = 'Some or all of the request keys have been left undefined';
+    case MissingPayloadKeys = 'Some or all of the payload keys have been left undefined';
+    case MissingRequestType = 'Api request type is missing';
 
     ############################ Auth ############################
     // credManager
-    case NoEnv = 'The enviromental variable for credManager is corrupted or missing.';
+    case NoEnv = 'The enviromental variable for credManager is corrupted or missing';
     case FailedDecrypt = 'Failed decryption of database credentials';
 
     // registration

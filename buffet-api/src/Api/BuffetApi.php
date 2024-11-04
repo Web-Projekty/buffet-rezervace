@@ -67,7 +67,7 @@ class BuffetApi
             return $response;
         }
 
-        switch ($request['requestType']) {
+        switch ($response->getRequestType()) {
             case "test":
                 return $this->handleTest($response);
                 break;
