@@ -8,6 +8,8 @@ type MenuItemButtons = {
   getItemQuantity: (id: number) => number;
   handleAddToCart: () => void;
   handleRemoveFromCart: () => void;
+  isCartFull: () => boolean;
+  isItemMaxQuantity: boolean;
 };
 
 const quantChangeAnimation = {
@@ -30,9 +32,9 @@ const MenuItemButtons = ({
   getItemQuantity,
   handleAddToCart,
   handleRemoveFromCart,
+  isItemMaxQuantity,
+  isCartFull,
 }: MenuItemButtons) => {
-  const isMaxQuantity = getItemQuantity(id) === 5;
-
   return (
     <AnimatePresence>
       <div className="absolute bottom-[0.30rem] left-1/2 flex -translate-x-1/2 transform flex-row items-center justify-center">
@@ -54,7 +56,7 @@ const MenuItemButtons = ({
             <motion.span
               key={getItemQuantity(id)}
               {...quantChangeAnimation}
-              className={`rounded-lg px-2 text-lg ${isMaxQuantity ? "bg-red-400" : "bg-slate-800"}`}
+              className={`rounded-lg px-2 text-lg ${isItemMaxQuantity || isCartFull() ? "bg-red-400" : "bg-slate-800"}`}
             >
               {getItemQuantity(id)}
             </motion.span>
@@ -63,7 +65,7 @@ const MenuItemButtons = ({
               <BadgePlus
                 key={"add-to-cart"}
                 size={48}
-                className={`p-2 ${isMaxQuantity ? "cursor-not-allowed text-gray-400" : "cursor-pointer"}`}
+                className={`p-2 ${isItemMaxQuantity || isCartFull() ? "cursor-not-allowed text-gray-400" : "cursor-pointer"}`}
                 onClick={handleAddToCart}
               />
             </motion.div>

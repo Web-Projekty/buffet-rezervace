@@ -16,8 +16,14 @@ const menuItemShowAnimation = {
 };
 
 const MenuItem = ({ item }: MenuItem) => {
-  const { addToCart, removeFromCart, getItemQuantity, isItemInCart } =
-    useCart();
+  const {
+    addToCart,
+    removeFromCart,
+    getItemQuantity,
+    isItemInCart,
+    isCartFull,
+    isItemMaxQuantity,
+  } = useCart();
 
   const handleAddToCart = () => {
     addToCart(item);
@@ -42,6 +48,8 @@ const MenuItem = ({ item }: MenuItem) => {
           getItemQuantity={getItemQuantity}
           handleAddToCart={handleAddToCart}
           handleRemoveFromCart={handleRemoveFromCart}
+          isCartFull={isCartFull}
+          isItemMaxQuantity={isItemMaxQuantity(item.id)}
         />
       </div>
     </motion.div>
