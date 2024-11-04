@@ -12,16 +12,16 @@ const PagingButtons = ({
 }: PagingButtons) => {
   return (
     listOfPages.length > 1 && (
-      <div className="flex w-full flex-row items-center justify-center gap-10">
+      <div className="z-10 flex w-full flex-row items-center justify-center gap-10">
         <div className="flex gap-2">
           {listOfPages.map((index: number) => (
             <button
               key={index}
               onClick={() => handlePage(index)}
-              className={`cursor-pointer rounded-md border border-slate-900 p-2 ${
+              className={`rounded-md border border-slate-900 px-3 py-2 ${
                 currentPage === index
-                  ? "bg-cyan-700 text-white"
-                  : "bg-cyan-500 text-white hover:bg-cyan-700"
+                  ? "cursor-default bg-cyan-700 text-white"
+                  : "cursor-pointer bg-cyan-500 text-white hover:bg-cyan-700"
               }`}
             >
               {index}
