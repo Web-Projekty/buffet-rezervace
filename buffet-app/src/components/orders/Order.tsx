@@ -3,7 +3,7 @@ import { formatCurrency, formatUnixDate } from "../../utils";
 import { useState } from "react";
 import { MenuItem, Order as OrderType } from "../../types";
 import { scaleUpAnimation } from "../../animations";
-import { ArrowLeft, BadgeCheck, BadgeInfo, BadgeX } from "lucide-react";
+import { ChevronLeft, BadgeCheck, BadgeInfo, BadgeX } from "lucide-react";
 
 const StatusBadge = ({ status }: { status: OrderType["status"] }) => {
   return status === "pickedup" ? (
@@ -95,7 +95,7 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
               </AnimationWrapper>
             )}
           </AnimatePresence>
-          <ArrowLeft
+          <ChevronLeft
             size={32}
             className={`${isOpen ? "-rotate-90" : null} cursor-pointer transition-transform duration-300 ease-in-out`}
             onClick={handleOpen}
