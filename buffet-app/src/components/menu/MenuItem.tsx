@@ -88,7 +88,7 @@ const MenuItem = ({ item }: MenuItem) => {
                   <BadgeMinus
                     key={"remove-from-cart"}
                     size={48}
-                    className="p-2 hover:cursor-pointer"
+                    className="cursor-pointer p-2"
                     onClick={handleRemoveFromCart}
                   />
                 </motion.div>
@@ -105,7 +105,7 @@ const MenuItem = ({ item }: MenuItem) => {
                   <BadgePlus
                     key={"add-to-cart"}
                     size={48}
-                    className={`p-2 hover:cursor-pointer ${isMaxQuantity ? "text-gray-400" : ""}`}
+                    className={`p-2 ${isMaxQuantity ? "cursor-not-allowed text-gray-400" : "cursor-pointer"}`}
                     onClick={handleAddToCart}
                   />
                 </motion.div>
@@ -118,7 +118,7 @@ const MenuItem = ({ item }: MenuItem) => {
               >
                 <BadgePlus
                   size={48}
-                  className="p-2 hover:cursor-pointer"
+                  className="cursor-pointer p-2"
                   onClick={handleAddToCart}
                 />
               </motion.div>
