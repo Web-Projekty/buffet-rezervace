@@ -22,7 +22,7 @@ export type MenuItem = {
   price: number;
   description: string;
   image: string;
-  alergens: Allergen[];
+  allergens: Allergen[];
 };
 
 export type Allergen = {
