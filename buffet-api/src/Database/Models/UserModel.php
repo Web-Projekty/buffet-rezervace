@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace Buffet\Database\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -20,12 +22,13 @@ class UserModel extends Model
     protected $fillable = ['username', 'password', 'isAdmin'];
 
     // Optionally, disable timestamps if the table doesn't have them
+
     /**
-     * @var mixed
+     * @var bool
      */
     public $timestamps = false;
 
-    public static function getAll()
+    public static function getAll(): \Illuminate\Database\Eloquent\Collection  | bool
     {
         try {
             return UserModel::all();
@@ -38,11 +41,13 @@ class UserModel extends Model
      * @param  $username
      * @return mixed
      */
-    public static function getUserByName($username)
+    public static function getUserByName($username): array
     {
-        if (UserModel::where('username', $username)->exists()) {
-            return UserModel::where('username', $username)->first();
-        }
+        try {
+            if (UserModel::where('username', $username)->exists()) {
+                return UserModel::where('username', $username)->first()->toArray();
+            }
+        } catch (QueryException $e) {}
         return [];
     }
 
@@ -50,9 +55,13 @@ class UserModel extends Model
      * @param string $haystack
      * @param string $needle
      */
-    public static function isDuplicate(string $haystack, string $needle)
+    public static function isDuplicate(string $haystack, string $needle): bool
     {
-        return UserModel::where($haystack, $needle)->exists();
+        try {
+            return UserModel::where($haystack, $needle)->exists();
+        } catch (QueryException $e) {
+            return false;
+        }
     }
 
     /**
