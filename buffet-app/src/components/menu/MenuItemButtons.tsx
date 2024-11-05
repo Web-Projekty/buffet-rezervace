@@ -65,7 +65,7 @@ const MenuItemButtons = ({
               <BadgePlus
                 key={"add-to-cart"}
                 size={48}
-                className={`p-2 ${isItemMaxQuantity || isCartFull() ? "cursor-not-allowed text-gray-400" : "cursor-pointer"}`}
+                className={`p-2 ${isItemMaxQuantity || isCartFull() ? "cursor-not-allowed text-gray-400" : "cursor-pointer"} transition-colors duration-500`}
                 onClick={handleAddToCart}
               />
             </motion.div>
@@ -78,7 +78,7 @@ const MenuItemButtons = ({
           >
             <BadgePlus
               size={48}
-              className="cursor-pointer p-2"
+              className={`${isItemMaxQuantity || isCartFull() ? "cursor-not-allowed text-gray-400" : "cursor-pointer"} p-2 transition-colors duration-500`}
               onClick={handleAddToCart}
             />
           </motion.div>
