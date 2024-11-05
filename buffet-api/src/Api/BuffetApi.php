@@ -173,9 +173,14 @@ class BuffetApi
     function handleGetMenu(ApiResponse $response): ApiResponse
     {
         $response->setPayloadKeys(["menuItems"]);
-        //var_dump(ItemModel::getAll()->toArray());
-        // if()
-        $response->setPayload("menuItems", ItemModel::getAll()->toArray());
+
+        $queryResult = null;
+
+        if (!$queryResult = ItemModel::getAll()) {
+            return $response->setError(Error::QueryFailed);
+        }
+
+        $response->setPayload("menuItems", $queryResult->toArray());
         // phpinfo();
         $response->setStatus(true);
         return $response;

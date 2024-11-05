@@ -36,6 +36,8 @@ enum Error: string {
     case CorruptedOrNull = "Token's data have been corrupted or are null";
     case UnexpectedValue = "Token value is unexpected";
 
+    ############################ Database ############################
+    case QueryFailed = 'Query from database has failed';
     /**
      * @return string
      */
