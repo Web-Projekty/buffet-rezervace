@@ -34,9 +34,11 @@ class AuthApi
             return $response;
         }
 
-        UserModel::createUser($username, $password);
-        $response->setSuccess(Success::Registration);
-        return $response;
+        if (UserModel::createUser($username, $password)) {
+            return $response->setSuccess(Success::Registration);
+        }
+
+        return $response->setError(Error::RegistrationFailed);
     }
 
     /**
@@ -56,7 +58,7 @@ class AuthApi
         $password = $response->getRequestByKey("password");
 
         if (!$assoc = UserModel::getUserByName($username)) {
-            return $response->setError(Error::QueryFailed);
+            return $response->setError(Error::NonexistentUser);
         }
 
         if (isset($assoc['password'])) {

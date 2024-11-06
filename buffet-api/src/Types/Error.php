@@ -21,6 +21,7 @@ enum Error: string {
 
     // registration
     case UserInUse = 'Username is in use';
+    case RegistrationFailed = 'Could\'t register the user';
 
     // login
     case NonexistentUser = 'User doesn\'t exist';
@@ -38,6 +39,7 @@ enum Error: string {
 
     ############################ Database ############################
     case QueryFailed = 'Query from database has failed';
+    
     /**
      * @return string
      */
