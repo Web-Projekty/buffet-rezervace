@@ -62,6 +62,7 @@ class AuthApi
         }
 
         if (isset($assoc['password'])) {
+            $uid = $assoc['id'];
             $hash = $assoc['password'];
             $isAdmin = $assoc['isAdmin'];
             $fullName = $assoc['fullName'];
@@ -73,7 +74,7 @@ class AuthApi
 
         if (password_verify($password, $hash)) {
 
-            $token = $jwt->getToken($username);
+            $token = $jwt->getToken($uid, $username); // is acutally used don't trust the intelephense
 
             foreach ($response->getPayloadKeys() as $key) {
                 $response->setPayload($key, $$key);
@@ -81,7 +82,6 @@ class AuthApi
             $response->setSuccess(Success::Login);
         } else {
             $response->setError(Error::WrongPassword);
-            //return ['success' => false, 'error' => "failed to login"];
         }
         return $response;
     }
