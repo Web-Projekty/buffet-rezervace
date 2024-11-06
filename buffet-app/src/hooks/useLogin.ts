@@ -17,7 +17,7 @@ type LoginData = {
   password: string;
 };
 
-type UserData = {
+export type UserData = {
   fullName: string;
   email: string;
   isAdmin: boolean;
