@@ -69,4 +69,15 @@ class UserModel extends Model
             'isAdmin' => false
         ]);
     }
+
+    /**
+     * @param int $uid
+     */
+    public static function isAdmin(int $uid): bool
+    {
+        try {
+            return (bool) UserModel::where('id', $uid)->first()->isAdmin;
+        } catch (QueryException) {}
+        return false;
+    }
 }
