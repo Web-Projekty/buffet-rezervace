@@ -32,7 +32,7 @@ class UserModel extends Model
     {
         try {
             return UserModel::all();
-        } catch (QueryException $e) {
+        } catch (QueryException) {
             return false;
         }
     }
@@ -84,5 +84,16 @@ class UserModel extends Model
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param int $uid
+     */
+    public static function isAdmin(int $uid): bool
+    {
+        try {
+            return (bool) UserModel::where('id', $uid)->first()->isAdmin;
+        } catch (QueryException) {}
+        return false;
     }
 }
