@@ -4,7 +4,6 @@ declare (strict_types = 1);
 
 namespace Buffet\Api;
 
-use Buffet\Database\Database;
 use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
@@ -19,7 +18,7 @@ class AuthApi
      * Returns errors when user profile cannot be created
      *
      * @param  ApiResponse
-     * @return ApiResponse    Api response
+     * @return ApiResponse   Api response
      */
 
     function register(ApiResponse $response): ApiResponse
