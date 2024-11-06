@@ -1,12 +1,12 @@
 import { formatCurrency } from "../../utils";
 
-type MenuItemText = {
+type MenuItemTextProps = {
   name: string;
   price: number;
   description: string;
 };
 
-const MenuItemText = ({ name, price, description }: MenuItemText) => {
+const MenuItemText = ({ name, price, description }: MenuItemTextProps) => {
   return (
     <>
       <div className="flex items-center font-bold">

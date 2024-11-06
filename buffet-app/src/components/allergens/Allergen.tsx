@@ -1,19 +1,23 @@
 import { scaleUpAnimation } from "../../animations";
-import { Allergen as AlergenType } from "../../types";
+import { Allergen as AllergenType } from "../../types";
 import { motion } from "framer-motion";
 
-const Alergen = ({ alergen }: { alergen: AlergenType }) => {
+type AlergenProps = {
+  allergen: AllergenType;
+};
+
+const Allergen = ({ allergen }: AlergenProps) => {
   return (
     <motion.li
       {...scaleUpAnimation(0.5)}
       className="flex items-center gap-2 rounded-md bg-slate-900 p-2"
     >
       <span className="rounded-full bg-slate-800 px-4 py-2 text-xl">
-        {alergen.id}
+        {allergen.id}
       </span>
-      <span>{alergen.name}</span>
+      <span>{allergen.name}</span>
     </motion.li>
   );
 };
 
-export default Alergen;
+export default Allergen;

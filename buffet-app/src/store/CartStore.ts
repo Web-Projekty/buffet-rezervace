@@ -5,7 +5,7 @@ import { getItem, removeItem, setItem } from "../components/utils/localStorage";
 
 type CartItem = MenuItem & { quantity: number };
 
-type cartItems = {
+type CartItems = {
   isOpen: boolean;
   handleOpenCart: () => void;
   cartItems: CartItem[];
@@ -26,7 +26,7 @@ const loadCartItems = (): CartItem[] => {
   return cartItems ? (cartItems as CartItem[]) : [];
 };
 
-const useCart = create<cartItems>((set, get) => ({
+const useCart = create<CartItems>((set, get) => ({
   cartItems: loadCartItems(),
   addToCart: (item: MenuItem) => {
     const hasReachedMaxCartQuantity = get().isCartFull();

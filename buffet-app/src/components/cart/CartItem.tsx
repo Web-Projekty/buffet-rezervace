@@ -2,11 +2,11 @@ import useCart from "../../store/CartStore";
 import { MenuItem } from "../../types";
 import { formatCurrency } from "../../utils";
 
-type CartItem = {
+type CartItemProps = {
   item: MenuItem;
 };
 
-const CartItem = ({ item }: CartItem) => {
+const CartItem = ({ item }: CartItemProps) => {
   const { getItemQuantity, removeFromCart, addToCart } = useCart();
 
   const handleAddItem = (item: MenuItem) => {

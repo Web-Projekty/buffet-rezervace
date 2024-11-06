@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { BadgeMinus, BadgePlus } from "lucide-react";
 import { scaleUpAnimation, tapScaleAnimation } from "../../animations";
 
-type MenuItemButtons = {
+type MenuItemButtonsProps = {
   isItemInCart: (id: number) => boolean;
   id: number;
   getItemQuantity: (id: number) => number;
@@ -34,7 +34,7 @@ const MenuItemButtons = ({
   handleRemoveFromCart,
   isItemMaxQuantity,
   isCartFull,
-}: MenuItemButtons) => {
+}: MenuItemButtonsProps) => {
   return (
     <AnimatePresence>
       <div className="absolute bottom-[0.30rem] left-1/2 flex -translate-x-1/2 transform flex-row items-center justify-center">

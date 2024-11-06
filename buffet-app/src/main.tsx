@@ -9,16 +9,16 @@ import Menu from "./components/menu/Menu.tsx";
 import MenuEdit from "./components/menu/MenuEdit.tsx";
 import AdminOrderHistory from "./components/orders/AdminOrderHistory.tsx";
 import Login from "./components/auth/login/Login.tsx";
-import Register from "./components/auth/Register.tsx";
 import Dashboard from "./components/auth/Dashboard.tsx";
-import Alergens from "./components/allergens/Allergens.tsx";
+import Allergens from "./components/allergens/Allergens.tsx";
 import RequireAuth from "./components/auth/RequireAuth.tsx";
 import PageNotFound from "./components/error/PageNotFound.tsx";
 import Cart from "./components/cart/Cart.tsx";
 import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
 import SuccessOrder from "./components/orders/SuccessOrder.tsx";
+import { UserData } from "./hooks/useLogin.ts";
 
-const store = createStore({
+const store = createStore<UserData>({
   authName: "_auth",
   authType: "cookie",
   cookieDomain: window.location.hostname,
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
         path: "/alergeny",
         element: (
           <ErrorBoundary>
-            <Alergens />
+            <Allergens />
           </ErrorBoundary>
         ),
         //loader: () => import("./components/menu/MenuList.tsx"),
@@ -95,15 +95,6 @@ const router = createBrowserRouter([
           </ErrorBoundary>
         ),
         //loader: () => import("./components/account/Login.tsx"),
-      },
-      {
-        path: "/register",
-        element: (
-          <ErrorBoundary>
-            <Register />
-          </ErrorBoundary>
-        ),
-        //loader: () => import("./components/account/Register.tsx"),
       },
       {
         path: "/cart",

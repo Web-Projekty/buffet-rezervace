@@ -1,4 +1,4 @@
-type Button = {
+type ButtonProps = {
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
   additionalStyles?: string;
@@ -12,7 +12,7 @@ const Button = ({
   additionalStyles,
   disabled,
   children,
-}: Button) => {
+}: ButtonProps) => {
   return (
     <button
       className={`rounded-md border border-cyan-900 bg-cyan-500 p-2 text-white hover:bg-cyan-600 ${additionalStyles} ${disabled ? "cursor-not-allowed bg-cyan-600" : ""}`}

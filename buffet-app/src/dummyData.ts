@@ -405,7 +405,7 @@ export const dummyOrders: Order[] = [
   dummyUser3.orders,
 ].flat();
 
-export const alergens: Allergen[] = [
+export const allergens: Allergen[] = [
   {
     id: 1,
     name: "Gluten",

@@ -8,7 +8,11 @@ import useFetch from "../../hooks/useFetch";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Loading from "../Loading";
 
-const UserOrderHistory = ({ list }: { list: OrderType[] }) => {
+type UserOrderHistoryProps = {
+  list: OrderType[];
+};
+
+const UserOrderHistory = ({ list }: UserOrderHistoryProps) => {
   /* Test pro získání tokenu */
   // const token = useAuthHeader()?.split(" ")[1];
 

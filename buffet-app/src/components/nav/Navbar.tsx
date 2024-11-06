@@ -14,13 +14,17 @@ type NavLinks = {
   requireAdmin?: boolean;
 };
 
+type LinksProps = {
+  user: User;
+};
+
 const NavLinks: NavLinks[] = [
   { id: 1, name: "Menu", path: "/" },
   { id: 2, name: "Alergeny", path: "/alergeny" },
   { id: 3, name: "Objednávky", path: "/objednavky", requireAdmin: true },
 ];
 
-const Links = ({ user }: { user: User }) => {
+const Links = ({ user }: LinksProps) => {
   return NavLinks.map(({ id, path, name, requireAdmin }) => {
     if (requireAdmin && (!user || !user?.isAdmin)) {
       return null;

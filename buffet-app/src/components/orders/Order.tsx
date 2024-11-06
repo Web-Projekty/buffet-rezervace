@@ -5,7 +5,24 @@ import { MenuItem, Order as OrderType } from "../../types";
 import { scaleUpAnimation } from "../../animations";
 import { ChevronLeft, BadgeCheck, BadgeInfo, BadgeX } from "lucide-react";
 
-const StatusBadge = ({ status }: { status: OrderType["status"] }) => {
+type AnimationWrapperProps = {
+  children: React.ReactNode;
+  keyValue: string;
+};
+
+type StatusBadgeProps = {
+  status: OrderType["status"];
+};
+
+type CancelButtonProps = {
+  handleCancel: () => void;
+};
+
+type PickupButtonProps = {
+  handlePickup: () => void;
+};
+
+const StatusBadge = ({ status }: StatusBadgeProps) => {
   return status === "pickedup" ? (
     <BadgeCheck size={32} className="text-green-500" />
   ) : status === "notpickedup" ? (
@@ -15,7 +32,7 @@ const StatusBadge = ({ status }: { status: OrderType["status"] }) => {
   );
 };
 
-const CancelButton = ({ handleCancel }: { handleCancel: () => void }) => {
+const CancelButton = ({ handleCancel }: CancelButtonProps) => {
   return (
     <motion.button
       {...scaleUpAnimation()}
@@ -27,7 +44,7 @@ const CancelButton = ({ handleCancel }: { handleCancel: () => void }) => {
   );
 };
 
-const PickupButton = ({ handlePickup }: { handlePickup: () => void }) => {
+const PickupButton = ({ handlePickup }: PickupButtonProps) => {
   return (
     <motion.button
       {...scaleUpAnimation()}
@@ -39,13 +56,7 @@ const PickupButton = ({ handlePickup }: { handlePickup: () => void }) => {
   );
 };
 
-const AnimationWrapper = ({
-  children,
-  keyValue,
-}: {
-  children: React.ReactNode;
-  keyValue: string;
-}) => {
+const AnimationWrapper = ({ children, keyValue }: AnimationWrapperProps) => {
   return (
     <motion.div key={keyValue} {...scaleUpAnimation()}>
       {children}

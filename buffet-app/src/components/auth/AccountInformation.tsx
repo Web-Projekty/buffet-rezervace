@@ -6,11 +6,15 @@ import { scaleUpAnimation } from "../../animations";
 import { removeTokenExpiration } from "./login/login";
 import Button from "../Button";
 
-type AccountInformation = {
+type AccountInformationProps = {
   user: User;
 };
 
-const AdminButtons = ({ handleMenuEdit }: { handleMenuEdit: () => void }) => {
+type AdminButtonsProps = {
+  handleMenuEdit: () => void;
+};
+
+const AdminButtons = ({ handleMenuEdit }: AdminButtonsProps) => {
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
       <button
@@ -23,7 +27,7 @@ const AdminButtons = ({ handleMenuEdit }: { handleMenuEdit: () => void }) => {
   );
 };
 
-const AccountInformation = ({ user }: AccountInformation) => {
+const AccountInformation = ({ user }: AccountInformationProps) => {
   const logout = useSignOut();
   const navigate = useNavigate();
 

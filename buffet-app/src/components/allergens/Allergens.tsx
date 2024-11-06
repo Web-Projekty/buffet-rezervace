@@ -1,18 +1,17 @@
-import { alergens } from "../../dummyData";
-import { Allergen as AlergenType } from "../../types";
-import Alergen from "./Allergen";
+import { allergens } from "../../dummyData";
+import Allergen from "./Allergen";
 
-const Alergens = () => {
+const Allergens = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-5 text-white">
       <h1 className="text-center text-3xl font-bold">Seznam alergenů</h1>
       <ul className="grid grid-cols-2 gap-5 md:grid-cols-4">
-        {alergens.map((item: AlergenType) => (
-          <Alergen key={item.id} alergen={item} />
+        {allergens.map((item) => (
+          <Allergen key={item.id} allergen={item} />
         ))}
       </ul>
     </div>
   );
 };
 
-export default Alergens;
+export default Allergens;

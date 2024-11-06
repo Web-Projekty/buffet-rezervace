@@ -6,7 +6,7 @@ import LoginError from "./LoginError";
 import useLogin from "../../../hooks/useLogin";
 import Loading from "../../Loading";
 
-type LoginForm = {
+type LoginFormData = {
   username: string;
   password: string;
 };
@@ -18,7 +18,7 @@ const loginShowAnimation = {
 };
 
 const Login = () => {
-  const [formData, setFormData] = useState<LoginForm>({
+  const [formData, setFormData] = useState<LoginFormData>({
     username: "user4",
     password: "u",
   });

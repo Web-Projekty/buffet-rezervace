@@ -5,7 +5,7 @@ import MenuItemImage from "./MenuItemImage";
 import MenuItemText from "./MenuItemText";
 import MenuItemButtons from "./MenuItemButtons";
 
-type MenuItem = {
+type MenuItemProps = {
   item: MenuItemType;
 };
 
@@ -15,7 +15,7 @@ const menuItemShowAnimation = {
   transition: { duration: 0.5 },
 };
 
-const MenuItem = ({ item }: MenuItem) => {
+const MenuItem = ({ item }: MenuItemProps) => {
   const {
     addToCart,
     removeFromCart,

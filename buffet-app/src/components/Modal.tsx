@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 
-type Modal = {
+type ModalProps = {
   children: React.ReactNode;
   isOpen: boolean;
   darkBackground?: boolean;
@@ -13,7 +13,7 @@ const modalShowAnimation = {
   transition: { duration: 0.3 },
 };
 
-const Modal = ({ children, isOpen, darkBackground }: Modal) => {
+const Modal = ({ children, isOpen, darkBackground }: ModalProps) => {
   return (
     <AnimatePresence>
       {isOpen && (

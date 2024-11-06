@@ -1,12 +1,12 @@
 import { Allergen } from "../../types";
 
-type MenuItemImage = {
+type MenuItemImageProps = {
   image: string;
   name: string;
   allergens: Allergen[];
 };
 
-const MenuItemImage = ({ image, name, allergens }: MenuItemImage) => {
+const MenuItemImage = ({ image, name, allergens }: MenuItemImageProps) => {
   return (
     <div className="relative">
       <img

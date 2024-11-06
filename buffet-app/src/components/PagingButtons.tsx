@@ -1,4 +1,4 @@
-type PagingButtons = {
+type PagingButtonsProps = {
   currentPage: number;
   totalPagesCount: number;
   listOfPages: number[];
@@ -9,7 +9,7 @@ const PagingButtons = ({
   currentPage,
   listOfPages,
   handlePage,
-}: PagingButtons) => {
+}: PagingButtonsProps) => {
   return (
     listOfPages.length > 1 && (
       <div className="z-10 flex w-full flex-row items-center justify-center gap-10">
