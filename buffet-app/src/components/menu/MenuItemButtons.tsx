@@ -74,6 +74,7 @@ const MenuItemButtons = ({
           <motion.div
             key="add-to-cart"
             {...quantButtonShowAnimation}
+            {...tapScaleAnimation}
             className="flex transform items-center justify-center"
           >
             <BadgePlus
