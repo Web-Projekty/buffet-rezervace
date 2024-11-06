@@ -4,7 +4,6 @@ import Input from "../../Input";
 import Button from "../../Button";
 import LoginError from "./LoginError";
 import useLogin from "../../../hooks/useLogin";
-import { useNavigate } from "react-router-dom";
 import Loading from "../../Loading";
 
 type LoginForm = {
@@ -24,8 +23,6 @@ const Login = () => {
     password: "u",
   });
 
-  const navigate = useNavigate();
-
   const { loading, error, setError, login } = useLogin(
     { requestType: "login", ...formData },
     "https://wlczak.vlastas.cc/backend/api",
@@ -34,10 +31,6 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     login();
-  };
-
-  const handleRegister = () => {
-    navigate("/register");
   };
 
   const handleResetLogin = () => {
