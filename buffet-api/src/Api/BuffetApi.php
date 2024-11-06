@@ -110,9 +110,7 @@ class BuffetApi
 
         $jwt = new JWTApi;
 
-        $jwt->validateToken($response);
-
-        if ($response->hasFailed()) {
+        if (!$jwt->validateToken($response)) {
             return $response;
         }
 
@@ -122,9 +120,9 @@ class BuffetApi
             return $response;
         }
 
-        $response->addPayload("newToken", $jwt->getToken($decodedToken->name));
+        $response->addPayload("newToken", $jwt->getToken($decodedToken->sub, $decodedToken->name));
 
-        return $response;
+        return $response->setSuccess(Success::Verification);
     }
 
 /**

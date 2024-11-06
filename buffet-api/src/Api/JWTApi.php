@@ -25,15 +25,14 @@ class JWTApi
      * @return string generated JWT token
      */
 
-    function getToken(string $username): string
+    function getToken(int $uid, string $username): string
     {
-        $user_id = -1;
         $key = 'example_key';
         $payload = [
             'iss' => $_SERVER['HTTP_HOST'],
             'iat' => time(),
             'exp' => time() + (60 * 60),
-            'sub' => $user_id,
+            'sub' => $uid,
             'name' => $username,
             'admin' => false
         ];
