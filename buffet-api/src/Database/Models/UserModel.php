@@ -29,7 +29,7 @@ class UserModel extends Model
     {
         try {
             return UserModel::all();
-        } catch (QueryException $e) {
+        } catch (QueryException) {
             return false;
         }
     }
@@ -40,9 +40,11 @@ class UserModel extends Model
      */
     public static function getUserByName($username)
     {
-        if (UserModel::where('username', $username)->exists()) {
-            return UserModel::where('username', $username)->first();
-        }
+        try {
+            if (UserModel::where('username', $username)->exists()) {
+                return UserModel::where('username', $username)->first();
+            }
+        } catch (QueryException) {}
         return [];
     }
 
