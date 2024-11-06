@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace Buffet\Database\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -24,7 +26,7 @@ class ItemModel extends Model
      */
     public $timestamps = false;
 
-    public static function getAll()
+    public static function getAll(): \Illuminate\Database\Eloquent\Collection  | bool
     {
         try {
             return ItemModel::all();
