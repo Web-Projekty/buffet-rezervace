@@ -10,6 +10,7 @@ class BuffetApiTest extends TestCase
     protected function setUp(): void
     {
         // Set up a mock .env environment for testing
+        touch(__DIR__ . "/../src/Database/.env");
     }
 
     #[TestDox('Setup works')]
