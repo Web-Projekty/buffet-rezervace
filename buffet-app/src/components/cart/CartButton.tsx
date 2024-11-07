@@ -3,11 +3,11 @@ import useCart from "../../store/CartStore";
 import { ShoppingCartIcon } from "lucide-react";
 
 const CartButton = () => {
-  const { getCartQuantity, handleOpenCart } = useCart();
+  const { getCartQuantity, handleOpenCart, isOpen } = useCart();
 
   return (
     <div
-      className="relative rounded-full bg-white p-2 hover:cursor-pointer"
+      className={`relative rounded-full p-2 hover:cursor-pointer ${isOpen ? "bg-white" : ""}`}
       onClick={handleOpenCart}
     >
       <motion.span
