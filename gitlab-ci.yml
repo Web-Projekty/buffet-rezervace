@@ -1,6 +1,3 @@
-variables:
-  DOCKER_CONTENT_TRUST: "0"
-
 stages:
     - PHP Unit Tests
 
