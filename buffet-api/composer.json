@@ -21,19 +21,19 @@
             "name": "Adam Vlček",
             "email": "vlcek-adam@seznam.cz",
             "role": "Backend Developer",
-            "website": "https://github.com/wlczak"
+            "homepage": "https://github.com/wlczak"
         },
         {
             "name": "Jan Egermajer",
             "email": "egermajerj@spseplzen.cz",
             "role": "<role>",
-            "website": "https://example.com"
+            "homepage": "https://example.com"
         },
         {
             "name": "Ondřej Pták",
             "email": "ptakondrej@spseplzen.cz",
             "role": "Frontend Developer",
-            "website": "https://github.com/florixak"
+            "homepage": "https://github.com/florixak"
         }
     ],
     "require-dev": {
