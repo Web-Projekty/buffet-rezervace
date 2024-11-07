@@ -1,6 +1,5 @@
 <?php
 
-use Buffet\Database\CredentialsManager;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
