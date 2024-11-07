@@ -12,10 +12,10 @@ class BuffetApiTest extends TestCase
         // Set up a mock .env environment for testing
     }
 
-    #[TestDox('Test runs')]
+    #[TestDox('Setup works')]
     public function testRunTest()
     {
-        $this->assertTrue(true);
+        $this->assertFileExists(__DIR__ . "/../src/Database/.env");
     }
 
 }
