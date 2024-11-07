@@ -40,7 +40,6 @@ const useLogin = (loginData: LoginData, url: string): UseLoginReturn => {
       );
 
       const success: boolean = data.status === "success";
-      //   console.log(data);
 
       if (success) {
         signIn({
