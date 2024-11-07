@@ -18,6 +18,12 @@ type LinksProps = {
   user: User;
 };
 
+type MobileNavbarProps = {
+  isOpen: boolean;
+  handleOpenMobileMenu: () => void;
+  user: User;
+};
+
 const NavLinks: NavLinks[] = [
   { id: 1, name: "Menu", path: "/" },
   { id: 2, name: "Alergeny", path: "/alergeny" },
@@ -47,8 +53,28 @@ const Links = ({ user }: LinksProps) => {
   });
 };
 
-const MobileNavbar = () => {
-  return;
+const MobileNavbar = ({
+  isOpen,
+  handleOpenMobileMenu,
+  user,
+}: MobileNavbarProps) => {
+  return (
+    <motion.ul
+      initial="closed"
+      animate={isOpen ? "open" : "closed"}
+      variants={{
+        open: { x: 0, opacity: 1 },
+        closed: { x: "-100%", opacity: 0 },
+      }}
+      transition={{ duration: 0.3 }}
+      className="fixed bottom-0 left-0 right-0 top-0 z-40 flex h-screen w-screen flex-col items-center justify-center gap-5 bg-primary text-xl text-white"
+    >
+      <li className="absolute right-5 top-5">
+        <X size={64} onClick={handleOpenMobileMenu} />
+      </li>
+      <Links user={user} />
+    </motion.ul>
+  );
 };
 
 const Navbar = () => {
@@ -70,25 +96,15 @@ const Navbar = () => {
           </div>
         </ul>
       </div>
-      <div className="z-50 flex flex-col rounded-full bg-white p-[18px] md:hidden">
+      <div className="z-50 flex flex-col rounded-full text-white md:hidden">
         <Menu size={64} onClick={handleOpenMobileMenu} />
       </div>
 
-      <motion.ul
-        initial="closed"
-        animate={isOpen ? "open" : "closed"}
-        variants={{
-          open: { x: 0, opacity: 1 },
-          closed: { x: "-100%", opacity: 0 },
-        }}
-        transition={{ duration: 0.3 }}
-        className="fixed bottom-0 left-0 right-0 top-0 z-40 flex h-screen w-screen flex-col items-center justify-center gap-5 bg-primary text-xl text-white"
-      >
-        <li className="absolute right-5 top-5">
-          <X size={64} onClick={handleOpenMobileMenu} />
-        </li>
-        <Links user={user} />
-      </motion.ul>
+      <MobileNavbar
+        isOpen={isOpen}
+        handleOpenMobileMenu={handleOpenMobileMenu}
+        user={user}
+      />
     </nav>
   );
 };
