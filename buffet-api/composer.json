@@ -25,13 +25,13 @@
         },
         {
             "name": "Jan Egermajer",
-            "email": "",
-            "role": "",
-            "website": ""
+            "email": "egermajerj@spseplzen.cz",
+            "role": "<role>",
+            "website": "https://example.com"
         },
         {
             "name": "Ondřej Pták",
-            "email": "",
+            "email": "ptakondrej@spseplzen.cz",
             "role": "Frontend Developer",
             "website": "https://github.com/florixak"
         }
