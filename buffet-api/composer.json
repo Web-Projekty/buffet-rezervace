@@ -12,7 +12,8 @@
     "license": "none",
     "autoload": {
         "psr-4": {
-            "Buffet\\": "src/"
+            "Buffet\\": "src/",
+            "Buffet\\Tests\\": "tests/"
         }
     },
     "authors": [

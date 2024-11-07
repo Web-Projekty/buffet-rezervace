@@ -1,0 +1,46 @@
+<?php
+
+declare (strict_types = 1);
+
+namespace Buffet\Tests;
+
+class EnvSetup
+{
+    public string $envDir = __DIR__ . "/../src/Database/";
+    public string $envPath;
+
+    protected string $envContent = "DECRYPT_KEY=a_key";
+    protected bool $returnOriginalEnv = false;
+
+    public function __construct()
+    {
+        $this->envPath = $this->envDir . ".env";
+    }
+
+    /**
+     * @return int
+     */
+
+    public function setupDummyEnv(): void
+    {
+        // Set up a mock .env environment for testing
+        if (file_exists($this->envPath)) {
+            $this->returnOriginalEnv = true;
+            copy($this->envPath, __DIR__ . "/temp.env");
+        } else {
+            if ($env = fopen($this->envPath, "w")) {
+                fwrite($env, $this->envContent);
+                fclose($env);
+            }
+        }
+    }
+
+    public function cleanupDummyEnv(): void
+    {
+        unlink($this->envPath);
+        if ($this->returnOriginalEnv) {
+            copy(__DIR__ . "/temp.env", $this->envPath);
+            unlink(__DIR__ . "/temp.env");
+        }
+    }
+}
