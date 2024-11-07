@@ -1,7 +1,7 @@
 {
-    "name": "idk/buffet-rezervace-api",
+    "name": "spseplzen/buffet-rezervace-api",
     "description": "",
-    "type": "project",
+    "type": "webapp",
     "require": {
         "slim/slim": "4.*",
         "slim/psr7": "^1.7",
@@ -19,7 +19,21 @@
     "authors": [
         {
             "name": "Adam Vlček",
-            "email": "vlcek-adam@seznam.cz"
+            "email": "vlcek-adam@seznam.cz",
+            "role": "Backend Developer",
+            "website": "https://github.com/wlczak"
+        },
+        {
+            "name": "Jan Egermajer",
+            "email": "",
+            "role": "",
+            "website": ""
+        },
+        {
+            "name": "Ondřej Pták",
+            "email": "",
+            "role": "Frontend Developer",
+            "website": "https://github.com/florixak"
         }
     ],
     "require-dev": {
