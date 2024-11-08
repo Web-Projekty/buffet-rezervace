@@ -8,7 +8,7 @@ phpunit:
     script:
         - cd buffet-api
         - composer install
-        - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text
+        - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --display-deprecations --display-phpunit-deprecations --fail-on-deprecation --fail-on-phpunit-deprecation
 
 # Job to extract the coverage percentage from the PHPUnit output
 phpunit-coverage:

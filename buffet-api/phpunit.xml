@@ -1,8 +1,9 @@
-<phpunit convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" displayDetailsOnTestsThatTriggerDeprecations="true" displayDetailsOnTestsThatTriggerErrors="true" displayDetailsOnTestsThatTriggerNotices="true" displayDetailsOnTestsThatTriggerWarnings="true" strict="true">
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd">
     <php>
-        <ini name="error_reporting" value="E_ALL | E_DEPRECATED" />
+        <ini name="error_reporting" value="E_ALL | E_DEPRECATED"/>
     </php>
-    <coverage>
+    <source>
         <include>
             <directory>src</directory>
         </include>
@@ -10,5 +11,5 @@
             <directory>vendor</directory>
             <directory>tests</directory>
         </exclude>
-    </coverage>
+    </source>
 </phpunit>
