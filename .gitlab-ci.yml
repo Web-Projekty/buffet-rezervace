@@ -8,8 +8,6 @@ phpunit:
     script:
         - cd buffet-api
         - composer install
-        - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-clover=coverage.xml
-    artifacts:
-        paths:
-        - buffet-api/coverage.xml
+        - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text
+        - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text | grep 'Lines:'
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
