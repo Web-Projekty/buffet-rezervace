@@ -5,7 +5,7 @@ phpunit:
     stage: PHP Unit Tests
     image: php:8.3-apache-bookworm
     before_script:
-        - apt install git
+        - apt update && apt install git
         - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
         - cd buffet-api
         - composer install
