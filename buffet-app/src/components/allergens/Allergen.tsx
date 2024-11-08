@@ -15,7 +15,7 @@ const Allergen = ({ allergen }: AlergenProps) => {
       <span className="rounded-full bg-slate-800 px-4 py-2 text-xl">
         {allergen.id}
       </span>
-      <span>{allergen.name}</span>
+      <span className="font-FiraSans">{allergen.name}</span>
     </motion.li>
   );
 };
