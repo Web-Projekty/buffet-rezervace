@@ -3,22 +3,43 @@ import { usePaging } from "../../hooks/usePaging";
 import { Order as OrderType } from "../../types";
 import PagingButtons from "../PagingButtons";
 import { AnimatePresence, motion } from "framer-motion";
+import { ordersPerPage } from "../../constants";
+import useFetch from "../../hooks/useFetch";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import Loading from "../Loading";
 
-const UserOrderHistory = ({ list }: { list: OrderType[] }) => {
-  const {
-    currentPage,
-    totalPagesCount,
-    totalListCount,
-    displayedList,
-    handleNextPage,
-    handlePreviousPage,
-  } = usePaging(list, 4);
+type UserOrderHistoryProps = {
+  list: OrderType[];
+};
+
+const UserOrderHistory = ({ list }: UserOrderHistoryProps) => {
+  /* Test pro získání tokenu */
+  // const token = useAuthHeader()?.split(" ")[1];
+
+  // const { data, isLoading, error } = useFetch<OrderType[]>(
+  //   "https://wlczak.vlastas.cc/backend/api",
+  //   { requestType: "getOrders", token: token },
+  // );
+
+  const { currentPage, totalPagesCount, dataList, arrayOfPages, handlePage } =
+    usePaging(list, ordersPerPage, "orderPage");
+
+  // if (isLoading) {
+  //   return <Loading size={30} />;
+  // }
+
+  // if (error) {
+  //   return <div className="text-white">Chyba načítání dat ze serveru.</div>;
+  // }
+
   return (
     <div className="flex flex-col gap-2 md:w-[45rem]">
-      <h1 className="text-2xl">Tvá historie objednávek ({totalListCount})</h1>
+      <h1 className="text-2xl">
+        Tvá historie objednávek ({arrayOfPages.length})
+      </h1>
       <AnimatePresence>
         <ul className="flex flex-col gap-2">
-          {displayedList.map((order) => (
+          {dataList.map((order) => (
             <motion.div
               key={order.id}
               layout
@@ -35,8 +56,8 @@ const UserOrderHistory = ({ list }: { list: OrderType[] }) => {
       <PagingButtons
         currentPage={currentPage}
         totalPagesCount={totalPagesCount}
-        handleNextPage={handleNextPage}
-        handlePreviousPage={handlePreviousPage}
+        listOfPages={arrayOfPages}
+        handlePage={handlePage}
       />
     </div>
   );

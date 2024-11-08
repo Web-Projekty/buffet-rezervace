@@ -1,55 +1,38 @@
-import { formatCurrency } from "../../utils";
-import { MenuItem } from "../../types";
+import { useNavigate } from "react-router-dom";
 import useCart from "../../store/CartStore";
+import Button from "../Button";
+import CartItem from "./CartItem";
+import EmptyCart from "./EmptyCart";
 
 const Cart = () => {
-  const { cartItems, getItemQuantity, removeFromCart, addToCart } = useCart();
+  const { cartItems, isCartEmpty } = useCart();
+  const navigate = useNavigate();
 
-  const handleAddItem = (item: MenuItem) => {
-    addToCart(item);
+  const handleSubmitOrder = () => {
+    // TODO: process the order
+    navigate("/success-order?id=" + 5);
   };
 
-  const handleRemoveItem = (id: number) => {
-    removeFromCart(id);
+  const handleBack = () => {
+    navigate("/");
   };
 
   return (
-    <div className="mb-[3rem] mt-[10rem] flex flex-col items-center justify-center">
-      <h1>Your Cart</h1>
-      <div className="grid grid-cols-3 gap-4">
-        {cartItems.length === 0 && (
-          <p className="text-white">Your cart is empty</p>
-        )}
+    <div className="flex flex-col items-center justify-between text-white">
+      <h1 className="text-xl">Potvrdit objednávku?</h1>
+      <div
+        className={`${isCartEmpty() ? "" : "grid grid-flow-row grid-cols-3"} gap-5 overflow-auto px-10 py-5`}
+      >
+        {isCartEmpty() && <EmptyCart />}
         {cartItems.map((item) => {
-          return (
-            <div
-              key={item.id}
-              className="flex flex-row items-center justify-between rounded-lg bg-white p-4 shadow-md"
-            >
-              <img
-                src={item.image}
-                alt={item.name}
-                className="h-12 w-12 rounded-md"
-              />
-              <div className="flex flex-col">
-                <h1 className="text-xl font-bold">{item.name}</h1>
-
-                <p className="font-bold text-gray-700">
-                  {formatCurrency(item.price * getItemQuantity(item.id))}
-                </p>
-              </div>
-              <div className="flex flex-row gap-2">
-                <button onClick={() => handleRemoveItem(item.id)}>-</button>
-                <span>{getItemQuantity(item.id)}</span>
-                <button onClick={() => handleAddItem(item)}>+</button>
-              </div>
-            </div>
-          );
+          return <CartItem key={item.id} item={item} />;
         })}
       </div>
-      <div>
-        <button>Close</button>
-        <button>Continue</button>
+      <div className="grid h-10 grid-cols-2 grid-rows-1 justify-between gap-10 text-white">
+        <Button onClick={handleBack}>Zpět</Button>
+        <Button disabled={isCartEmpty()} onClick={handleSubmitOrder}>
+          Pokračovat
+        </Button>
       </div>
     </div>
   );
