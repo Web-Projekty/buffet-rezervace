@@ -6,4 +6,6 @@ phpunit:
     image: wlczak/buffet-test-prebuild:latest
     
     script:
+        - cd buffet-api
+        - composer install
         - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text
