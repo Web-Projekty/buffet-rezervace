@@ -1,5 +1,7 @@
 <?php
 
+use Buffet\Database\CredentialsManager;
+use Buffet\Types\ApiResponse;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
@@ -9,21 +11,27 @@ class CredentialsManagerTest extends TestCase
 {
 
     /**
-     * @var mixed
+     * @var CredentialsManager
      */
-    protected $credentialsManager;
+    protected CredentialsManager $credentialsManager;
+    protected ApiResponse $response;
 
     protected function setUp(): void
     {
-        //$this->credentialsManager = new CredentialsManager();
+        //error_reporting(E_ALL);
 
+        $this->response = new ApiResponse();
+        $this->credentialsManager = new CredentialsManager($this->response);
         // Set up a mock .env environment for testing
 
     }
 
-    #[TestDox('Is true true?')]
-    public function testGetCredentialsSuccess()
+    #[TestDox('Test createCredentials')]
+    public function testCreateCredentials()
     {
+        $this->credentialsManager->createCredentials(username: "test", password: "test");
+        
+        $this->output();
         $this->assertTrue(true);
     }
 
