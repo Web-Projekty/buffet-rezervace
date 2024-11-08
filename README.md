@@ -4,9 +4,9 @@
 
 [![pipeline status](https://gitlab.spseplzen.cz/studentske-projekty/projekty-2024-2025/mtp6/skolni-bufet-online-objednavky/badges/main/pipeline.svg)](https://gitlab.spseplzen.cz/studentske-projekty/projekty-2024-2025/mtp6/skolni-bufet-online-objednavky/-/commits/main)
 
-### Code coverage (side branch)
+### Code coverage
 
-[![coverage report](https://gitlab.spseplzen.cz/studentske-projekty/projekty-2024-2025/mtp6/skolni-bufet-online-objednavky/badges/76-basic-env-testing/coverage.svg)](https://gitlab.spseplzen.cz/studentske-projekty/projekty-2024-2025/mtp6/skolni-bufet-online-objednavky/-/commits/76-basic-env-testing)
+[![coverage report](https://gitlab.spseplzen.cz/studentske-projekty/projekty-2024-2025/mtp6/skolni-bufet-online-objednavky/badges/main/coverage.svg)](https://gitlab.spseplzen.cz/studentske-projekty/projekty-2024-2025/mtp6/skolni-bufet-online-objednavky/-/commits/main)
 
 ## Getting started
 
