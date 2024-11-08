@@ -11,8 +11,10 @@ phpunit:
         - cd buffet-api
         - composer install
         - apk add autoconf build-base
+        - cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
         - pecl install pcov
         - echo 'extension=pcov.so' >> /usr/local/etc/php/php.ini
         - echo 'pcov.enabled=1' >> /usr/local/etc/php/php.ini
     script:
+        - apk add tree && tree /usr/local/etc/php/
         - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text
