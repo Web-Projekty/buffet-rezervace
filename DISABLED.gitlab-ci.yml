@@ -15,3 +15,5 @@ phpunit:
         - composer install
     script:
         - ./vendor/bin/phpunit tests --testdox --colors=always
+    only:
+    - merge_requests

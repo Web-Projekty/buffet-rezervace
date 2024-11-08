@@ -8,16 +8,17 @@ import createStore from "react-auth-kit/createStore";
 import Menu from "./components/menu/Menu.tsx";
 import MenuEdit from "./components/menu/MenuEdit.tsx";
 import AdminOrderHistory from "./components/orders/AdminOrderHistory.tsx";
-import Login from "./components/account/Login.tsx";
-import Register from "./components/account/Register.tsx";
-import Dashboard from "./components/account/Dashboard.tsx";
-import Alergens from "./components/alergens/Alergens.tsx";
-import { CartProvider } from "./store/CartContext.tsx";
-import RequireAuth from "./components/account/RequireAuth.tsx";
+import Login from "./components/auth/login/Login.tsx";
+import Dashboard from "./components/auth/Dashboard.tsx";
+import Allergens from "./components/allergens/Allergens.tsx";
+import RequireAuth from "./components/auth/RequireAuth.tsx";
 import PageNotFound from "./components/error/PageNotFound.tsx";
 import Cart from "./components/cart/Cart.tsx";
+import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
+import SuccessOrder from "./components/orders/SuccessOrder.tsx";
+import { UserData } from "./hooks/useLogin.ts";
 
-const store = createStore({
+const store = createStore<UserData>({
   authName: "_auth",
   authType: "cookie",
   cookieDomain: window.location.hostname,
@@ -27,34 +28,50 @@ const store = createStore({
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: (
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    ),
     //loader: () => import("./App.tsx"),
     children: [
       {
         path: "/",
         index: true,
-        element: <Menu />,
+        element: (
+          <ErrorBoundary>
+            <Menu />
+          </ErrorBoundary>
+        ),
         //loader: () => import("./components/menu/MenuList.tsx"),
       },
       {
         path: "/menu/edit",
         element: (
-          <RequireAuth requireAdmin={true} fallbackPath="/menu">
-            <MenuEdit />
+          <RequireAuth requireAdmin={true}>
+            <ErrorBoundary>
+              <MenuEdit />
+            </ErrorBoundary>
           </RequireAuth>
         ),
         //loader: () => import("./components/menu/MenuEdit.tsx"),
       },
       {
         path: "/alergeny",
-        element: <Alergens />,
+        element: (
+          <ErrorBoundary>
+            <Allergens />
+          </ErrorBoundary>
+        ),
         //loader: () => import("./components/menu/MenuList.tsx"),
       },
       {
         path: "/objednavky",
         element: (
           <RequireAuth requireAdmin={true} fallbackPath="/login">
-            <AdminOrderHistory />
+            <ErrorBoundary>
+              <AdminOrderHistory />
+            </ErrorBoundary>
           </RequireAuth>
         ),
         //loader: () => import("./components/orders/AdminOrderHistory.tsx"),
@@ -63,28 +80,47 @@ const router = createBrowserRouter([
         path: "/account",
         element: (
           <RequireAuth requireAdmin={false} fallbackPath="/login">
-            <Dashboard />
+            <ErrorBoundary>
+              <Dashboard />
+            </ErrorBoundary>
           </RequireAuth>
         ),
         //loader: () => import("./components/account/AccountDashboard.tsx"),
       },
       {
         path: "/login",
-        element: <Login />,
+        element: (
+          <ErrorBoundary>
+            <Login />
+          </ErrorBoundary>
+        ),
         //loader: () => import("./components/account/Login.tsx"),
       },
       {
-        path: "/register",
-        element: <Register />,
-        //loader: () => import("./components/account/Register.tsx"),
+        path: "/cart",
+        element: (
+          <ErrorBoundary>
+            <Cart />
+          </ErrorBoundary>
+        ),
       },
       {
-        path: "/cart",
-        element: <Cart />,
+        path: "/success-order",
+        element: (
+          <ErrorBoundary>
+            {/*<RequireAuth requireAdmin={false} fallbackPath="/">*/}
+            <SuccessOrder />
+            {/*</RequireAuth>*/}
+          </ErrorBoundary>
+        ),
       },
       {
         path: "/*",
-        element: <PageNotFound />,
+        element: (
+          <ErrorBoundary>
+            <PageNotFound />
+          </ErrorBoundary>
+        ),
       },
     ],
   },
@@ -93,9 +129,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider store={store}>
-      {/* <CartProvider> */}
       <RouterProvider router={router} />
-      {/* </CartProvider> */}
     </AuthProvider>
   </StrictMode>,
 );

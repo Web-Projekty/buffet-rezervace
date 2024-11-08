@@ -1,12 +1,11 @@
 import { NavLink } from "react-router-dom";
-import CartButton from "./cart/CartButton";
-import AccountButton from "./account/AccountButton";
-import { IoIosMenu, IoIosClose } from "react-icons/io";
+import CartButton from "../cart/CartButton";
+import AccountButton from "../auth/AccountButton";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-import { User } from "../types";
-import { dummyUser } from "../dummyData";
+import { User } from "../../types";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
 
 type NavLinks = {
   id: number;
@@ -15,15 +14,29 @@ type NavLinks = {
   requireAdmin?: boolean;
 };
 
+type LinksProps = {
+  user: User;
+};
+
+type MobileNavbarProps = {
+  isOpen: boolean;
+  handleOpenMobileMenu: () => void;
+  user: User;
+};
+
 const NavLinks: NavLinks[] = [
   { id: 1, name: "Menu", path: "/" },
   { id: 2, name: "Alergeny", path: "/alergeny" },
   { id: 3, name: "Objednávky", path: "/objednavky", requireAdmin: true },
 ];
 
-const Links = ({ user }: { user: User }) => {
+const Links = ({ user }: LinksProps) => {
   return NavLinks.map(({ id, path, name, requireAdmin }) => {
-    return requireAdmin && !user?.isAdmin ? null : (
+    if (requireAdmin && (!user || !user?.isAdmin)) {
+      return null;
+    }
+
+    return (
       <li key={id}>
         <NavLink
           className={({ isActive }) =>
@@ -40,10 +53,33 @@ const Links = ({ user }: { user: User }) => {
   });
 };
 
+const MobileNavbar = ({
+  isOpen,
+  handleOpenMobileMenu,
+  user,
+}: MobileNavbarProps) => {
+  return (
+    <motion.ul
+      initial="closed"
+      animate={isOpen ? "open" : "closed"}
+      variants={{
+        open: { x: 0, opacity: 1 },
+        closed: { x: "-100%", opacity: 0 },
+      }}
+      transition={{ duration: 0.3 }}
+      className="fixed bottom-0 left-0 right-0 top-0 z-40 flex h-screen w-screen flex-col items-center justify-center gap-5 bg-primary text-xl text-white"
+    >
+      <li className="absolute right-5 top-5">
+        <X size={64} onClick={handleOpenMobileMenu} />
+      </li>
+      <Links user={user} />
+    </motion.ul>
+  );
+};
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  //const user: User = dummyUser;
-  const user: User = useAuthUser()!;
+  const user: User | null = useAuthUser()!;
 
   const handleOpenMobileMenu = (): void => {
     setIsOpen(!isOpen);
@@ -60,25 +96,15 @@ const Navbar = () => {
           </div>
         </ul>
       </div>
-      <div className="z-50 flex flex-col rounded-full bg-white p-[18px] md:hidden">
-        <IoIosMenu size={64} onClick={handleOpenMobileMenu} />
+      <div className="z-50 flex flex-col rounded-full text-white md:hidden">
+        <Menu size={64} onClick={handleOpenMobileMenu} />
       </div>
 
-      <motion.ul
-        initial="closed"
-        animate={isOpen ? "open" : "closed"}
-        variants={{
-          open: { x: 0, opacity: 1 },
-          closed: { x: "-100%", opacity: 0 },
-        }}
-        transition={{ duration: 0.3 }}
-        className="fixed bottom-0 left-0 right-0 top-0 z-40 flex h-screen w-screen flex-col items-center justify-center gap-5 bg-primary text-xl text-white"
-      >
-        <li className="absolute right-5 top-5">
-          <IoIosClose size={64} onClick={handleOpenMobileMenu} />
-        </li>
-        <Links user={user} />
-      </motion.ul>
+      <MobileNavbar
+        isOpen={isOpen}
+        handleOpenMobileMenu={handleOpenMobileMenu}
+        user={user}
+      />
     </nav>
   );
 };

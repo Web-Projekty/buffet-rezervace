@@ -1,26 +1,38 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { formatCurrency, formatUnixDate } from "../../utils";
 import { useState } from "react";
-import { MdKeyboardArrowLeft } from "react-icons/md";
-import { LuBadgeCheck, LuBadgeX, LuBadgeInfo } from "react-icons/lu";
 import { MenuItem, Order as OrderType } from "../../types";
 import { scaleUpAnimation } from "../../animations";
+import { ChevronLeft, BadgeCheck, BadgeInfo, BadgeX } from "lucide-react";
 
-const StatusBadge = ({ status }: { status: OrderType["status"] }) => {
+type AnimationWrapperProps = {
+  children: React.ReactNode;
+  keyValue: string;
+};
+
+type StatusBadgeProps = {
+  status: OrderType["status"];
+};
+
+type CancelButtonProps = {
+  handleCancel: () => void;
+};
+
+type PickupButtonProps = {
+  handlePickup: () => void;
+};
+
+const StatusBadge = ({ status }: StatusBadgeProps) => {
   return status === "pickedup" ? (
-    <LuBadgeCheck size={32} className="text-green-500" title="Vyzvednuto" />
+    <BadgeCheck size={32} className="text-green-500" />
   ) : status === "notpickedup" ? (
-    <LuBadgeX size={32} className="text-red-500" title="Nevyzvednuto" />
+    <BadgeX size={32} className="text-red-500" />
   ) : (
-    <LuBadgeInfo
-      size={32}
-      className="text-yellow-300"
-      title="Čeká na vyzvednutí"
-    />
+    <BadgeInfo size={32} className="text-yellow-300" />
   );
 };
 
-const CancelButton = ({ handleCancel }: { handleCancel: () => void }) => {
+const CancelButton = ({ handleCancel }: CancelButtonProps) => {
   return (
     <motion.button
       {...scaleUpAnimation()}
@@ -32,7 +44,7 @@ const CancelButton = ({ handleCancel }: { handleCancel: () => void }) => {
   );
 };
 
-const PickupButton = ({ handlePickup }: { handlePickup: () => void }) => {
+const PickupButton = ({ handlePickup }: PickupButtonProps) => {
   return (
     <motion.button
       {...scaleUpAnimation()}
@@ -44,13 +56,7 @@ const PickupButton = ({ handlePickup }: { handlePickup: () => void }) => {
   );
 };
 
-const AnimationWrapper = ({
-  children,
-  keyValue,
-}: {
-  children: React.ReactNode;
-  keyValue: string;
-}) => {
+const AnimationWrapper = ({ children, keyValue }: AnimationWrapperProps) => {
   return (
     <motion.div key={keyValue} {...scaleUpAnimation()}>
       {children}
@@ -100,7 +106,7 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
               </AnimationWrapper>
             )}
           </AnimatePresence>
-          <MdKeyboardArrowLeft
+          <ChevronLeft
             size={32}
             className={`${isOpen ? "-rotate-90" : null} cursor-pointer transition-transform duration-300 ease-in-out`}
             onClick={handleOpen}
