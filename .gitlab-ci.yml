@@ -8,4 +8,8 @@ phpunit:
     script:
         - cd buffet-api
         - composer install
-        - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text
+        - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-clover=coverage.xml
+    artifacts:
+        paths:
+        - coverage.xml
+    coverage: '/Code coverage: (\d+\%)/'
