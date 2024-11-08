@@ -1,3 +1,4 @@
 buffet-app/package-lock.json
 buffet-api/src/Database/.env
 #.env
+buffet-api/.phpunit.result.cache

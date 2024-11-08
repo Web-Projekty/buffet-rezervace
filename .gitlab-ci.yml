@@ -10,6 +10,9 @@ phpunit:
         - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
         - cd buffet-api
         - composer install
+        - pecl install pcov
+        - echo 'extension=pcov.so' >> /usr/local/etc/php/php.ini
+        - echo 'pcov.enabled=1' >> /usr/local/etc/php/php.ini
     script:
-        - php --ini
+        - apt update && apt install -y tree && tree /usr/local/etc/php
         - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text
