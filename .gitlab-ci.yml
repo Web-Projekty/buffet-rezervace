@@ -13,7 +13,7 @@ phpunit:
 
 # Job to extract the coverage percentage from the PHPUnit output
 phpunit-coverage:
-    stage: PHP Code Coverage
+    stage: PHP Unit Tests
     image: wlczak/buffet-test-prebuild:latest
     script:
         - cd buffet-api
