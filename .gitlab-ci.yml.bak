@@ -1,0 +1,19 @@
+stages:
+    - PHP Unit Tests
+
+phpunit:
+    stage: PHP Unit Tests
+    image: php:8.3-alpine3.20
+    before_script:
+        - apk add --no-cache bash git unzip libzip-dev oniguruma-dev # main binaries
+        - apk add --no-cache bash php83-mysqli # php extensions
+        - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+        - cd buffet-api
+        - composer install
+        - apk add autoconf build-base
+        - cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
+        - pecl install pcov
+        - echo 'extension=pcov.so' >> /usr/local/etc/php/php.ini
+        - echo 'pcov.enabled=1' >> /usr/local/etc/php/php.ini
+    script:
+        - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text

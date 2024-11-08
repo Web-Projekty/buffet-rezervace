@@ -22,14 +22,5 @@ RUN pecl install pcov \
     && echo 'extension=pcov.so' >> /usr/local/etc/php/php.ini \
     && echo 'pcov.enabled=1' >> /usr/local/etc/php/php.ini
 
-# Set the working directory
-WORKDIR /app
-
-# Copy the project files (assuming the GitLab repository is in the same directory as Dockerfile)
-COPY . /app
-
-# Install project dependencies via Composer (assuming a composer.json is present)
-RUN composer install
-
 # Set the default command to run bash (can be changed based on your needs)
 CMD ["bash"]
