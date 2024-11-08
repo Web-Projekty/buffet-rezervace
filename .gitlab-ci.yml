@@ -15,5 +15,5 @@ phpunit:
         - echo 'extension=pcov.so' >> /usr/local/etc/php/php.ini
         - echo 'pcov.enabled=1' >> /usr/local/etc/php/php.ini
     script:
-        - apt update && apt install -y tree && tree /usr/local/etc/php
+        - apk add tree
         - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text
