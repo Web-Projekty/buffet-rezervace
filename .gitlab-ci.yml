@@ -11,5 +11,5 @@ phpunit:
         - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-clover=coverage.xml
     artifacts:
         paths:
-        - coverage.xml
+        - buffet-api/coverage.xml
     coverage: '/Code coverage: (\d+\%)/'
