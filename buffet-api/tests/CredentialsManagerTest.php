@@ -1,6 +1,7 @@
 <?php
 
 use Buffet\Database\CredentialsManager;
+use Buffet\Tests\EnvSetup;
 use Buffet\Types\ApiResponse;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
@@ -15,15 +16,15 @@ class CredentialsManagerTest extends TestCase
      */
     protected CredentialsManager $credentialsManager;
     protected ApiResponse $response;
+    protected EnvSetup $envSetup;
 
     protected function setUp(): void
     {
-        //error_reporting(E_ALL);
-
+        $this->envSetup = new EnvSetup();
         $this->response = new ApiResponse();
         $this->credentialsManager = new CredentialsManager($this->response);
-        // Set up a mock .env environment for testing
 
+        $this->envSetup->setupDummyEnv();
     }
 
     #[TestDox('Test createCredentials')]
@@ -34,5 +35,8 @@ class CredentialsManagerTest extends TestCase
         $this->output();
         $this->assertTrue(true);
     }
-
+    protected function tearDown(): void
+    {
+        $this->envSetup->cleanupDummyEnv();
+    }
 }
