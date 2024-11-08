@@ -10,6 +10,7 @@ phpunit:
         - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
         - cd buffet-api
         - composer install
+        - apk add autoconf build-base
         - pecl install pcov
         - echo 'extension=pcov.so' >> /usr/local/etc/php/php.ini
         - echo 'pcov.enabled=1' >> /usr/local/etc/php/php.ini
