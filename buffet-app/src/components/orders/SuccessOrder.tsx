@@ -2,17 +2,18 @@ import { useNavigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
 import { useEffect } from "react";
 import Loading from "../Loading";
+import { Order } from "../../types";
 
 const SuccessOrder = () => {
   const navigate = useNavigate();
 
-  const { data, error, isLoading } = useFetch("/api/orders", {
+  const { data, error, isLoading } = useFetch<Order>("/api/orders", {
     requestType: "success-order",
   });
 
   useEffect(() => {
     if (!data) {
-      //navigate("/");
+      navigate("/");
     }
   }, []);
 
@@ -27,8 +28,8 @@ const SuccessOrder = () => {
   return (
     <div className="flex flex-col items-center justify-center text-white">
       <h1 className="text-center text-2xl font-bold">
-        Objednávka <span className="text-cyan-500">#{data && data?.id}</span>{" "}
-        byla úspěšně vytvořena!
+        Objednávka <span className="text-cyan-500">#{data?.id}</span> byla
+        úspěšně vytvořena!
       </h1>
       <h2 className="text-xl">Nezapomeňte si ji včas vyzvednout.</h2>
     </div>

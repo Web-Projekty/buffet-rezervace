@@ -12,10 +12,12 @@ const MenuItemText = ({ name, price, description }: MenuItemTextProps) => {
       <div className="flex items-center font-bold">
         <h1 className="rounded-lg px-2 text-xl">{name}</h1>
         <div className="mt-4 flex-1 border-b-2 border-dotted border-white"></div>
-        <p className="rounded-lg px-2 text-lg">{formatCurrency(price)}</p>
+        <p className="font-FiraSans rounded-lg px-2 text-lg font-normal italic">
+          {formatCurrency(price)}
+        </p>
       </div>
 
-      <div className="flex flex-col items-start px-2">
+      <div className="font-FiraSans flex flex-col items-start px-2">
         <p className="rounded-lg">{description}</p>
       </div>
     </>

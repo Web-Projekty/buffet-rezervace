@@ -10,14 +10,18 @@ const Cart = () => {
 
   const handleSubmitOrder = () => {
     // TODO: process the order
-    navigate("/order?id=" + 5);
+    navigate("/success-order?id=" + 5);
+  };
+
+  const handleBack = () => {
+    navigate("/");
   };
 
   return (
     <div className="flex flex-col items-center justify-between text-white">
       <h1 className="text-xl">Potvrdit objednávku?</h1>
       <div
-        className={`flex ${isCartEmpty() ? "flex-col" : "flex-row"} flex-wrap justify-center gap-5 overflow-auto px-10 py-5`}
+        className={`${isCartEmpty() ? "" : "grid grid-flow-row grid-cols-3"} gap-5 overflow-auto px-10 py-5`}
       >
         {isCartEmpty() && <EmptyCart />}
         {cartItems.map((item) => {
@@ -25,7 +29,7 @@ const Cart = () => {
         })}
       </div>
       <div className="grid h-10 grid-cols-2 grid-rows-1 justify-between gap-10 text-white">
-        <Button>Zpět</Button>
+        <Button onClick={handleBack}>Zpět</Button>
         <Button disabled={isCartEmpty()} onClick={handleSubmitOrder}>
           Pokračovat
         </Button>

@@ -27,7 +27,7 @@ const CartModal = () => {
         </div>
 
         <div
-          className={`flex ${isCartEmpty() ? "flex-col" : "flex-row"} flex-wrap justify-center gap-5 overflow-auto px-10 py-5`}
+          className={`${isCartEmpty() ? "" : "grid grid-flow-row grid-cols-2"} gap-5 overflow-auto px-10 py-5`}
         >
           {isCartEmpty() && <EmptyCart />}
           {cartItems.map((item) => {
