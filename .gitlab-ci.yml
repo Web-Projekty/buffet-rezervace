@@ -3,7 +3,7 @@ stages:
 
 phpunit:
     stage: PHP Unit Tests
-    image: php:8.3-alpine3.20
+    image: php:8.3-apache-bookworm
     before_script:
         - apk add --no-cache bash git unzip libzip-dev oniguruma-dev # main binaries
         - apk add --no-cache bash php83-mysqli # php extensions
