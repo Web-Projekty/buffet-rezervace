@@ -11,4 +11,4 @@ phpunit:
         - cd buffet-api
         - composer install
     script:
-        - ./vendor/bin/phpunit tests --testdox --colors=always
+        - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text
