@@ -12,4 +12,4 @@ phpunit:
     artifacts:
         paths:
         - buffet-api/coverage.xml
-    coverage: '/Code coverage: (\d+\%)/'
+    coverage: '/<coverage>(\d+.\d+)<\/coverage>/'
