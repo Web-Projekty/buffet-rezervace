@@ -1,13 +1,21 @@
 stages:
     - PHP Unit Tests
+    - PHP Code Coverage
 
+# Job to run PHPUnit tests and generate the coverage output
 phpunit:
     stage: PHP Unit Tests
     image: wlczak/buffet-test-prebuild:latest
-    
     script:
         - cd buffet-api
         - composer install
         - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text
+
+# Job to extract the coverage percentage from the PHPUnit output
+phpunit-coverage:
+    stage: PHP Code Coverage
+    image: wlczak/buffet-test-prebuild:latest
+    script:
+        - cd buffet-api
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text | grep 'Lines:'
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
