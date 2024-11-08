@@ -1,6 +1,5 @@
 stages:
     - PHP Unit Tests
-    - PHP Code Coverage
 
 # Job to run PHPUnit tests and generate the coverage output
 phpunit:
