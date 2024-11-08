@@ -12,6 +12,7 @@ phpunit:
         - composer install
         - apk add autoconf build-base
         - pecl install pcov
+        - cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
         - echo 'extension=pcov.so' >> /usr/local/etc/php/php.ini
         - echo 'pcov.enabled=1' >> /usr/local/etc/php/php.ini
     script:
