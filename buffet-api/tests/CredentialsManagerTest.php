@@ -21,7 +21,7 @@ class CredentialsManagerTest extends TestCase
 
     }
 
-    #[TestDox('Test getCredentials() with success')]
+    #[TestDox('Is true true?')]
     public function testGetCredentialsSuccess()
     {
         $this->assertTrue(true);
