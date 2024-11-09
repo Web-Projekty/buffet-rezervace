@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace Buffet\Tests;
 
+use Buffet\Utils\EnvSetup;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 

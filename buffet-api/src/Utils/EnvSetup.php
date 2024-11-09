@@ -2,11 +2,11 @@
 
 declare (strict_types = 1);
 
-namespace Buffet\Tests;
+namespace Buffet\Utils;
 
 class EnvSetup
 {
-    public string $envDir = __DIR__ . "/../src/Database/";
+    public string $envDir = __DIR__ . "/../Database/";
     public string $envPath;
 
     public string $envContent = "DECRYPT_KEY=a_key";

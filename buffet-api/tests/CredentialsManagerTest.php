@@ -5,7 +5,7 @@ declare (strict_types = 1);
 namespace Buffet\Tests;
 
 use Buffet\Database\CredentialsManager;
-use Buffet\Tests\EnvSetup;
+use Buffet\Utils\EnvSetup;
 use Buffet\Types\ApiResponse;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
