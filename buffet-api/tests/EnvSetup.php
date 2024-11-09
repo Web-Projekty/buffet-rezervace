@@ -18,19 +18,20 @@ class EnvSetup
     }
 
     /**
-     * @return int
+     * Set up a mock .env environment for testing
+     * @param $fileContent
      */
-
-    public function setupDummyEnv(): void
+    public function setupDummyEnv($fileContent = ""): void
     {
-        $fileContent = $this->envContent;
-        // Set up a mock .env environment for testing
+        if (empty($fileContent)) {
+            $fileContent = $this->envContent;
+        }
         if (file_exists($this->envPath)) {
             $this->returnOriginalEnv = true;
             copy($this->envPath, __DIR__ . "/temp.env");
         } else {
             if ($env = fopen($this->envPath, "w")) {
-                fwrite($env, $this->$fileContent);
+                fwrite($env, $fileContent);
                 fclose($env);
             }
         }
