@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-class BuffetApiTest extends TestCase
+class EnvSetupTest extends TestCase
 {
     protected EnvSetup $envSetup;
 
@@ -18,13 +18,24 @@ class BuffetApiTest extends TestCase
     protected function setUp(): void
     {
         $this->envSetup = new EnvSetup();
-        $this->envSetup->setupDummyEnv();
     }
 
-    #[TestDox('Setup works')]
-    public function testRunTest()
+    #[TestDox('Env file creation')]
+    public function testEnvSetup()
     {
+        $this->assertFileDoesNotExist($this->envSetup->envPath);
+
+        $this->envSetup->setupDummyEnv();
         $this->assertFileExists($this->envSetup->envPath);
+
+        $this->envSetup->cleanupDummyEnv();
+        $this->assertFileDoesNotExist($this->envSetup->envPath);
+    }
+
+    #[TestDox('Env file custom content')]
+    public function testEnvFileContent()
+    {
+
     }
 
     protected function tearDown(): void
