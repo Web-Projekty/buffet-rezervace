@@ -1,5 +1,9 @@
 <?php
 
+declare (strict_types = 1);
+
+namespace Buffet\Tests;
+
 use Buffet\Database\CredentialsManager;
 use Buffet\Tests\EnvSetup;
 use Buffet\Types\ApiResponse;
@@ -25,18 +29,21 @@ class CredentialsManagerTest extends TestCase
         $this->credentialsManager = new CredentialsManager($this->response);
 
         $this->envSetup->setupDummyEnv();
+        $this->envSetup->backupCreds();
     }
 
     #[TestDox('Test createCredentials')]
     public function testCreateCredentials()
     {
         $this->credentialsManager->createCredentials(username: "test", password: "test");
-        
+
         $this->output();
         $this->assertTrue(true);
     }
+
     protected function tearDown(): void
     {
         $this->envSetup->cleanupDummyEnv();
+        $this->envSetup->cleanupCreds();
     }
 }

@@ -43,4 +43,19 @@ class EnvSetup
             unlink(__DIR__ . "/temp.env");
         }
     }
+
+    public function backupCreds(): void
+    {
+        if (file_exists($this->envDir . "creds.json")) {
+            copy($this->envDir . "creds.json", __DIR__ . "/temp.creds.json");
+        }
+    }
+
+    public function cleanupCreds(): void
+    {
+        if (file_exists(__DIR__ . "/temp.creds.json")) {
+            copy(__DIR__ . "/temp.creds.json", $this->envDir . "creds.json");
+            unlink(__DIR__ . "/temp.creds.json");
+        }
+    }
 }
