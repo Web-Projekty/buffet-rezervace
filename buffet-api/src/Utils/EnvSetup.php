@@ -8,6 +8,7 @@ class EnvSetup
 {
     public string $envDir = __DIR__ . "/../Database/";
     public string $envPath;
+    public string $envBackupPath = __DIR__ . "/temp.env";
 
     public string $envContent = "DECRYPT_KEY=a_key";
     public bool $returnOriginalEnv = false;
@@ -31,7 +32,7 @@ class EnvSetup
 
         if (file_exists($this->envPath) && $this->returnOriginalEnv == false) {
             $this->returnOriginalEnv = true;
-            copy($this->envPath, __DIR__ . "/temp.env");
+            copy($this->envPath, $this->envBackupPath);
         }
         if ($env = fopen($this->envPath, "w")) {
             fwrite($env, $fileContent);
@@ -47,8 +48,8 @@ class EnvSetup
             $this->isDummy = false;
         }
         if ($this->returnOriginalEnv) {
-            copy(__DIR__ . "/temp.env", $this->envPath);
-            unlink(__DIR__ . "/temp.env");
+            copy($this->envBackupPath, $this->envPath);
+            unlink($this->envBackupPath);
             $this->returnOriginalEnv = false;
         }
     }
