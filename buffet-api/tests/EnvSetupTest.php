@@ -28,16 +28,24 @@ class EnvSetupTest extends TestCase
 
         $this->envSetup->setupDummyEnv();
         $this->assertFileExists($this->envSetup->envPath);
+        $this->assertFileIsReadable($this->envSetup->envPath);
+        $this->assertFileIsWritable($this->envSetup->envPath);
+        $this->assertStringEqualsFile(expectedFile: $this->envSetup->envPath, actualString: $this->envSetup->envContent, message: "Created env file content does not match the default value");
 
         $this->envSetup->cleanupDummyEnv();
         $this->assertFileDoesNotExist($this->envSetup->envPath);
     }
 
-    /*#[TestDox('Env file custom content')]
+    #[TestDox('Env file custom content')]
     public function testEnvFileContent()
     {
+        $customEnvContent = 'FOO=BAR';
+        $this->envSetup->setupDummyEnv($customEnvContent);
 
-    }*/
+        $this->assertFileExists($this->envSetup->envPath);
+        $this->assertFileIsReadable($this->envSetup->envPath);
+        $this->assertStringEqualsFile(expectedFile: $this->envSetup->envPath, actualString: $customEnvContent, message: "Created env file content does not match the custom value");
+    }
 
     protected function tearDown(): void
     {
