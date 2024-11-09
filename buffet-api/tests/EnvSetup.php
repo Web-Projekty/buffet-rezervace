@@ -9,7 +9,7 @@ class EnvSetup
     public string $envDir = __DIR__ . "/../src/Database/";
     public string $envPath;
 
-    protected string $envContent = "DECRYPT_KEY=a_key";
+    public string $envContent = "DECRYPT_KEY=a_key";
     protected bool $returnOriginalEnv = false;
 
     public function __construct()
@@ -21,7 +21,7 @@ class EnvSetup
      * @return int
      */
 
-    public function setupDummyEnv(): void
+    public function setupDummyEnv($fileContent = $this->envContent): void
     {
         // Set up a mock .env environment for testing
         if (file_exists($this->envPath)) {
@@ -29,7 +29,7 @@ class EnvSetup
             copy($this->envPath, __DIR__ . "/temp.env");
         } else {
             if ($env = fopen($this->envPath, "w")) {
-                fwrite($env, $this->envContent);
+                fwrite($env, $this->$fileContent);
                 fclose($env);
             }
         }
