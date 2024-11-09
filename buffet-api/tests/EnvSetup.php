@@ -21,8 +21,9 @@ class EnvSetup
      * @return int
      */
 
-    public function setupDummyEnv($fileContent = $this->envContent): void
+    public function setupDummyEnv(): void
     {
+        $fileContent = $this->envContent;
         // Set up a mock .env environment for testing
         if (file_exists($this->envPath)) {
             $this->returnOriginalEnv = true;

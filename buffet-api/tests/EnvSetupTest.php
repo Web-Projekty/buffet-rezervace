@@ -32,11 +32,11 @@ class EnvSetupTest extends TestCase
         $this->assertFileDoesNotExist($this->envSetup->envPath);
     }
 
-    #[TestDox('Env file custom content')]
+    /*#[TestDox('Env file custom content')]
     public function testEnvFileContent()
     {
 
-    }
+    }*/
 
     protected function tearDown(): void
     {
