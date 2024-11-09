@@ -23,5 +23,5 @@ phpunit-coverage:
     script:
         - cd buffet-api
         - composer install
-        - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text | grep 'Lines:'
+        - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
