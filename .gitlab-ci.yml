@@ -1,0 +1,27 @@
+stages:
+    - PHP Unit Tests
+
+# Job to run PHPUnit tests and generate the coverage output
+phpunit:
+    stage: PHP Unit Tests
+    image: wlczak/buffet-test-prebuild:latest
+    script:
+        - cd buffet-api
+        - composer install
+        - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-html tests/result
+          --display-deprecations --display-phpunit-deprecations --fail-on-deprecation
+          --fail-on-phpunit-deprecation
+    artifacts:
+        paths:
+            - buffet-api/tests/result/
+        expire_in: 1 hour
+
+# Job to extract the coverage percentage from the PHPUnit output
+phpunit-coverage:
+    stage: PHP Unit Tests
+    image: wlczak/buffet-test-prebuild:latest
+    script:
+        - cd buffet-api
+        - composer install
+        - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
+    coverage: '/^\s*Lines:\s*\d+.\d+\%/'
