@@ -47,6 +47,7 @@ class CredentialsManager
         $passH = $json->{'db_pass'};
 
         if (empty($_ENV['DECRYPT_KEY']) || !isset($_ENV['DECRYPT_KEY'])) {
+            return ['success' => false];
             return $this->response->setError(Error::FailedDecrypt);
         }
 
