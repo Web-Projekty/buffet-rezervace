@@ -116,12 +116,6 @@ class EnvSetupTest extends TestCase
         }
     }
 
-    /*#[TestDox('Env file setup-cleanup sequence')]
-    public function testEnvFileSetupCleanupSequence()
-    {
-
-    }*/
-
     protected function tearDown(): void
     {
         $this->envSetup->cleanupDummyEnv();
