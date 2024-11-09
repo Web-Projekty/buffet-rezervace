@@ -50,39 +50,84 @@ class AuthApi
      * @return ApiResponse Api response with JWT token and account information
      */
 
-    function login($response)
+    function login(ApiResponse $response): ApiResponse
     {
-        $jwt = new JWTApi;
+        $user = $response->getRequestByKey('username');
+        $pass = $response->getRequestByKey('password');
 
-        $username = $response->getRequestByKey("username");
-        $password = $response->getRequestByKey("password");
+        $ldapServer = "ldap://vlastas.cc"; // URL of the LDAP server
+        $ldapPort = 389;                   // Default port for LDAP is 389
 
-        if (!$assoc = UserModel::getUserByName($username)) {
-            return $response->setError(Error::NonexistentUser);
+                                                 // User credentials
+        $ldapUser = "cn=admin,dc=vlastas,dc=cc"; // LDAP distinguished name (DN)
+        $ldapPassword = "prestizniBuffet2305";   // Password
+
+        // Connect to the LDAP server
+        $ldapConnection = ldap_connect($ldapServer);
+        ob_start();
+        if (!$ldapConnection) {
+
+            die("Could not connect to LDAP server.");
+
         }
+        ldap_set_option($ldapConnection, LDAP_OPT_PROTOCOL_VERSION, 3);
 
-        if (isset($assoc['password'])) {
-            $uid = $assoc['id'];
-            $hash = $assoc['password'];
-            $isAdmin = $assoc['isAdmin'];
-            $fullName = $assoc['fullName'];
-            $email = $assoc['email'];
-            $class = $assoc['class'];
+        /*if (@ldap_bind($ldapConnection, $ldapUser, $ldapPassword)) {
+        echo "Authenticated to LDAP server successfully!";
         } else {
-            return $response->setError(Error::NonexistentUser);
-        }
+        echo "LDAP bind failed: " . ldap_error($ldapConnection);
+        }*/
+        $userDn = "uid=$user,cn=zaci,dc=vlastas,dc=cc";
 
-        if (password_verify($password, $hash)) {
-
-            $token = $jwt->getToken($uid, $username); // is acutally used don't trust the intelephense
-
-            foreach ($response->getPayloadKeys() as $key) {
-                $response->setPayload($key, $$key);
-            }
-            $response->setSuccess(Success::Login);
+        if (@ldap_bind($ldapConnection, $userDn, $pass)) {
+            echo "Password is valid!";
+            ldap_unbind($ldapConnection); // Close the connection
+                                          // return true;
         } else {
-            $response->setError(Error::WrongPassword);
+            echo "Invalid username or password.";
+            ldap_unbind($ldapConnection); // Close the connection
+                                          //return false;
         }
-        return $response;
+
+        $response->setPayload("test", ob_get_clean());
+
+        return $response->setStatus(true);
     }
+
+/* OLD CODE WITH MYSQL
+function login($response)
+{
+$jwt = new JWTApi;
+
+$username = $response->getRequestByKey("username");
+$password = $response->getRequestByKey("password");
+
+if (!$assoc = UserModel::getUserByName($username)) {
+return $response->setError(Error::NonexistentUser);
+}
+
+if (isset($assoc['password'])) {
+$uid = $assoc['id'];
+$hash = $assoc['password'];
+$isAdmin = $assoc['isAdmin'];
+$fullName = $assoc['fullName'];
+$email = $assoc['email'];
+$class = $assoc['class'];
+} else {
+return $response->setError(Error::NonexistentUser);
+}
+
+if (password_verify($password, $hash)) {
+
+$token = $jwt->getToken($uid, $username); // is acutally used don't trust the intelephense
+
+foreach ($response->getPayloadKeys() as $key) {
+$response->setPayload($key, $$key);
+}
+$response->setSuccess(Success::Login);
+} else {
+$response->setError(Error::WrongPassword);
+}
+return $response;
+}*/
 }
