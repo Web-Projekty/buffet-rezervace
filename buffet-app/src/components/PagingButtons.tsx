@@ -1,33 +1,33 @@
-type PagingButtons = {
+type PagingButtonsProps = {
   currentPage: number;
   totalPagesCount: number;
-  handlePreviousPage: () => void;
-  handleNextPage: () => void;
+  listOfPages: number[];
+  handlePage: (page: number) => void;
 };
 
 const PagingButtons = ({
   currentPage,
-  totalPagesCount,
-  handlePreviousPage,
-  handleNextPage,
-}: PagingButtons) => {
+  listOfPages,
+  handlePage,
+}: PagingButtonsProps) => {
   return (
-    totalPagesCount > 1 && (
-      <div className="flex flex-row gap-2">
-        <button
-          onClick={handlePreviousPage}
-          disabled={currentPage === 1}
-          className="cursor-pointer rounded-md border border-slate-900 bg-cyan-500 p-2 text-white hover:bg-cyan-700"
-        >
-          Předchozí
-        </button>
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPagesCount}
-          className="cursor-pointer rounded-md border border-slate-900 bg-cyan-500 p-2 text-white hover:bg-cyan-700"
-        >
-          Další
-        </button>
+    listOfPages.length > 1 && (
+      <div className="z-10 flex w-full flex-row items-center justify-center gap-10">
+        <div className="flex gap-2">
+          {listOfPages.map((index: number) => (
+            <button
+              key={index}
+              onClick={() => handlePage(index)}
+              className={`rounded-md border border-slate-900 px-3 py-2 ${
+                currentPage === index
+                  ? "cursor-default bg-cyan-700 text-white"
+                  : "cursor-pointer bg-cyan-500 text-white hover:bg-cyan-700"
+              }`}
+            >
+              {index}
+            </button>
+          ))}
+        </div>
       </div>
     )
   );

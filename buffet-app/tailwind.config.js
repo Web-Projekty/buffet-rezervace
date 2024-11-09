@@ -4,13 +4,16 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        Lato: ["Lato", "sans-serif"],
+        FiraSans: ["Fira Sans", "sans-serif"],
+        SourGummy: ["Sour Gummy", "IBM Plex Mono", "Lato", "sans-serif"],
+        SansSerif: ["sans-serif", "IBM Plex Mono", "Lato"],
       },
       animation: {
         fadeIn: "fadeIn 0.5s ease-in-out",
         fadeOut: "fadeOut 0.5s ease-in-out",
         "one-spin": "spin 0.5s ease-in-out",
         wiggle: "wiggle 0.5s ease-in-out infinite",
+        slowWiggle: "wiggle 1s ease-in-out infinite",
       },
       keyframes: {
         fadeIn: {

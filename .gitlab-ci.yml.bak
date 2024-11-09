@@ -17,3 +17,5 @@ phpunit:
         - echo 'pcov.enabled=1' >> /usr/local/etc/php/php.ini
     script:
         - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text
+    only:
+    - merge_requests

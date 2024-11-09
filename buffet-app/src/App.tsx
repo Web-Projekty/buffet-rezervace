@@ -6,11 +6,11 @@ import CartModal from "./components/cart/CartModal";
 
 const App = () => {
   return (
-    <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-white font-Lato dark:bg-slate-800">
+    <div className="font-SourGummy relative flex min-h-screen flex-col overflow-x-hidden bg-slate-800">
       <Header />
       <RouteScrollToTop />
       <CartModal />
-      <div className="flex-1">
+      <div className="mb-[3rem] mt-[10rem] flex-1">
         <Outlet />
       </div>
       <Footer />
