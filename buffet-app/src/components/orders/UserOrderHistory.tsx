@@ -33,10 +33,8 @@ const UserOrderHistory = ({ list }: UserOrderHistoryProps) => {
   // }
 
   return (
-    <div className="flex flex-col gap-2 md:w-[45rem]">
-      <h1 className="text-2xl">
-        Tvá historie objednávek ({arrayOfPages.length})
-      </h1>
+    <div className="flex w-[22rem] flex-col gap-2 md:w-[45rem]">
+      <h1 className="text-2xl">Tvá historie objednávek ({dataList.length})</h1>
       <AnimatePresence>
         <ul className="flex flex-col gap-2">
           {dataList.map((order) => (

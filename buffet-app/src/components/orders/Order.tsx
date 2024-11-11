@@ -5,9 +5,9 @@ import { MenuItem, Order as OrderType } from "../../types";
 import { scaleUpAnimation } from "../../animations";
 import { ChevronLeft, BadgeCheck, BadgeInfo, BadgeX } from "lucide-react";
 
-type AnimationWrapperProps = {
-  children: React.ReactNode;
-  keyValue: string;
+type OrderProps = {
+  order: OrderType;
+  isAdmin?: boolean;
 };
 
 type StatusBadgeProps = {
@@ -20,6 +20,11 @@ type CancelButtonProps = {
 
 type PickupButtonProps = {
   handlePickup: () => void;
+};
+
+type AnimationWrapperProps = {
+  children: React.ReactNode;
+  keyValue: string;
 };
 
 const StatusBadge = ({ status }: StatusBadgeProps) => {
@@ -64,7 +69,7 @@ const AnimationWrapper = ({ children, keyValue }: AnimationWrapperProps) => {
   );
 };
 
-const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
+const Order = ({ order, isAdmin }: OrderProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [status, setStatus] = useState<OrderType["status"]>(order.status);
 
@@ -89,7 +94,7 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
     >
       <div className="flex flex-row items-center justify-between text-xl">
         <div className="flex flex-row items-center gap-2 text-xl">
-          <h2>#{order.id}</h2>
+          <h2 className="font-bold">#{order.id}</h2>
           <p>{formatUnixDate(order.date)}</p>
           {isAdmin && order.user && (
             <p className="text-base">
@@ -97,7 +102,6 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
             </p>
           )}
         </div>
-
         <div className="flex flex-row items-center">
           <AnimatePresence>
             {!isOpen && (
@@ -125,7 +129,7 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
         className="flex flex-col gap-3 overflow-hidden"
       >
         <div className="flex flex-col">
-          {order.items.map((item: MenuItem) => (
+          {order.items.map((item) => (
             <li
               key={item.id}
               className="flex w-[240px] flex-row items-center justify-center gap-2"
@@ -139,8 +143,8 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
 
         <hr />
 
-        <div className="flex flex-row justify-between">
-          <div className="flex w-[240px] flex-row items-center justify-center gap-2">
+        <div className="flex flex-col justify-between md:flex-row">
+          <div className="flex w-[240px] flex-row items-center justify-center gap-2 font-bold">
             <span>Celkem</span>
             <div className="mt-3 flex-1 border-b-2 border-dotted border-white"></div>
             <p>
@@ -152,7 +156,7 @@ const Order = ({ order, isAdmin }: { order: OrderType; isAdmin?: boolean }) => {
               )}
             </p>
           </div>
-          <div className="flex flex-row items-center gap-2">
+          <div className="flex flex-col items-center gap-2 md:flex-row">
             <AnimatePresence>
               {status === "pending" && isAdmin && (
                 <PickupButton handlePickup={handlePickup} />
