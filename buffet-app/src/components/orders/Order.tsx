@@ -98,7 +98,7 @@ const Order = ({ order, isAdmin }: OrderProps) => {
           <p>{formatUnixDate(order.date)}</p>
           {isAdmin && order.user && (
             <p className="text-base">
-              {order.user?.fullName}, {order.user?.class}, {order.user?.email}
+              {order.user.fullName}, {order.user.class}, {order.user.email}
             </p>
           )}
         </div>
