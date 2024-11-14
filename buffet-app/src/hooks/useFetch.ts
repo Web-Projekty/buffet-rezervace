@@ -3,7 +3,7 @@ import axios from "axios";
 
 type UseFetchReturn<T> = {
   isLoading: boolean;
-  error: string;
+  error: string | null;
   setError: (error: string) => void;
   data: T | null;
 };
@@ -19,7 +19,7 @@ const useFetch = <T>(
   initialValue?: T,
 ): UseFetchReturn<T> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<T | null>(
     initialValue ? initialValue : null,
   );
