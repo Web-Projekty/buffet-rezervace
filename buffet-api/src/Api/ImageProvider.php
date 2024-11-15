@@ -32,7 +32,6 @@ class ImageProvider
         $html->getBody()->write(file_get_contents($path));
 
         return $html->withHeader('Content-Type', mime_content_type($path))
-            ->withHeader('Content-Disposition', 'attachment; filename="' . basename($path) . '"')
             ->withHeader('Content-Length', filesize($path));
     }
 
