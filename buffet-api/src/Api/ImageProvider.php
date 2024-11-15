@@ -17,15 +17,16 @@ class ImageProvider
      */
     function main(RequestInterface $request, ResponseInterface $html, $args): ResponseInterface
     {
-        $path = $this->getFilePath($args);
+        $urlPath = $args['path'];
+        $path = $this->getFilePath($urlPath);
 
         if (!file_exists($path)) {
             throw new HttpNotFoundException($request);
             return $html;
         }
 
-        if(explode("/",mime_content_type($path))[0] != "image"){
-            throw new HttpNotFoundException($request,"not an image");
+        if (explode("/", mime_content_type($path))[0] != "image") {
+            throw new HttpNotFoundException($request, "not an image");
             return $html;
         }
 
@@ -37,22 +38,44 @@ class ImageProvider
 
     /**
      * @param  $args
-     * @return mixed
+     * @return string
      */
-    function getFilePath($args): string
+    function getFilePath($urlPath): string
     {
-        $urlPath = $args['path'];
+        $supportedFormats = ["jpg", "png", "svg"];
+        $fileFound = false;
         $pathParts = explode("/", $urlPath);
         $pathPartsCount = count($pathParts) - 1;
 
-        $path = __DIR__ . "/../../img/";
+        $dir = __DIR__ . "/../../img/";
 
         for ($i = 0; $i < $pathPartsCount; $i++) {
-            $path .= $pathParts[$i] . "/";
+            $dir .= $pathParts[$i] . "/";
         }
 
-        $path .= $pathParts[$pathPartsCount];
+        $path = $dir . explode(".", $pathParts[$pathPartsCount])[0];
 
+        foreach ($supportedFormats as $format) {
+            if (file_exists($path . "." . $format)) {
+                $path .= "." . $format;
+                $fileFound = true;
+                break;
+            }
+        }
+
+        if (!$fileFound) {
+            $path = $dir . "default";
+
+            foreach ($supportedFormats as $format) {
+                if (file_exists($path . "." . $format)) {
+                    $path .= "." . $format;
+                    $fileFound = true;
+                    break;
+                }
+            }
+
+        }
+        //var_dump($path);
         return $path;
     }
 }
