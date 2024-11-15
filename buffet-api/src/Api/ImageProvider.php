@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace Buffet\Api;
 
+use PHPUnit\Runner\FileDoesNotExistException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Exception\HttpNotFoundException;
@@ -46,10 +47,9 @@ class ImageProvider
         $fileFound = false;
         $pathParts = explode("/", $urlPath);
         $pathPartsCount = count($pathParts) - 1;
-
         $dir = __DIR__ . "/../../img/";
 
-        for ($i = 0; $i < $pathPartsCount; $i++) {
+        for ($i = 0; $i < 1; $i++) {
             $dir .= $pathParts[$i] . "/";
         }
 
@@ -75,7 +75,6 @@ class ImageProvider
             }
 
         }
-        //var_dump($path);
-        return $path;
+        return $fileFound ? $path : throw (new FileDoesNotExistException($path));
     }
 }
