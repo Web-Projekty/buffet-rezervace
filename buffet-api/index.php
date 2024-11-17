@@ -64,7 +64,7 @@ $app->post('/api', [BuffetApi::class, 'main']);
 
 $app->any('/image/{path:.*}', [ImageProvider::class, 'main']);
 
-$app->get('/wstest', function (Request $request, Response $response, $args) {
+$app->get('/chat', function (Request $request, Response $response, $args) {
 
     ob_start();
     include __DIR__ . "/templates/ws.html";
