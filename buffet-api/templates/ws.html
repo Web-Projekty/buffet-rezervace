@@ -9,7 +9,15 @@
 
 <body>
     <div style="width: 50%; margin: auto;">
-        <script> const ws = new WebSocket('ws://' + window.location.host + '/ws/dk/dsfsdf');
+        <script>
+            protocol = window.location.protocol
+            console.log(window.location.protocol)
+            if (protocol == 'http:') {
+            address = 'ws://' + window.location.host + '/ws/dk/dsfsdf'
+            } else {
+            address = 'wss://' + window.location.host + '/ws/dk/dsfsdf'
+            }
+            const ws = new WebSocket(address);
             ws.onmessage = (event) => {
                 console.log(event.data)
 
