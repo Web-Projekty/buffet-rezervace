@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WS-test</title>
+</head>
+
+<body>
+    <div style="width: 50%; margin: auto;">
+        <script> const ws = new WebSocket('ws://localhost:8069');
+            ws.onmessage = (event) => {
+                console.log(event.data)
+
+                element = document.createElement('p')
+                element.innerText = event.data
+                document.getElementById('chat').append(element)
+            };
+            ws.onopen = () => ws.send('New annonymous user has joined the chat');
+            function send() {
+
+                element = document.createElement('p')
+                element.innerText = document.getElementById('text').value
+                element.style.textAlign = 'right';
+                document.getElementById('chat').append(element)
+
+                ws.send(document.getElementById('text').value);
+            }
+        </script>
+        <div id="chat"></div>
+        <input type="text" id="text">
+        <button id="send" onclick="send()">send</button>
+    </div>
+</body>
+
+</html>

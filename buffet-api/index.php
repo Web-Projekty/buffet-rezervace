@@ -64,4 +64,12 @@ $app->post('/api', [BuffetApi::class, 'main']);
 
 $app->any('/image/{path:.*}', [ImageProvider::class, 'main']);
 
+$app->get('/wstest', function (Request $request, Response $response, $args) {
+
+    ob_start();
+    include __DIR__ . "/templates/ws.html";
+    $response->getBody()->write(ob_get_clean());
+    return $response;
+});
+
 $app->run();
