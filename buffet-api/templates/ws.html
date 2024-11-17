@@ -35,6 +35,15 @@
 
                 ws.send(document.getElementById('text').value);
             }
+            ws.onclose = () => {
+                console.log('Connection closed');
+
+                element = document.createElement('p')
+                element.innerText = 'Connection closed'
+                element.style.textAlign = 'center';
+                element.style.color = 'red';
+                document.getElementById('chat').append(element)
+            };
         </script>
         <div id="chat"></div>
         <input type="text" id="text">
