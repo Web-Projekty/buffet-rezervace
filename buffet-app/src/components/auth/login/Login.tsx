@@ -82,7 +82,7 @@ const Login = () => {
           ) : loading ? (
             <Loading />
           ) : (
-            <Button type="submit" additionalStyles="w-full">
+            <Button type="submit" className="w-full">
               Přihlásit se
             </Button>
           )}
