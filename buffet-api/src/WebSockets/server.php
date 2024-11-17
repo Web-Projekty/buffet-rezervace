@@ -38,10 +38,14 @@ class ChatServer implements MessageComponentInterface
         echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n",
             $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
 
+        $httpRequest = $from->httpRequest;
+        $url = $httpRequest->getUri(); // Gets the request URL
+        echo "Client connected via URL: " . $url . "\n";
+
         // Broadcast the message to all clients
         foreach ($this->clients as $client) {
             if ($from !== $client) { // Skip the sender
-                $client->send($msg);
+                $client->send($msg . $url);
             }
         }
     }

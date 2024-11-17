@@ -72,4 +72,22 @@ $app->get('/chat', function (Request $request, Response $response, $args) {
     return $response;
 });
 
+$app->get('/wstest', function (Request $request, Response $response, $args) {
+    $connector = new Ratchet\Client\Connector();
+
+    $connector('ws://localhost:8069/ok') // Specify the WebSocket server address
+        ->then(function ($conn) {
+            echo "Connected to WebSocket server\n";
+
+            // Send a message
+            $conn->send('Hello, WebSocket Server!');
+
+            // Close the connection after sending the message
+            $conn->close();
+        }, function ($e) {
+            echo "Could not connect: {$e->getMessage()}\n";
+        });
+    return $response;
+});
+
 $app->run();
