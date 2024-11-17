@@ -24,6 +24,7 @@ class ChatServer implements MessageComponentInterface
     {
         // Store the new connection
         $this->clients->attach($conn);
+        $conn->send('Welcome to VC chat room!');
         echo "New connection! ({$conn->resourceId})\n";
     }
 
