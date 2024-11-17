@@ -13,9 +13,9 @@
             protocol = window.location.protocol
             console.log(window.location.protocol)
             if (protocol == 'http:') {
-            address = 'ws://' + window.location.host + '/ws/dk/dsfsdf'
+            address = 'ws://' + window.location.host + '/backend'
             } else {
-            address = 'wss://' + window.location.host + '/ws/dk/dsfsdf'
+            address = 'wss://' + window.location.host + '/backend'
             }
             const ws = new WebSocket(address);
             ws.onmessage = (event) => {
