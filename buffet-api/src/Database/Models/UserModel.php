@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace Buffet\Database\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -17,19 +19,20 @@ class UserModel extends Model
     /**
      * @var array
      */
-    protected $fillable = ['username', 'password', 'isAdmin'];
+    protected $fillable = ['username', 'password', 'isAdmin', 'fullName', 'email', 'class'];
 
     // Optionally, disable timestamps if the table doesn't have them
+
     /**
-     * @var mixed
+     * @var bool
      */
     public $timestamps = false;
 
-    public static function getAll()
+    public static function getAll(): \Illuminate\Database\Eloquent\Collection  | bool
     {
         try {
             return UserModel::all();
-        } catch (QueryException $e) {
+        } catch (QueryException) {
             return false;
         }
     }
@@ -38,11 +41,13 @@ class UserModel extends Model
      * @param  $username
      * @return mixed
      */
-    public static function getUserByName($username)
+    public static function getUserByName($username): array
     {
-        if (UserModel::where('username', $username)->exists()) {
-            return UserModel::where('username', $username)->first();
-        }
+        try {
+            if (UserModel::where('username', $username)->exists()) {
+                return UserModel::where('username', $username)->first()->toArray();
+            }
+        } catch (QueryException $e) {}
         return [];
     }
 
@@ -50,21 +55,45 @@ class UserModel extends Model
      * @param string $haystack
      * @param string $needle
      */
-    public static function isDuplicate(string $haystack, string $needle)
+    public static function isDuplicate(string $haystack, string $needle): bool
     {
-        return UserModel::where($haystack, $needle)->exists();
+        try {
+            return UserModel::where($haystack, $needle)->exists();
+        } catch (QueryException $e) {
+            return false;
+        }
     }
 
     /**
      * @param string $username
      * @param string $password
      */
-    public static function createUser(string $username, string $password)
+
+    public static function createUser(string $username, string $password): bool
     {
-        UserModel::create([
-            'username' => $username,
-            'password' => $password,
-            'isAdmin' => false
-        ]);
+        try {
+            UserModel::create([
+                'username' => $username,
+                'password' => $password,
+                'isAdmin' => false,
+                'fullName' => 'idk',
+                'email' => 'default@spseplzen.cz',
+                'class' => '5.H'
+            ]);
+        } catch (\Illuminate\Database\QueryException) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param int $uid
+     */
+    public static function isAdmin(int $uid): bool
+    {
+        try {
+            return (bool) UserModel::where('id', $uid)->first()->isAdmin;
+        } catch (QueryException) {}
+        return false;
     }
 }

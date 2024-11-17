@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Delete all merged branches except the current one
+git branch --merged | grep -v "\*" | xargs -n 1 git branch -d
+echo "Deleted all merged branches except the current one"

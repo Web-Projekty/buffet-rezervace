@@ -18,8 +18,12 @@ class ApiResponse
      * @param array $payloadKeys
      */
 
-    public function __construct(public array $request = [])
-    {}
+    public function __construct(public ?array $request = []) // allows for request to be null
+    {
+        if (!isset($this->request['requestType'])) {
+            $this->setError(Error::MissingRequestType);
+        }
+    }
 
     /**
      * @param string $key
@@ -49,8 +53,8 @@ class ApiResponse
     }
 
     /**
-     * @param  string  $key
-     * @return mixed
+     * @param  string $key
+     * @return mixed  $payload
      */
     public function getPayload(string $key)
     {
@@ -58,26 +62,26 @@ class ApiResponse
     }
 
     /**
-     * @return mixed
+     * @return string|null $requestType
      */
-    public function getRequestType(): string
+    public function getRequestType(): string | null
     {
         return $this->request['requestType'] ?? null;
     }
 
     /**
-     * @return array
+     * @return array|null $request
      */
-    public function getRequest(): array
+    public function getRequest(): array | null
     {
         return $this->request ?? null;
     }
 
     /**
-     * @param  string  $key
-     * @return mixed
+     * @param  string     $key
+     * @return mixed|null $requestMember
      */
-    public function getRequestByKey(string $key)
+    public function getRequestByKey(string $key): mixed
     {
         return $this->request[$key] ?? null;
     }
@@ -94,7 +98,8 @@ class ApiResponse
     }
 
     /**
-     * @param Error $msg
+     * @param  Error       $msg
+     * @return ApiResponse $this - optional
      */
     public function setError(Error $msg): ApiResponse
     {
@@ -108,8 +113,8 @@ class ApiResponse
     }
 
     /**
-     * @param  Success $msg
-     * @return null
+     * @param  Success     $msg
+     * @return ApiResponse $this - optional
      */
     public function setSuccess(Success $msg): ApiResponse
     {
@@ -117,7 +122,7 @@ class ApiResponse
             $this->status = Status::Success;
             $this->addPayload("msg", $msg->getValue() ?? null);
         }
-        
+
         return $this;
     }
 
@@ -147,6 +152,9 @@ class ApiResponse
         $this->payloadKeys = $payloadKeys;
     }
 
+    /**
+     * @return bool
+     */
     public function getStatus(): bool
     {
         if ($this->status === Status::Failed) {
@@ -186,8 +194,12 @@ class ApiResponse
         return true;
     }
 
-    public function hasFailed(){
-        return $this->status === Status::Failed;
+    /**
+     * @return bool
+     */
+    public function hasFailed()
+    {
+        return $this->status === Status::Failed ? true : false;
     }
 
     public function __toString()
