@@ -9,7 +9,7 @@
 
 <body>
     <div style="width: 50%; margin: auto;">
-        <script> const ws = new WebSocket('ws://localhost:8069');
+        <script> const ws = new WebSocket('ws://' + window.location.host + '/ws/dk/dsfsdf');
             ws.onmessage = (event) => {
                 console.log(event.data)
 
