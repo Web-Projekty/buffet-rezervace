@@ -6,13 +6,13 @@ namespace Buffet\Api;
 
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
-use Buffet\Types\Success;
 use DomainException;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Firebase\JWT\SignatureInvalidException;
 use InvalidArgumentException;
+use stdClass;
 use UnexpectedValueException;
 
 class JWTApi
@@ -25,15 +25,14 @@ class JWTApi
      * @return string generated JWT token
      */
 
-    function getToken(string $username): string
+    function getToken(int $uid, string $username): string
     {
-        $user_id = -1;
         $key = 'example_key';
         $payload = [
             'iss' => $_SERVER['HTTP_HOST'],
             'iat' => time(),
             'exp' => time() + (60 * 60),
-            'sub' => $user_id,
+            'sub' => $uid,
             'name' => $username,
             'admin' => false
         ];
@@ -47,24 +46,24 @@ class JWTApi
      * Decodes JWT token and returns an object with details (should be array (WIP))
      *
      * @param  ApiResponse $token  JWT token to decode
-     * @return mixed       decoded JWT token
+     * @return mixed       decoded JWT token API response(if failed) stdClass (decoded JWT token)
      */
 
-    function decodeToken(ApiResponse $response)
+    function decodeToken(ApiResponse $response): ApiResponse | stdClass
     {
         $token = $response->getRequestByKey('token');
         $key = 'example_key';
         try {
             $dec = JWT::decode($token, new Key($key, 'HS384'));
-        } catch (SignatureInvalidException $e) {
+        } catch (SignatureInvalidException) {
             return $response->setError(Error::TamperedSign);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             return $response->setError(Error::CorruptedOrNull);
-        } catch (DomainException $e) {
+        } catch (DomainException) {
             return $response->setError(Error::Corrupted);
-        } catch (ExpiredException $e) {
+        } catch (ExpiredException) {
             return $response->setError(Error::TokenExpired);
-        } catch (UnexpectedValueException $e) {
+        } catch (UnexpectedValueException) {
             return $response->setError(Error::UnexpectedValue);
         }
         return $dec;
@@ -77,27 +76,25 @@ class JWTApi
  * @return ApiResponse API response
  */
 
-    function validateToken(ApiResponse $response): ApiResponse
+    function validateToken(ApiResponse $response): bool
     {
 
         $jwt = $this->decodeToken($response);
 
-        if ($jwt instanceof ApiResponse) {
-            return $response;
-        }
+        if (!$jwt instanceof ApiResponse) {
 
-        if ($jwt->iss != $_SERVER['HTTP_HOST']) {
-            return $response->setError(Error::BadDomain);
-        }
+            if ($jwt->iss != $_SERVER['HTTP_HOST']) {
+                $response->setError(Error::BadDomain);
+            }
 
-        if ($jwt->iat > time()) {
-            return $response->setError(Error::TooEarly);
-        }
+            if ($jwt->iat > time()) {
+                $response->setError(Error::TooEarly);
+            }
 
-        if ($jwt->exp < time()) {
-            return $response->setError(Error::TokenExpired);
+            if ($jwt->exp < time()) {
+                $response->setError(Error::TokenExpired);
+            }
         }
-
-        return $response->setSuccess(Success::Verification);
+        return $response->getStatus();
     }
 }

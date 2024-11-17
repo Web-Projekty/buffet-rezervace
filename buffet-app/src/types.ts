@@ -22,12 +22,12 @@ export type MenuItem = {
   price: number;
   description: string;
   image: string;
-  alergens: Alergen[];
+  allergens: Allergen[];
 };
 
-export type Alergen = {
+export type Allergen = {
   id: number;
   name: string;
   description: string;
-  image: string;
+  image?: string;
 };

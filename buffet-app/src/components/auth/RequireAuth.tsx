@@ -3,11 +3,14 @@ import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 
 import { Navigate } from "react-router-dom";
 import { User } from "../../types";
+import { isTokenExpired } from "./login/login";
+import useSignOut from "react-auth-kit/hooks/useSignOut";
+import PageNotFound from "../error/PageNotFound";
 
 type ProtectedRouteProps = {
   children: ReactNode;
   requireAdmin: boolean;
-  fallbackPath: string;
+  fallbackPath?: string;
 };
 
 const RequireAuth = ({
@@ -17,16 +20,23 @@ const RequireAuth = ({
 }: ProtectedRouteProps) => {
   // const user: User = dummyUser;
   const user: User = useAuthUser()!;
+  const logout = useSignOut();
 
   if (!user) {
     console.log("User not authenticated");
-    return <Navigate to={fallbackPath} />;
+    return fallbackPath ? <Navigate to={fallbackPath} /> : <PageNotFound />;
+  }
+
+  if (isTokenExpired()) {
+    console.log("Token expired");
+    logout();
+    return <Navigate to={fallbackPath ? fallbackPath : "/login"} />;
   }
 
   console.log("User authenticated", user);
 
   if (requireAdmin && !user.isAdmin) {
-    return <Navigate to="/" />;
+    return <PageNotFound />;
   }
 
   return <>{children}</>;

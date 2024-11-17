@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare (strict_types = 1);
 
 namespace Buffet\Database;
 
@@ -75,9 +75,9 @@ class CredentialsManager
      *
      * @param  string $username   Username to encrypt.
      * @param  string $password   Password to encrypt.
-     * @return array  Description of the return value.
+     * @return void   Description of the return value.
      */
-    function createCredentials($username, $password)
+    function createCredentials($username, $password, $host = "vlastas.cc", $database = "buffet"): void
     {
         $this->envExists();
 
@@ -94,10 +94,10 @@ class CredentialsManager
         $file = fopen(__DIR__ . "/creds.json", "w");
 
         $config = [
-            'db_host' => 'localhost',
+            'db_host' => $host,
             'db_user' => $userH,
             'db_pass' => $passH,
-            'db_name' => 'database_name'
+            'db_name' => $database
         ];
         fwrite($file, json_encode($config, JSON_PRETTY_PRINT));
         fclose($file);
@@ -109,6 +109,6 @@ class CredentialsManager
             $this->response->setError(Error::NoEnv);
             return false;
         }
-return true;
+        return true;
     }
 }

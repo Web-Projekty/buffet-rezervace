@@ -3,8 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { User } from "../../types";
 import { scaleUpAnimation } from "../../animations";
+import { removeTokenExpiration } from "./login/login";
+import Button from "../Button";
 
-const AdminButtons = ({ handleMenuEdit }: { handleMenuEdit: () => void }) => {
+type AccountInformationProps = {
+  user: User;
+};
+
+type AdminButtonsProps = {
+  handleMenuEdit: () => void;
+};
+
+const AdminButtons = ({ handleMenuEdit }: AdminButtonsProps) => {
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
       <button
@@ -17,12 +27,13 @@ const AdminButtons = ({ handleMenuEdit }: { handleMenuEdit: () => void }) => {
   );
 };
 
-const AccountInformation = ({ user }: { user: User }) => {
+const AccountInformation = ({ user }: AccountInformationProps) => {
   const logout = useSignOut();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
+    removeTokenExpiration();
     navigate("/login");
   };
 
@@ -44,12 +55,7 @@ const AccountInformation = ({ user }: { user: User }) => {
         <p className="text-lg">Třída: {user.class}</p>
       </motion.div>
 
-      <button
-        className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
-        onClick={handleLogout}
-      >
-        Logout
-      </button>
+      <Button onClick={handleLogout}>Odhlásit</Button>
       {user.isAdmin && <AdminButtons handleMenuEdit={handleMenuEdit} />}
     </div>
   );

@@ -7,8 +7,10 @@ namespace Buffet\Api;
 use Buffet\Api\AuthApi;
 use Buffet\Database\DatabaseManager;
 use Buffet\Database\Models\ItemModel;
+use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\Types\Success;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
@@ -67,7 +69,7 @@ class BuffetApi
             return $response;
         }
 
-        switch ($request['requestType']) {
+        switch ($response->getRequestType()) {
             case "test":
                 return $this->handleTest($response);
                 break;
@@ -86,6 +88,9 @@ class BuffetApi
 
             case "getMenu":
                 return $this->handleGetMenu($response);
+                break;
+            case "isAdmin":
+                return $this->handleIsAdmin($response);
                 break;
 
             case null:
@@ -110,9 +115,7 @@ class BuffetApi
 
         $jwt = new JWTApi;
 
-        $jwt->validateToken($response);
-
-        if ($response->hasFailed()) {
+        if (!$jwt->validateToken($response)) {
             return $response;
         }
 
@@ -122,9 +125,9 @@ class BuffetApi
             return $response;
         }
 
-        $response->addPayload("newToken", $jwt->getToken($decodedToken->name));
+        $response->addPayload("newToken", $jwt->getToken($decodedToken->sub, $decodedToken->name));
 
-        return $response;
+        return $response->setSuccess(Success::Verification);
     }
 
 /**
@@ -173,10 +176,45 @@ class BuffetApi
     function handleGetMenu(ApiResponse $response): ApiResponse
     {
         $response->setPayloadKeys(["menuItems"]);
-        //var_dump(ItemModel::getAll()->toArray());
-        // if()
-        $response->setPayload("menuItems", ItemModel::getAll()->toArray());
+
+        $queryResult = null;
+
+        if (!$queryResult = ItemModel::getAll()) {
+            return $response->setError(Error::QueryFailed);
+        }
+
+        $response->setPayload("menuItems", $queryResult->toArray());
         // phpinfo();
+        $response->setStatus(true);
+        return $response;
+    }
+
+    /**
+     * @param  ApiResponse $response
+     * @return mixed
+     */
+    function handleIsAdmin(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token"]);
+        $response->setPayloadKeys(["isAdmin"]);
+
+        $jwt = new JWTApi;
+
+        $token = $response->getRequestByKey("token");
+        $jwt->validateToken($response);
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $uid = $jwt->decodeToken($response)->sub;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+        $isAdmin = UserModel::isAdmin($uid);
+        $response->setPayload("isAdmin", $isAdmin);
+
         $response->setStatus(true);
         return $response;
     }

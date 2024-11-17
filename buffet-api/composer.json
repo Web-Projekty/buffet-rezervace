@@ -1,7 +1,7 @@
 {
-    "name": "idk/buffet-rezervace-api",
+    "name": "spseplzen/buffet-rezervace-api",
     "description": "",
-    "type": "project",
+    "type": "webapp",
     "require": {
         "slim/slim": "4.*",
         "slim/psr7": "^1.7",
@@ -12,16 +12,32 @@
     "license": "none",
     "autoload": {
         "psr-4": {
-            "Buffet\\": "src/"
+            "Buffet\\": "src/",
+            "Buffet\\Tests\\": "tests/"
         }
     },
     "authors": [
         {
             "name": "Adam Vlček",
-            "email": "vlcek-adam@seznam.cz"
+            "email": "vlcek-adam@seznam.cz",
+            "role": "Backend Developer",
+            "homepage": "https://github.com/wlczak"
+        },
+        {
+            "name": "Jan Egermajer",
+            "email": "egermajerj@spseplzen.cz",
+            "role": "<role>",
+            "homepage": "https://example.com"
+        },
+        {
+            "name": "Ondřej Pták",
+            "email": "ptakondrej@spseplzen.cz",
+            "role": "Frontend Developer",
+            "homepage": "https://github.com/florixak"
         }
     ],
     "require-dev": {
-        "phpunit/phpunit": "^10"
+        "phpunit/phpunit": "^10",
+        "phpunit/php-code-coverage": "^10.1"
     }
 }

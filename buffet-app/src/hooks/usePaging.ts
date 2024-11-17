@@ -1,34 +1,46 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
-type PagingReturn = {
+type PagingReturn<T> = {
   currentPage: number;
   totalPagesCount: number;
-  totalListCount: number;
-  displayedList: any[];
-  displayedListCount: number;
-  handleNextPage: () => void;
-  handlePreviousPage: () => void;
+  dataList: T[];
+  dataListLength: number;
+  arrayOfPages: number[];
+  handlePage: (page: number) => void;
 };
 
-export function usePaging(
-  data: any[] = [],
+export function usePaging<T>(
+  data: T[] = [],
   itemsPerPage: number,
-): PagingReturn {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const totalPagesCount: number = Math.ceil(data.length / itemsPerPage);
-  const totalListCount: number = data.length;
+  paramsName?: string,
+): PagingReturn<T> {
+  const [searchParams, setSearchParams] = useSearchParams("");
 
-  const displayedList: any[] = data
+  const currentPage: number = parseInt(
+    searchParams.get(paramsName ? paramsName : "page") || "1",
+    10,
+  );
+
+  const dataList: T[] = data
     ? data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
     : [];
-  const displayedListCount: number = displayedList.length;
 
-  const handleNextPage = (): void => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPagesCount));
+  const dataListLength: number = dataList.length;
+
+  const totalPagesCount: number = Math.ceil(data.length / itemsPerPage);
+
+  const arrayOfPages: number[] = Array.from(
+    { length: totalPagesCount },
+    (_, index) => index + 1,
+  );
+
+  const setCurrentPage = (page: number): void => {
+    setSearchParams({ [paramsName ? paramsName : "page"]: page.toString() });
   };
 
-  const handlePreviousPage = (): void => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  const handlePage = (page: number): void => {
+    setCurrentPage(page);
   };
 
   useEffect(() => {
@@ -38,10 +50,9 @@ export function usePaging(
   return {
     currentPage,
     totalPagesCount,
-    totalListCount,
-    displayedList,
-    displayedListCount,
-    handleNextPage,
-    handlePreviousPage,
+    dataList,
+    dataListLength,
+    arrayOfPages,
+    handlePage,
   };
 }
