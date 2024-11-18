@@ -190,14 +190,14 @@ class BuffetApi
         // testing only !!!
         $array = $queryResult->toArray();
         for ($i = 0; $i < sizeof($array); $i++) {
-            $alergen["id"] = 1;
+            $alergen["id"] = 7;
             $alergen["name"] = "test";
             $alergen["description"] = "test_desc";
 
             $array[$i]["allergens"] = null;
             $array[$i]["allergens"][0] = $alergen;
 
-            $alergen["id"] = 2;
+            $alergen["id"] = 13;
             $alergen["name"] = "test2";
             $alergen["description"] = "test_desc2";
 
