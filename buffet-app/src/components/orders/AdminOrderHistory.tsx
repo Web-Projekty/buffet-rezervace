@@ -56,7 +56,7 @@ const AdminOrderHistory = () => {
   }, [ordersFilter]);
 
   return (
-    <div className="m-auto mb-[3rem] mt-[10rem] flex flex-col-reverse items-center justify-between gap-5 text-white md:mt-[15rem] md:w-[1200px] md:flex-row md:items-start">
+    <div className="m-auto flex flex-col-reverse items-center justify-between gap-5 font-FiraSans text-white md:mt-[5rem] md:w-[1200px] md:flex-row md:items-start">
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl">Objednávky ({arrayOfPages.length})</h1>
         <ul className="flex flex-col gap-2">
