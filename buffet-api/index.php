@@ -11,7 +11,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 $app = AppFactory::create();
 
-$app->addErrorMiddleware(true, true, true);
+$isProd = 0;
+$app->addErrorMiddleware(!$isProd, true, true);
 
 $app->get('/', function (Request $request, Response $response, $args) {
 

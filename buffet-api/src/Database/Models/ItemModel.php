@@ -34,4 +34,13 @@ class ItemModel extends Model
             return false;
         }
     }
+
+    public static function getAllByPage(int $page, int $itemsCount): \Illuminate\Database\Eloquent\Collection  | bool
+    {
+        try {
+            return ItemModel::select()->offset(($page - 1) * $itemsCount)->limit($itemsCount)->get();
+        } catch (QueryException $e) {
+            return false;
+        }
+    }
 }
