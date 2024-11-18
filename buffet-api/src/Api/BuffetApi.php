@@ -175,16 +175,43 @@ class BuffetApi
      */
     function handleGetMenu(ApiResponse $response): ApiResponse
     {
+        $response->setRequestKeys(["page", "itemsCount"]);
         $response->setPayloadKeys(["menuItems"]);
 
         $queryResult = null;
 
-        if (!$queryResult = ItemModel::getAll()) {
+        $page = (int) $response->getRequestByKey("page");
+        $itemsCount = (int) $response->getRequestByKey("itemsCount");
+
+        if (!$queryResult = ItemModel::getAllByPage($page, $itemsCount)) {
             return $response->setError(Error::QueryFailed);
         }
 
+        // testing only !!!
+        $array = $queryResult->toArray();
+        for ($i = 0; $i < sizeof($array); $i++) {
+            $alergen["id"] = 7;
+            $alergen["name"] = "test";
+            $alergen["description"] = "test_desc";
+
+            $array[$i]["allergens"] = null;
+            $array[$i]["allergens"][0] = $alergen;
+
+            $alergen["id"] = 13;
+            $alergen["name"] = "test2";
+            $alergen["description"] = "test_desc2";
+
+            $array[$i]["allergens"][1] = $alergen;
+            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/";
+        }
+        // var_dump($array);
+
+        $response->setPayload("menuItems", $array);
+
+        /* // production
         $response->setPayload("menuItems", $queryResult->toArray());
-        // phpinfo();
+         */
+
         $response->setStatus(true);
         return $response;
     }

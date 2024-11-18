@@ -68,11 +68,11 @@ const router = createBrowserRouter([
       {
         path: "/objednavky",
         element: (
-          <RequireAuth requireAdmin={true} fallbackPath="/login">
-            <ErrorBoundary>
-              <AdminOrderHistory />
-            </ErrorBoundary>
-          </RequireAuth>
+          //<RequireAuth requireAdmin={true} fallbackPath="/login">
+          <ErrorBoundary>
+            <AdminOrderHistory />
+          </ErrorBoundary>
+          //</RequireAuth>
         ),
         //loader: () => import("./components/orders/AdminOrderHistory.tsx"),
       },

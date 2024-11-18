@@ -3,23 +3,18 @@ import axios from "axios";
 
 type UseFetchReturn<T> = {
   isLoading: boolean;
-  error: string;
+  error: string | null;
   setError: (error: string) => void;
   data: T | null;
 };
 
-type RequestData = {
-  requestType: string;
-  token?: string | undefined;
-};
-
 const useFetch = <T>(
   url: string,
-  requestData: RequestData,
+  requestData: Record<string, unknown>,
   initialValue?: T,
 ): UseFetchReturn<T> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<T | null>(
     initialValue ? initialValue : null,
   );
@@ -30,7 +25,8 @@ const useFetch = <T>(
     async function fetchData() {
       try {
         const { data } = await axios.post(url, requestData);
-        setData(data as T);
+        console.log(data.payload);
+        setData(data.payload.menuItems as T);
       } catch (e) {
         console.log(e);
         setError("Chyba načítání dat ze serveru.");
