@@ -195,6 +195,7 @@ class BuffetApi
             $alergen["description"] = "test_desc";
 
             $array[$i]["allergens"] = $alergen;
+            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/";
         }
         // var_dump($array);
 
