@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { formatCurrency, formatUnixDate } from "../../utils";
+import { formatCurrency } from "../../utils";
 import { useState } from "react";
 import { MenuItem, Order as OrderType } from "../../types";
 import { scaleUpAnimation } from "../../animations";
@@ -95,11 +95,9 @@ const Order = ({ order, isAdmin }: OrderProps) => {
       <div className="flex flex-row items-center justify-between text-xl">
         <div className="flex flex-row items-center gap-2 text-xl">
           <h2 className="font-bold">#{order.id}</h2>
-          <p>{formatUnixDate(order.date)}</p>
+          {/*<p>{formatUnixDate(order.date)}</p>*/}
           {isAdmin && order.user && (
-            <p className="text-base">
-              {order.user.fullName}, {order.user.class}, {order.user.email}
-            </p>
+            <p className="text-base">{order.user.fullName}</p>
           )}
         </div>
         <div className="flex flex-row items-center">
