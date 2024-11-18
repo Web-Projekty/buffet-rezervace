@@ -6,14 +6,14 @@ type UseFetchReturn<T> = {
   error: string | null;
   setError: (error: string) => void;
   data: T | null;
-  dependency?: any;
+  dependency?: unknown;
 };
 
 const useFetch = <T>(
   url: string,
   requestData: Record<string, unknown>,
   initialValue?: T,
-  dependency?: any,
+  dependency?: unknown,
 ): UseFetchReturn<T> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
