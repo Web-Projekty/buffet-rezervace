@@ -38,9 +38,7 @@ class ItemModel extends Model
     public static function getAllByPage(int $page, int $itemsCount): \Illuminate\Database\Eloquent\Collection  | bool
     {
         try {
-            $a = ItemModel::select()->offset(($page-1) * $itemsCount)->limit($itemsCount)->get();
-            // var_dump($a);
-            return $a;
+            return ItemModel::select()->offset(($page - 1) * $itemsCount)->limit($itemsCount)->get();
         } catch (QueryException $e) {
             return false;
         }

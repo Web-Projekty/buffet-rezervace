@@ -181,7 +181,6 @@ class BuffetApi
         $queryResult = null;
 
         $page = (int) $response->getRequestByKey("page");
-        //var_dump($page);
         $itemsCount = (int) $response->getRequestByKey("itemsCount");
 
         if (!$queryResult = ItemModel::getAllByPage($page, $itemsCount)) {
@@ -205,6 +204,7 @@ class BuffetApi
         /* // production
         $response->setPayload("menuItems", $queryResult->toArray());
          */
+
         $response->setStatus(true);
         return $response;
     }
