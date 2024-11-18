@@ -17,17 +17,6 @@ export function usePaging<T>(
 ): PagingReturn<T> {
   const [searchParams, setSearchParams] = useSearchParams("");
 
-  if (!data) {
-    return {
-      currentPage: 1,
-      totalPagesCount: 1,
-      dataList: [],
-      dataListLength: 0,
-      arrayOfPages: [1],
-      handlePage: () => {},
-    };
-  }
-
   const currentPage: number = parseInt(
     searchParams.get(paramsName ? paramsName : "page") || "1",
     10,
@@ -38,7 +27,9 @@ export function usePaging<T>(
     : [];
 
   const dataListLength: number = dataList.length;
-  const totalPagesCount: number = Math.ceil(data.length / itemsPerPage);
+  const totalPagesCount: number = data
+    ? Math.ceil(data.length / itemsPerPage)
+    : 1;
 
   const arrayOfPages: number[] = Array.from(
     { length: totalPagesCount },

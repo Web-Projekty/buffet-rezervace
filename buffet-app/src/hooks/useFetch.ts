@@ -27,7 +27,6 @@ const useFetch = <T>(
     async function fetchData() {
       try {
         const { data } = await axios.post(url, requestData);
-        console.log(data.payload);
         setData(data.payload.menuItems as T);
       } catch (e) {
         console.log(e);

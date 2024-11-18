@@ -10,7 +10,11 @@ import ErrorComponent from "../error/ErrorComponent";
 const Menu = () => {
   const { data, isLoading, error } = useFetch<MenuItemType[]>(
     "https://wlczak.vlastas.cc/backend/api",
-    { requestType: "getMenu", page: 1, itemsCount: itemsPerPage },
+    {
+      requestType: "getMenu",
+      page: 1,
+      itemsCount: itemsPerPage,
+    },
     [],
   );
 
