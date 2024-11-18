@@ -188,6 +188,7 @@ class BuffetApi
             return $response->setError(Error::QueryFailed);
         }
 
+        // testing only !!!
         $array = $queryResult->toArray();
         for ($i = 0; $i < sizeof($array); $i++) {
             $alergen["id"] = 1;
@@ -200,7 +201,10 @@ class BuffetApi
         // var_dump($array);
 
         $response->setPayload("menuItems", $array);
-        // phpinfo();
+
+        /* // production
+        $response->setPayload("menuItems", $queryResult->toArray());
+         */
         $response->setStatus(true);
         return $response;
     }
