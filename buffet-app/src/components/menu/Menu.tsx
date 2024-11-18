@@ -8,20 +8,20 @@ import { itemsPerPage } from "../../constants";
 import ErrorComponent from "../error/ErrorComponent";
 
 const Menu = () => {
-  // const { currentPage, totalPagesCount, dataList, arrayOfPages, handlePage } =
-  //   usePaging<MenuItemType>(menu, itemsPerPage);
-
   const { data, isLoading, error } = useFetch<MenuItemType[]>(
     "https://wlczak.vlastas.cc/backend/api",
     { requestType: "getMenu", page: 1, itemsCount: itemsPerPage },
     [],
   );
 
+  const { currentPage, totalPagesCount, dataList, arrayOfPages, handlePage } =
+    usePaging<MenuItemType>(data, itemsPerPage);
+
   if (isLoading) {
     return <Loading size={30} />;
   }
 
-  if (error) {
+  if (!data || error) {
     return (
       <ErrorComponent title="Načítání položek se nezdařilo." subtitle="🛠️👷" />
     );
@@ -31,24 +31,24 @@ const Menu = () => {
     <div className="flex flex-col items-center justify-center gap-5">
       <h1 className="text-3xl font-bold text-white">Menu</h1>
       {/* {isLoading && <Loading size={30} />} */}
-      {!data ? (
+      {currentPage > totalPagesCount ? (
         <p className="italic text-white">
           "Meow? (Waiting for something to happen?)"
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-4">
-          {data.map((item) => (
+          {dataList.map((item) => (
             <MenuItem key={item.id} item={item} />
           ))}
         </div>
       )}
 
-      {/* <PagingButtons
+      <PagingButtons
         currentPage={currentPage}
         totalPagesCount={totalPagesCount}
         listOfPages={arrayOfPages}
         handlePage={handlePage}
-      /> */}
+      />
     </div>
   );
 };
