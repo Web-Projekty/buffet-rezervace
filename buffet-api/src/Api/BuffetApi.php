@@ -195,6 +195,7 @@ class BuffetApi
             $alergen["description"] = "test_desc";
 
             $array[$i]["allergens"] = null;
+
             $array[$i]["allergens"][0] = $alergen;
 
             $alergen["id"] = 13;
@@ -202,11 +203,16 @@ class BuffetApi
             $alergen["description"] = "test_desc2";
 
             $array[$i]["allergens"][1] = $alergen;
+
             $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/";
         }
         // var_dump($array);
 
         $response->setPayload("menuItems", $array);
+
+        // paging info
+
+        $response->setPayload("itemsCount", ItemModel::countAll());
 
         /* // production
         $response->setPayload("menuItems", $queryResult->toArray());

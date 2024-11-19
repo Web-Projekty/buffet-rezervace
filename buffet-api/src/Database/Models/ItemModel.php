@@ -35,6 +35,10 @@ class ItemModel extends Model
         }
     }
 
+    /**
+     * @param int $page
+     * @param int $itemsCount
+     */
     public static function getAllByPage(int $page, int $itemsCount): \Illuminate\Database\Eloquent\Collection  | bool
     {
         try {
@@ -42,5 +46,10 @@ class ItemModel extends Model
         } catch (QueryException $e) {
             return false;
         }
+    }
+
+    public static function countAll(): int | bool
+    {
+        return ItemModel::select()->count();
     }
 }
