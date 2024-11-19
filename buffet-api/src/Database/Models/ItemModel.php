@@ -50,6 +50,10 @@ class ItemModel extends Model
 
     public static function countAll(): int | bool
     {
-        return ItemModel::select()->count();
+        try {
+            return ItemModel::select()->count();
+        } catch (QueryException $e) {
+            return false;
+        }
     }
 }
