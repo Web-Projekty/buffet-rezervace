@@ -31,3 +31,14 @@ export type Allergen = {
   description: string;
   image?: string;
 };
+
+export type RequestData = {
+  requestType:
+    | "login"
+    | "verify"
+    | "isAdmin"
+    | "getMenu"
+    | "getOrders"
+    | "getAllergens";
+  [key: string]: string | number | boolean | object | undefined;
+};

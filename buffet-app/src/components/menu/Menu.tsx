@@ -1,31 +1,27 @@
-import { usePaging } from "../../hooks/usePaging";
 import PagingButtons from "../PagingButtons";
 import MenuItem from "./MenuItem";
 import { MenuItem as MenuItemType } from "../../types";
-import useFetch from "../../hooks/useFetch";
 import Loading from "../Loading";
 import { itemsPerPage } from "../../constants";
 import ErrorComponent from "../error/ErrorComponent";
+import useBackendPaging from "../../hooks/useBackendPaging";
 
 const Menu = () => {
-  const { data, isLoading, error } = useFetch<MenuItemType[]>(
-    "https://wlczak.vlastas.cc/backend/api",
-    {
-      requestType: "getMenu",
-      page: 1,
-      itemsCount: itemsPerPage,
-    },
-    [],
-  );
-
-  const { currentPage, totalPagesCount, dataList, arrayOfPages, handlePage } =
-    usePaging<MenuItemType>(data, itemsPerPage);
+  const {
+    dataList,
+    error,
+    isLoading,
+    currentPage,
+    arrayOfPages,
+    totalPagesCount,
+    handlePage,
+  } = useBackendPaging<MenuItemType>("getMenu", itemsPerPage);
 
   if (isLoading) {
     return <Loading size={30} />;
   }
 
-  if (!data || error) {
+  if (error) {
     return (
       <ErrorComponent title="Načítání položek se nezdařilo." subtitle="🛠️👷" />
     );

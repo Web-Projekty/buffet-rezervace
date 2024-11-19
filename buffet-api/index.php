@@ -11,7 +11,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 $app = AppFactory::create();
 
-$app->addErrorMiddleware(true, true, true);
+$isProd = 0;
+$app->addErrorMiddleware(!$isProd, true, true);
 
 $app->get('/', function (Request $request, Response $response, $args) {
 
@@ -63,5 +64,31 @@ $app->add($corsMiddleware);
 $app->post('/api', [BuffetApi::class, 'main']);
 
 $app->any('/image/{path:.*}', [ImageProvider::class, 'main']);
+
+$app->get('/chat', function (Request $request, Response $response, $args) {
+
+    ob_start();
+    include __DIR__ . "/templates/ws.html";
+    $response->getBody()->write(ob_get_clean());
+    return $response;
+});
+
+$app->get('/wstest', function (Request $request, Response $response, $args) {
+    $connector = new Ratchet\Client\Connector();
+
+    $connector('ws://localhost:8069/ok') // Specify the WebSocket server address
+        ->then(function ($conn) {
+            echo "Connected to WebSocket server\n";
+
+            // Send a message
+            $conn->send('Hello, WebSocket Server!');
+
+            // Close the connection after sending the message
+            $conn->close();
+        }, function ($e) {
+            echo "Could not connect: {$e->getMessage()}\n";
+        });
+    return $response;
+});
 
 $app->run();
