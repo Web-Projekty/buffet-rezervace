@@ -115,6 +115,16 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/kds",
+        element: (
+          <ErrorBoundary>
+            {/*<RequireAuth requireAdmin={true} fallbackPath="/">*/}
+            <h1>KDS</h1>
+            {/*</RequireAuth>*/}
+          </ErrorBoundary>
+        ),
+      },
+      {
         path: "/*",
         element: (
           <ErrorBoundary>
