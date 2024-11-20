@@ -12,20 +12,16 @@ const MenuItemImage = ({ image, name, allergens }: MenuItemImageProps) => {
       <img
         src={image}
         alt={name}
-        className="h-[15rem] w-[20rem] rounded-lg object-cover"
+        className="h-[12rem] w-[16rem] rounded-lg object-cover"
       />
-      {
-        <ul className="absolute bottom-0 m-1 flex flex-row gap-1">
-          {allergens.map((allergen) => (
-            <li
-              key={allergen.id}
-              className="rounded-full bg-slate-600 p-1 px-3"
-            >
-              {allergen.id}
-            </li>
-          ))}
-        </ul>
-      }
+
+      <ul className="absolute bottom-0 m-1 flex flex-row gap-1">
+        {allergens.map((allergen) => (
+          <li key={allergen.id} className="rounded-full bg-slate-600 p-1 px-3">
+            {allergen.id}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
