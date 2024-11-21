@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Allergen } from "../../types";
 
 type MenuItemImageProps = {
@@ -7,12 +8,24 @@ type MenuItemImageProps = {
 };
 
 const MenuItemImage = ({ image, name, allergens }: MenuItemImageProps) => {
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+  }, [image]);
+
   return (
     <div className="relative">
+      {loading && (
+        <div className="skeleton h-[12rem] w-[16rem] animate-pulse rounded-lg bg-slate-700"></div>
+      )}
       <img
         src={image}
         alt={name}
-        className="h-[12rem] w-[16rem] rounded-lg object-cover"
+        className={`h-[12rem] w-[16rem] rounded-lg object-cover ${loading ? "hidden" : "block"}`}
       />
 
       <ul className="absolute bottom-0 m-1 flex flex-row gap-1">
