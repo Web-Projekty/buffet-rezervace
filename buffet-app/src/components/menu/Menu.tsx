@@ -1,31 +1,21 @@
-import { useEffect, useState } from "react";
-import { usePaging } from "../../hooks/usePaging";
 import PagingButtons from "../PagingButtons";
 import MenuItem from "./MenuItem";
 import { MenuItem as MenuItemType } from "../../types";
-import useFetch from "../../hooks/useFetch";
 import Loading from "../Loading";
 import { itemsPerPage } from "../../constants";
 import ErrorComponent from "../error/ErrorComponent";
+import useBackendPaging from "../../hooks/useBackendPaging";
 
 const Menu = () => {
-  const [menu, setMenu] = useState<MenuItemType[]>([]);
-
-  const { currentPage, totalPagesCount, dataList, arrayOfPages, handlePage } =
-    usePaging<MenuItemType>(menu, itemsPerPage);
-
-  const { data, isLoading, error } = useFetch<MenuItemType[]>(
-    "https://wlczak.vlastas.cc/backend/api",
-    { requestType: "getMenu", page: 1, itemsCount: itemsPerPage },
-    [],
-  );
-
-  useEffect(() => {
-    if (data) {
-      setMenu(data);
-    }
-    //setMenu(dummyFood as MenuItemType[]);
-  }, []);
+  const {
+    dataList,
+    error,
+    isLoading,
+    currentPage,
+    arrayOfPages,
+    totalPagesCount,
+    handlePage,
+  } = useBackendPaging<MenuItemType>("getMenu", itemsPerPage);
 
   if (isLoading) {
     return <Loading size={30} />;
@@ -41,7 +31,7 @@ const Menu = () => {
     <div className="flex flex-col items-center justify-center gap-5">
       <h1 className="text-3xl font-bold text-white">Menu</h1>
       {/* {isLoading && <Loading size={30} />} */}
-      {totalPagesCount < currentPage ? (
+      {currentPage > totalPagesCount ? (
         <p className="italic text-white">
           "Meow? (Waiting for something to happen?)"
         </p>
