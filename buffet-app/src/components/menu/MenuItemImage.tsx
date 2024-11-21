@@ -27,7 +27,7 @@ const MenuItemImage = ({ image, name, allergens }: MenuItemImageProps) => {
   return (
     <div className="relative">
       {loading && (
-        <div className="skeleton h-[12rem] w-[16rem] animate-pulse rounded-lg bg-slate-700"></div>
+        <div className="skeleton h-[12rem] w-[14rem] animate-pulse rounded-lg bg-slate-700"></div>
       )}
       <img
         src={imageSrc}

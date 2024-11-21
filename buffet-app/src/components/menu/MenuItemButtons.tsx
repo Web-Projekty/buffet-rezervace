@@ -37,7 +37,7 @@ const MenuItemButtons = ({
 }: MenuItemButtonsProps) => {
   return (
     <AnimatePresence>
-      <div className="absolute bottom-[0.30rem] left-1/2 flex -translate-x-1/2 transform flex-row items-center justify-center">
+      <div className="absolute bottom-[0.30rem] right-5 flex transform flex-row items-center justify-center">
         {isItemInCart(id) ? (
           <motion.div
             key="remove-from-cart"
