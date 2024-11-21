@@ -8,14 +8,21 @@ type MenuItemImageProps = {
 };
 
 const MenuItemImage = ({ image, name, allergens }: MenuItemImageProps) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [imageSrc, setImageSrc] = useState<string>(image);
 
   useEffect(() => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1500);
+    setImageSrc(`${image}?${new Date().getTime()}`);
   }, [image]);
+
+  const handleImageLoad = () => {
+    setLoading(false);
+  };
+
+  const handleImageError = () => {
+    setLoading(false);
+  };
 
   return (
     <div className="relative">
@@ -23,9 +30,11 @@ const MenuItemImage = ({ image, name, allergens }: MenuItemImageProps) => {
         <div className="skeleton h-[12rem] w-[16rem] animate-pulse rounded-lg bg-slate-700"></div>
       )}
       <img
-        src={image}
+        src={imageSrc}
         alt={name}
         className={`h-[12rem] w-[16rem] rounded-lg object-cover ${loading ? "hidden" : "block"}`}
+        onLoad={handleImageLoad}
+        onError={handleImageError}
       />
 
       <ul className="absolute bottom-0 m-1 flex flex-row gap-1">
