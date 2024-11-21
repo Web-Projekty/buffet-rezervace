@@ -198,9 +198,10 @@ class BuffetApi
 
             $array[$i]["allergens"][0] = $alergen;
 
-            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/";
+            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
         }
-        // var_dump($array);
+        
+        //var_dump($array);
 
         $response->setPayload("data", $array);
 
