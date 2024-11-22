@@ -34,15 +34,17 @@ const useBackendPaging = <T>(
     window.scrollTo(0, 0);
   }, [currentPage, itemsPerPage]);
 
-  const totalPagesCount: number = itemsCount ? itemsCount / itemsPerPage : 0;
+  const totalPagesCount: number = itemsCount
+    ? Math.ceil(itemsCount / itemsPerPage)
+    : 0;
 
   const handlePage = (page: number): void => {
     setSearchParams({ [paramsName]: page.toString() });
   };
 
   return {
-    dataList: data!,
-    dataListLength: data?.length,
+    dataList: data || [],
+    dataListLength: data ? data.length : 0,
     arrayOfPages: Array.from(
       { length: totalPagesCount },
       (_, index) => index + 1,
