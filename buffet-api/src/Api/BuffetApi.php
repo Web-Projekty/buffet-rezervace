@@ -221,9 +221,9 @@ class BuffetApi
     /**
      * @param ApiResponse $response
      */
-    function handleGetOrders(ApiResponse $response) //: ApiResponse
+    function handleGetOrders(ApiResponse $response): ApiResponse
     {
-
+        return $response;
     }
 
     /**
