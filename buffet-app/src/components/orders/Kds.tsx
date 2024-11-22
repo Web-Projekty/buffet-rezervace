@@ -1,5 +1,5 @@
 const Kds = () => {
-  return <div>KDS</div>;
+  return <div>Kds</div>;
 };
 
 export default Kds;
