@@ -92,7 +92,9 @@ class BuffetApi
             case "isAdmin":
                 return $this->handleIsAdmin($response);
                 break;
-
+            case "getOrders":
+                return $this->handleGetOrders($response);
+                break;
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -214,6 +216,14 @@ class BuffetApi
 
         $response->setStatus(true);
         return $response;
+    }
+
+    /**
+     * @param ApiResponse $response
+     */
+    function handleGetOrders(ApiResponse $response) //: ApiResponse
+    {
+
     }
 
     /**
