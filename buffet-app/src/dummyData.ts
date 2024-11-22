@@ -1,4 +1,4 @@
-import { Allergen, MenuItem, Order, User } from "./types";
+import { Allergen, Order, User } from "./types";
 
 export const dummyUser: User = {
   id: 1,
@@ -169,7 +169,7 @@ export const dummyUser3: User = {
   ],
 };
 
-export const dummyFood: MenuItem[] = [
+/*export const dummyFood: MenuItem[] = [
   {
     id: 1,
     image: "https://www.pizzaplzen.cz/wp-content/uploads/2017/02/8-768x493.jpg",
@@ -397,7 +397,7 @@ export const dummyFood: MenuItem[] = [
       { id: 1, name: "Gluten", description: "This product contains gluten" },
     ],
   },
-];
+];*/
 
 export const dummyOrders: Order[] = [
   dummyUser.orders,
