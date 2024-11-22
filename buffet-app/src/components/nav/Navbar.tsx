@@ -6,6 +6,7 @@ import { User } from "../../types";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import SchoolLogo from "../../assets/images/logo-white_alfa.png";
 
 type NavLinks = {
   id: number;
@@ -69,6 +70,11 @@ const MobileNavbar = ({
       transition={{ duration: 0.3 }}
       className="fixed bottom-0 left-0 right-0 top-0 z-40 flex h-screen w-screen flex-col items-center justify-center gap-5 bg-primary text-xl text-white"
     >
+      <img
+        src={SchoolLogo}
+        alt="School Logo"
+        className={`absolute right-1/2 translate-x-1/2 scale-150`}
+      />
       <li className="absolute right-5 top-5">
         <X size={64} onClick={handleOpenMobileMenu} />
       </li>
