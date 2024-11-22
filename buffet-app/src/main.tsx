@@ -7,7 +7,6 @@ import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
 import Menu from "./components/menu/Menu.tsx";
 import MenuEdit from "./components/menu/MenuEdit.tsx";
-import AdminOrderHistory from "./components/orders/AdminOrderHistory.tsx";
 import Login from "./components/auth/login/Login.tsx";
 import Dashboard from "./components/auth/Dashboard.tsx";
 import Allergens from "./components/allergens/Allergens.tsx";
@@ -64,17 +63,6 @@ const router = createBrowserRouter([
           </ErrorBoundary>
         ),
         //loader: () => import("./components/menu/MenuList.tsx"),
-      },
-      {
-        path: "/objednavky",
-        element: (
-          //<RequireAuth requireAdmin={true} fallbackPath="/login">
-          <ErrorBoundary>
-            <AdminOrderHistory />
-          </ErrorBoundary>
-          //</RequireAuth>
-        ),
-        //loader: () => import("./components/orders/AdminOrderHistory.tsx"),
       },
       {
         path: "/account",
