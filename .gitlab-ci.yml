@@ -1,9 +1,10 @@
 stages:
     - PHP Unit Tests
+    - PHP Static Analysis
 
 # Job to run PHPStan
 phpstan-analysis:
-    stage: PHP Unit Tests
+    stage: PHP Static Analysis
     image: wlczak/buffet-test-prebuild:latest
     script:
         - cd buffet-api
