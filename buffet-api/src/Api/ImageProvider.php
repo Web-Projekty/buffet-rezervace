@@ -43,7 +43,7 @@ class ImageProvider
      */
     function getFilePath($urlPath): string
     {
-        $supportedFormats = ["jpg", "png", "svg"];
+        $supportedFormats = ["jpg", "png", "svg", "webp"];
         $fileFound = false;
         $pathParts = explode("/", $urlPath);
         $pathPartsCount = count($pathParts) - 1;
