@@ -1,6 +1,6 @@
 stages:
-    - PHP Unit Tests
     - PHP Static Analysis
+    - PHP Unit Tests
 
 # Job to run PHPStan
 phpstan-analysis:
