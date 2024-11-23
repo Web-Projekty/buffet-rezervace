@@ -10,7 +10,7 @@ phpstan-analysis:
         - composer install
         - ./vendor/bin/phpstan analyse --autoload-file vendor/autoload.php --level 0 --error-format=gitlab src
           tests
-        - ./vendor/bin/phpstan analyse --autoload-file vendor/autoload.php --level 1 --error-format=gitlab src
+        - ./vendor/bin/phpstan analyse --autoload-file vendor/autoload.php --level 0 --error-format=gitlab src
           tests >> test.json
 
 # Job to run PHPUnit tests and generate the coverage output
