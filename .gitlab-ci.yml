@@ -25,3 +25,13 @@ phpunit-coverage:
         - composer install
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+phpstan-analysis:
+    stage: PHP Unit Tests
+    image: wlczak/buffet-test-prebuild:latest
+    script:
+        - cd buffet-api
+        - composer install
+        - ./vendor/bin/phpstan analyse --autoload-file vendor/autoload.php --level 0 --error-format=gitlab src
+          tests
+        - ./vendor/bin/phpstan analyse --autoload-file vendor/autoload.php --level 1 --error-format=gitlab src
+          tests >> test.json
