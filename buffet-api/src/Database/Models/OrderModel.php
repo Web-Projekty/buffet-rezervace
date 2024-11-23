@@ -32,4 +32,16 @@ class OrderModel extends Model
             return false;
         }
     }
+
+    /**
+     * @param $userId
+     */
+    public static function getByUser($userId)
+    {
+        try {
+            return OrderModel::where('userId', $userId)->get();
+        } catch (QueryException $e) {
+            return false;
+        }
+    }
 }

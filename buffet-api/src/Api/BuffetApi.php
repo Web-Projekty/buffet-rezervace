@@ -7,6 +7,7 @@ namespace Buffet\Api;
 use Buffet\Api\AuthApi;
 use Buffet\Database\DatabaseManager;
 use Buffet\Database\Models\ItemModel;
+use Buffet\Database\Models\OrderModel;
 use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
@@ -202,7 +203,7 @@ class BuffetApi
 
             $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
         }
-        
+
         //var_dump($array);
 
         $response->setPayload("data", $array);
@@ -224,12 +225,37 @@ class BuffetApi
      */
     function handleGetOrders(ApiResponse $response): ApiResponse
     {
+        $response->setRequestKeys(["token"]);
+        $response->setPayloadKeys(["orders"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $uid = $jwt->decodeToken($response)->sub;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+        $isAdmin = UserModel::isAdmin($uid);
+
+        if ($isAdmin) {
+            $response->setPayload("orders", OrderModel::getAll());
+        } else {
+            $response->setPayload("orders", OrderModel::getByUser($uid));
+        }
+
+        $response->setStatus(true);
         return $response;
     }
 
     /**
-     * @param  ApiResponse $response
-     * @return mixed
+     * @param  ApiResponse   $response
+     * @return ApiResponse
      */
     function handleIsAdmin(ApiResponse $response): ApiResponse
     {
@@ -238,7 +264,6 @@ class BuffetApi
 
         $jwt = new JWTApi;
 
-        $token = $response->getRequestByKey("token");
         $jwt->validateToken($response);
 
         if ($response->hasFailed()) {
