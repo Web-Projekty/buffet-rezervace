@@ -8,9 +8,9 @@ phpstan-analysis:
     script:
         - cd buffet-api
         - composer install
-        - ./vendor/bin/phpstan analyse --autoload-file vendor/autoload.php --level 0 --error-format=gitlab src
+        - ./vendor/bin/phpstan analyse --autoload-file vendor/autoload.php --level 1 --error-format=gitlab src
           tests
-        - ./vendor/bin/phpstan analyse --autoload-file vendor/autoload.php --level 0 --error-format=gitlab src
+        - ./vendor/bin/phpstan analyse --autoload-file vendor/autoload.php --level 1 --error-format=gitlab src
           tests >> phpstan-result.json
     artifacts:
         reports:
