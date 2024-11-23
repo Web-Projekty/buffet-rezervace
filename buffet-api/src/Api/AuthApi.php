@@ -23,18 +23,18 @@ class AuthApi
 
     function register(ApiResponse $response): ApiResponse
     {
-        $idk = $response->getRequestByKey("idk");
+        $username = $response->getRequestByKey("username");
         $password = $response->getRequestByKey("password");
 
         $password = password_hash($password, PASSWORD_BCRYPT);
 
-        if (UserModel::isDuplicate("idk", $idk)) {
+        if (UserModel::isDuplicate("username", $username)) {
 
             $response->setError(Error::UserInUse);
             return $response;
         }
 
-        if (UserModel::createUser($idk, $password)) {
+        if (UserModel::createUser($username, $password)) {
             return $response->setSuccess(Success::Registration);
         }
 
