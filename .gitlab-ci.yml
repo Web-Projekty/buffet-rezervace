@@ -1,5 +1,19 @@
 stages:
+    - PHP Static Analysis
     - PHP Unit Tests
+
+# Job to run PHPStan
+phpstan-analysis:
+    stage: PHP Static Analysis
+    image: wlczak/buffet-test-prebuild:latest
+    script:
+        - cd buffet-api
+        - composer install
+        - ./vendor/bin/phpstan analyse --autoload-file vendor/autoload.php --level 0 --error-format=gitlab src
+          tests >> phpstan-result.json
+    artifacts:
+        reports:
+            codequality: buffet-api/phpstan-result.json
 
 # Job to run PHPUnit tests and generate the coverage output
 phpunit:
