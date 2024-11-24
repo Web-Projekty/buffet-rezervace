@@ -25,6 +25,7 @@ class EnvSetupTest extends TestCase
     public function testEnvSetup()
     {
         $this->assertFalse($this->envSetup->returnOriginalEnv);
+        $hadOrginalEnv = false;
 
         // checks for original env file
         if (file_exists($this->envSetup->envPath)) {
@@ -58,6 +59,7 @@ class EnvSetupTest extends TestCase
     public function testEnvFileBackup()
     {
         $customEnvContent = 'CUSTOM=CONTENT';
+        $hadOrginalEnv = false;
 
         // checks for original env file
         if (file_exists($this->envSetup->envPath)) {
@@ -96,7 +98,6 @@ class EnvSetupTest extends TestCase
 
         $this->envSetup->cleanupDummyEnv();
         $this->assertStringEqualsFile(expectedFile: $this->envSetup->envPath, actualString: $customEnvContent);
-
 
         ### Custom teardown sequence ###
 

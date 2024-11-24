@@ -42,7 +42,7 @@ class ItemModel extends Model
     public static function getAllByPage(int $page, int $itemsCount): \Illuminate\Database\Eloquent\Collection  | bool
     {
         try {
-            return ItemModel::select()->offset(($page - 1) * $itemsCount)->limit($itemsCount)->get();
+            return ItemModel::query()->offset(($page - 1) * $itemsCount)->limit($itemsCount)->get();
         } catch (QueryException $e) {
             return false;
         }
@@ -51,7 +51,7 @@ class ItemModel extends Model
     public static function countAll(): int | bool
     {
         try {
-            return ItemModel::select()->count();
+            return ItemModel::query()->count();
         } catch (QueryException $e) {
             return false;
         }

@@ -34,7 +34,8 @@ class BuffetApi
          * @var ApiResponse
          */
         $response = $this->handleApiCall();
-        if ($response == null || !isset($response) || empty($response) || get_class($response) != "Buffet\Types\ApiResponse") {
+
+        if ($response == null || get_class($response) != "Buffet\Types\ApiResponse") {
             $response = new ApiResponse();
             $response->setError(Error::InvalidDataType);
         }
