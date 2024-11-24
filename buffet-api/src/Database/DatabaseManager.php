@@ -17,16 +17,16 @@ class DatabaseManager
      */
     private $capsule;
 
+    /**
+     * @param ApiResponse $response
+     */
     public function __construct(private ApiResponse $response)
     {
         $this->credentialsManager = new CredentialsManager($response);
         $this->capsule = new Capsule;
     }
 
-    /**
-     * @param ApiResponse $response
-     */
-    public function setupConnection()
+    public function setupConnection(): void
     {
         $creds = $this->credentialsManager->getCredentials();
         if ($creds['success'] == true) {
