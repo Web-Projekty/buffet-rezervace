@@ -39,7 +39,7 @@ class OrderModel extends Model
     public static function getByUser($userId)
     {
         try {
-            return OrderModel::where('userId', $userId)->get();
+            return OrderModel::query()->where('userId', $userId)->get();
         } catch (QueryException $e) {
             return false;
         }
