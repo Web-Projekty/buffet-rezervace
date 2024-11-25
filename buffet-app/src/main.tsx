@@ -16,7 +16,7 @@ import Cart from "./components/cart/Cart.tsx";
 import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
 import SuccessOrder from "./components/orders/SuccessOrder.tsx";
 import { UserData } from "./hooks/useLogin.ts";
-import Kds from "./components/orders/Kds.tsx";
+import Kds from "./components/kds/Kds.tsx";
 
 const store = createStore<UserData>({
   authName: "_auth",
