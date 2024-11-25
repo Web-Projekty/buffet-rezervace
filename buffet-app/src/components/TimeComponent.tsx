@@ -15,7 +15,9 @@ const TimeComponent = () => {
     };
 
     updateCurrentTime();
-    const interval = setInterval(() => {}, 1000);
+    const interval = setInterval(() => {
+      updateCurrentTime();
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 
