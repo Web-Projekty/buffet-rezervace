@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import Logo from "../assets/images/logo.svg";
-import SchoolLogo from "../assets/images/logo-white_alfa.png";
-import Navbar from "./nav/Navbar";
+import Logo from "../../assets/images/logo.svg";
+import SchoolLogo from "../../assets/images/logo-white_alfa.png";
+import Navbar from "../nav/Navbar";
 import { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 
