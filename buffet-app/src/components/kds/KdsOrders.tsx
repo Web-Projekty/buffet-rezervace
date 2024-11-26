@@ -1,5 +1,7 @@
+import { dummyOrders } from "../../dummyData";
 import Button from "../Button";
 import KdsOrder from "./KdsOrder";
+import KdsStatusCards from "./KdsStatusCards";
 
 const KdsOrders = () => {
   return (
@@ -7,30 +9,34 @@ const KdsOrders = () => {
       {/* KDS Orders Status */}
       <div className="mx-1 my-2 flex h-[5rem] w-full items-center justify-between bg-white px-10">
         <div className="flex flex-row items-center gap-10">
-          <div className="flex flex-row items-center gap-5 bg-red-400 px-5 py-3 text-white">
-            <span className="text-2xl font-bold">1</span>
-            <h2>Zpožděné</h2>
-          </div>
-          <div className="flex flex-row items-center gap-5 bg-orange-400 px-5 py-3 text-white">
-            <span className="text-2xl font-bold">3</span>
-            <h2>Aktuální</h2>
-          </div>
-          <div className="flex flex-row items-center gap-5 bg-yellow-500 px-5 py-3 text-white">
-            <span className="text-2xl font-bold">2</span>
-            <h2>Následující</h2>
-          </div>
+          <KdsStatusCards
+            amount={1}
+            title="Zpožděné"
+            backgroundColor="bg-red-400"
+          />
+          <KdsStatusCards
+            amount={3}
+            title="Aktuální"
+            backgroundColor="bg-orange-400"
+          />
+          <KdsStatusCards
+            amount={2}
+            title="Nadcházející"
+            backgroundColor="bg-yellow-400"
+          />
         </div>
-        <div className="flex flex-row items-center gap-5 bg-green-400 px-5 py-3 text-white">
-          <span className="text-2xl font-bold">4</span>
-          <h2>Výdej</h2>
-        </div>
+        <KdsStatusCards
+          amount={6}
+          title="Výdej"
+          backgroundColor="bg-green-400"
+        />
       </div>
 
       {/* KDS Orders */}
       <div className="flex flex-row justify-between">
-        <div className="grid grid-cols-4 grid-rows-2 gap-4">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <KdsOrder key={index} />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {dummyOrders.map((order, index) => (
+            <KdsOrder key={index} order={order} />
           ))}
         </div>
         <div className="flex flex-col">
