@@ -7,7 +7,7 @@ const KdsOrders = () => {
   return (
     <div className="mx-auto flex w-[80%] flex-col justify-center">
       {/* KDS Orders Status */}
-      <div className="mx-1 my-2 flex h-[5rem] w-full items-center justify-between bg-white px-10">
+      <div className="my-2 flex h-[5rem] w-full items-center justify-between bg-white px-10">
         <div className="flex flex-row items-center gap-10">
           <KdsStatusCards
             amount={1}
@@ -34,13 +34,13 @@ const KdsOrders = () => {
 
       {/* KDS Orders */}
       <div className="flex flex-row justify-between">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="flex flex-wrap gap-4">
           {dummyOrders.map((order, index) => (
             <KdsOrder key={index} order={order} />
           ))}
         </div>
         <div className="flex flex-col">
-          <div className="h-[10rem] bg-white p-4">
+          <div className="h-[10rem] w-auto bg-white p-4">
             <div className="text-xl font-bold">Table {1}</div>
             <div className="text-sm">Order 1</div>
             <div className="text-sm">Order 2</div>
