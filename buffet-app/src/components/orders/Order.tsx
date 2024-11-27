@@ -96,8 +96,8 @@ const Order = ({ order, isAdmin }: OrderProps) => {
         <div className="flex flex-row items-center gap-2 text-xl">
           <h2 className="font-bold">#{order.id}</h2>
           {/*<p>{formatUnixDate(order.date)}</p>*/}
-          {isAdmin && order.user && (
-            <p className="text-base">{order.user.fullName}</p>
+          {isAdmin && order.userId && (
+            <p className="text-base">{order.userId}</p>
           )}
         </div>
         <div className="flex flex-row items-center">
@@ -127,7 +127,7 @@ const Order = ({ order, isAdmin }: OrderProps) => {
         className="flex flex-col gap-3 overflow-hidden"
       >
         <div className="flex flex-col">
-          {order.items.map((item) => (
+          {/*order.items.map((item) => (
             <li
               key={item.id}
               className="flex w-[240px] flex-row items-center justify-center gap-2"
@@ -136,7 +136,7 @@ const Order = ({ order, isAdmin }: OrderProps) => {
               <div className="mt-3 flex-1 border-b-2 border-dotted border-white"></div>
               <p>{formatCurrency(item.price)}</p>
             </li>
-          ))}
+          ))*/}
         </div>
 
         <hr />
@@ -146,12 +146,12 @@ const Order = ({ order, isAdmin }: OrderProps) => {
             <span>Celkem</span>
             <div className="mt-3 flex-1 border-b-2 border-dotted border-white"></div>
             <p>
-              {formatCurrency(
+              {/*formatCurrency(
                 order.items.reduce(
                   (acc: number, item: MenuItem) => acc + item.price,
                   0,
                 ),
-              )}
+              )*/}
             </p>
           </div>
           <div className="flex flex-col items-center gap-2 md:flex-row">
