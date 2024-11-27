@@ -1,11 +1,37 @@
-import { dummyOrders } from "../../dummyData";
-import Button from "../Button";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import useFetch from "../../hooks/useFetch";
+import { Order } from "../../types";
+import KdsDeliveryOrder from "./KdsDeliveryOrder";
 import KdsOrder from "./KdsOrder";
 import KdsStatusCards from "./KdsStatusCards";
+import { useEffect } from "react";
+import { usePaging } from "../../hooks/usePaging";
 
 const KdsOrders = () => {
+  const token = useAuthHeader()?.split(" ")[1];
+  const { data, error, isLoading } = useFetch<Order[]>(
+    "https://wlczak.vlastas.cc/backend/api",
+    { requestType: "getOrders", token: token },
+    [],
+    [token],
+  );
+
+  const { dataList } = usePaging<Order>(data, 5);
+
+  useEffect(() => {
+    console.log("Fetched data:", data);
+  }, [data]);
+
+  if (isLoading) {
+    return <div className="text-white">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-white">Error: {error}</div>;
+  }
+
   return (
-    <div className="mx-auto flex w-[80%] flex-col justify-center">
+    <div className="mx-auto flex w-[85.5%] flex-col justify-center">
       {/* KDS Orders Status */}
       <div className="my-2 flex h-[5rem] w-full items-center justify-between bg-white px-10">
         <div className="flex flex-row items-center gap-10">
@@ -33,27 +59,24 @@ const KdsOrders = () => {
       </div>
 
       {/* KDS Orders */}
-      <div className="flex flex-row justify-between">
-        <div className="flex flex-wrap gap-4">
-          {dummyOrders.map((order, index) => (
-            <KdsOrder key={index} order={order} />
-          ))}
+      <div className="flex flex-row items-start justify-between">
+        <div className="flex flex-wrap gap-2">
+          {dataList ? (
+            dataList.map((order, index) => (
+              <KdsOrder key={index} order={order} />
+            ))
+          ) : (
+            <p className="text-4xl">No orders available</p>
+          )}
         </div>
-        <div className="flex flex-col">
-          <div className="h-[10rem] w-auto bg-white p-4">
-            <div className="text-xl font-bold">Table {1}</div>
-            <div className="text-sm">Order 1</div>
-            <div className="text-sm">Order 2</div>
-            <div className="text-sm">Order 3</div>
-            <div className="flex">
-              <Button className="bottom-0 m-2 mt-auto rounded-none border-0 bg-green-400">
-                Vyzvednuto
-              </Button>
-              <Button className="bottom-0 m-2 mt-auto rounded-none border-0 bg-red-400">
-                Zrušit
-              </Button>
-            </div>
-          </div>
+        <div className="flex flex-col gap-2">
+          {dataList ? (
+            dataList.map((order, index) => (
+              <KdsDeliveryOrder key={index} order={order} />
+            ))
+          ) : (
+            <p className="text-4xl">No orders available</p>
+          )}
         </div>
       </div>
     </div>
