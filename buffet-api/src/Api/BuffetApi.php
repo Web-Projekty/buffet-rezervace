@@ -227,7 +227,7 @@ class BuffetApi
     function handleGetOrders(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token"]);
-        $response->setPayloadKeys(["orders"]);
+        $response->setPayloadKeys(["data"]);
 
         $jwt = new JWTApi;
 
@@ -245,9 +245,9 @@ class BuffetApi
         $isAdmin = UserModel::isAdmin($uid);
 
         if ($isAdmin) {
-            $response->setPayload("orders", OrderModel::getAll());
+            $response->setPayload("data", OrderModel::getAll());
         } else {
-            $response->setPayload("orders", OrderModel::getByUser($uid));
+            $response->setPayload("data", OrderModel::getByUser($uid));
         }
 
         $response->setStatus(true);
