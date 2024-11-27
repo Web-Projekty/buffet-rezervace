@@ -17,6 +17,8 @@ import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
 import SuccessOrder from "./components/orders/SuccessOrder.tsx";
 import { UserData } from "./hooks/useLogin.ts";
 import Kds from "./components/kds/Kds.tsx";
+import Header from "./components/header/Header.tsx";
+import Footer from "./components/Footer.tsx";
 
 const store = createStore<UserData>({
   authName: "_auth",
@@ -117,9 +119,9 @@ const router = createBrowserRouter([
     path: "/kds",
     element: (
       <ErrorBoundary>
-        {/*<RequireAuth requireAdmin={true} fallbackPath="/">*/}
-        <Kds />
-        {/*</RequireAuth>*/}
+        <RequireAuth requireAdmin={true}>
+          <Kds />
+        </RequireAuth>
       </ErrorBoundary>
     ),
   },
