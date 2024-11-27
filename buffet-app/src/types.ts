@@ -8,12 +8,15 @@ export type User = {
   orders: Order[];
 };
 
+export type OrderStatus = "pending" | "pickedup" | "notpickedup";
+
 export type Order = {
   id: number;
-  status: "pending" | "pickedup" | "notpickedup";
+  userId: number;
+  status: OrderStatus;
   date: string;
-  items: MenuItem[];
-  user: User | null;
+  pickupDate: string;
+  items: string;
 };
 
 export type MenuItem = {
