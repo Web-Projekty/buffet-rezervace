@@ -23,12 +23,10 @@ class ImageProvider
 
         if (!file_exists($path)) {
             throw new HttpNotFoundException($request);
-            return $html;
         }
 
         if (explode("/", mime_content_type($path))[0] != "image") {
             throw new HttpNotFoundException($request, "not an image");
-            return $html;
         }
 
         $html->getBody()->write(file_get_contents($path));

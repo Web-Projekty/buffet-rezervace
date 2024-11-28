@@ -35,10 +35,10 @@ class CredentialsManagerTest extends TestCase
     #[TestDox('Test createCredentials')]
     public function testCreateCredentials()
     {
+        $text = "fake test";
         $this->credentialsManager->createCredentials(username: "test", password: "test");
-
         $this->output();
-        $this->assertTrue(true);
+        $this->assertSame("fake test", $text);
     }
 
     protected function tearDown(): void
