@@ -74,34 +74,29 @@ class BuffetApi
         switch ($response->getRequestType()) {
             case "test":
                 return $this->handleTest($response);
-                break;
 
             case "register";
                 return $this->handleRegister($response);
-                break;
 
             case "login":
                 return $this->handleLogin($response);
-                break;
 
             case "verify":
                 return $this->handleVerify($response);
-                break;
 
             case "getMenu":
                 return $this->handleGetMenu($response);
-                break;
+
             case "isAdmin":
                 return $this->handleIsAdmin($response);
-                break;
+
             case "getOrders":
                 return $this->handleGetOrders($response);
-                break;
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
 
-                break;
         }
     }
 
