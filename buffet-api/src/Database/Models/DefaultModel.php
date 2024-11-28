@@ -15,12 +15,12 @@ class DefaultModel extends Model
 
     // Define the columns that are mass assignable
     /**
-     * @var array
+     * @var array<string>
      */
     protected $fillable = ['stuffHere'];
 
     /**
-     * @var mixed
+     * @var bool
      */
     public $timestamps = false;
 
