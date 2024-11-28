@@ -20,10 +20,7 @@ const ErrorComponent = ({ title, subtitle, onBack }: Error) => {
         <h1 className="text-2xl">{title}</h1>
         <span className="text-4xl">{subtitle}</span>
       </div>
-      <Link
-        to="/"
-        onClick={onBack}
-      >
+      <Link to="/" onClick={onBack}>
         <Button>Zpět na hlavní stránku</Button>
       </Link>
     </div>
