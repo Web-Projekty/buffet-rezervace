@@ -4,7 +4,6 @@ import { Order } from "../../types";
 import KdsDeliveryOrder from "./KdsDeliveryOrder";
 import KdsOrder from "./KdsOrder";
 import KdsStatusCards from "./KdsStatusCards";
-import { useEffect } from "react";
 import { usePaging } from "../../hooks/usePaging";
 
 const KdsOrders = () => {
@@ -17,10 +16,6 @@ const KdsOrders = () => {
   );
 
   const { dataList } = usePaging<Order>(data, 5);
-
-  useEffect(() => {
-    console.log("Fetched data:", data);
-  }, [data]);
 
   if (isLoading) {
     return <div className="text-white">Loading...</div>;
