@@ -15,12 +15,12 @@ class OrderModel extends Model
 
     // Define the columns that are mass assignable
     /**
-     * @var array
+     * @var array<string>
      */
     protected $fillable = ['userId', 'status', 'date', 'pickupDate', 'items'];
 
     /**
-     * @var mixed
+     * @var bool
      */
     public $timestamps = true;
 

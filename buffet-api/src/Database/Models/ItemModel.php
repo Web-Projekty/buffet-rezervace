@@ -17,12 +17,12 @@ class ItemModel extends Model
 
     // Define the columns that are mass assignable
     /**
-     * @var array
+     * @var array<string>
      */
     protected $fillable = ['name', 'price', 'description', 'image', 'allergens'];
 
     /**
-     * @var mixed
+     * @var bool
      */
     public $timestamps = false;
 
@@ -39,7 +39,7 @@ class ItemModel extends Model
      * @param int $page
      * @param int $itemsCount
      */
-    public static function getAllByPage(int $page, int $itemsCount): \Illuminate\Database\Eloquent\Collection  | bool
+    public static function getAllByPage(int $page, int $itemsCount): bool | \Illuminate\Database\Eloquent\Collection  | \Illuminate\Support\Collection
     {
         try {
             return ItemModel::query()->offset(($page - 1) * $itemsCount)->limit($itemsCount)->get();
