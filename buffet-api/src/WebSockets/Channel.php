@@ -8,7 +8,7 @@ use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 use SplObjectStorage;
 
-class Chat implements MessageComponentInterface
+class Channel implements MessageComponentInterface
 {
     protected SplObjectStorage $clients;
     protected SplObjectStorage $authenticatedClients;
@@ -26,7 +26,6 @@ class Chat implements MessageComponentInterface
     {
         $conn = new StaticConnectionInterface($conn);
         $this->clients->attach($conn);
-        //var_dump($conn);
 
         echo "New connection! ({$conn->resourceId})\n";
     }
@@ -42,21 +41,32 @@ class Chat implements MessageComponentInterface
 
         $numRecv = count($this->clients) - 1;
 
-        foreach ($this->clients as $recipient) {
-            if ($sender->resourceId !== $recipient->resourceId) {
-                // The sender is not the receiver, send to each client connected
-                $recipient->send($msg);
-            }
-        }
         foreach ($this->authenticatedClients as $recipient) {
             $recipient->send("You are authenticated");
         }
 
         if ($msg == "secret") {
-            $this->authenticatedClients->attach($sender);
+            $clientExists = false;
+            foreach ($this->authenticatedClients as $client) {
+                if ($client->resourceId == $sender->resourceId) {
+                    $clientExists = true;
+                }
+            }
+            if (!$clientExists) {
+                $this->authenticatedClients->attach($sender);
+            }
+
         }
 
-        $sender->send($this->authenticatedClients->count());
+        foreach ($this->clients as $recipient) {
+            if ($sender->resourceId !== $recipient->resourceId) {
+                // The sender is not the receiver, send to each client connected
+                $recipient->send($msg);
+            }
+            $recipient->send(json_encode(["count" => $this->authenticatedClients->count()]));
+        }
+
+        // $sender->send($this->authenticatedClients->count());
     }
 
     /**
@@ -67,6 +77,11 @@ class Chat implements MessageComponentInterface
         $conn = new StaticConnectionInterface($conn);
         $this->clients->detach($conn);
 
+        foreach ($this->authenticatedClients as $client) {
+            if ($conn->resourceId == $client->resourceId) {
+                $this->authenticatedClients->detach($client);
+            }
+        }
         echo "Connection {$conn->resourceId} has disconnected\n";
     }
 

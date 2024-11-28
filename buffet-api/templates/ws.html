@@ -9,10 +9,22 @@
 
 <body>
     <p id="time"></p>
+    <p id="count" style="text-align: center"></p>
     <div style="width: 50%; margin: auto;">
         <script>
             time = 0;
             let timer;
+
+            function isJson(str) {
+                try {
+                    const data = JSON.parse(str);
+                    return true
+                } catch (error) {
+                    console.log('Received non-JSON data:', event.data);
+                    return false
+                }
+            }
+
 
             protocol = window.location.protocol
             console.log(window.location.protocol)
@@ -24,7 +36,9 @@
             const ws = new WebSocket(address);
             ws.onmessage = (event) => {
                 console.log(event.data)
-
+                if (isJson(event.data)) {
+                    return
+                }
                 element = document.createElement('p')
                 element.innerText = event.data
                 document.getElementById('chat').append(element)
@@ -60,6 +74,18 @@
 
                 clearInterval(timer);
             };
+
+            couner = new WebSocket(address)
+            couner.onmessage = (event) => {
+                const data = event.data
+                if (isJson(data)) {
+                    console.log(JSON.parse(data).count)
+                    document.getElementById('count').innerHTML = "Authenticated user count: " + JSON.parse(data).count
+                }
+
+
+            }
+
         </script>
         <div id="chat"></div>
         <input type="text" id="text">

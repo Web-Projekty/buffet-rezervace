@@ -16,7 +16,7 @@ require dirname(__DIR__) . '/../vendor/autoload.php';
 $server = IoServer::factory(
     new HttpServer(
         new WsServer(
-            new Chat()
+            new Channel()
         )
     )
     ,
