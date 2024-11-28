@@ -1,5 +1,8 @@
 parameters:
-    level: 4
+    ignoreErrors:
+            - 
+               identifier: argument.named
+    level: 5
     paths:
         - src
         - tests
