@@ -291,6 +291,7 @@ class BuffetApi
 
 /**
  * Utility function for checking if all keys are present and carry data
+ * @deprecated
  *
  * @param  array<mixed> $request API request
  * @param  array<mixed> $members list of all the required members

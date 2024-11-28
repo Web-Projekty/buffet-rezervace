@@ -23,7 +23,8 @@ class CredentialsManager
      *
      * Uses openssl decryption
      *
-     * @return array Schema here: https://github.com/Web-Projekty/buffet-rezervace/wiki/getCredentials()
+     * @deprecated - poor return value design use custom class factory instead
+     * @return array<mixed> Schema here: https://github.com/Web-Projekty/buffet-rezervace/wiki/getCredentials()
      */
     function getCredentials(): array
     {
