@@ -8,8 +8,12 @@
 </head>
 
 <body>
-    <p id="time"></p>
-    <p id="count" style="text-align: center"></p>
+    <div style="display: flex; justify-content: space-between; ">
+        <p id="time"></p>
+        <p id="authCount" style="text-align: center"></p>
+        <p id="userCount" style="text-align: right"></p>
+    </div>
+
     <div style="width: 50%; margin: auto;">
         <script>
             time = 0;
@@ -80,10 +84,9 @@
                 const data = event.data
                 if (isJson(data)) {
                     console.log(JSON.parse(data).count)
-                    document.getElementById('count').innerHTML = "Authenticated user count: " + JSON.parse(data).count
+                    document.getElementById('authCount').innerHTML = "Authenticated user count: " + JSON.parse(data).authCount
+                    document.getElementById('userCount').innerHTML = "Connected user count: " + JSON.parse(data).userCount
                 }
-
-
             }
 
         </script>

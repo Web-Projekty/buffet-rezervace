@@ -4,7 +4,7 @@ declare (strict_types = 1);
 
 namespace Buffet\WebSockets;
 
-use Buffet\WebSockets\Chat;
+use Buffet\WebSockets\Channel;
 use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;

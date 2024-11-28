@@ -63,7 +63,7 @@ class Channel implements MessageComponentInterface
                 // The sender is not the receiver, send to each client connected
                 $recipient->send($msg);
             }
-            $recipient->send(json_encode(["count" => $this->authenticatedClients->count()]));
+            $recipient->send(json_encode(["authCount" => $this->authenticatedClients->count(), "userCount" => $this->clients->count()]));
         }
 
         // $sender->send($this->authenticatedClients->count());
@@ -75,7 +75,12 @@ class Channel implements MessageComponentInterface
     public function onClose(ConnectionInterface $conn)
     {
         $conn = new StaticConnectionInterface($conn);
-        $this->clients->detach($conn);
+
+        foreach ($this->clients as $client) {
+            if ($conn->resourceId == $client->resourceId) {
+                $this->clients->detach($client);
+            }
+        }
 
         foreach ($this->authenticatedClients as $client) {
             if ($conn->resourceId == $client->resourceId) {
