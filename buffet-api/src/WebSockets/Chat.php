@@ -22,7 +22,9 @@ class Chat implements MessageComponentInterface
      */
     public function onOpen(ConnectionInterface $conn)
     {
+        $conn = new StaticConnectionInterface($conn);
         $this->clients->attach($conn);
+        //var_dump($conn);
 
         echo "New connection! ({$conn->resourceId})\n";
     }
@@ -33,7 +35,8 @@ class Chat implements MessageComponentInterface
      */
     public function onMessage(ConnectionInterface $sender, $msg)
     {
-       // echo "Message from {$sender->resourceId}: $msg\n";
+        $sender = new StaticConnectionInterface($sender);
+        // echo "Message from {$sender->resourceId}: $msg\n";
 
         $numRecv = count($this->clients) - 1;
 
@@ -51,6 +54,7 @@ class Chat implements MessageComponentInterface
      */
     public function onClose(ConnectionInterface $conn)
     {
+        $conn = new StaticConnectionInterface($conn);
         $this->clients->detach($conn);
 
         echo "Connection {$conn->resourceId} has disconnected\n";
@@ -62,6 +66,7 @@ class Chat implements MessageComponentInterface
      */
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
+        $conn = new StaticConnectionInterface($conn);
         echo "An error has occurred: {$e->getMessage()}\n";
 
         $conn->close();
