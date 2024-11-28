@@ -9,6 +9,8 @@ use Ratchet\Http\HttpServer;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
 
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+
 require dirname(__DIR__) . '/../vendor/autoload.php';
 
 $server = IoServer::factory(
