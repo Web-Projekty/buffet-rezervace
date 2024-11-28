@@ -8,29 +8,25 @@ import useFetch from "../../hooks/useFetch";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Loading from "../Loading";
 
-type UserOrderHistoryProps = {
-  list: OrderType[];
-};
+const UserOrderHistory = () => {
+  // /* Test pro získání tokenu */
+  const token = useAuthHeader()?.split(" ")[1];
 
-const UserOrderHistory = ({ list }: UserOrderHistoryProps) => {
-  /* Test pro získání tokenu */
-  // const token = useAuthHeader()?.split(" ")[1];
-
-  // const { data, isLoading, error } = useFetch<OrderType[]>(
-  //   "https://wlczak.vlastas.cc/backend/api",
-  //   { requestType: "getOrders", token: token },
-  // );
+  const { data, isLoading, error } = useFetch<OrderType[]>(
+    "https://wlczak.vlastas.cc/backend/api",
+    { requestType: "getOrders", token: token },
+  );
 
   const { currentPage, totalPagesCount, dataList, arrayOfPages, handlePage } =
-    usePaging(list, ordersPerPage, "orderPage");
+    usePaging<OrderType>(data, ordersPerPage, "orderPage");
 
-  // if (isLoading) {
-  //   return <Loading size={30} />;
-  // }
+  if (isLoading) {
+    return <Loading size={30} />;
+  }
 
-  // if (error) {
-  //   return <div className="text-white">Chyba načítání dat ze serveru.</div>;
-  // }
+  if (error) {
+    return <div className="text-white">Chyba načítání dat ze serveru.</div>;
+  }
 
   return (
     <div className="flex w-[22rem] flex-col gap-2 md:w-[45rem]">
