@@ -52,4 +52,18 @@ class StaticConnectionInterface
     {
         return $this->original->$method(...$arguments);
     }
+
+    /**
+     * @param  string $data
+     * @return void
+     */
+    public function send(string $data): void
+    {
+        $this->original->send($data);
+    }
+
+    public function close(): void
+    {
+        $this->original->close();
+    }
 }
