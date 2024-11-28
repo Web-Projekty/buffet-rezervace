@@ -52,7 +52,7 @@ class BuffetApi
      *
      * Calls specified requestType methods
      *
-     * @return array API response
+     * @return ApiResponse API response
      */
 
     function handleApiCall(): ApiResponse
@@ -138,7 +138,7 @@ class BuffetApi
  * API handler for user registration
  *
  *
- * @param  ApiResponse $request API request
+ * @param  ApiResponse $response API request
  * @return ApiResponse API response
  */
 
@@ -158,7 +158,7 @@ class BuffetApi
  * API handler for user lgoin
  *
  *
- * @param  ApiResponse $request API request
+ * @param  ApiResponse $response API request
  * @return ApiResponse API response with JWT token
  */
 
@@ -287,7 +287,7 @@ class BuffetApi
  * API handler for data transit testing
  *
  *
- * @param  ApiResponse $request API request
+ * @param  ApiResponse $response API request
  * @return ApiResponse copy of the request
  */
 

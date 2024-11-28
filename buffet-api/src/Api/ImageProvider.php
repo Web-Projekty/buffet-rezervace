@@ -12,9 +12,9 @@ use Slim\Exception\HttpNotFoundException;
 class ImageProvider
 {
     /**
-     * @param  RequestInterface  $request
-     * @param  ResponseInterface $html
-     * @return mixed
+     * @param  RequestInterface    $request
+     * @param  ResponseInterface   $html
+     * @return ResponseInterface
      */
     function main(RequestInterface $request, ResponseInterface $html, $args): ResponseInterface
     {
