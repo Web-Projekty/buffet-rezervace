@@ -11,10 +11,12 @@ use SplObjectStorage;
 class Chat implements MessageComponentInterface
 {
     protected SplObjectStorage $clients;
+    protected SplObjectStorage $authenticatedClients;
 
     public function __construct()
     {
         $this->clients = new \SplObjectStorage;
+        $this->authenticatedClients = new \SplObjectStorage;
     }
 
     /**
@@ -36,17 +38,25 @@ class Chat implements MessageComponentInterface
     public function onMessage(ConnectionInterface $sender, $msg)
     {
         $sender = new StaticConnectionInterface($sender);
-        // echo "Message from {$sender->resourceId}: $msg\n";
+        echo "Message from {$sender->resourceId}: $msg\n";
 
         $numRecv = count($this->clients) - 1;
 
         foreach ($this->clients as $recipient) {
-            if ($sender !== $recipient) {
+            if ($sender->resourceId !== $recipient->resourceId) {
                 // The sender is not the receiver, send to each client connected
                 $recipient->send($msg);
             }
         }
+        foreach ($this->authenticatedClients as $recipient) {
+            $recipient->send("You are authenticated");
+        }
 
+        if ($msg == "secret") {
+            $this->authenticatedClients->attach($sender);
+        }
+
+        $sender->send($this->authenticatedClients->count());
     }
 
     /**
