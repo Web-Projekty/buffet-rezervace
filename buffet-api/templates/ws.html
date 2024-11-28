@@ -8,14 +8,18 @@
 </head>
 
 <body>
+    <p id="time"></p>
     <div style="width: 50%; margin: auto;">
         <script>
+            time = 0;
+            let timer;
+
             protocol = window.location.protocol
             console.log(window.location.protocol)
             if (protocol == 'http:') {
-            address = 'ws://' + window.location.host + '/backend/'
+                address = 'ws://' + window.location.host + '/backend/'
             } else {
-            address = 'wss://' + window.location.host + '/backend/'
+                address = 'wss://' + window.location.host + '/backend/'
             }
             const ws = new WebSocket(address);
             ws.onmessage = (event) => {
@@ -25,7 +29,17 @@
                 element.innerText = event.data
                 document.getElementById('chat').append(element)
             };
-            ws.onopen = () => ws.send('New annonymous user has joined the chat');
+            ws.onopen = () => {
+                ws.send('New annonymous user has joined the chat')
+                startTime = Date.now();
+                timer = setInterval(() => {
+                    time += 1;
+                    minutes = Math.floor(time / 60);
+                    seconds = time % 60;
+                    document.getElementById('time').innerText = minutes + 'm ' + seconds + 's'
+                }, 1000);
+                
+            };
             function send() {
 
                 element = document.createElement('p')
@@ -43,6 +57,8 @@
                 element.style.textAlign = 'center';
                 element.style.color = 'red';
                 document.getElementById('chat').append(element)
+
+                clearInterval(timer);
             };
         </script>
         <div id="chat"></div>
