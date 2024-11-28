@@ -292,10 +292,9 @@ class BuffetApi
 /**
  * Utility function for checking if all keys are present and carry data
  *
- *
- * @param  array      $request API request
- * @param  array      $members list of all the required members
- * @return bool|error if members missing kills the process and sends error otherwise true
+ * @param  array<mixed> $request API request
+ * @param  array<mixed> $members list of all the required members
+ * @return bool|error   if members missing kills the process and sends error otherwise true
  */
 
     function hasAllMembers($request, $members)
@@ -315,7 +314,7 @@ class BuffetApi
  *
  * Retrieves json data from POST method raw data and returns decode json
  *
- * @return array decoded json from POST raw data
+ * @return array<mixed> decoded json from POST raw data
  */
 
     function getPostJson()
