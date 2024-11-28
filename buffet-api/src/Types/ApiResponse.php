@@ -15,7 +15,6 @@ class ApiResponse
 
     /**
      * @param array $request
-     * @param array $payloadKeys
      */
 
     public function __construct(public ?array $request = []) // allows for request to be null
@@ -127,7 +126,7 @@ class ApiResponse
     }
 
     /**
-     * @param array $payloadKeys
+     * @param array $requestKeys
      */
     public function setRequestKeys(array $requestKeys): void
     {

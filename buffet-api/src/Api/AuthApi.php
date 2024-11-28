@@ -17,8 +17,8 @@ class AuthApi
      *
      * Returns errors when user profile cannot be created
      *
-     * @param  ApiResponse
-     * @return ApiResponse   Api response
+     * @param  ApiResponse $response - incomming api response
+     * @return ApiResponse Api response
      */
 
     function register(ApiResponse $response): ApiResponse

@@ -39,7 +39,7 @@ class UserModel extends Model
 
     /**
      * @param  $username
-     * @return mixed
+     * @return array
      */
     public static function getUserByName($username): array
     {
