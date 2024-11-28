@@ -74,34 +74,29 @@ class BuffetApi
         switch ($response->getRequestType()) {
             case "test":
                 return $this->handleTest($response);
-                break;
 
             case "register";
                 return $this->handleRegister($response);
-                break;
 
             case "login":
                 return $this->handleLogin($response);
-                break;
 
             case "verify":
                 return $this->handleVerify($response);
-                break;
 
             case "getMenu":
                 return $this->handleGetMenu($response);
-                break;
+
             case "isAdmin":
                 return $this->handleIsAdmin($response);
-                break;
+
             case "getOrders":
                 return $this->handleGetOrders($response);
-                break;
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
 
-                break;
         }
     }
 
@@ -233,11 +228,7 @@ class BuffetApi
 
         $jwt->validateToken($response);
 
-        if ($response->hasFailed()) {
-            return $response;
-        }
-
-        $uid = $jwt->decodeToken($response)->sub;
+        $uid = $jwt->decodeToken($response)->sub ?? null;
 
         if ($response->hasFailed()) {
             return $response;
@@ -266,10 +257,6 @@ class BuffetApi
         $jwt = new JWTApi;
 
         $jwt->validateToken($response);
-
-        if ($response->hasFailed()) {
-            return $response;
-        }
 
         $uid = $jwt->decodeToken($response)->sub;
 

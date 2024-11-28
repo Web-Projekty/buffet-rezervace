@@ -105,7 +105,7 @@ class ApiResponse
         if ($this->status !== Status::Failed) {
             $this->status = Status::Failed;
             unset($this->payload);
-            $this->payload["msg"] = $msg->getValue() ?? null;
+            $this->payload["msg"] = $msg->getValue();
         }
 
         return $this;
@@ -119,7 +119,7 @@ class ApiResponse
     {
         if ($this->status !== Status::Failed) {
             $this->status = Status::Success;
-            $this->addPayload("msg", $msg->getValue() ?? null);
+            $this->addPayload("msg", $msg->getValue());
         }
 
         return $this;
@@ -196,9 +196,9 @@ class ApiResponse
     /**
      * @return bool
      */
-    public function hasFailed()
+    public function hasFailed(): bool
     {
-        return $this->status === Status::Failed ? true : false;
+        return $this->status === Status::Failed;
     }
 
     public function __toString()

@@ -26,7 +26,7 @@ enum Success: string {
         if ($this->isProd()) {
             return "Api call finished successfully";
         }
-        return $this->value;
+        return $this->value ?? "Api call finished successfully (missing success message)";
     }
 
     /**

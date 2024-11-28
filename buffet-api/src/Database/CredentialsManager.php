@@ -48,7 +48,7 @@ class CredentialsManager
 
         if (empty($_ENV['DECRYPT_KEY']) || !isset($_ENV['DECRYPT_KEY'])) {
             return ['success' => false];
-            return $this->response->setError(Error::FailedDecrypt);
+            //return $this->response->setError(Error::FailedDecrypt);
         }
 
         $username = openssl_decrypt($userH, $cipher, $_ENV['DECRYPT_KEY']);
