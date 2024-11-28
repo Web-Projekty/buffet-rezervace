@@ -49,7 +49,7 @@ enum Error: string {
         if ($this->isProd()) {
             return "Oops something has gone wrong";
         }
-        return $this->value;
+        return $this->value ?? "Oops something has gone wrong (missing error message)";
     }
 
     /**
