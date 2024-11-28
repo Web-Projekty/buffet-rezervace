@@ -228,11 +228,7 @@ class BuffetApi
 
         $jwt->validateToken($response);
 
-        if ($response->hasFailed()) {
-            return $response;
-        }
-
-        $uid = $jwt->decodeToken($response)->sub;
+        $uid = $jwt->decodeToken($response)->sub ?? null;
 
         if ($response->hasFailed()) {
             return $response;
@@ -261,10 +257,6 @@ class BuffetApi
         $jwt = new JWTApi;
 
         $jwt->validateToken($response);
-
-        if ($response->hasFailed()) {
-            return $response;
-        }
 
         $uid = $jwt->decodeToken($response)->sub;
 
