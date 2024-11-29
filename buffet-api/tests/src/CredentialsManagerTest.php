@@ -5,8 +5,8 @@ declare (strict_types = 1);
 namespace Buffet\Tests;
 
 use Buffet\Database\CredentialsManager;
-use Buffet\Utils\EnvSetup;
 use Buffet\Types\ApiResponse;
+use Buffet\Utils\EnvSetup;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
@@ -33,7 +33,7 @@ class CredentialsManagerTest extends TestCase
     }
 
     #[TestDox('Test createCredentials')]
-    public function testCreateCredentials()
+    public function testCreateCredentials():void
     {
         $text = "fake test";
         $this->credentialsManager->createCredentials(username: "test", password: "test");

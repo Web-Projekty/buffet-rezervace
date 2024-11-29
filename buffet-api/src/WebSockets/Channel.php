@@ -10,7 +10,13 @@ use SplObjectStorage;
 
 class Channel implements MessageComponentInterface
 {
+    /**
+     * @var SplObjectStorage<StaticConnectionInterface,mixed> - stores all connected clients
+     */
     protected SplObjectStorage $clients;
+    /**
+     * @var SplObjectStorage<StaticConnectionInterface,mixed> - stores only authenticated clients
+     */
     protected SplObjectStorage $authenticatedClients;
 
     public function __construct()
@@ -22,7 +28,7 @@ class Channel implements MessageComponentInterface
     /**
      * @param ConnectionInterface $conn
      */
-    public function onOpen(ConnectionInterface $conn)
+    public function onOpen(ConnectionInterface $conn): void
     {
         $conn = new StaticConnectionInterface($conn);
         $this->clients->attach($conn);
@@ -34,7 +40,7 @@ class Channel implements MessageComponentInterface
      * @param ConnectionInterface $sender
      * @param $msg
      */
-    public function onMessage(ConnectionInterface $sender, $msg)
+    public function onMessage(ConnectionInterface $sender, $msg): void
     {
         $sender = new StaticConnectionInterface($sender);
         echo "Message from {$sender->resourceId}: $msg\n";
@@ -72,7 +78,7 @@ class Channel implements MessageComponentInterface
     /**
      * @param ConnectionInterface $conn
      */
-    public function onClose(ConnectionInterface $conn)
+    public function onClose(ConnectionInterface $conn): void
     {
         $conn = new StaticConnectionInterface($conn);
 
@@ -94,7 +100,7 @@ class Channel implements MessageComponentInterface
      * @param ConnectionInterface $conn
      * @param \Exception          $e
      */
-    public function onError(ConnectionInterface $conn, \Exception $e)
+    public function onError(ConnectionInterface $conn, \Exception $e): void
     {
         $conn = new StaticConnectionInterface($conn);
         echo "An error has occurred: {$e->getMessage()}\n";

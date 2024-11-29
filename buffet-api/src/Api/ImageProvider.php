@@ -15,7 +15,7 @@ class ImageProvider
      * @param  ResponseInterface   $html
      * @return ResponseInterface
      */
-    function main(RequestInterface $request, ResponseInterface $html, $args): ResponseInterface
+    function main(RequestInterface $request, ResponseInterface $html, mixed $args): ResponseInterface
     {
         $urlPath = $args['path'];
         $path = $this->getFilePath($urlPath, $request);
@@ -34,7 +34,7 @@ class ImageProvider
      * @param  $args
      * @return string
      */
-    function getFilePath($urlPath, RequestInterface $request): string
+    function getFilePath(string $urlPath, RequestInterface $request): string
     {
         $supportedFormats = ["jpg", "png", "svg", "webp"];
         $fileFound = false;

@@ -22,7 +22,7 @@ class EnvSetupTest extends TestCase
     }
 
     #[TestDox('Env file creation')]
-    public function testEnvSetup()
+    public function testEnvSetup(): void
     {
         $this->assertFalse($this->envSetup->returnOriginalEnv);
         $hadOrginalEnv = false;
@@ -45,7 +45,7 @@ class EnvSetupTest extends TestCase
     }
 
     #[TestDox('Env file custom content')]
-    public function testEnvFileContent()
+    public function testEnvFileContent(): void
     {
         $customEnvContent = 'CUSTOM=CONTENT';
         $this->envSetup->setupDummyEnv($customEnvContent);
@@ -56,7 +56,7 @@ class EnvSetupTest extends TestCase
     }
 
     #[TestDox('Env file backup')]
-    public function testEnvFileBackup()
+    public function testEnvFileBackup(): void
     {
         $customEnvContent = 'CUSTOM=CONTENT';
         $hadOrginalEnv = false;
@@ -77,7 +77,7 @@ class EnvSetupTest extends TestCase
     }
 
     #[TestDox('Env file keep original')]
-    public function testEnvFileKeepOriginal()
+    public function testEnvFileKeepOriginal(): void
     {
         // manually backup original env file
         if (file_exists($this->envSetup->envPath)) {

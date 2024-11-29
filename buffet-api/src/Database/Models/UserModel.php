@@ -39,9 +39,9 @@ class UserModel extends Model
 
     /**
      * @param  $username
-     * @return array
+     * @return array<mixed>
      */
-    public static function getUserByName($username): array
+    public static function getUserByName(string $username): array
     {
         try {
             if (UserModel::query()->where('username', $username)->exists()) {

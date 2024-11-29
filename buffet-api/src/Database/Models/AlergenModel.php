@@ -24,7 +24,7 @@ class AllergenModel extends Model
      */
     public $timestamps = false;
 
-    public static function getAll()
+    public static function getAll(): \Illuminate\Database\Eloquent\Collection  | bool
     {
         try {
             return AllergenModel::all();
