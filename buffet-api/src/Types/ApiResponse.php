@@ -8,15 +8,23 @@ class ApiResponse
 {
     public Status $status = Status::Pending;
 
+    /**
+     * @var array<mixed>
+     */
     private array $requestKeys = [];
 
+    /**
+     * @var array<string>
+     */
     private array $payloadKeys = [];
+    /**
+     * @var array<mixed>
+     */
     private array $payload = [];
 
     /**
-     * @param array $request
+     * @param array<mixed> $request
      */
-
     public function __construct(public ?array $request = []) // allows for request to be null
     {
         if (!isset($this->request['requestType'])) {
@@ -69,7 +77,7 @@ class ApiResponse
     }
 
     /**
-     * @return array|null $request
+     * @return array<mixed>|null $request
      */
     public function getRequest(): array | null
     {
@@ -126,7 +134,7 @@ class ApiResponse
     }
 
     /**
-     * @param array $requestKeys
+     * @param array<mixed> $requestKeys
      */
     public function setRequestKeys(array $requestKeys): void
     {
@@ -135,15 +143,15 @@ class ApiResponse
     }
 
     /**
-     * @return array
+     * @return array<string>
      */
-    public function getPayloadKeys(): array
+    public function getPayloadKeys(): array|null
     {
         return $this->payloadKeys ?? null;
     }
 
     /**
-     * @param array $payloadKeys
+     * @param array<string> $payloadKeys
      */
     public function setPayloadKeys(array $payloadKeys): void
     {

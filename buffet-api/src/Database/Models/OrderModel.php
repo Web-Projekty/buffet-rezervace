@@ -24,7 +24,7 @@ class OrderModel extends Model
      */
     public $timestamps = true;
 
-    public static function getAll()
+    public static function getAll(): bool | \Illuminate\Database\Eloquent\Collection
     {
         try {
             return OrderModel::all();
@@ -36,7 +36,7 @@ class OrderModel extends Model
     /**
      * @param $userId
      */
-    public static function getByUser($userId)
+    public static function getByUser(int $userId): bool | \Illuminate\Database\Eloquent\Collection
     {
         try {
             return OrderModel::query()->where('userId', $userId)->get();
