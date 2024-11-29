@@ -40,7 +40,9 @@ enum Error: string {
 
     ############################ Database ############################
     case QueryFailed = 'Query from database has failed';
-    
+
+    ############################ Ws Channels ############################
+    case NonexistentChannel = 'Channel doesn\'t exist';
     /**
      * @return string
      */
