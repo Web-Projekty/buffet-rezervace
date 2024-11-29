@@ -22,14 +22,13 @@ class ApiResponse
      */
     private array $payload = [];
 
+    private bool $requireRequestType = true;
+
     /**
      * @param array<mixed> $request
      */
     public function __construct(public ?array $request = []) // allows for request to be null
     {
-        if (!isset($this->request['requestType'])) {
-            $this->setError(Error::MissingRequestType);
-        }
     }
 
     /**
@@ -134,6 +133,14 @@ class ApiResponse
     }
 
     /**
+     * @param bool $value
+     */
+    public function requireRequestType(bool $value): void
+    {
+        $this->requireRequestType = $value;
+    }
+
+    /**
      * @param array<mixed> $requestKeys
      */
     public function setRequestKeys(array $requestKeys): void
@@ -145,7 +152,7 @@ class ApiResponse
     /**
      * @return array<string>
      */
-    public function getPayloadKeys(): array|null
+    public function getPayloadKeys(): array | null
     {
         return $this->payloadKeys ?? null;
     }
@@ -211,6 +218,10 @@ class ApiResponse
 
     public function __toString()
     {
+        if (!isset($this->request['requestType']) && $this->requireRequestType) {
+            $this->setError(Error::MissingRequestType);
+        }
+
         if (!$this->hasRequestKeys()) {
             $this->setError(Error::MissingRequestKeys);
         }
