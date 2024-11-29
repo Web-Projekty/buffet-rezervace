@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Allergen } from "../../types";
+import MenuItemAllergens from "./MenuItemAllergens";
 
 type MenuItemImageProps = {
   image: string;
@@ -37,13 +38,7 @@ const MenuItemImage = ({ image, name, allergens }: MenuItemImageProps) => {
         onError={handleImageError}
       />
 
-      <ul className="absolute bottom-0 m-1 flex flex-row gap-1">
-        {allergens.map((allergen) => (
-          <li key={allergen.id} className="rounded-full bg-slate-600 p-1 px-3">
-            {allergen.id}
-          </li>
-        ))}
-      </ul>
+      <MenuItemAllergens allergens={allergens} />
     </div>
   );
 };
