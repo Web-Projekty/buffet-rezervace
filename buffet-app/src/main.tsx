@@ -111,13 +111,21 @@ const router = createBrowserRouter([
           </ErrorBoundary>
         ),
       },
+      {
+        path: "/page-not-found",
+        element: (
+          <ErrorBoundary>
+            <PageNotFound />
+          </ErrorBoundary>
+        ),
+      },
     ],
   },
   {
     path: "/kds",
     element: (
       <ErrorBoundary>
-        <RequireAuth requireAdmin={false}>
+        <RequireAuth requireAdmin={true}>
           <Kds />
         </RequireAuth>
       </ErrorBoundary>
