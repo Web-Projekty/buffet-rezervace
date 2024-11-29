@@ -1,17 +1,13 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { formatCurrency } from "../../utils";
-import { useState } from "react";
-import { MenuItem, Order as OrderType } from "../../types";
+import { Order as OrderType } from "../../types";
 import { scaleUpAnimation } from "../../animations";
-import { ChevronLeft, BadgeCheck, BadgeInfo, BadgeX } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import useOrder from "../../hooks/useOrder";
+import { statusToText } from "../../utils";
 
 type OrderProps = {
   order: OrderType;
   isAdmin?: boolean;
-};
-
-type StatusBadgeProps = {
-  status: OrderType["status"];
 };
 
 type CancelButtonProps = {
@@ -25,16 +21,6 @@ type PickupButtonProps = {
 type AnimationWrapperProps = {
   children: React.ReactNode;
   keyValue: string;
-};
-
-const StatusBadge = ({ status }: StatusBadgeProps) => {
-  return status === "pickedup" ? (
-    <BadgeCheck size={32} className="text-green-500" />
-  ) : status === "notpickedup" ? (
-    <BadgeX size={32} className="text-red-500" />
-  ) : (
-    <BadgeInfo size={32} className="text-yellow-300" />
-  );
 };
 
 const CancelButton = ({ handleCancel }: CancelButtonProps) => {
@@ -70,29 +56,31 @@ const AnimationWrapper = ({ children, keyValue }: AnimationWrapperProps) => {
 };
 
 const Order = ({ order, isAdmin }: OrderProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [status, setStatus] = useState<OrderType["status"]>(order.status);
+  const { color, isOpen, toggleOpen, status, handleStatus } = useOrder(order);
 
   const handleOpen = () => {
-    setIsOpen(!isOpen);
+    toggleOpen();
   };
 
   const handleCancel = () => {
-    setStatus("notpickedup");
+    handleStatus("notpickedup");
   };
 
   const handlePickup = () => {
-    setStatus("pickedup");
+    handleStatus("pickedup");
   };
 
   return (
     <motion.div
-      initial={{ y: 100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
+      initial={{ x: 100, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className={`flex w-auto flex-col rounded-lg bg-slate-900 p-4 md:w-[45rem]`}
+      className={`relative flex w-auto flex-col rounded-lg bg-slate-900 p-4 md:w-[45rem]`}
     >
       <div className="flex flex-row items-center justify-between text-xl">
+        <div
+          className={`absolute left-0 h-[64px] w-2 ${color} round-bl-lg rounded-tl-lg`}
+        ></div>
         <div className="flex flex-row items-center gap-2 text-xl">
           <h2 className="font-bold">#{order.id}</h2>
           {/*<p>{formatUnixDate(order.date)}</p>*/}
@@ -101,13 +89,6 @@ const Order = ({ order, isAdmin }: OrderProps) => {
           )}
         </div>
         <div className="flex flex-row items-center">
-          <AnimatePresence>
-            {!isOpen && (
-              <AnimationWrapper keyValue="pickedup">
-                <StatusBadge status={status} />
-              </AnimationWrapper>
-            )}
-          </AnimatePresence>
           <ChevronLeft
             size={32}
             className={`${isOpen ? "-rotate-90" : null} cursor-pointer transition-transform duration-300 ease-in-out`}
@@ -170,14 +151,7 @@ const Order = ({ order, isAdmin }: OrderProps) => {
             <AnimatePresence>
               <AnimationWrapper keyValue="status-button">
                 <div className="flex flex-row items-center gap-2">
-                  <span>
-                    {status === "pending"
-                      ? "Čeká na vyzvednutí"
-                      : status === "pickedup"
-                        ? "Vyzvednuto"
-                        : "Nevyzvednuto"}
-                  </span>
-                  <StatusBadge status={status} />
+                  <span>{statusToText(status)}</span>
                 </div>
               </AnimationWrapper>
             </AnimatePresence>
