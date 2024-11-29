@@ -32,10 +32,8 @@ export default {
       colors: {
         primary: "#14ce9c",
         secondary: "#00A699",
-        tertiary: "#FFB400",
-        quaternary: "#787878",
-        quinary: "#FFFFFF",
         transparentBlack: "rgba(0, 0, 0, 0.5)",
+        descriptionColor: "#9ca3af",
       },
     },
   },
