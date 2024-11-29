@@ -10,7 +10,7 @@ const Allergen = ({ allergen }: AlergenProps) => {
   return (
     <motion.li
       {...scaleUpAnimation(0.5)}
-      className="flex w-[20rem] items-center gap-2 rounded-lg bg-slate-900 p-3"
+      className="flex w-[22rem] items-center gap-2 rounded-lg bg-slate-900 p-3"
     >
       <img
         src={
@@ -22,7 +22,10 @@ const Allergen = ({ allergen }: AlergenProps) => {
       <span className="rounded-full bg-slate-800 px-4 py-2 text-xl">
         {allergen.id}
       </span>
-      <span className="font-FiraSans">{allergen.name}</span>
+      <div className="flex flex-col">
+        <span className="font-bold">{allergen.name}</span>
+        <p className="text-descriptionColor">{allergen.description}</p>
+      </div>
     </motion.li>
   );
 };
