@@ -70,16 +70,16 @@
             protocol = window.location.protocol
             //console.log(window.location.protocol)
             if (protocol == 'http:') {
-                address = 'ws://' + window.location.host + '/backend/'
+                address = 'ws://' + window.location.host + '/kdss/'
             } else {
                 address = 'wss://' + window.location.host + '/backend/'
             }
             const ws = new WebSocket(address);
             ws.onmessage = (event) => {
                 console.log(event.data)
-                if (isJson(event.data)) {
+                /*if (isJson(event.data)) {
                     return
-                }
+                }*/
                 element = document.createElement('p')
                 element.innerText = event.data
                 document.getElementById('chat').append(element)
