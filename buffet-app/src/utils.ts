@@ -1,3 +1,5 @@
+import { OrderStatus } from "./types";
+
 export const formatCurrency = (number: number): string => {
   return new Intl.NumberFormat("cs-CZ", {
     style: "currency",
@@ -22,4 +24,20 @@ export const formatToUnixDate = (date: string): string => {
 
 export const matchValues = (text: string, text2: string): boolean => {
   return text === text2;
+};
+
+export const getColorByStatus = (status: OrderStatus): string => {
+  return status === "pickedup"
+    ? "bg-green-500"
+    : status === "notpickedup"
+      ? "bg-red-500"
+      : "bg-orange-400";
+};
+
+export const statusToText = (status: OrderStatus): string => {
+  return status === "pickedup"
+    ? "Vyzvednuto"
+    : status === "notpickedup"
+      ? "Nevyzvednuto"
+      : "Probíhá";
 };
