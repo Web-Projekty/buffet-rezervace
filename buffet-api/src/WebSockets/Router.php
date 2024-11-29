@@ -4,13 +4,15 @@ declare (strict_types = 1);
 
 namespace Buffet\WebSockets;
 
+use Buffet\Types\ApiResponse;
+use Buffet\Types\Error;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 
 class Router implements MessageComponentInterface
 {
 
-    public Channel $channel;
+    public KDSChannel $kds;
 
     public function __construct()
     {
@@ -19,18 +21,20 @@ class Router implements MessageComponentInterface
 
     public function initializeClasses(): void
     {
-        $this->channel = new Channel();
+        $this->kds = new KDSChannel();
     }
 
     /**
      * @param ConnectionInterface $conn
      */
+
     public function onOpen(ConnectionInterface $conn): void
     {
         $conn = new StaticConnectionInterface($conn);
-        $this->channel->onOpen($conn);
 
-        echo $conn->httpRequest->getUri()->getPath()."\n";
+        $channel = $this->getChannel($conn);
+
+        $channel->onOpen($conn);
     }
 
     /**
@@ -54,5 +58,32 @@ class Router implements MessageComponentInterface
      */
     public function onError(ConnectionInterface $conn, \Exception $e): void
     {
+    }
+
+    /**
+     * @param  StaticConnectionInterface $conn
+     * @return object
+     */
+    public function getChannel(StaticConnectionInterface $conn): object
+    {
+        $path = $conn->httpRequest->getUri()->getPath();
+        // remove trailing "/" for simple routing formating
+        if (strlen($path) > 1) {
+            $path = rtrim($path, '/');
+        }
+
+        echo "New request from: " . $path . "\n";
+        switch ($path) {
+            case '/kds':
+                return $this->kds;
+        }
+
+        $conn->send((function () {
+            $api = new ApiResponse;
+             $api->setError(Error::NonexistentChannel);
+            return (string) $api->__toString();
+        })());
+        $conn->close();
+        throw new \Exception('Channel not found');
     }
 }
