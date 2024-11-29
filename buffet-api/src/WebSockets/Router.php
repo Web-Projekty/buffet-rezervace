@@ -10,8 +10,16 @@ use Ratchet\MessageComponentInterface;
 class Router implements MessageComponentInterface
 {
 
+    public Channel $channel;
+
     public function __construct()
     {
+        $this->initializeClasses();
+    }
+
+    public function initializeClasses(): void
+    {
+        $this->channel = new Channel();
     }
 
     /**
@@ -19,6 +27,10 @@ class Router implements MessageComponentInterface
      */
     public function onOpen(ConnectionInterface $conn): void
     {
+        $conn = new StaticConnectionInterface($conn);
+        $this->channel->onOpen($conn);
+
+        echo $conn->httpRequest->getUri()->getPath()."\n";
     }
 
     /**
