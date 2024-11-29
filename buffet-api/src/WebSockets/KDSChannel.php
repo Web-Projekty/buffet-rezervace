@@ -6,7 +6,7 @@ namespace Buffet\WebSockets;
 
 use SplObjectStorage;
 
-class Channel implements MessageInterface
+class KDSChannel implements MessageInterface
 {
     /**
      * @var SplObjectStorage<StaticConnectionInterface,mixed> - stores all connected clients
