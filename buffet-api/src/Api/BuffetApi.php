@@ -228,7 +228,7 @@ class BuffetApi
 
         $jwt->validateToken($response);
 
-        $uid = $jwt->decodeToken($response)->sub ?? null;
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
 
         if ($response->hasFailed()) {
             return $response;
@@ -238,7 +238,7 @@ class BuffetApi
         if ($isAdmin) {
             $response->setPayload("data", OrderModel::getAll());
         } else {
-            $response->setPayload("data", OrderModel::getByUser($uid));
+            $response->setPayload("data", OrderModel::getByUser((int) $uid));
         }
 
         $response->setStatus(true);
@@ -292,7 +292,6 @@ class BuffetApi
 /**
  * Utility function for checking if all keys are present and carry data
  * @deprecated
- *
  * @param  array<mixed> $request API request
  * @param  array<mixed> $members list of all the required members
  * @return bool|error   if members missing kills the process and sends error otherwise true
