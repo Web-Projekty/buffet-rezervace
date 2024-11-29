@@ -8,16 +8,23 @@ class ApiResponse
 {
     public Status $status = Status::Pending;
 
+    /**
+     * @var array<mixed>
+     */
     private array $requestKeys = [];
 
+    /**
+     * @var array<string>
+     */
     private array $payloadKeys = [];
+    /**
+     * @var array<mixed>
+     */
     private array $payload = [];
 
     /**
-     * @param array $request
-     * @param array $payloadKeys
+     * @param array<mixed> $request
      */
-
     public function __construct(public ?array $request = []) // allows for request to be null
     {
         if (!isset($this->request['requestType'])) {
@@ -70,7 +77,7 @@ class ApiResponse
     }
 
     /**
-     * @return array|null $request
+     * @return array<mixed>|null $request
      */
     public function getRequest(): array | null
     {
@@ -106,7 +113,7 @@ class ApiResponse
         if ($this->status !== Status::Failed) {
             $this->status = Status::Failed;
             unset($this->payload);
-            $this->payload["msg"] = $msg->getValue() ?? null;
+            $this->payload["msg"] = $msg->getValue();
         }
 
         return $this;
@@ -120,14 +127,14 @@ class ApiResponse
     {
         if ($this->status !== Status::Failed) {
             $this->status = Status::Success;
-            $this->addPayload("msg", $msg->getValue() ?? null);
+            $this->addPayload("msg", $msg->getValue());
         }
 
         return $this;
     }
 
     /**
-     * @param array $payloadKeys
+     * @param array<mixed> $requestKeys
      */
     public function setRequestKeys(array $requestKeys): void
     {
@@ -136,15 +143,15 @@ class ApiResponse
     }
 
     /**
-     * @return array
+     * @return array<string>
      */
-    public function getPayloadKeys(): array
+    public function getPayloadKeys(): array|null
     {
         return $this->payloadKeys ?? null;
     }
 
     /**
-     * @param array $payloadKeys
+     * @param array<string> $payloadKeys
      */
     public function setPayloadKeys(array $payloadKeys): void
     {
@@ -197,9 +204,9 @@ class ApiResponse
     /**
      * @return bool
      */
-    public function hasFailed()
+    public function hasFailed(): bool
     {
-        return $this->status === Status::Failed ? true : false;
+        return $this->status === Status::Failed;
     }
 
     public function __toString()

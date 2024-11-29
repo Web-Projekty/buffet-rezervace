@@ -4,56 +4,70 @@ declare (strict_types = 1);
 
 namespace Buffet\Api;
 
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use Slim\Exception\HttpNotFoundException;
 
 class ImageProvider
 {
     /**
-     * @param  RequestInterface  $request
-     * @param  ResponseInterface $html
-     * @return mixed
+     * @param  RequestInterface    $request
+     * @param  ResponseInterface   $html
+     * @return ResponseInterface
      */
-    function main(RequestInterface $request, ResponseInterface $html, $args): ResponseInterface
+    function main(RequestInterface $request, ResponseInterface $html, mixed $args): ResponseInterface
     {
-        $path = $this->getFilePath($args);
+        $urlPath = $args['path'];
+        $path = $this->getFilePath($urlPath, $request);
 
-        if (!file_exists($path)) {
-            throw new HttpNotFoundException($request);
-            return $html;
-        }
-
-        if(explode("/",mime_content_type($path))[0] != "image"){
-            throw new HttpNotFoundException($request,"not an image");
-            return $html;
+        if (explode("/", mime_content_type($path))[0] != "image") {
+            throw new HttpNotFoundException($request, "not an image");
         }
 
         $html->getBody()->write(file_get_contents($path));
 
         return $html->withHeader('Content-Type', mime_content_type($path))
-            ->withHeader('Content-Disposition', 'attachment; filename="' . basename($path) . '"')
-            ->withHeader('Content-Length', filesize($path));
+            ->withHeader('Content-Length', (string) filesize($path));
     }
 
     /**
      * @param  $args
-     * @return mixed
+     * @return string
      */
-    function getFilePath($args): string
+    function getFilePath(string $urlPath, RequestInterface $request): string
     {
-        $urlPath = $args['path'];
+        $supportedFormats = ["jpg", "png", "svg", "webp"];
+        $fileFound = false;
         $pathParts = explode("/", $urlPath);
         $pathPartsCount = count($pathParts) - 1;
+        $dir = __DIR__ . "/../../img/";
 
-        $path = __DIR__ . "/../../img/";
-
-        for ($i = 0; $i < $pathPartsCount; $i++) {
-            $path .= $pathParts[$i] . "/";
+        for ($i = 0; $i < 1; $i++) {
+            $dir .= $pathParts[$i] . "/";
         }
 
-        $path .= $pathParts[$pathPartsCount];
+        $path = $dir . explode(".", $pathParts[$pathPartsCount])[0];
 
-        return $path;
+        foreach ($supportedFormats as $format) {
+            if (file_exists($path . "." . $format)) {
+                $path .= "." . $format;
+                $fileFound = true;
+                break;
+            }
+        }
+
+        if (!$fileFound) {
+            $path = $dir . "default";
+
+            foreach ($supportedFormats as $format) {
+                if (file_exists($path . "." . $format)) {
+                    $path .= "." . $format;
+                    $fileFound = true;
+                    break;
+                }
+            }
+
+        }
+        return $fileFound ? $path : throw (new HttpNotFoundException($request, "file not found: " . $path));
     }
 }
