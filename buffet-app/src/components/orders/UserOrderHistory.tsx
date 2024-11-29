@@ -2,7 +2,7 @@ import Order from "./Order";
 import { usePaging } from "../../hooks/usePaging";
 import { Order as OrderType } from "../../types";
 import PagingButtons from "../PagingButtons";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { ordersPerPage } from "../../constants";
 import useFetch from "../../hooks/useFetch";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
@@ -15,6 +15,8 @@ const UserOrderHistory = () => {
   const { data, isLoading, error } = useFetch<OrderType[]>(
     "https://wlczak.vlastas.cc/backend/api",
     { requestType: "getOrders", token: token },
+    [],
+    [token],
   );
 
   const { currentPage, totalPagesCount, dataList, arrayOfPages, handlePage } =
@@ -25,25 +27,16 @@ const UserOrderHistory = () => {
   }
 
   if (error) {
-    return <div className="text-white">Chyba načítání dat ze serveru.</div>;
+    return <div className="text-white">{error}</div>;
   }
 
   return (
-    <div className="flex w-[22rem] flex-col gap-2 md:w-[45rem]">
+    <div className="flex w-auto flex-col gap-2">
       <h1 className="text-2xl">Tvá historie objednávek ({dataList.length})</h1>
       <AnimatePresence>
         <ul className="flex flex-col gap-2">
           {dataList.map((order) => (
-            <motion.div
-              key={order.id}
-              layout
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 50 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Order key={order.id} order={order} />
-            </motion.div>
+            <Order key={order.id} order={order} />
           ))}
         </ul>
       </AnimatePresence>
