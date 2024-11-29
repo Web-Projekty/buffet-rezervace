@@ -1,6 +1,8 @@
 <?php
 namespace Buffet\WebSockets;
 
+use Ratchet\ConnectionInterface;
+
 class StaticConnectionInterface
 {
     /**
@@ -33,14 +35,16 @@ class StaticConnectionInterface
     /**
      * @param $original - original object
      */
-    public function __construct($original)
+
+    public function __construct(ConnectionInterface $original)
     {
         $this->original = $original;
-        $this->resourceId = $original->resourceId;
-        $this->remoteAddress = $original->remoteAddress;
-        $this->httpHeadersReceived = $original->httpHeadersReceived;
-        $this->httpRequest = $original->httpRequest;
-        $this->WebSocket = $original->WebSocket;
+
+        $this->resourceId = $original->resourceId;                   // @phpstan-ignore property.notFound
+        $this->remoteAddress = $original->remoteAddress;             // @phpstan-ignore property.notFound
+        $this->httpHeadersReceived = $original->httpHeadersReceived; // @phpstan-ignore property.notFound
+        $this->httpRequest = $original->httpRequest;                 // @phpstan-ignore property.notFound
+        $this->WebSocket = $original->WebSocket;                     // @phpstan-ignore property.notFound
     }
 
     /**
@@ -48,7 +52,7 @@ class StaticConnectionInterface
      * @param  $arguments
      * @return mixed
      */
-    public function __call($method, $arguments)
+    public function __call(mixed $method, mixed $arguments)
     {
         return $this->original->$method(...$arguments);
     }

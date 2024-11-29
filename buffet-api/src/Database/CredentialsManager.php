@@ -23,7 +23,9 @@ class CredentialsManager
      *
      * Uses openssl decryption
      *
-     * @return array Schema here: https://github.com/Web-Projekty/buffet-rezervace/wiki/getCredentials()
+     * @deprecated - poor return value design use custom class factory instead
+     *
+     * @return array<mixed> Schema here: https://github.com/Web-Projekty/buffet-rezervace/wiki/getCredentials()
      */
     function getCredentials(): array
     {
@@ -78,7 +80,7 @@ class CredentialsManager
      * @param  string $password   Password to encrypt.
      * @return void   Description of the return value.
      */
-    function createCredentials($username, $password, $host = "vlastas.cc", $database = "buffet"): void
+    function createCredentials(string $username, string $password, string $host = "vlastas.cc", string $database = "buffet"): void
     {
         $this->envExists();
 

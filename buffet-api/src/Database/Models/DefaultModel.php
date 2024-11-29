@@ -24,7 +24,7 @@ class DefaultModel extends Model
      */
     public $timestamps = false;
 
-    public static function getAll()
+    public static function getAll(): bool | \Illuminate\Database\Eloquent\Collection
     {
         try {
             return DefaultModel::all();
