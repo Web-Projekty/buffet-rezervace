@@ -8,17 +8,16 @@ type MenuItemTextProps = {
 
 const MenuItemText = ({ name, price, description }: MenuItemTextProps) => {
   return (
-    <>
-      <div className="flex items-center justify-between font-FiraSans font-bold">
-        <h1 className="w-[7rem] rounded-lg px-1 text-xl">{name}</h1>
-        {/* <div className="mt-4 flex-1 border-b-2 border-dotted border-white px-2"></div> */}
-        <p className="rounded-lg px-2 text-lg font-normal italic">
+    <div className="flex flex-col justify-center gap-1">
+      <div className="flex items-center justify-between font-bold">
+        <h1 className="w-full rounded-lg px-1 text-xl">{name}</h1>
+        <span className="rounded-lg text-lg font-normal italic">
           {formatCurrency(price)}
-        </p>
+        </span>
       </div>
-
-      <p className="rounded-lg px-2">{description}</p>
-    </>
+      <hr />
+      <p className="text-descriptionColor rounded-lg px-2">{description}</p>
+    </div>
   );
 };
 
