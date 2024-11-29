@@ -42,7 +42,7 @@ const useFetch = <T>(
       }
     }
     fetchData();
-  }, [...dependencies]);
+  }, [url, ...dependencies]);
 
   return { isLoading, error, setError, data, itemsCount };
 };
