@@ -6,9 +6,10 @@ type Error = {
   title: string;
   subtitle: string;
   onBack?: () => void;
+  linkTo?: string;
 };
 
-const ErrorComponent = ({ title, subtitle, onBack }: Error) => {
+const ErrorComponent = ({ title, subtitle, onBack, linkTo }: Error) => {
   return (
     <div className="flex flex-col items-center justify-center gap-5 overflow-x-hidden bg-slate-800 font-sans text-white">
       <img
@@ -20,7 +21,7 @@ const ErrorComponent = ({ title, subtitle, onBack }: Error) => {
         <h1 className="text-2xl">{title}</h1>
         <span className="text-4xl">{subtitle}</span>
       </div>
-      <Link to="/" onClick={onBack}>
+      <Link to={linkTo ? linkTo : "/"} onClick={onBack}>
         <Button>Zpět na hlavní stránku</Button>
       </Link>
     </div>
