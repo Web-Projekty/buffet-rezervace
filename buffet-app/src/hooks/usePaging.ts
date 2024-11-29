@@ -11,7 +11,7 @@ type PagingReturn<T> = {
 };
 
 export function usePaging<T>(
-  data: T[] = [],
+  data: T[] | null = [],
   itemsPerPage: number,
   paramsName?: string,
 ): PagingReturn<T> {
@@ -27,8 +27,9 @@ export function usePaging<T>(
     : [];
 
   const dataListLength: number = dataList.length;
-
-  const totalPagesCount: number = Math.ceil(data.length / itemsPerPage);
+  const totalPagesCount: number = data
+    ? Math.ceil(data.length / itemsPerPage)
+    : 1;
 
   const arrayOfPages: number[] = Array.from(
     { length: totalPagesCount },

@@ -68,11 +68,11 @@ const router = createBrowserRouter([
       {
         path: "/objednavky",
         element: (
-          <RequireAuth requireAdmin={true} fallbackPath="/login">
-            <ErrorBoundary>
-              <AdminOrderHistory />
-            </ErrorBoundary>
-          </RequireAuth>
+          //<RequireAuth requireAdmin={true} fallbackPath="/login">
+          <ErrorBoundary>
+            <AdminOrderHistory />
+          </ErrorBoundary>
+          //</RequireAuth>
         ),
         //loader: () => import("./components/orders/AdminOrderHistory.tsx"),
       },
@@ -110,6 +110,16 @@ const router = createBrowserRouter([
           <ErrorBoundary>
             {/*<RequireAuth requireAdmin={false} fallbackPath="/">*/}
             <SuccessOrder />
+            {/*</RequireAuth>*/}
+          </ErrorBoundary>
+        ),
+      },
+      {
+        path: "/kds",
+        element: (
+          <ErrorBoundary>
+            {/*<RequireAuth requireAdmin={true} fallbackPath="/">*/}
+            <h1>KDS</h1>
             {/*</RequireAuth>*/}
           </ErrorBoundary>
         ),

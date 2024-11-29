@@ -1,47 +1,48 @@
-import { useEffect, useState } from "react";
-import { dummyFood } from "../../dummyData";
-import { usePaging } from "../../hooks/usePaging";
 import PagingButtons from "../PagingButtons";
 import MenuItem from "./MenuItem";
 import { MenuItem as MenuItemType } from "../../types";
-import useFetch from "../../hooks/useFetch";
-import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Loading from "../Loading";
 import { itemsPerPage } from "../../constants";
+import ErrorComponent from "../error/ErrorComponent";
+import useBackendPaging from "../../hooks/useBackendPaging";
 
 const Menu = () => {
-  const [menu, setMenu] = useState<MenuItemType[]>([]);
+  const {
+    dataList,
+    error,
+    isLoading,
+    currentPage,
+    arrayOfPages,
+    totalPagesCount,
+    handlePage,
+  } = useBackendPaging<MenuItemType>("getMenu", itemsPerPage);
 
-  const { currentPage, totalPagesCount, dataList, arrayOfPages, handlePage } =
-    usePaging<MenuItemType>(menu, itemsPerPage);
+  if (isLoading) {
+    return <Loading size={30} />;
+  }
 
-  // const { data, isLoading, error } = useFetch<MenuItemType[]>(
-  //   "https://wlczak.vlastas.cc/backend/api",
-  //   { requestType: "getMenu" },
-  //   [],
-  // );
-
-  useEffect(
-    () => {
-      // if (data) {
-      //   setMenu(data);
-      // }
-      setMenu(dummyFood as MenuItemType[]);
-    },
-    [
-      /*data*/
-    ],
-  );
+  if (error) {
+    return (
+      <ErrorComponent title="Načítání položek se nezdařilo." subtitle="🛠️👷" />
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center gap-5">
       <h1 className="text-3xl font-bold text-white">Menu</h1>
       {/* {isLoading && <Loading size={30} />} */}
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3">
-        {dataList.map((item) => {
-          return <MenuItem key={item.id} item={item} />;
-        })}
-      </div>
+      {currentPage > totalPagesCount ? (
+        <p className="italic text-white">
+          "Meow? (Waiting for something to happen?)"
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-4">
+          {dataList.map((item) => (
+            <MenuItem key={item.id} item={item} />
+          ))}
+        </div>
+      )}
+
       <PagingButtons
         currentPage={currentPage}
         totalPagesCount={totalPagesCount}

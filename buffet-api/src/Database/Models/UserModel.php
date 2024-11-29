@@ -17,7 +17,7 @@ class UserModel extends Model
 
     // Define the columns that are mass assignable
     /**
-     * @var array
+     * @var array<string>
      */
     protected $fillable = ['username', 'password', 'isAdmin', 'fullName', 'email', 'class'];
 
@@ -39,13 +39,13 @@ class UserModel extends Model
 
     /**
      * @param  $username
-     * @return mixed
+     * @return array<mixed>
      */
-    public static function getUserByName($username): array
+    public static function getUserByName(string $username): array
     {
         try {
-            if (UserModel::where('username', $username)->exists()) {
-                return UserModel::where('username', $username)->first()->toArray();
+            if (UserModel::query()->where('username', $username)->exists()) {
+                return UserModel::query()->where('username', $username)->first()->toArray();
             }
         } catch (QueryException $e) {}
         return [];
@@ -58,7 +58,7 @@ class UserModel extends Model
     public static function isDuplicate(string $haystack, string $needle): bool
     {
         try {
-            return UserModel::where($haystack, $needle)->exists();
+            return UserModel::query()->where($haystack, $needle)->exists();
         } catch (QueryException $e) {
             return false;
         }
@@ -72,7 +72,7 @@ class UserModel extends Model
     public static function createUser(string $username, string $password): bool
     {
         try {
-            UserModel::create([
+            UserModel::query()->create([
                 'username' => $username,
                 'password' => $password,
                 'isAdmin' => false,
@@ -92,7 +92,7 @@ class UserModel extends Model
     public static function isAdmin(int $uid): bool
     {
         try {
-            return (bool) UserModel::where('id', $uid)->first()->isAdmin;
+            return (bool) UserModel::query()->where('id', $uid)->first()->isAdmin;
         } catch (QueryException) {}
         return false;
     }

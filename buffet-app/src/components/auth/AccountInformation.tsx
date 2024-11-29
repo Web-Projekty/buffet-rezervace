@@ -42,7 +42,7 @@ const AccountInformation = ({ user }: AccountInformationProps) => {
   };
 
   return (
-    <div className="flex h-[220px] w-full flex-col justify-center gap-5 md:w-[300px]">
+    <div className="flex h-[220px] w-[22rem] flex-col justify-center gap-5 md:w-[300px]">
       <h1 className="text-2xl">
         {user.isAdmin ? "Administrátor" : "Uživatel"}
       </h1>
