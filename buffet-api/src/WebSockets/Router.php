@@ -78,11 +78,11 @@ class Router implements MessageComponentInterface
                 return $this->kds;
         }
 
-        $conn->send((function () {
-            $api = new ApiResponse;
-             $api->setError(Error::NonexistentChannel);
-            return (string) $api->__toString();
-        })());
+        $api = new ApiResponse;
+        $api->requireRequestType(false);
+        $api->setError(Error::NonexistentChannel);
+
+        $conn->send((string) $api);
         $conn->close();
         throw new \Exception('Channel not found');
     }
