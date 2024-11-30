@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-namespace Buffet\WebSockets;
+namespace Buffet\WebSockets\Interfaces;
 
 interface MessageInterface
 {

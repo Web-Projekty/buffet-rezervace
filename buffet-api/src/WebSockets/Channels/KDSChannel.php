@@ -2,8 +2,10 @@
 
 declare (strict_types = 1);
 
-namespace Buffet\WebSockets;
+namespace Buffet\WebSockets\Channels;
 
+use Buffet\WebSockets\Interfaces\MessageInterface;
+use Buffet\WebSockets\Interfaces\StaticConnectionInterface;
 use SplObjectStorage;
 
 class KDSChannel implements MessageInterface
@@ -26,6 +28,7 @@ class KDSChannel implements MessageInterface
      */
     public function onOpen(StaticConnectionInterface $conn): void
     {
+        $conn->send("Hello from KDS");
     }
 
     /**
@@ -34,7 +37,7 @@ class KDSChannel implements MessageInterface
      */
     public function onMessage(StaticConnectionInterface $conn, string $msg): void
     {
-
+        $conn->send($msg . " from KDS");
     }
 
     /**

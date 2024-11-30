@@ -1,5 +1,8 @@
 <?php
-namespace Buffet\WebSockets;
+
+declare (strict_types = 1);
+
+namespace Buffet\WebSockets\Interfaces;
 
 use GuzzleHttp\Psr7\Request;
 use Ratchet\ConnectionInterface;
