@@ -6,6 +6,7 @@ namespace Buffet\WebSockets;
 
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\WebSockets\Channels\EmptyChannel;
 use Buffet\WebSockets\Channels\KDSChannel;
 use Buffet\WebSockets\Interfaces\StaticConnectionInterface;
 use Ratchet\ConnectionInterface;
@@ -15,6 +16,7 @@ class Router implements MessageComponentInterface
 {
 
     public KDSChannel $kds;
+    public EmptyChannel $default;
 
     public function __construct()
     {
@@ -24,6 +26,7 @@ class Router implements MessageComponentInterface
     public function initializeClasses(): void
     {
         $this->kds = new KDSChannel();
+        $this->default = new EmptyChannel();
     }
 
     /**
@@ -93,14 +96,15 @@ class Router implements MessageComponentInterface
         switch ($path) {
             case '/kds':
                 return $this->kds;
+            default:
+                $api = new ApiResponse;
+                $api->requireRequestType(false);
+                $api->setError(Error::NonexistentChannel);
+
+                $conn->send((string) $api);
+                $conn->close();
+                return $this->default;
         }
 
-        $api = new ApiResponse;
-        $api->requireRequestType(false);
-        $api->setError(Error::NonexistentChannel);
-
-        $conn->send((string) $api);
-        $conn->close();
-        throw new \Exception('Channel not found');
     }
 }
