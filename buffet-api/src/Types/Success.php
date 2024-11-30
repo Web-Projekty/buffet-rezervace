@@ -18,6 +18,9 @@ enum Success: string {
     // JWT
     case Verification = 'Token verified succesfully';
 
+    ############################ Channels ############################
+    case ChannelConnected = 'Channel connected successfully';
+    
     /**
      * @return string
      */
