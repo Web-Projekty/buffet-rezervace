@@ -15,8 +15,8 @@ class Helper
      */
     public function getErrorResponse(Error $error): string
     {
-        $api = new ApiResponse();
-        return (string) $api->requireRequestType(false)->setError($error);
+        $response = new ApiResponse();
+        return (string) $response->requireRequestType(false)->setError($error);
     }
 
     /**
@@ -24,7 +24,7 @@ class Helper
      */
     public function getSuccessResponse(Success $success): string
     {
-        $api = new ApiResponse();
-        return (string) $api->requireRequestType(false)->setSuccess($success);
+        $response = new ApiResponse();
+        return (string) $response->requireRequestType(false)->setSuccess($success);
     }
 }
