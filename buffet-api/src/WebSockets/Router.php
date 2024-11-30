@@ -6,6 +6,8 @@ namespace Buffet\WebSockets;
 
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\WebSockets\Channels\KDSChannel;
+use Buffet\WebSockets\Interfaces\StaticConnectionInterface;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 
@@ -38,11 +40,16 @@ class Router implements MessageComponentInterface
     }
 
     /**
-     * @param ConnectionInterface $sender
+     * @param ConnectionInterface $conn
      * @param $msg
      */
-    public function onMessage(ConnectionInterface $sender, $msg): void
+    public function onMessage(ConnectionInterface $conn, $msg): void
     {
+        $conn = new StaticConnectionInterface($conn);
+
+        $channel = $this->getChannel($conn);
+
+        $channel->onMessage($conn, $msg);
     }
 
     /**
@@ -50,6 +57,11 @@ class Router implements MessageComponentInterface
      */
     public function onClose(ConnectionInterface $conn): void
     {
+        $conn = new StaticConnectionInterface($conn);
+
+        $channel = $this->getChannel($conn);
+
+        $channel->onClose($conn);
     }
 
     /**
@@ -58,6 +70,11 @@ class Router implements MessageComponentInterface
      */
     public function onError(ConnectionInterface $conn, \Exception $e): void
     {
+        $conn = new StaticConnectionInterface($conn);
+
+        $channel = $this->getChannel($conn);
+
+        $channel->onError($conn, $e);
     }
 
     /**
