@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace Buffet\WebSockets\Channels;
 
+use Buffet\Types\Success;
+use Buffet\WebSockets\Helper;
 use Buffet\WebSockets\Interfaces\MessageInterface;
 use Buffet\WebSockets\Interfaces\StaticConnectionInterface;
 use SplObjectStorage;
@@ -11,16 +13,15 @@ use SplObjectStorage;
 class KDSChannel implements MessageInterface
 {
     /**
-     * @var SplObjectStorage<StaticConnectionInterface,mixed> - stores all connected clients
-     */
-    protected SplObjectStorage $clients;
-    /**
      * @var SplObjectStorage<StaticConnectionInterface,mixed> - stores only authenticated clients
      */
     protected SplObjectStorage $authenticatedClients;
 
+    protected Helper $helper;
+
     public function __construct()
     {
+        $this->helper = new Helper();
     }
 
     /**
@@ -28,7 +29,7 @@ class KDSChannel implements MessageInterface
      */
     public function onOpen(StaticConnectionInterface $conn): void
     {
-        $conn->send("Hello from KDS");
+        $conn->send($this->helper->getSuccessResponse(Success::ChannelConnected));
     }
 
     /**
