@@ -64,8 +64,8 @@ const MobileNavbar = ({
       initial="closed"
       animate={isOpen ? "open" : "closed"}
       variants={{
-        open: { x: 0, opacity: 1 },
-        closed: { x: "-100%", opacity: 0 },
+        open: { x: 0, opacity: 1, display: "flex" },
+        closed: { x: "-100%", opacity: 0, display: "none" },
       }}
       transition={{ duration: 0.3 }}
       className="fixed bottom-0 left-0 right-0 top-0 z-40 flex h-screen w-screen flex-col items-center justify-center gap-5 bg-primary text-xl text-white"
