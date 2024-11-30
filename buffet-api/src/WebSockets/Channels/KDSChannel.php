@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace Buffet\WebSockets\Channels;
 
+use Buffet\Api\BuffetApi;
+use Buffet\Types\Error;
 use Buffet\Types\Success;
 use Buffet\WebSockets\Helper;
 use Buffet\WebSockets\Interfaces\MessageInterface;
@@ -38,7 +40,16 @@ class KDSChannel implements MessageInterface
      */
     public function onMessage(StaticConnectionInterface $conn, string $msg): void
     {
-        $conn->send($msg . " from KDS");
+        if (json_validate($msg)) {
+            $api = new BuffetApi();
+
+            $response = $api->handleApiCall($msg);
+
+            $conn->send((string) $response);
+        } else {
+            $conn->send($this->helper->getErrorResponse(Error::InvalidJson));
+        }
+
     }
 
     /**

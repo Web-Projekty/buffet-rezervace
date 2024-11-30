@@ -52,12 +52,17 @@ class BuffetApi
      *
      * Calls specified requestType methods
      *
+     * @param  string      $request
      * @return ApiResponse API response
      */
 
-    function handleApiCall(): ApiResponse
+    function handleApiCall(string $request = null): ApiResponse
     {
-        $request = $this->getPostJson();
+        if (!$request) {
+            $request = $this->getPostJson();
+        } else {
+            $request = json_decode($request, true);
+        }
 
         /**
          * @var ApiResponse

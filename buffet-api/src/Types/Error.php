@@ -14,6 +14,7 @@ enum Error: string {
     case MissingRequestKeys = 'Some or all of the request keys have been left undefined';
     case MissingPayloadKeys = 'Some or all of the payload keys have been left undefined';
     case MissingRequestType = 'Api request type is missing';
+    case InvalidJson = 'Invalid JSON format';
 
     ############################ Auth ############################
     // credManager
