@@ -70,9 +70,9 @@
             protocol = window.location.protocol
             //console.log(window.location.protocol)
             if (protocol == 'http:') {
-                address = 'ws://' + window.location.host + '/kdss/'
+                address = 'ws://' + window.location.host + '/kds/'
             } else {
-                address = 'wss://' + window.location.host + '/backend/'
+                address = 'wss://' + window.location.host + '/kds/'
             }
             const ws = new WebSocket(address);
             ws.onmessage = (event) => {
@@ -119,6 +119,12 @@
                 clearInterval(timer);
             };
 
+
+            if (protocol == 'http:') {
+                address = 'ws://' + window.location.host + '/stats/'
+            } else {
+                address = 'wss://' + window.location.host + '/stats/'
+            }
             couner = new WebSocket(address)
             couner.onmessage = (event) => {
                 const data = event.data
