@@ -135,9 +135,10 @@ class ApiResponse
     /**
      * @param bool $value
      */
-    public function requireRequestType(bool $value): void
+    public function requireRequestType(bool $value): ApiResponse
     {
         $this->requireRequestType = $value;
+        return $this;
     }
 
     /**
