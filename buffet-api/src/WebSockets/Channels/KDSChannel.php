@@ -15,15 +15,13 @@ use SplObjectStorage;
 class KDSChannel implements MessageInterface
 {
     /**
-     * @var SplObjectStorage<StaticConnectionInterface,mixed> - stores only authenticated clients
+     * @var SplObjectStorage<StaticConnectionInterface,null> - stores only authenticated clients
      */
     protected SplObjectStorage $authenticatedClients;
 
-    protected Helper $helper;
-
     public function __construct()
     {
-        $this->helper = new Helper();
+        $this->authenticatedClients = new SplObjectStorage;
     }
 
     /**
@@ -31,7 +29,7 @@ class KDSChannel implements MessageInterface
      */
     public function onOpen(StaticConnectionInterface $conn): void
     {
-        $conn->send($this->helper->getSuccessResponse(Success::ChannelConnected));
+        $conn->send(Helper::getSuccessResponse(Success::ChannelConnected));
     }
 
     /**
@@ -41,13 +39,30 @@ class KDSChannel implements MessageInterface
     public function onMessage(StaticConnectionInterface $conn, string $msg): void
     {
         if (json_validate($msg)) {
-            $api = new BuffetApi();
 
-            $response = $api->handleApiCall($msg);
+            $decoded = json_decode($msg);
 
-            $conn->send((string) $response);
+
+
+            if (isset($decoded->requestType) && $decoded->requestType == "subscribe") {
+
+                switch ($dec)
+                $token = $decoded->token;
+
+                if (Helper::isAdmin($token)) {
+                    Helper::attachClient($conn, $this->authenticatedClients);
+                }
+
+            } else {
+                $api = new BuffetApi();
+
+                $response = $api->handleApiCall($msg);
+
+                $conn->send((string) $response);
+            }
+
         } else {
-            $conn->send($this->helper->getErrorResponse(Error::InvalidJson));
+            $conn->send(Helper::getErrorResponse(Error::InvalidJson));
         }
 
     }
@@ -57,7 +72,7 @@ class KDSChannel implements MessageInterface
      */
     public function onClose(StaticConnectionInterface $conn): void
     {
-
+        Helper::removeClient($conn, $this->authenticatedClients);
     }
 
     /**
