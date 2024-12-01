@@ -42,15 +42,20 @@ class KDSChannel implements MessageInterface
 
             $decoded = json_decode($msg);
 
+            if (isset($decoded->requestType)) {
+                switch ($decoded->requestType) {
+                    case "subscribe":
+                        $token = $decoded->token;
 
-
-            if (isset($decoded->requestType) && $decoded->requestType == "subscribe") {
-
-                switch ($dec)
-                $token = $decoded->token;
-
-                if (Helper::isAdmin($token)) {
-                    Helper::attachClient($conn, $this->authenticatedClients);
+                        if (Helper::isAdmin($token)) {
+                            Helper::attachClient($conn, $this->authenticatedClients);
+                        }
+                        break;
+                    case "publish":
+                        foreach ($this->authenticatedClients as $client) {
+                            $client->send($msg);
+                        }
+                        break;
                 }
 
             } else {
