@@ -19,6 +19,12 @@ class JWTApi
 {
 
     /**
+     * @param bool $ignoreHost
+     */
+    public function __construct(
+        private bool $ignoreHost = false) {}
+
+    /**
      * Generates and returns a signed JWT token
      *
      * @param  string $username username of the user generating this JWT
@@ -73,7 +79,7 @@ class JWTApi
  * Verifies JWT token
  *
  * @param  ApiResponse $response JWT token to verify
- * @return bool API response
+ * @return bool        API response
  */
 
     function validateToken(ApiResponse $response): bool
@@ -83,8 +89,10 @@ class JWTApi
 
         if (!$jwt instanceof ApiResponse) {
 
-            if ($jwt->iss != $_SERVER['HTTP_HOST']) {
-                $response->setError(Error::BadDomain);
+            if (!$this->ignoreHost) {
+                if ($jwt->iss != $_SERVER['HTTP_HOST']) {
+                    $response->setError(Error::BadDomain);
+                }
             }
 
             if ($jwt->iat > time()) {

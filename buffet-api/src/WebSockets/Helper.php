@@ -39,7 +39,7 @@ class Helper
     public static function isAdmin(string $token): bool
     {
         $response = new ApiResponse(["token" => $token]);
-        $jwtApi = new JWTApi;
+        $jwtApi = new JWTApi(ignoreHost: true);
 
         $response->requireRequestType(false);
         $jwtApi->validateToken($response);
