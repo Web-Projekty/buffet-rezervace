@@ -17,12 +17,12 @@ class HttpClient
 
     /**
      * @param string        $url
-     * @param array<string> $data
+     * @param string $data
      */
-    public static function post(string $url, array $data): string
+    public static function post(string $url, string $data): string
     {
         $client = new Client();
-        $reponse = $client->post($url, $data);
+        $reponse = $client->post($url, ['body' => $data]);
         return $reponse->getBody()->getContents();
     }
 }
