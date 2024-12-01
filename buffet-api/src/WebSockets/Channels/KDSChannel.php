@@ -42,28 +42,31 @@ class KDSChannel implements MessageInterface
 
             $decoded = json_decode($msg);
 
-            if (isset($decoded->requestType)) {
-                switch ($decoded->requestType) {
-                    case "subscribe":
-                        $token = $decoded->token;
+            $requestType = $decoded->requestType ?? "";
 
-                        if (Helper::isAdmin($token)) {
-                            Helper::attachClient($conn, $this->authenticatedClients);
-                        }
-                        break;
-                    case "publish":
-                        foreach ($this->authenticatedClients as $client) {
-                            $client->send($msg);
-                        }
-                        break;
-                }
+            switch ($requestType) {
+                case "subscribe":
+                    $token = $decoded->token ?? "";
 
-            } else {
-                $api = new BuffetApi();
+                    echo $conn->httpRequest->getUri()->getHost() . "\n";
+                    
+                    if (Helper::isAdmin($token)) {
+                        Helper::attachClient($conn, $this->authenticatedClients);
+                    } else {
+                        $conn->send(Helper::getErrorResponse(Error::Unauthorized));
+                    }
+                    break;
+                case "publish":
+                    foreach ($this->authenticatedClients as $client) {
+                        $client->send($msg);
+                    }
+                    break;
+                default:
+                    $api = new BuffetApi();
 
-                $response = $api->handleApiCall($msg);
+                    $response = $api->handleApiCall($msg);
 
-                $conn->send((string) $response);
+                    $conn->send((string) $response);
             }
 
         } else {
