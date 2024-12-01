@@ -48,8 +48,6 @@ class KDSChannel implements MessageInterface
                 case "subscribe":
                     $token = $decoded->token ?? "";
 
-                    echo $conn->httpRequest->getUri()->getHost() . "\n";
-                    
                     if (Helper::isAdmin($token)) {
                         Helper::attachClient($conn, $this->authenticatedClients);
                     } else {
