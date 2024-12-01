@@ -181,9 +181,10 @@ class ApiResponse
     /**
      * @param bool $status
      */
-    public function setStatus(bool $status): void
+    public function setStatus(bool $status): ApiResponse
     {
         $this->status = $status ? Status::Success : Status::Failed;
+        return $this;
     }
 
     /**
