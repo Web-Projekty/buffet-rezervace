@@ -2,10 +2,8 @@
 
 declare (strict_types = 1);
 
-namespace Buffet\WebSockets;
+namespace Buffet\Utils;
 
-use Buffet\Api\JWTApi;
-use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\Types\Success;
@@ -38,17 +36,21 @@ class Helper
      */
     public static function isAdmin(string $token): bool
     {
-        $response = new ApiResponse(["token" => $token]);
+        /*$response = new ApiResponse(["token" => $token]);
         $jwtApi = new JWTApi(ignoreHost: true);
 
         $response->requireRequestType(false);
         $jwtApi->validateToken($response);
         if ($response->hasFailed()) {
-            return false;
+        return false;
         }
         $uid = $jwtApi->decodeToken($response)->sub ?? 0;
 
-        return UserModel::isAdmin($uid);
+        return UserModel::isAdmin($uid);*/
+
+        echo $response = HttpClient::post('http://localhost/api', ["body" => json_encode(['requestType' => 'isAdmin', 'token' => $token])]);
+
+        return json_decode($response)->payload->isAdmin ?? false;
     }
 
     /**

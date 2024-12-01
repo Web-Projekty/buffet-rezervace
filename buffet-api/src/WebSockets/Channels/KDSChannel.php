@@ -7,7 +7,7 @@ namespace Buffet\WebSockets\Channels;
 use Buffet\Api\BuffetApi;
 use Buffet\Types\Error;
 use Buffet\Types\Success;
-use Buffet\WebSockets\Helper;
+use Buffet\Utils\Helper;
 use Buffet\WebSockets\Interfaces\MessageInterface;
 use Buffet\WebSockets\Interfaces\StaticConnectionInterface;
 use SplObjectStorage;
@@ -50,6 +50,7 @@ class KDSChannel implements MessageInterface
 
                     if (Helper::isAdmin($token)) {
                         Helper::attachClient($conn, $this->authenticatedClients);
+                        $conn->send(Helper::getSuccessResponse(Success::Subscribed));
                     } else {
                         $conn->send(Helper::getErrorResponse(Error::Unauthorized));
                     }

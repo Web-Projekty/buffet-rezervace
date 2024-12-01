@@ -20,6 +20,7 @@ enum Success: string {
 
     ############################ Channels ############################
     case ChannelConnected = 'Channel connected successfully';
+    case Subscribed = 'Subscribed successfully';
     
     /**
      * @return string
