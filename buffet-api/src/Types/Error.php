@@ -39,6 +39,9 @@ enum Error: string {
     case CorruptedOrNull = "Token's data have been corrupted or are null";
     case UnexpectedValue = "Token value is unexpected";
 
+    // Admin status
+    case Unauthorized = "User does not have appropriate permissions";
+
     ############################ Database ############################
     case QueryFailed = 'Query from database has failed';
 
