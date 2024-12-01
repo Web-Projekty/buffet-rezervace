@@ -1,14 +1,14 @@
 import { Order } from "../../types";
 import Button from "../Button";
 import { ChevronLeft } from "lucide-react";
-import useOrderColor from "../../hooks/useOrder";
+import useOrder from "../../hooks/useOrder";
 
 type KdsDeliveryOrderProps = {
   order: Order;
 };
 
 const KdsDeliveryOrder = ({ order }: KdsDeliveryOrderProps) => {
-  const { isOpen, toggleOpen, color } = useOrderColor(order);
+  const { isOpen, toggleOpen, color } = useOrder(order);
 
   const items = JSON.parse(order.items);
 
