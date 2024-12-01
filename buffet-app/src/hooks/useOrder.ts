@@ -12,8 +12,8 @@ type UseOrderReturn = {
 
 const useOrder = (order: Order): UseOrderReturn => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [color, setColor] = useState<string>("bg-white");
-  const [status, setStatus] = useState<OrderStatus>("pending");
+  const [color, setColor] = useState<string>(getColorByStatus(order.status));
+  const [status, setStatus] = useState<OrderStatus>(order.status);
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
@@ -25,7 +25,7 @@ const useOrder = (order: Order): UseOrderReturn => {
 
   useEffect(() => {
     setColor(getColorByStatus(status));
-  }, [order]);
+  }, [status]);
 
   return { isOpen, toggleOpen, color, status, handleStatus };
 };
