@@ -1,25 +1,29 @@
 <?php
-namespace Buffet\WebSockets;
 
+declare (strict_types = 1);
+
+namespace Buffet\WebSockets\Interfaces;
+
+use GuzzleHttp\Psr7\Request;
 use Ratchet\ConnectionInterface;
 
 class StaticConnectionInterface
 {
     /**
-     * @var mixed
+     * @var int
      */
     public $resourceId;
     /**
-     * @var mixed
+     * @var string
      */
     public $remoteAddress;
     /**
-     * @var mixed
+     * @var bool
      */
     public $httpHeadersReceived;
 
     /**
-     * @var mixed
+     * @var Request
      */
     public $httpRequest;
     /**

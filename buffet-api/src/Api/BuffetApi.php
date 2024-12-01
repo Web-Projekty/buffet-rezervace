@@ -12,6 +12,7 @@ use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\Types\Success;
+use Buffet\Utils\WebsocketClient;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
@@ -52,12 +53,17 @@ class BuffetApi
      *
      * Calls specified requestType methods
      *
+     * @param  string      $request
      * @return ApiResponse API response
      */
 
-    function handleApiCall(): ApiResponse
+    function handleApiCall(string $request = null): ApiResponse
     {
-        $request = $this->getPostJson();
+        if (!$request) {
+            $request = $this->getPostJson();
+        } else {
+            $request = json_decode($request, true);
+        }
 
         /**
          * @var ApiResponse
@@ -92,6 +98,9 @@ class BuffetApi
 
             case "getOrders":
                 return $this->handleGetOrders($response);
+
+            case "makeOrderEvent":
+                return $this->handleMakeOrderEvent($response);
 
             case null:
             default:
@@ -268,6 +277,16 @@ class BuffetApi
 
         $response->setStatus(true);
         return $response;
+    }
+
+    /**
+     * @param ApiResponse $reponse
+     * @return ApiResponse
+     */
+    function handleMakeOrderEvent(ApiResponse $reponse): ApiResponse
+    {
+        WebsocketClient::send("kds", json_encode(["requestType" => "publish"]));
+        return $reponse->setStatus(true);
     }
 
 /**
