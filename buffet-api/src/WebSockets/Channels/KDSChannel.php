@@ -47,6 +47,11 @@ class KDSChannel implements MessageInterface
 
             switch ($requestType) {
                 case "subscribe":
+                    if (Helper::isClientInStorage($conn, $this->authenticatedClients)) {
+                        $conn->send(Helper::getErrorResponse(Error::AlreadySubscribed));
+                        break;
+                    }
+
                     $token = $decoded->token ?? "";
 
                     if (Helper::isAdmin($token)) {

@@ -47,6 +47,7 @@ enum Error: string {
 
     ############################ Ws Channels ############################
     case NonexistentChannel = 'Channel doesn\'t exist';
+    case AlreadySubscribed = 'User is already subscribed to this channel';
     /**
      * @return string
      */
