@@ -130,6 +130,33 @@ const router = createBrowserRouter([
         </RequireAuth>
       </ErrorBoundary>
     ),
+    children: [
+      {
+        path: "souhrn",
+        element: (
+          <ErrorBoundary>
+            <Kds />
+          </ErrorBoundary>
+        ),
+      },
+      {
+        path: "objednavky",
+        index: true,
+        element: (
+          <ErrorBoundary>
+            <Kds />
+          </ErrorBoundary>
+        ),
+      },
+      {
+        path: "uprava-menu",
+        element: (
+          <ErrorBoundary>
+            <Kds />
+          </ErrorBoundary>
+        ),
+      },
+    ],
   },
 ]);
 
