@@ -89,7 +89,7 @@ class JWTApi
 
         if (!$jwt instanceof ApiResponse) {
 
-            if (!$this->ignoreHost) {
+            if (!$this->ignoreHost && $_SERVER['HTTP_HOST'] != 'localhost') {
                 if ($jwt->iss != $_SERVER['HTTP_HOST']) {
                     $response->setError(Error::BadDomain);
                 }
