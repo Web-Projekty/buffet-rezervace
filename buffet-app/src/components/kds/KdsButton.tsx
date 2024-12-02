@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ButtonProps } from "../Button";
 
 type KdsLinkTo = {
-  linkTo: "souhrn" | "objednávky" | "uprava-menu";
+  linkTo: "souhrn" | "objednavky" | "uprava-menu";
 };
 
 type KdsButtonProps = ButtonProps & { linkTo: KdsLinkTo["linkTo"] };
