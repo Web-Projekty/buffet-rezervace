@@ -25,7 +25,7 @@ export type UserData = {
   class: string;
 };
 
-const useLogin = (loginData: LoginData): UseLoginReturn => {
+export const useLogin = (loginData: LoginData): UseLoginReturn => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const signIn = useSignIn<UserData>();
@@ -78,5 +78,3 @@ const useLogin = (loginData: LoginData): UseLoginReturn => {
     login,
   };
 };
-
-export default useLogin;

@@ -9,7 +9,7 @@ type UseFetchReturn<T> = {
   itemsCount: number;
 };
 
-const useFetch = <T>(
+export const useFetch = <T>(
   url: string,
   requestData: Record<string, unknown>,
   initialValue?: T,
@@ -46,5 +46,3 @@ const useFetch = <T>(
 
   return { isLoading, error, setError, data, itemsCount };
 };
-
-export default useFetch;

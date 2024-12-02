@@ -2,15 +2,7 @@ import { useEffect, useState } from "react";
 import { Order, OrderStatus } from "../types";
 import { getColorByStatus } from "../utils";
 
-type UseOrderReturn = {
-  isOpen: boolean;
-  toggleOpen: () => void;
-  color: string;
-  status: OrderStatus;
-  handleStatus: (status: OrderStatus) => void;
-};
-
-const useOrder = (order: Order): UseOrderReturn => {
+export const useOrder = (order: Order) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [color, setColor] = useState<string>(getColorByStatus(order.status));
   const [status, setStatus] = useState<OrderStatus>(order.status);
@@ -29,5 +21,3 @@ const useOrder = (order: Order): UseOrderReturn => {
 
   return { isOpen, toggleOpen, color, status, handleStatus };
 };
-
-export default useOrder;
