@@ -1,13 +1,13 @@
 import { Order } from "../../types";
 import Button from "../Button";
-import useOrderColor from "../../hooks/useOrder";
+import { useOrder } from "../../hooks/useOrder";
 
 type KdsOrderProps = {
   order: Order;
 };
 
 const KdsOrder = ({ order }: KdsOrderProps) => {
-  const { color } = useOrderColor(order);
+  const { color } = useOrder(order);
 
   return (
     <div className="flex h-auto w-full flex-col bg-white sm:w-[15rem] md:w-[302px]">

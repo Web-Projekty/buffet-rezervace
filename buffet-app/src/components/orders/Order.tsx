@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Order as OrderType } from "../../types";
 import { scaleUpAnimation } from "../../animations";
 import { ChevronLeft } from "lucide-react";
-import useOrder from "../../hooks/useOrder";
+import { useOrder } from "../../hooks/useOrder";
 import { statusToText } from "../../utils";
 
 type OrderProps = {

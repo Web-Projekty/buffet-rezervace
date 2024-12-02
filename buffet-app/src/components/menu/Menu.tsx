@@ -4,7 +4,7 @@ import { MenuItem as MenuItemType } from "../../types";
 import Loading from "../Loading";
 import { itemsPerPage } from "../../constants";
 import ErrorComponent from "../error/ErrorComponent";
-import useBackendPaging from "../../hooks/useBackendPaging";
+import { useBackendPaging } from "../../hooks/useBackendPaging";
 
 const Menu = () => {
   const {

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { RequestData } from "../types";
-import useFetch from "./useFetch";
+import { useFetch } from "./useFetch";
 import { FETCH_URL } from "../constants";
 
 type BackendPagingReturn<T> = {
@@ -15,7 +15,7 @@ type BackendPagingReturn<T> = {
   handlePage: (page: number) => void;
 };
 
-const useBackendPaging = <T>(
+export const useBackendPaging = <T>(
   requestData: RequestData["requestType"],
   itemsPerPage: number,
   paramsName: string = "page",
@@ -57,5 +57,3 @@ const useBackendPaging = <T>(
     handlePage,
   };
 };
-
-export default useBackendPaging;

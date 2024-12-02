@@ -3,17 +3,15 @@ import { usePaging } from "../../hooks/usePaging";
 import { Order as OrderType } from "../../types";
 import PagingButtons from "../PagingButtons";
 import { AnimatePresence } from "framer-motion";
-import { ordersPerPage } from "../../constants";
-import useFetch from "../../hooks/useFetch";
+import { FETCH_URL, ordersPerPage } from "../../constants";
+import { useFetch } from "../../hooks/useFetch";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Loading from "../Loading";
 
 const UserOrderHistory = () => {
-  // /* Test pro získání tokenu */
   const token = useAuthHeader()?.split(" ")[1];
-
   const { data, isLoading, error } = useFetch<OrderType[]>(
-    "https://wlczak.vlastas.cc/backend/api",
+    FETCH_URL,
     { requestType: "getOrders", token: token },
     [],
     [token],

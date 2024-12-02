@@ -1,12 +1,11 @@
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import useFetch from "../../hooks/useFetch";
-import { Order } from "../../types";
+import { useFetch } from "../../hooks/useFetch";
 import KdsDeliveryOrder from "./KdsDeliveryOrder";
 import KdsOrder from "./KdsOrder";
-
-import { usePaging } from "../../hooks/usePaging";
+import { Order } from "../../types";
 import Loading from "../Loading";
 import KdsStatusBar from "./KdsStatusBar";
+import { usePaging } from "../../hooks/usePaging";
 import { FETCH_URL } from "../../constants";
 
 const KdsOrders = () => {
@@ -49,7 +48,7 @@ const KdsOrders = () => {
             )}
           </div>
           <div className="flex flex-col gap-2">
-            {pickedUpOrders && !(pickedUpOrders.length < 1)
+            {pickedUpOrders && pickedUpOrders.length > 0
               ? pickedUpOrders.map((order, index) => (
                   <KdsDeliveryOrder key={index} order={order} />
                 ))

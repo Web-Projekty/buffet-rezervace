@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import useFetch from "../../hooks/useFetch";
+import { useFetch } from "../../hooks/useFetch";
 import { useEffect } from "react";
 import Loading from "../Loading";
 import { Order } from "../../types";
