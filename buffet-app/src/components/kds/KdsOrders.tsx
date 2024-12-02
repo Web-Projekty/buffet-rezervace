@@ -7,11 +7,12 @@ import KdsOrder from "./KdsOrder";
 import { usePaging } from "../../hooks/usePaging";
 import Loading from "../Loading";
 import KdsStatusBar from "./KdsStatusBar";
+import { FETCH_URL } from "../../constants";
 
 const KdsOrders = () => {
   const token = useAuthHeader()?.split(" ")[1];
   const { data, error, isLoading } = useFetch<Order[]>(
-    "https://wlczak.vlastas.cc/backend/api",
+    FETCH_URL,
     { requestType: "getOrders", token: token },
     [],
     [token],

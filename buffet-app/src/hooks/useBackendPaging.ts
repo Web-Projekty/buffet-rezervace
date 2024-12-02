@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { RequestData } from "../types";
 import useFetch from "./useFetch";
+import { FETCH_URL } from "../constants";
 
 type BackendPagingReturn<T> = {
   isLoading: boolean;
@@ -24,7 +25,7 @@ const useBackendPaging = <T>(
   const currentPage: number = parseInt(searchParams.get(paramsName) || "1", 10);
 
   const { data, error, isLoading, itemsCount } = useFetch<T[]>(
-    "https://wlczak.vlastas.cc/backend/api",
+    FETCH_URL,
     { requestType: requestData, page: currentPage, itemsCount: itemsPerPage },
     [],
     [currentPage],
