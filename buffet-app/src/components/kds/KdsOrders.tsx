@@ -21,6 +21,7 @@ const KdsOrders = () => {
     data?.filter((order) => order.status !== "pickedup"),
     8,
   );
+
   const { dataList: pickedUpOrders } = usePaging<Order>(
     data?.filter((order) => order.status === "pickedup"),
     5,
