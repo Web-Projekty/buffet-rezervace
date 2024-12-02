@@ -1,3 +1,5 @@
+import { LucideIcon } from "lucide-react";
+
 export type User = {
   id: number;
   username: string;
@@ -33,6 +35,7 @@ export type Allergen = {
   name: string;
   description: string;
   image?: string;
+  icon?: LucideIcon;
 };
 
 export type RequestData = {
