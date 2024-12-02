@@ -9,13 +9,11 @@ type AlergenProps = {
 
 const Allergen = ({ allergen }: AlergenProps) => {
   const Icon = ({ size }: { size: number }) =>
-    allergen.icon ? (
-      <div>{React.createElement(allergen.icon, { size })}</div>
-    ) : null;
+    allergen.icon ? React.createElement(allergen.icon, { size }) : null;
   return (
     <motion.li
       {...scaleUpAnimation(0.5)}
-      className="flex w-[22rem] items-center gap-2 rounded-lg bg-slate-900 px-3 py-6"
+      className="flex w-[18rem] items-center gap-2 rounded-lg bg-slate-900 px-3 py-6"
     >
       {/*<img
         src={
@@ -24,7 +22,7 @@ const Allergen = ({ allergen }: AlergenProps) => {
         alt={allergen.name + "'s image"}
         className="w-[8rem] rounded-lg object-cover"
       />*/}
-      <Icon size={50} />
+      <Icon size={70} />
       <span className="rounded-full bg-slate-800 px-4 py-2 text-xl">
         {allergen.id}
       </span>
