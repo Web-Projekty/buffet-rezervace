@@ -8,7 +8,7 @@ use Buffet\Utils\EnvSetup;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../../../vendor/autoload.php';
 
 class EnvSetupTest extends TestCase
 {
