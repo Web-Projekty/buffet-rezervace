@@ -2,7 +2,7 @@ import PagingButtons from "../PagingButtons";
 import MenuItem from "./MenuItem";
 import { MenuItem as MenuItemType } from "../../types";
 import Loading from "../Loading";
-import { itemsPerPage } from "../../constants";
+import { ITEMS_PER_PAGE } from "../../constants";
 import ErrorComponent from "../error/ErrorComponent";
 import { useBackendPaging } from "../../hooks/useBackendPaging";
 
@@ -15,7 +15,7 @@ const Menu = () => {
     arrayOfPages,
     totalPagesCount,
     handlePage,
-  } = useBackendPaging<MenuItemType>("getMenu", itemsPerPage);
+  } = useBackendPaging<MenuItemType>("getMenu", ITEMS_PER_PAGE);
 
   if (isLoading) {
     return <Loading size={30} />;

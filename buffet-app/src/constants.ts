@@ -1,13 +1,13 @@
-export const maxItems: number = 5;
+export const MAX_ITEMS: number = 5;
 
-export const maxItemsInCart: number = 10;
+export const MAX_ITEMS_CART: number = 10;
 
-export const itemsPerPage: number = 8;
+export const ITEMS_PER_PAGE: number = 8;
 
-export const adminOrdersPerPage: number = 10;
+export const ADMIN_ORDERS_PER_PAGE: number = 10;
 
-export const ordersPerPage: number = 5;
+export const ORDERS_PER_PAGE: number = 5;
 
-export const cartLocalStorageKey: string = "cartItems";
+export const CART_LOCAL_STORAGE_KEY: string = "cartItems";
 
 export const FETCH_URL: string = "https://wlczak.vlastas.cc/backend/api";

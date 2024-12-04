@@ -3,7 +3,7 @@ import { usePaging } from "../../hooks/usePaging";
 import { Order as OrderType } from "../../types";
 import PagingButtons from "../PagingButtons";
 import { AnimatePresence } from "framer-motion";
-import { FETCH_URL, ordersPerPage } from "../../constants";
+import { FETCH_URL, ORDERS_PER_PAGE } from "../../constants";
 import { useFetch } from "../../hooks/useFetch";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Loading from "../Loading";
@@ -18,7 +18,7 @@ const UserOrderHistory = () => {
   );
 
   const { currentPage, totalPagesCount, dataList, arrayOfPages, handlePage } =
-    usePaging<OrderType>(data, ordersPerPage, "orderPage");
+    usePaging<OrderType>(data, ORDERS_PER_PAGE, "orderPage");
 
   if (isLoading) {
     return <Loading size={30} />;

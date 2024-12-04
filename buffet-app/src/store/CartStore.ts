@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { MenuItem } from "../types";
-import { cartLocalStorageKey, maxItems, maxItemsInCart } from "../constants";
+import {
+  CART_LOCAL_STORAGE_KEY,
+  MAX_ITEMS,
+  MAX_ITEMS_CART,
+} from "../constants";
 import { getItem, removeItem, setItem } from "../components/utils/localStorage";
 
 type CartItem = MenuItem & { quantity: number };
@@ -22,7 +26,7 @@ type CartItems = {
 };
 
 const loadCartItems = (): CartItem[] => {
-  const cartItems = getItem(cartLocalStorageKey);
+  const cartItems = getItem(CART_LOCAL_STORAGE_KEY);
   return cartItems ? (cartItems as CartItem[]) : [];
 };
 
@@ -56,7 +60,7 @@ const useCart = create<CartItems>((set, get) => ({
       }));
     }
 
-    setItem(cartLocalStorageKey, get().cartItems);
+    setItem(CART_LOCAL_STORAGE_KEY, get().cartItems);
   },
   removeFromCart: (id: number) => {
     const isAlreadyInCart = get().isItemInCart(id);
@@ -78,11 +82,11 @@ const useCart = create<CartItems>((set, get) => ({
         ),
       }));
     }
-    setItem(cartLocalStorageKey, get().cartItems);
+    setItem(CART_LOCAL_STORAGE_KEY, get().cartItems);
   },
   clearCart: () => {
     set({ cartItems: [] });
-    removeItem(cartLocalStorageKey);
+    removeItem(CART_LOCAL_STORAGE_KEY);
   },
   getCartTotal: () =>
     get().cartItems.reduce(
@@ -91,7 +95,7 @@ const useCart = create<CartItems>((set, get) => ({
     ),
   getCartQuantity: () =>
     get().cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0),
-  isCartFull: () => get().getCartQuantity() >= maxItemsInCart,
+  isCartFull: () => get().getCartQuantity() >= MAX_ITEMS_CART,
   isCartEmpty: () => get().cartItems.length === 0,
   isItemInCart: (id: number) =>
     get().cartItems.some((cartItem) => cartItem.id === id),
@@ -99,7 +103,7 @@ const useCart = create<CartItems>((set, get) => ({
     const cartItem = get().cartItems.find((cartItem) => cartItem.id === id);
     return cartItem?.quantity || 0;
   },
-  isItemMaxQuantity: (id: number) => get().getItemQuantity(id) >= maxItems,
+  isItemMaxQuantity: (id: number) => get().getItemQuantity(id) >= MAX_ITEMS,
   isOpen: false,
   handleOpenCart: () => set((state) => ({ isOpen: !state.isOpen })),
 }));
