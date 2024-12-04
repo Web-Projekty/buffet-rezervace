@@ -39,7 +39,7 @@ const Header = () => {
       <img
         src={SchoolLogo}
         alt="School Logo"
-        className={`absolute right-1/2 z-50 translate-x-1/2`}
+        className={`absolute right-1/2 translate-x-1/2`}
       />
 
       <Navbar />
