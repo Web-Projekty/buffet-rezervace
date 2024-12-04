@@ -3,7 +3,8 @@ import { Order as OrderType } from "../../types";
 import { scaleUpAnimation } from "../../animations";
 import { ChevronLeft } from "lucide-react";
 import { useOrder } from "../../hooks/useOrder";
-import { statusToText } from "../../utils";
+import OrderPrice from "./OrderPrice";
+import OrderItems from "./OrderItems";
 
 type OrderProps = {
   order: OrderType;
@@ -56,7 +57,8 @@ const AnimationWrapper = ({ children, keyValue }: AnimationWrapperProps) => {
 };
 
 const Order = ({ order, isAdmin }: OrderProps) => {
-  const { color, isOpen, toggleOpen, status, handleStatus } = useOrder(order);
+  const { color, isOpen, toggleOpen, status, statusText, handleStatus } =
+    useOrder(order);
 
   const handleOpen = () => {
     toggleOpen();
@@ -107,34 +109,12 @@ const Order = ({ order, isAdmin }: OrderProps) => {
         transition={{ duration: 0.3 }}
         className="flex flex-col gap-3 overflow-hidden"
       >
-        <div className="flex flex-col">
-          {/*order.items.map((item) => (
-            <li
-              key={item.id}
-              className="flex w-[240px] flex-row items-center justify-center gap-2"
-            >
-              <h3>{item.name}</h3>
-              <div className="mt-3 flex-1 border-b-2 border-dotted border-white"></div>
-              <p>{formatCurrency(item.price)}</p>
-            </li>
-          ))*/}
-        </div>
+        <OrderItems items={order.items} />
 
         <hr />
 
         <div className="flex flex-col justify-between md:flex-row">
-          <div className="flex w-[240px] flex-row items-center justify-center gap-2 font-bold">
-            <span>Celkem</span>
-            <div className="mt-3 flex-1 border-b-2 border-dotted border-white"></div>
-            <p>
-              {/*formatCurrency(
-                order.items.reduce(
-                  (acc: number, item: MenuItem) => acc + item.price,
-                  0,
-                ),
-              )*/}
-            </p>
-          </div>
+          <OrderPrice items={order.items} />
           <div className="flex flex-col items-center gap-2 md:flex-row">
             <AnimatePresence>
               {status === "pending" && isAdmin && (
@@ -151,7 +131,7 @@ const Order = ({ order, isAdmin }: OrderProps) => {
             <AnimatePresence>
               <AnimationWrapper keyValue="status-button">
                 <div className="flex flex-row items-center gap-2">
-                  <span>{statusToText(status)}</span>
+                  <span>{statusText}</span>
                 </div>
               </AnimationWrapper>
             </AnimatePresence>
