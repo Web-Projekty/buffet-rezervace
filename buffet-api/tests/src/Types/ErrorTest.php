@@ -24,11 +24,29 @@ class ErrorTest extends TestCase
     #[TestDox('All Error cases have values')]
     public function testErrorHasValue(): void
     {
-
         foreach ($this->errorList as $error) {
             $this->assertIsString($error->value);
             $this->assertNotNull($error->value);
             $this->assertNotNull($error);
         }
     }
+
+    #[TestDox("TestGetValueMethod")]
+    public function testGetValue(): void
+    {
+        foreach ($this->errorList as $error) {
+            $this->assertIsString($error->getValue());
+            $this->assertNotNull($error->getValue());
+            $this->assertSame($error->value, $error->getValue());
+        }
+    }
+
+    // add isProd implementation
+    /*  #[TestDox("TestIsProdValue")]
+public function testIsProd(): void
+{
+foreach ($this->errorList as $error) {
+
+}
+}*/
 }
