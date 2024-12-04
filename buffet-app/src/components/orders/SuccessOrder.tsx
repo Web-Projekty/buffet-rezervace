@@ -3,11 +3,12 @@ import { useFetch } from "../../hooks/useFetch";
 import { useEffect } from "react";
 import Loading from "../Loading";
 import { Order } from "../../types";
+import { FETCH_URL } from "../../constants";
 
 const SuccessOrder = () => {
   const navigate = useNavigate();
 
-  const { data, error, isLoading } = useFetch<Order>("/api/orders", {
+  const { data, error, isLoading } = useFetch<Order>(FETCH_URL, {
     requestType: "success-order",
   });
 
