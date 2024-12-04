@@ -1,4 +1,4 @@
-import { formatCurrency } from "../../utils";
+import { formatCurrency } from "../utils/utils";
 
 type MenuItemTextProps = {
   name: string;
@@ -16,7 +16,7 @@ const MenuItemText = ({ name, price, description }: MenuItemTextProps) => {
         </span>
       </div>
       <hr />
-      <p className="text-descriptionColor rounded-lg px-2">{description}</p>
+      <p className="rounded-lg px-2 text-descriptionColor">{description}</p>
     </div>
   );
 };

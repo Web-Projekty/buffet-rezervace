@@ -1,6 +1,6 @@
 import useCart from "../../store/CartStore";
 import { MenuItem } from "../../types";
-import { formatCurrency } from "../../utils";
+import { formatCurrency } from "../utils/utils";
 
 type CartItemProps = {
   item: MenuItem;
