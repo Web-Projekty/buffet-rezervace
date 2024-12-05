@@ -12,6 +12,21 @@ use PHPUnit\Framework\TestCase;
 
 class HelperTest extends TestCase
 {
+
+    /**
+     * @return array<array<Error>>
+     */
+    public static function errorResponseProvider(): array
+    {
+        return [
+            [Error::AlreadySubscribed],
+            [Error::BadDomain],
+            [Error::Corrupted],
+            [Error::CorruptedOrNull],
+            [Error::InvalidJson]
+        ];
+    }
+
     #[DataProvider("errorResponseProvider")]
     #[TestDox("Test getErrorResponse")]
     /**
@@ -26,11 +41,4 @@ class HelperTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    /**
-     * @return array<Error>
-     */
-    public function errorResponseProvider(): array
-    {
-        return [Error::AlreadySubscribed, Error::BadDomain, Error::Corrupted, Error::CorruptedOrNull, Error::InvalidJson];
-    }
 }
