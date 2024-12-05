@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-namespace Buffet\Tests;
+namespace Buffet\Tests\Database;
 
 use Buffet\Database\CredentialsManager;
 use Buffet\Types\ApiResponse;
@@ -10,7 +10,7 @@ use Buffet\Utils\EnvSetup;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../../../vendor/autoload.php';
 
 class CredentialsManagerTest extends TestCase
 {
