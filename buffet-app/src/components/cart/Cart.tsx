@@ -3,14 +3,24 @@ import useCart from "../../store/CartStore";
 import Button from "../Button";
 import CartItem from "./CartItem";
 import EmptyCart from "./EmptyCart";
+import { createOrder } from "../utils/api";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 const Cart = () => {
   const { cartItems, isCartEmpty } = useCart();
   const navigate = useNavigate();
+  const token = useAuthHeader()?.split(" ")[1];
 
-  const handleSubmitOrder = () => {
-    // TODO: process the order
-    navigate("/success-order?id=" + 5);
+  const handleSubmitOrder = async () => {
+    const createdOrder = await createOrder(token ? token : "");
+
+    console.log(createdOrder);
+
+    if (!createdOrder.error) {
+      navigate("/success-order?id=" + createdOrder.order.id);
+    } else {
+      navigate("/error-order");
+    }
   };
 
   const handleBack = () => {
