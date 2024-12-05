@@ -1,4 +1,4 @@
-import { OrderStatus } from "./types";
+import { OrderStatus } from "../../types";
 
 export const formatCurrency = (number: number): string => {
   return new Intl.NumberFormat("cs-CZ", {
