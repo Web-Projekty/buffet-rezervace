@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-namespace Buffet\Tests;
+namespace Buffet\Tests\Types;
 
 use Buffet\Types\Success;
 use PHPUnit\Framework\Attributes\TestDox;

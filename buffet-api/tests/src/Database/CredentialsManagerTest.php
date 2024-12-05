@@ -2,7 +2,7 @@
 
 declare (strict_types = 1);
 
-namespace Buffet\Tests;
+namespace Buffet\Tests\Database;
 
 use Buffet\Database\CredentialsManager;
 use Buffet\Types\ApiResponse;
