@@ -5,58 +5,31 @@ import { ChevronLeft } from "lucide-react";
 import { useOrder } from "../../hooks/useOrder";
 import OrderPrice from "./OrderPrice";
 import OrderItems from "./OrderItems";
+import Button from "../Button";
 
 type OrderProps = {
   order: OrderType;
-  isAdmin?: boolean;
-};
-
-type CancelButtonProps = {
-  handleCancel: () => void;
-};
-
-type PickupButtonProps = {
-  handlePickup: () => void;
 };
 
 type AnimationWrapperProps = {
   children: React.ReactNode;
   keyValue: string;
+  className?: string;
 };
 
-const CancelButton = ({ handleCancel }: CancelButtonProps) => {
+const AnimationWrapper = ({
+  children,
+  keyValue,
+  className,
+}: AnimationWrapperProps) => {
   return (
-    <motion.button
-      {...scaleUpAnimation()}
-      className="rounded-md border bg-red-500 p-2 text-white hover:bg-red-700"
-      onClick={handleCancel}
-    >
-      Zrušit
-    </motion.button>
-  );
-};
-
-const PickupButton = ({ handlePickup }: PickupButtonProps) => {
-  return (
-    <motion.button
-      {...scaleUpAnimation()}
-      className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
-      onClick={handlePickup}
-    >
-      Vyzvednuto
-    </motion.button>
-  );
-};
-
-const AnimationWrapper = ({ children, keyValue }: AnimationWrapperProps) => {
-  return (
-    <motion.div key={keyValue} {...scaleUpAnimation()}>
+    <motion.div key={keyValue} className={className} {...scaleUpAnimation()}>
       {children}
     </motion.div>
   );
 };
 
-const Order = ({ order, isAdmin }: OrderProps) => {
+const Order = ({ order }: OrderProps) => {
   const { color, isOpen, toggleOpen, status, statusText, handleStatus } =
     useOrder(order);
 
@@ -66,10 +39,6 @@ const Order = ({ order, isAdmin }: OrderProps) => {
 
   const handleCancel = () => {
     handleStatus("notpickedup");
-  };
-
-  const handlePickup = () => {
-    handleStatus("pickedup");
   };
 
   return (
@@ -85,10 +54,7 @@ const Order = ({ order, isAdmin }: OrderProps) => {
         ></div>
         <div className="flex flex-row items-center gap-2 text-xl">
           <h2 className="font-bold">#{order.id}</h2>
-          {/*<p>{formatUnixDate(order.date)}</p>*/}
-          {isAdmin && order.userId && (
-            <p className="text-base">{order.userId}</p>
-          )}
+          {/* <p>{formatUnixDate(order.date)}</p> */}
         </div>
         <div className="flex flex-row items-center">
           <ChevronLeft
@@ -116,23 +82,18 @@ const Order = ({ order, isAdmin }: OrderProps) => {
         <div className="flex flex-col justify-between md:flex-row">
           <OrderPrice items={order.items} />
           <div className="flex flex-col items-center gap-2 md:flex-row">
-            <AnimatePresence>
-              {status === "pending" && isAdmin && (
-                <PickupButton handlePickup={handlePickup} />
-              )}
-              {status === "pending" && (
-                <CancelButton
-                  key={"cancel-button"}
-                  handleCancel={handleCancel}
-                />
-              )}
-            </AnimatePresence>
+            {status === "pending" && (
+              <Button key="cancel-button" onClick={handleCancel}>
+                Zrušit
+              </Button>
+            )}
 
             <AnimatePresence>
-              <AnimationWrapper keyValue="status-button">
-                <div className="flex flex-row items-center gap-2">
-                  <span>{statusText}</span>
-                </div>
+              <AnimationWrapper
+                keyValue="status-button"
+                className="flex flex-row items-center gap-2"
+              >
+                <span>{statusText}</span>
               </AnimationWrapper>
             </AnimatePresence>
           </div>
