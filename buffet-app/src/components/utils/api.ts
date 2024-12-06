@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Order } from "../../types";
+import { Order, OrderStatus } from "../../types";
 import { FETCH_URL } from "../../constants";
 
 type CreateOrderReturn = {
@@ -25,15 +25,14 @@ export const createOrder = async (
   }
 };
 
-export const updateOrder = async (
-  token: string,
-  order: Order,
-): Promise<Order> => {
+export const updateOrder = async (requestData: {
+  token: string;
+  [key: string]: string | OrderStatus;
+}): Promise<Order> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "updateOrderEvent",
-      order: order,
-      token: token,
+      ...requestData,
     });
     return data.payload.data as Order;
   } catch {
