@@ -18,18 +18,25 @@ const KdsOrders = () => {
   );
 
   const { dataList: pendingOrders } = usePaging<Order>(
-    data?.filter((order) => order.status !== "pickedup"),
+    data?.filter((order) => order.status === "sent"),
     8,
   );
 
   const { dataList: pickedUpOrders } = usePaging<Order>(
-    data?.filter((order) => order.status === "pickedup"),
+    data?.filter((order) => order.status === "waiting"),
     5,
   );
 
   return (
     <div className="mx-auto flex w-[85.5%] flex-col justify-center">
-      <KdsStatusBar />
+      <KdsStatusBar
+        delayed={pendingOrders.length}
+        uptodate={2}
+        current={10}
+        waiting={
+          pickedUpOrders.filter((order) => order.status === "waiting").length
+        }
+      />
 
       {isLoading ? (
         <Loading size={30} />
