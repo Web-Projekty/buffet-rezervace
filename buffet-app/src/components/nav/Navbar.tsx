@@ -1,13 +1,11 @@
 import { NavLink } from "react-router-dom";
 import CartButton from "../cart/CartButton";
 import AccountButton from "../auth/AccountButton";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import SchoolLogo from "../../assets/images/logo-white_alfa.png";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
-import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-import { User } from "../../types";
 
 type NavLinks = {
   id: number;
@@ -86,7 +84,7 @@ const MobileNavbar = ({
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const isAdmin: boolean = (useAuthUser()! as User).isAdmin;
+  const isAuthenticated = useIsAuthenticated();
 
   const handleOpenMobileMenu = (): void => {
     setIsOpen(!isOpen);
@@ -96,7 +94,7 @@ const Navbar = () => {
     <nav className="relative">
       <div className="hidden flex-row md:flex">
         <ul className="relative flex w-auto flex-row items-center justify-between gap-5 text-xl text-black">
-          <Links isAuthenticated={isAdmin} />
+          <Links isAuthenticated={isAuthenticated} />
           <div className="flex flex-row gap-5">
             <CartButton />
             <AccountButton />
@@ -110,7 +108,7 @@ const Navbar = () => {
       <MobileNavbar
         isOpen={isOpen}
         handleOpenMobileMenu={handleOpenMobileMenu}
-        isAuthenticated={isAdmin}
+        isAuthenticated={isAuthenticated}
       />
     </nav>
   );
