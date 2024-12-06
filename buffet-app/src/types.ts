@@ -10,7 +10,13 @@ export type User = {
   orders: Order[];
 };
 
-export type OrderStatus = "pending" | "pickedup" | "notpickedup";
+export type OrderStatus =
+  | "sent"
+  | "waiting"
+  | "done"
+  | "storno"
+  | "cancelled"
+  | "preparing";
 
 export type Order = {
   id: number;
