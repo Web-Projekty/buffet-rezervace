@@ -18,6 +18,7 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
   const [statusText, setStatusText] = useState<string>(
     statusToText(order.status),
   );
+  const [delayed, setDelayed] = useState<boolean>(false);
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
@@ -27,10 +28,34 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
     setStatus(status);
   };
 
+  const handleDelayed = () => {
+    setDelayed(true);
+    setColor("bg-red-500");
+  };
+
   useEffect(() => {
     setColor(getColorByStatus(status));
     setStatusText(statusToText(status));
   }, [status]);
+
+  useEffect(() => {
+    if (status === "sent" && !delayed) {
+      const intervalId = setInterval(() => {
+        const currentTime = new Date().getTime();
+        const pickupTime = new Date(order.pickupDate).getTime();
+        console.log(currentTime, pickupTime);
+        if (
+          currentTime > pickupTime &&
+          status === "sent" &&
+          color !== "bg-red-500"
+        ) {
+          handleDelayed();
+        }
+      }, 1000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [order.pickupDate, status, delayed]);
 
   return { isOpen, toggleOpen, color, status, statusText, handleStatus };
 };
