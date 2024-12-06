@@ -27,17 +27,25 @@ export const matchValues = (text: string, text2: string): boolean => {
 };
 
 export const getColorByStatus = (status: OrderStatus): string => {
-  return status === "pickedup"
-    ? "bg-green-500"
-    : status === "notpickedup"
-      ? "bg-red-500"
-      : "bg-orange-400";
+  return status === "sent"
+    ? "bg-yellow-500"
+    : status === "waiting"
+      ? "bg-blue-500"
+      : status === "done"
+        ? "bg-green-500"
+        : status === "storno"
+          ? "bg-red-500"
+          : "bg-red-500";
 };
 
 export const statusToText = (status: OrderStatus): string => {
-  return status === "pickedup"
-    ? "Vyzvednuto"
-    : status === "notpickedup"
-      ? "Nevyzvednuto"
-      : "Probíhá";
+  return status === "sent"
+    ? "Čeká na zpracování"
+    : status === "waiting"
+      ? "Čeká na vyzvednutí"
+      : status === "done"
+        ? "Dokončeno"
+        : status === "storno"
+          ? "Zrušeno uživatelem"
+          : "Zrušeno provozovatelem";
 };
