@@ -38,7 +38,7 @@ const Order = ({ order }: OrderProps) => {
   };
 
   const handleCancel = () => {
-    handleStatus("notpickedup");
+    handleStatus("storno");
   };
 
   return (
@@ -82,7 +82,7 @@ const Order = ({ order }: OrderProps) => {
         <div className="flex flex-col justify-between md:flex-row">
           <OrderPrice items={order.items} />
           <div className="flex flex-col items-center gap-2 md:flex-row">
-            {status === "pending" && (
+            {status === "sent" && (
               <Button key="cancel-button" onClick={handleCancel}>
                 Zrušit
               </Button>
