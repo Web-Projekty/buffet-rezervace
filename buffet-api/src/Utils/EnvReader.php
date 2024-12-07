@@ -4,6 +4,8 @@ namespace Buffet\Utils;
 
 use Buffet\Types\Settings;
 
+require __DIR__ . '/../../vendor/autoload.php';
+
 class EnvReader
 {
 
@@ -15,6 +17,7 @@ class EnvReader
     public static function getEnvProperty(Settings $needle): string | null
     {
         if (!file_exists(self::$envPath)) {
+            echo "create";
             self::createEnv();
         }
         if (!$envContent = file_get_contents(self::$envPath)) {
@@ -45,10 +48,12 @@ class EnvReader
         foreach ($settings as $setting) {
             fwrite($env, $setting->value . "=" . "\n");
         }
-        
+
         fclose($env);
 
         chmod(self::$envPath, 0777);
 
     }
 }
+
+echo EnvReader::getEnvProperty(Settings::DecryptKey);
