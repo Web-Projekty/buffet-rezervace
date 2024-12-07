@@ -8,6 +8,8 @@ namespace Buffet\Database;
 
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\Types\Settings;
+use Buffet\Utils\EnvReader;
 use Dotenv\Dotenv;
 
 class CredentialsManager
@@ -47,14 +49,13 @@ class CredentialsManager
 
         $userH = $json->{'db_user'};
         $passH = $json->{'db_pass'};
-
-        if (empty($_ENV['DECRYPT_KEY']) || !isset($_ENV['DECRYPT_KEY'])) {
+        if (empty(EnvReader::getEnvProperty(Settings::DecryptKey)) || EnvReader::getEnvProperty(Settings::DecryptKey) == null) {
             return ['success' => false];
             //return $this->response->setError(Error::FailedDecrypt);
         }
 
-        $username = openssl_decrypt($userH, $cipher, $_ENV['DECRYPT_KEY']);
-        $password = openssl_decrypt($passH, $cipher, $_ENV['DECRYPT_KEY']);
+        $username = openssl_decrypt($userH, $cipher, EnvReader::getEnvProperty(Settings::DecryptKey));
+        $password = openssl_decrypt($passH, $cipher, EnvReader::getEnvProperty(Settings::DecryptKey));
 
         if (is_string($username) && is_string($password)) {
             $out = [
@@ -90,8 +91,8 @@ class CredentialsManager
 
         $cipher = "aes-256-ecb";
 
-        $userH = base64_encode(openssl_encrypt($username, $cipher, $_ENV['DECRYPT_KEY'], OPENSSL_RAW_DATA));
-        $passH = base64_encode(openssl_encrypt($password, $cipher, $_ENV['DECRYPT_KEY'], OPENSSL_RAW_DATA));
+        $userH = base64_encode(openssl_encrypt($username, $cipher, EnvReader::getEnvProperty(Settings::DecryptKey), OPENSSL_RAW_DATA));
+        $passH = base64_encode(openssl_encrypt($password, $cipher, EnvReader::getEnvProperty(Settings::DecryptKey), OPENSSL_RAW_DATA));
 
         ## opens local file with stored credentials
         $file = fopen(__DIR__ . "/creds.json", "w");

@@ -45,7 +45,10 @@ class EnvReader
         foreach ($settings as $setting) {
             fwrite($env, $setting->value . "=" . "\n");
         }
-
+        
         fclose($env);
+
+        chmod(self::$envPath, 0777);
+
     }
 }
