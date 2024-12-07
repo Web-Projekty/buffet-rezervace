@@ -9,6 +9,7 @@ services:
         container_name: php-apache
         volumes:
             - ./buffet-api:/var/www/html
+            - ./conf/:/var/www/html/conf/
         ports:
             - "8080:80" # Access Apache via http://localhost:8080
         depends_on:
