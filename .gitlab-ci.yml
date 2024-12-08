@@ -3,7 +3,7 @@ stages:
     - Code Coverage
 
 # Job to run PHPStan
-phpstan-analysis:
+phpstan:
     stage: Tests
     image: wlczak/buffet-test-prebuild:latest
     script:
