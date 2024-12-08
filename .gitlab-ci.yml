@@ -1,10 +1,10 @@
 stages:
-    - PHP Unit Tests
-    - PHP Static Analysis
+    - Tests
+    - Code Coverage
 
 # Job to run PHPStan
 phpstan-analysis:
-    stage: PHP Static Analysis
+    stage: Tests
     image: wlczak/buffet-test-prebuild:latest
     script:
         - cd buffet-api
@@ -17,7 +17,7 @@ phpstan-analysis:
 
 # Job to run PHPUnit tests and generate the coverage output
 phpunit:
-    stage: PHP Unit Tests
+    stage: Tests
     image: wlczak/buffet-test-prebuild:latest
     script:
         - echo ${ENV_CONFIG} >> conf/.env
@@ -35,7 +35,7 @@ phpunit:
 
 # Job to extract the coverage percentage from the PHPUnit output
 phpunit-coverage:
-    stage: PHP Unit Tests
+    stage: Code Coverage
     image: wlczak/buffet-test-prebuild:latest
     script:
         - echo ${ENV_CONFIG} >> conf/.env
