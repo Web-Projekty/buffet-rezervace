@@ -2,6 +2,8 @@
 
 use Buffet\Api\BuffetApi;
 use Buffet\Api\ImageProvider;
+use Buffet\Types\Settings;
+use Buffet\Utils\EnvReader;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -11,7 +13,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 $app = AppFactory::create();
 
-$isProd = 0;
+$isProd = EnvReader::getEnvProperty(Settings::IsProd) ?? 1;
 $app->addErrorMiddleware(!$isProd, true, true);
 
 $app->get('/', function (Request $request, Response $response, $args) {
