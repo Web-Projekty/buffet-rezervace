@@ -37,7 +37,9 @@ phpunit-coverage:
     stage: PHP Unit Tests
     image: wlczak/buffet-test-prebuild:latest
     script:
+        - cp -r conf/ buffet-api/
         - cd buffet-api
         - composer install
+        - chown -R 1000:1000 conf/
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
