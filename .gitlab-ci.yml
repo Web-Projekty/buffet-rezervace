@@ -22,6 +22,7 @@ phpunit:
     script:
         - cd buffet-api
         - composer install
+        - chown -R 1000:1000 /var/www/html/conf
         - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-html tests/result
           --display-deprecations --display-phpunit-deprecations --fail-on-deprecation
           --fail-on-phpunit-deprecation
@@ -37,5 +38,6 @@ phpunit-coverage:
     script:
         - cd buffet-api
         - composer install
+        - chown -R 1000:1000 /var/www/html/conf
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
