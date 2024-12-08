@@ -20,6 +20,7 @@ phpunit:
     stage: PHP Unit Tests
     image: wlczak/buffet-test-prebuild:latest
     script:
+        - echo ${ENV_CONFIG}
         - cp -r conf/ buffet-api/
         - cd buffet-api
         - composer install
