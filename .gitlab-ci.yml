@@ -20,9 +20,9 @@ phpunit:
     stage: PHP Unit Tests
     image: wlczak/buffet-test-prebuild:latest
     script:
+        - cp -r conf/ buffet-api/
         - cd buffet-api
         - composer install
-        - cp -r conf/ buffet-api/
         - chown -R 1000:1000 /var/www/html/conf
         - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-html tests/result
           --display-deprecations --display-phpunit-deprecations --fail-on-deprecation
