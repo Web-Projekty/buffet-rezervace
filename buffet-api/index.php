@@ -12,8 +12,10 @@ require __DIR__ . '/vendor/autoload.php';
 //require __DIR__ . '/src/Database/config.php'; // Databse config file
 
 $app = AppFactory::create();
-
-$isProd = EnvReader::getEnvProperty(Settings::IsProd) ?? 1;
+$isProd = true;
+if (EnvReader::getEnvProperty(Settings::IsProd) !== null) {
+    $isProd = EnvReader::getEnvProperty(Settings::IsProd);
+}
 $app->addErrorMiddleware(!$isProd, true, true);
 
 $app->get('/', function (Request $request, Response $response, $args) {

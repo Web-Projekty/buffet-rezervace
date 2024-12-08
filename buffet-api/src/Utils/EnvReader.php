@@ -14,7 +14,7 @@ class EnvReader
     /**
      * @param Settings $needle
      */
-    public static function getEnvProperty(Settings $needle): string | null
+    public static function getEnvProperty(Settings $needle): string | bool | null
     {
         if (!file_exists(self::$envPath)) {
             echo "create";
@@ -32,10 +32,16 @@ class EnvReader
             $value = trim($line[1]);
 
             if ($needle->value == $key && $value != "") {
+                if ($value == "true") {
+                    return true;
+                }
+                if ($value == "false") {
+                    return false;
+                }
                 return $value;
             }
-            return null;
         }
+        return null;
     }
 
     public static function createEnv(): void
@@ -56,4 +62,4 @@ class EnvReader
     }
 }
 
-echo EnvReader::getEnvProperty(Settings::DecryptKey);
+//var_dump(EnvReader::getEnvProperty(Settings::IsProd));
