@@ -31,14 +31,7 @@ class CredentialsManager
      */
     function getCredentials(): array
     {
-        if (!$this->envExists()) {
-            return ['success' => false];
-        }
-
-        ## loads .env file
-        $dotenv = Dotenv::createImmutable(__DIR__);
-        $dotenv->load();
-
+        $key = EnvReader::getEnvProperty(Settings::DecryptKey);
         $cipher = "aes-256-ecb";
 
         ## opens local file with stored credentials
@@ -49,13 +42,13 @@ class CredentialsManager
 
         $userH = $json->{'db_user'};
         $passH = $json->{'db_pass'};
-        if (empty(EnvReader::getEnvProperty(Settings::DecryptKey)) || EnvReader::getEnvProperty(Settings::DecryptKey) == null) {
+        if (empty($key) || $key == null) {
             return ['success' => false];
             //return $this->response->setError(Error::FailedDecrypt);
         }
 
-        $username = openssl_decrypt($userH, $cipher, EnvReader::getEnvProperty(Settings::DecryptKey));
-        $password = openssl_decrypt($passH, $cipher, EnvReader::getEnvProperty(Settings::DecryptKey));
+        $username = openssl_decrypt($userH, $cipher, $key);
+        $password = openssl_decrypt($passH, $cipher, $key);
 
         if (is_string($username) && is_string($password)) {
             $out = [
@@ -83,16 +76,12 @@ class CredentialsManager
      */
     function createCredentials(string $username, string $password, string $host = "vlastas.cc", string $database = "buffet"): void
     {
-        $this->envExists();
-
-        ## loads .env file
-        $dotenv = Dotenv::createImmutable(__DIR__);
-        $dotenv->load();
+        $key = EnvReader::getEnvProperty(Settings::DecryptKey);
 
         $cipher = "aes-256-ecb";
 
-        $userH = base64_encode(openssl_encrypt($username, $cipher, EnvReader::getEnvProperty(Settings::DecryptKey), OPENSSL_RAW_DATA));
-        $passH = base64_encode(openssl_encrypt($password, $cipher, EnvReader::getEnvProperty(Settings::DecryptKey), OPENSSL_RAW_DATA));
+        $userH = base64_encode(openssl_encrypt($username, $cipher, $key, OPENSSL_RAW_DATA));
+        $passH = base64_encode(openssl_encrypt($password, $cipher, $key, OPENSSL_RAW_DATA));
 
         ## opens local file with stored credentials
         $file = fopen(__DIR__ . "/creds.json", "w");

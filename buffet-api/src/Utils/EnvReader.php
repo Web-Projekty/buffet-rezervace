@@ -29,7 +29,8 @@ class EnvReader
         foreach ($lines as $line) {
             $line = explode("=", $line);
             $key = trim($line[0]);
-            $value = trim($line[1]);
+
+            $value = trim($line[1] ?? "");
 
             if ($needle->value == $key && $value != "") {
                 if ($value == "true") {
