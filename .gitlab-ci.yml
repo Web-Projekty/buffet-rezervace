@@ -1,6 +1,6 @@
 stages:
-    - PHP Static Analysis
     - PHP Unit Tests
+    - PHP Static Analysis
 
 # Job to run PHPStan
 phpstan-analysis:
@@ -38,6 +38,5 @@ phpunit-coverage:
     script:
         - cd buffet-api
         - composer install
-        - chown -R 1000:1000 /var/www/html/conf
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
