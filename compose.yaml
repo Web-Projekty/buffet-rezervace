@@ -9,13 +9,14 @@ services:
         container_name: php-apache
         volumes:
             - ./buffet-api:/var/www/html
+            - ./conf/:/var/www/html/conf/:rw
         ports:
             - "8080:80" # Access Apache via http://localhost:8080
         depends_on:
             - db
         environment:
             - APACHE_DOCUMENT_ROOT=/var/www/html
-        command: ["bash", "-c", "mkdir -p ./logs && cp ./src/WebSockets/apache.conf /etc/apache2/sites-available/000-default.conf && composer update && supervisord -c ./src/WebSockets/supervisor.conf && apache2-foreground"]
+        command: ["bash", "-c", "mkdir -p ./logs && cp ./src/WebSockets/apache.conf /etc/apache2/sites-available/000-default.conf && composer update && supervisord -c ./src/WebSockets/supervisor.conf && usermod -a -G root www-data && chown -R www-data:www-data /var/www/html/conf && apache2-foreground"]
 
     # MariaDB Database Service
     db:
