@@ -23,7 +23,7 @@ phpunit:
         - cp -r conf/ buffet-api/
         - cd buffet-api
         - composer install
-        - chown -R 1000:1000 /var/www/html/conf
+        - chown -R 1000:1000 conf/
         - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-html tests/result
           --display-deprecations --display-phpunit-deprecations --fail-on-deprecation
           --fail-on-phpunit-deprecation
