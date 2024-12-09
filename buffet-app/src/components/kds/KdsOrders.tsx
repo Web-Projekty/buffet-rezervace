@@ -1,51 +1,47 @@
-import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { useFetch } from "../../hooks/useFetch";
-import KdsDeliveryOrder from "./KdsDeliveryOrder";
-import KdsOrder from "./KdsOrder";
-import { Order } from "../../types";
 import Loading from "../Loading";
 import KdsStatusBar from "./KdsStatusBar";
-import { usePaging } from "../../hooks/usePaging";
-import { FETCH_URL } from "../../constants";
+import { WEBSOCKET_URL } from "../../constants";
+import useWebSocket, { ReadyState } from "react-use-websocket";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 const KdsOrders = () => {
   const token = useAuthHeader()?.split(" ")[1];
-  const { data, error, isLoading } = useFetch<Order[]>(
-    FETCH_URL,
-    { requestType: "getOrders", token: token },
-    [],
-    [token],
+  const { sendMessage, lastMessage, readyState } = useWebSocket(
+    WEBSOCKET_URL("kds"),
+    {
+      onOpen: () => {
+        if (token) {
+          sendMessage(JSON.stringify({ requestType: "subscribe", token }));
+        }
+      },
+    },
   );
 
-  const { dataList: pendingOrders } = usePaging<Order>(
-    data?.filter((order) => order.status === "sent"),
+  /*const { dataList: pendingOrders } = usePaging<Order>(
+    data?.filter(
+      (order) => order.status === "preparing" || order.status === "sent",
+    ),
     8,
   );
 
   const { dataList: pickedUpOrders } = usePaging<Order>(
     data?.filter((order) => order.status === "waiting"),
     5,
-  );
+  );*/
 
   return (
     <div className="mx-auto flex w-[85.5%] flex-col justify-center">
-      <KdsStatusBar
-        delayed={pendingOrders.length}
-        uptodate={2}
-        current={10}
-        waiting={
-          pickedUpOrders.filter((order) => order.status === "waiting").length
-        }
-      />
+      <KdsStatusBar delayed={0} uptodate={0} current={0} waiting={0} />
 
-      {isLoading ? (
+      {readyState === ReadyState.CONNECTING ? (
         <Loading size={30} />
-      ) : error ? (
-        <p className="text-center text-4xl text-white">{error}</p>
+      ) : readyState === ReadyState.CLOSED ? (
+        <p className="text-center text-4xl text-white">Chyba</p>
       ) : (
         <div className="flex flex-row items-start justify-between">
           <div className="flex flex-wrap gap-2">
-            {pendingOrders && pendingOrders.length > 0 ? (
+            {lastMessage?.data}
+            {/*pendingOrders && pendingOrders.length > 0 ? (
               pendingOrders.map((order, index) => (
                 <KdsOrder key={index} order={order} />
               ))
@@ -53,14 +49,14 @@ const KdsOrders = () => {
               <p className="text-4xl text-white">
                 Žádné objevnávky nejsou dostupné
               </p>
-            )}
+            )*/}
           </div>
           <div className="flex flex-col gap-2">
-            {pickedUpOrders && pickedUpOrders.length > 0
+            {/*pickedUpOrders && pickedUpOrders.length > 0
               ? pickedUpOrders.map((order, index) => (
                   <KdsDeliveryOrder key={index} order={order} />
                 ))
-              : null}
+              : null*/}
           </div>
         </div>
       )}
