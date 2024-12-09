@@ -34,8 +34,8 @@ export const getColorByStatus = (status: OrderStatus): string => {
       : status === "done"
         ? "bg-green-500"
         : status === "storno"
-          ? "bg-red-500"
-          : "bg-red-500";
+          ? "bg-red-400"
+          : "bg-red-400";
 };
 
 export const statusToText = (status: OrderStatus): string => {
