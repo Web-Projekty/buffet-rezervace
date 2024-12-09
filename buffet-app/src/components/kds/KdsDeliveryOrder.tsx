@@ -46,7 +46,7 @@ const KdsDeliveryOrder = ({ order }: KdsDeliveryOrderProps) => {
               Zrušit
             </Button>
             <Button
-              className="w-full rounded-none border-0 bg-green-400"
+              className="w-full rounded-none border-0 bg-primary"
               onClick={() => {}}
             >
               Vyzvednuto

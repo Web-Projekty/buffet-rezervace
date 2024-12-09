@@ -16,7 +16,7 @@ const KdsOrder = ({ order }: KdsOrderProps) => {
       </div>
       <div className="w-full px-4 py-2">
         <div className="m-2 flex-grow">{order.items}</div>
-        <Button className="mt-auto w-full rounded-none border-0 bg-green-400">
+        <Button className="mt-auto w-full rounded-none border-0 bg-primary">
           Hotovo
         </Button>
       </div>

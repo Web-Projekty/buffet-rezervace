@@ -35,7 +35,7 @@ const KdsStatusBar = ({
       <KdsStatusCards
         amount={waiting}
         title="Výdej"
-        backgroundColor="bg-green-400"
+        backgroundColor="bg-[#14ce9c]"
       />
     </div>
   );

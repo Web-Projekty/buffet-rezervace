@@ -30,7 +30,7 @@ export const getColorByStatus = (status: OrderStatus): string => {
   return status === "sent"
     ? "bg-yellow-500"
     : status === "waiting"
-      ? "bg-blue-500"
+      ? "bg-[#14ce9c]"
       : status === "done"
         ? "bg-green-500"
         : status === "storno"
