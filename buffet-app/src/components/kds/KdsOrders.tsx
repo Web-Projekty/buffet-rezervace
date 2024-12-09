@@ -8,47 +8,52 @@ import KdsOrder from "./KdsOrder";
 import { usePaging } from "../../hooks/usePaging";
 import KdsDeliveryOrder from "./KdsDeliveryOrder";
 
-type PayloadType = {
-  data?: Order[];
-  msg?: string;
-};
-
-type WebSocketType = {
-  status: string;
-  payload: PayloadType;
-};
-
 const KdsOrders = () => {
   const token = useAuthHeader()?.split(" ")[1];
-  const { sendMessage, lastJsonMessage, readyState } =
-    useWebSocket<WebSocketType>(WEBSOCKET_URL("kds"), {
+  const { sendMessage, lastJsonMessage, readyState } = useWebSocket(
+    WEBSOCKET_URL("kds"),
+    {
       onOpen: () => {
         if (token) {
           sendMessage(JSON.stringify({ requestType: "subscribe", token }));
         }
       },
       shouldReconnect: () => true,
-    });
+    },
+  );
 
   console.log(lastJsonMessage ? lastJsonMessage.payload : "Čekám na data");
 
   const { dataList: pendingOrders } = usePaging<Order>(
     lastJsonMessage?.payload.data?.filter(
-      (order) => order.status === "preparing" || order.status === "sent",
+      (order: Order) => order.status === "preparing" || order.status === "sent",
     ),
     8,
   );
 
-  const { dataList: pickedUpOrders } = usePaging<Order>(
+  const { dataList: waitingOrders } = usePaging<Order>(
     lastJsonMessage?.payload.data?.filter(
-      (order) => order.status === "waiting",
+      (order: Order) => order.status === "waiting",
     ),
     5,
   );
 
   return (
     <div className="mx-auto flex w-[85.5%] flex-col justify-center">
-      <KdsStatusBar delayed={0} uptodate={0} current={0} waiting={0} />
+      <KdsStatusBar
+        delayed={
+          pendingOrders.filter(
+            (order) => parseInt(order.pickupDate) < Date.now(),
+          ).length
+        }
+        uptodate={
+          pendingOrders.filter(
+            (order) => parseInt(order.pickupDate) > Date.now(),
+          ).length
+        }
+        current={0}
+        waiting={waitingOrders.length}
+      />
 
       {readyState === ReadyState.CONNECTING ? (
         <Loading size={30} />
@@ -68,8 +73,8 @@ const KdsOrders = () => {
             )}
           </div>
           <div className="flex flex-col gap-2">
-            {pickedUpOrders && pickedUpOrders.length > 0
-              ? pickedUpOrders.map((order, index) => (
+            {waitingOrders && waitingOrders.length > 0
+              ? waitingOrders.map((order, index) => (
                   <KdsDeliveryOrder key={index} order={order} />
                 ))
               : null}
