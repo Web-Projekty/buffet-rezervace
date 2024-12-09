@@ -30,7 +30,7 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
 
   const handleDelayed = () => {
     setDelayed(true);
-    setColor("bg-red-500");
+    setColor("bg-red-400");
   };
 
   useEffect(() => {
