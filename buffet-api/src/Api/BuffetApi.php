@@ -280,7 +280,7 @@ class BuffetApi
     }
 
     /**
-     * @param ApiResponse $reponse
+     * @param  ApiResponse   $reponse
      * @return ApiResponse
      */
     function handleMakeOrderEvent(ApiResponse $reponse): ApiResponse
