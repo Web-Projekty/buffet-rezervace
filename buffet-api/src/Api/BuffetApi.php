@@ -285,7 +285,7 @@ class BuffetApi
      */
     function handleMakeOrderEvent(ApiResponse $reponse): ApiResponse
     {
-        WebsocketClient::send("kds", json_encode(["requestType" => "publish"]));
+        WebsocketClient::send("kds", json_encode(["requestType" => "publish", "eventType" => "updateOrder", "payload" => "{order here}"]));
         return $reponse->setStatus(true);
     }
 

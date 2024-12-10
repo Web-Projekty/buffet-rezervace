@@ -64,7 +64,12 @@ class KDSChannel implements MessageInterface
                     break;
                 case "publish":
                     foreach ($this->authenticatedClients as $client) {
-                        $client->send($msg);
+                        $decoded = json_decode($msg);
+
+                        $newMsg["eventType"] = $decoded->eventType ?? "";
+                        $newMsg["payload"] = $decoded->payload ?? "";
+
+                        $client->send(json_encode($newMsg));
                     }
                     break;
                 default:
