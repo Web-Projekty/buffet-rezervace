@@ -9,7 +9,8 @@ import { usePaging } from "../../hooks/usePaging";
 import KdsDeliveryOrder from "./KdsDeliveryOrder";
 
 const KdsOrders = () => {
-  const token = useAuthHeader()?.split(" ")[1];
+  const authHeader = useAuthHeader();
+  const token = authHeader ? authHeader.split(" ")[1] : null;
   const { sendMessage, lastJsonMessage, readyState } = useWebSocket(
     WEBSOCKET_URL("kds"),
     {
@@ -25,14 +26,14 @@ const KdsOrders = () => {
   console.log(lastJsonMessage ? lastJsonMessage.payload : "Čekám na data");
 
   const { dataList: pendingOrders } = usePaging<Order>(
-    lastJsonMessage?.payload.data?.filter(
+    (lastJsonMessage?.payload.data || []).filter(
       (order: Order) => order.status === "preparing" || order.status === "sent",
     ),
     8,
   );
 
   const { dataList: waitingOrders } = usePaging<Order>(
-    lastJsonMessage?.payload.data?.filter(
+    (lastJsonMessage?.payload.data || []).filter(
       (order: Order) => order.status === "waiting",
     ),
     5,
@@ -63,8 +64,8 @@ const KdsOrders = () => {
         <div className="flex flex-row items-start justify-between">
           <div className="flex flex-wrap gap-2">
             {pendingOrders && pendingOrders.length > 0 ? (
-              pendingOrders.map((order, index) => (
-                <KdsOrder key={index} order={order} />
+              pendingOrders.map((order) => (
+                <KdsOrder key={order.id} order={order} />
               ))
             ) : (
               <p className="text-4xl text-white">
@@ -74,8 +75,8 @@ const KdsOrders = () => {
           </div>
           <div className="flex flex-col gap-2">
             {waitingOrders && waitingOrders.length > 0
-              ? waitingOrders.map((order, index) => (
-                  <KdsDeliveryOrder key={index} order={order} />
+              ? waitingOrders.map((order) => (
+                  <KdsDeliveryOrder key={order.id} order={order} />
                 ))
               : null}
           </div>
