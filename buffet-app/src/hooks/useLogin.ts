@@ -59,6 +59,7 @@ export const useLogin = (loginData: LoginData): UseLoginReturn => {
         });
         setTokenExpiration(data.payload.token);
         navigate("/");
+        window.location.reload();
       } else {
         setError("Error occured");
         console.log("Error occured");

@@ -25,6 +25,7 @@ const AccountInformation = ({
     logout();
     removeTokenExpiration();
     navigate("/login");
+    window.location.reload();
   };
 
   return (

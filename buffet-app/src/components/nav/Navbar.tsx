@@ -33,7 +33,7 @@ const Navbar = () => {
       <div className="hidden flex-row md:flex">
         <ul className="relative flex w-auto flex-row items-center justify-between gap-5 text-xl text-black">
           {NavLinks.map(({ id, path, name, requireAdmin }) => {
-            if (requireAdmin && !user) {
+            if (requireAdmin && (!user || !user.isAdmin)) {
               return null;
             }
             return <Link key={id} path={path} name={name} />;
