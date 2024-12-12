@@ -9,7 +9,7 @@ const KdsHeader = () => {
     >
       <h1 className="w-full text-3xl">Buffet KDS</h1>
       <KdsNavbar />
-      <div className="mr-[-10rem] flex w-full items-center justify-center gap-8">
+      <div className="mr-[-10rem] flex w-full items-center justify-center gap-8 text-2xl">
         <DateComponent />
         <TimeComponent />
       </div>
