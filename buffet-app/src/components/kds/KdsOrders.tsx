@@ -7,10 +7,11 @@ import { Order } from "../../types";
 import KdsOrder from "./KdsOrder";
 import { usePaging } from "../../hooks/usePaging";
 import KdsDeliveryOrder from "./KdsDeliveryOrder";
+import { extractToken } from "../utils/utils";
 
 const KdsOrders = () => {
   const authHeader = useAuthHeader();
-  const token = authHeader ? authHeader.split(" ")[1] : null;
+  const token = extractToken(authHeader);
   const { sendMessage, lastJsonMessage, readyState } = useWebSocket(
     WEBSOCKET_URL("kds"),
     {

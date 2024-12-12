@@ -7,6 +7,10 @@ export const formatCurrency = (number: number): string => {
   }).format(number);
 };
 
+export const extractToken = (header: string | null): string => {
+  return header ? header.split(" ")[1] : "";
+};
+
 export const formatDate = (date: string): string => {
   const dateObject = new Date(date);
   return dateObject.toLocaleDateString("cs-CZ");
