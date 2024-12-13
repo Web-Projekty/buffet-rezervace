@@ -10,6 +10,7 @@
 <body>
   <form id="myForm">
     <select name="requestType">
+      <option value="createOrder">createOrder</option>
       <option value="makeOrderEvent">makeOrderEvent</option>
       <option value="getOrders">getOrders</option>
       <option value="getMenu">getMenu</option>
@@ -25,6 +26,12 @@
     <input type="text" name="token" placeholder="token" />
     <input type="text" name="page" placeholder="page" value="1" />
     <input type="text" name="itemsCount" placeholder="itemsCount" value="1" />
+    <input type="text" name="items" placeholder="items" value="{'items':'[2,5,10]'}" />
+    <input type="time" name="startTime" value="09:00:00">
+    <input type="time" name="endTime" value="09:05:00">
+    <input type="date" name="pickUpDate" value="2024-12-14">
+    <input type="text" name="paymentMethod" placeholder="paymentMethod" value="thePay">
+    
     <input type="button" value="Submit" onclick="submitForm()" />
   </form>
 

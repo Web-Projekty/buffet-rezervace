@@ -99,8 +99,11 @@ class BuffetApi
             case "getOrders":
                 return $this->handleGetOrders($response);
 
+            case "createOrder":
+                return $this->handleCreateOrder($response);
+
             case "makeOrderEvent":
-                return $this->handleMakeOrderEvent($response);
+                return $this->handleMakeOrderEvent($response); // for testing
 
             case null:
             default:
@@ -267,7 +270,7 @@ class BuffetApi
 
         $jwt->validateToken($response);
 
-        $uid = $jwt->decodeToken($response)->sub;
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
 
         if ($response->hasFailed()) {
             return $response;
@@ -280,7 +283,28 @@ class BuffetApi
     }
 
     /**
-     * @param ApiResponse $reponse
+     * @param ApiResponse $response
+     */
+    function handleCreateOrder(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "items", "startTime", "endTime", "pickUpDate", "paymentMethod"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+        $isAdmin = UserModel::isAdmin($uid);
+        
+        return $response->setStatus(true);
+    }
+
+    /**
+     * @param  ApiResponse   $reponse
      * @return ApiResponse
      */
     function handleMakeOrderEvent(ApiResponse $reponse): ApiResponse
