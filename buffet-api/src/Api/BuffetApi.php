@@ -299,7 +299,11 @@ class BuffetApi
             return $response;
         }
         $isAdmin = UserModel::isAdmin($uid);
-        
+
+        if ($isAdmin) {
+
+        }
+
         return $response->setStatus(true);
     }
 
