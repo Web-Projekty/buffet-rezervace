@@ -13,6 +13,7 @@ use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\Types\Success;
 use Buffet\Utils\WebsocketClient;
+use DateException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
@@ -98,6 +99,9 @@ class BuffetApi
 
             case "getOrders":
                 return $this->handleGetOrders($response);
+
+            case "generateTimeslots":
+                return $this->handleGenerateTimeslots($response);
 
             case "makeOrderEvent":
                 return $this->handleMakeOrderEvent($response);
@@ -280,7 +284,45 @@ class BuffetApi
     }
 
     /**
-     * @param ApiResponse $reponse
+     * @param ApiResponse $response
+     */
+    function handleGenerateTimeslots(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "startTime", "endTime", "interval", "limit"]);
+
+        $jwt = new JWTApi;
+        $orderApi = new OrderApi;
+
+        $startTime = $response->getRequestByKey("startTime");
+        $endTime = $response->getRequestByKey("endTime");
+        $interval = $response->getRequestByKey("interval") ?? 0;
+        $limit = $response->getRequestByKey("limit") ?? 0;
+
+        if ($interval <= 0 || $limit <= 0) {
+            $response->setError(Error::InvalidLimitOrInterval);
+        }
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+        $isAdmin = UserModel::isAdmin($uid);
+        $response->setPayload("isAdmin", $isAdmin);
+
+        try {
+            $orderApi->generateTimeslots($startTime, $endTime, $interval, $limit);
+        } catch (DateException $e) {
+            $response->setError(Error::DateTimeInvalid);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param  ApiResponse   $reponse
      * @return ApiResponse
      */
     function handleMakeOrderEvent(ApiResponse $reponse): ApiResponse
