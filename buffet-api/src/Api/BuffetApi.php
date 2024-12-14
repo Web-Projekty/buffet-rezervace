@@ -11,6 +11,7 @@ use Buffet\Database\Models\OrderModel;
 use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Success;
 use Buffet\Utils\WebsocketClient;
 use DateException;
@@ -314,6 +315,8 @@ class BuffetApi
         try {
             $orderApi->generateTimeslots($startTime, $endTime, $interval, $limit);
         } catch (DateException $e) {
+            $response->setError(Error::DateTimeInvalid);
+        }catch (NegativeValueException $e) {
             $response->setError(Error::DateTimeInvalid);
         }
 
