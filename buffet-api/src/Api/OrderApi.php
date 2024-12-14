@@ -30,9 +30,14 @@ class OrderApi
         }
         $i = 0;
         $diff = $start->diff($end)->i + $start->diff($end)->h * 60;
-        while ($diff > $intervalTime) {
-            echo ++$i;
-            var_dump($diff);
+        while ($diff >= $intervalTime) {
+            ++$i;
+            echo "$i : ";
+            $msg = new DateTime();
+            $date = new DateTime();
+            $msg->setTime(0, $diff, 0)->sub($end->diff($date->setTime(0,$diff,0)));
+            echo $msg->format('H:i');
+            echo "\n";
             $diff -= $intervalTime;
 
         }
