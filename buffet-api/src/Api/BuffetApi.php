@@ -295,8 +295,8 @@ class BuffetApi
 
         $startTime = $response->getRequestByKey("startTime");
         $endTime = $response->getRequestByKey("endTime");
-        $interval = $response->getRequestByKey("interval") ?? 0;
-        $limit = $response->getRequestByKey("limit") ?? 0;
+        $interval = (int) $response->getRequestByKey("interval");
+        $limit = (int) $response->getRequestByKey("limit");
 
         if ($interval <= 0 || $limit <= 0) {
             $response->setError(Error::InvalidLimitOrInterval);
@@ -310,7 +310,6 @@ class BuffetApi
             return $response;
         }
         $isAdmin = UserModel::isAdmin($uid);
-        $response->setPayload("isAdmin", $isAdmin);
 
         try {
             $orderApi->generateTimeslots($startTime, $endTime, $interval, $limit);
