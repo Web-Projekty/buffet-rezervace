@@ -1,10 +1,10 @@
 import KdsStatusCards from "./KdsStatusCards";
 
 type KdsStatusProps = {
-  delayed: number;
-  uptodate: number;
-  current: number;
-  waiting: number;
+  delayed: number | undefined;
+  uptodate: number | undefined;
+  current: number | undefined;
+  waiting: number | undefined;
 };
 
 const KdsStatusBar = ({
