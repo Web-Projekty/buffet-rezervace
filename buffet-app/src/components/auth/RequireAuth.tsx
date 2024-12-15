@@ -1,9 +1,8 @@
 import { ReactNode } from "react";
-import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { Navigate } from "react-router-dom";
-import { User } from "../../types";
 import { isTokenExpired } from "./login/login";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
+import { useUser } from "../../hooks/useUser";
 
 type ProtectedRouteProps = {
   children: ReactNode;
@@ -16,8 +15,7 @@ const RequireAuth = ({
   requireAdmin,
   fallbackPath,
 }: ProtectedRouteProps) => {
-  // const user: User = dummyUser;
-  const user: User = useAuthUser()!;
+  const { user } = useUser();
   const logout = useSignOut();
 
   if (!user) {

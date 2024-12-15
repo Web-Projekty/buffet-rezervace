@@ -5,11 +5,12 @@ import PagingButtons from "../PagingButtons";
 import { AnimatePresence } from "framer-motion";
 import { FETCH_URL, ORDERS_PER_PAGE } from "../../constants";
 import { useFetch } from "../../hooks/useFetch";
-import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import Loading from "../Loading";
+import { useUser } from "../../hooks/useUser";
 
 const UserOrderHistory = () => {
-  const token = useAuthHeader()?.split(" ")[1];
+  const { token } = useUser();
+
   const { data, isLoading, error } = useFetch<OrderType[]>(
     FETCH_URL,
     { requestType: "getOrders", token: token },

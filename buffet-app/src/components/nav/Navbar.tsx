@@ -1,13 +1,12 @@
 import CartButton from "../cart/CartButton";
 import AccountButton from "../auth/AccountButton";
 import { Menu } from "lucide-react";
-import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-import { User } from "../../types";
 import { useState } from "react";
 import Link from "./Link";
 import MobileNavbar from "./MobileNavbar";
+import { useUser } from "../../hooks/useUser";
 
-type NavLinks = {
+export type NavLinks = {
   id: number;
   name: string;
   path: string;
@@ -18,11 +17,12 @@ const NavLinks: NavLinks[] = [
   { id: 1, name: "Menu", path: "/" },
   { id: 2, name: "Alergeny", path: "/alergeny" },
   { id: 3, name: "KDS", path: "/kds", requireAdmin: true },
+  { id: 4, name: "Nastavení", path: "/settings", requireAdmin: true },
 ];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const user: User = useAuthUser()!;
+  const { user } = useUser();
 
   const handleOpenMobileMenu = (): void => {
     setIsOpen(!isOpen);

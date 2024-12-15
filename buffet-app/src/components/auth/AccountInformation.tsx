@@ -4,22 +4,14 @@ import { motion } from "framer-motion";
 import { scaleUpAnimation } from "../../animations";
 import { removeTokenExpiration } from "./login/login";
 import Button from "../Button";
+import { useUser } from "../../hooks/useUser";
 
-type AccountInformationProps = {
-  isAdmin: boolean;
-  fullName: string;
-  email: string;
-  class: string;
-};
-
-const AccountInformation = ({
-  isAdmin,
-  fullName,
-  email,
-  class: userClass,
-}: AccountInformationProps) => {
+const AccountInformation = () => {
+  const { user } = useUser();
   const logout = useSignOut();
   const navigate = useNavigate();
+
+  const { isAdmin, fullName, email, class: userClass } = user!;
 
   const handleLogout = () => {
     logout();
