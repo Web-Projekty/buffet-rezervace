@@ -7,11 +7,20 @@ type Error = {
   subtitle: string;
   onBack?: () => void;
   linkTo?: string;
+  className?: string;
 };
 
-const ErrorComponent = ({ title, subtitle, onBack, linkTo }: Error) => {
+const ErrorComponent = ({
+  title,
+  subtitle,
+  onBack,
+  linkTo,
+  className,
+}: Error) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-5 overflow-x-hidden bg-slate-800 font-sans text-white">
+    <div
+      className={`flex flex-col items-center justify-center gap-5 overflow-x-hidden bg-slate-800 font-sans text-white ${className}`}
+    >
       <img
         src={Logo}
         alt="Hamburger Logo"
