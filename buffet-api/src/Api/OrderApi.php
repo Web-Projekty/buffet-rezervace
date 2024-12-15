@@ -31,8 +31,8 @@ class OrderApi
         echo "\n";
         echo $end->format("m");
         echo "-------------------\n";
-        $i =0 ;
-        while ($end->isBiggerThan($start) && $i < 5000) {
+        $i = 0;
+        while ($end->diff($start, "m") >= $limit) {
             echo $start->format("m");
             $start->addTime(new Time(0, $intervalTime));
             echo " - ";
