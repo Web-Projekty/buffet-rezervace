@@ -2,12 +2,13 @@ import { motion } from "framer-motion";
 import SchoolLogo from "../../assets/images/logo-white_alfa.png";
 import { X } from "lucide-react";
 import Link from "./Link";
+import { NavLinks } from "./Navbar";
 
 type MobileNavbarProps = {
   isOpen: boolean;
   handleOpenMobileMenu: () => void;
   isAdmin: boolean;
-  links: { id: number; name: string; path: string; requireAdmin?: boolean }[];
+  links: NavLinks[];
 };
 
 const MobileNavbar = ({
@@ -35,7 +36,7 @@ const MobileNavbar = ({
       <li className="absolute right-5 top-5">
         <X size={64} onClick={handleOpenMobileMenu} />
       </li>
-      <div className="flex flex-col gap-10">
+      <div className="z-[45] flex flex-col gap-10">
         {links.map(({ id, path, name, requireAdmin }) => {
           if (requireAdmin && !isAdmin) {
             return null;
