@@ -32,7 +32,7 @@ export const matchValues = (text: string, text2: string): boolean => {
 
 export const getColorByStatus = (status: OrderStatus): string => {
   return status === "sent"
-    ? "bg-yellow-500"
+    ? "bg-orange-400"
     : status === "waiting"
       ? "bg-[#14ce9c]"
       : status === "done"
