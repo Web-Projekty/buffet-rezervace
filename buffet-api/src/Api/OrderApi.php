@@ -3,9 +3,8 @@
 namespace Buffet\Api;
 
 use Buffet\Types\Exceptions\NegativeValueException;
+use Buffet\Types\Time;
 use DateException;
-use DateInterval;
-use DateTime;
 
 class OrderApi
 {
@@ -19,27 +18,28 @@ class OrderApi
     public function generateTimeslots(string $startTime, string $endTime, int $intervalTime, int $limit): void
     {
         try {
-            $start = DateTime::createFromFormat('H:i', $startTime);
-            $end = DateTime::createFromFormat('H:i', $endTime);
-            $interval = new DateInterval("PT{$intervalTime}M"); // P - period, T - time, M - minutes
+            $start = Time::fromString($startTime);
+            $end = Time::fromString($endTime);
         } catch (\Exception $e) {
             throw new DateException();
         }
-        if ($start > $end) {
+        if ($start->isBiggerThan($end)) {
             throw new NegativeValueException("Start time cannot be greater than end time");
         }
-        $i = 0;
-        $diff = $start->diff($end)->i + $start->diff($end)->h * 60;
-        while ($diff >= $intervalTime) {
-            ++$i;
-            echo "$i : ";
-            $msg = new DateTime();
-            $date = new DateTime();
-            $msg->setTime(0, $diff, 0)->sub($end->diff($date->setTime(0,$diff,0)));
-            echo $msg->format('H:i');
-            echo "\n";
-            $diff -= $intervalTime;
 
+        echo $start->format("m");
+        echo "\n";
+        echo $end->format("m");
+        echo "-------------------\n";
+        $i =0 ;
+        while ($end->isBiggerThan($start) && $i < 5000) {
+            echo $start->format("m");
+            $start->addTime(new Time(0, $intervalTime));
+            echo " - ";
+            echo $start->format("m");
+            echo "\n";
+            $i++;
         }
+
     }
 }
