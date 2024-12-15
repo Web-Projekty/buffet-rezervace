@@ -12,13 +12,20 @@ class TimeslotModel extends Model
     /**
      * @var string
      */
-    protected $table = 'timeslots';
+    protected $table = 'Timeslots';
+
+    // Disable timestamps
+
+    /**
+     * @var bool
+     */
+    public $timestamps = false;
 
     // Define fillable fields for mass assignment
     /**
      * @var array<string>
      */
-    protected $fillable = ['start_time', 'end_time', 'limit'];
+    protected $fillable = ['startTime', 'endTime', 'orderLimit'];
 
     // Add any relationships here, e.g., belongsTo, hasMany
 
@@ -27,11 +34,16 @@ class TimeslotModel extends Model
      *
      * @param  string $startTime
      * @param  string $endTime
-     * @param  int    $interval
+     * @param  int    $intervalTime
+     * @param  int    $limit
      * @return void
      */
-    public function generateTimeslots(string $startTime, string $endTime, int $interval, int $limit): void
+    public static function generateTimeslots(string $startTime, string $endTime, int $intervalTime, int $limit): void
     {
-
+        TimeslotModel::query()->create([
+            'startTime' => $startTime,
+            'endTime' => $endTime,
+            'orderLimit' => $limit
+        ]);
     }
 }

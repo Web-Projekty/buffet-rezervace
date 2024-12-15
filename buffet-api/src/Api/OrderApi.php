@@ -2,6 +2,7 @@
 
 namespace Buffet\Api;
 
+use Buffet\Database\Models\TimeslotModel;
 use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Time;
 use DateException;
@@ -26,20 +27,18 @@ class OrderApi
         if ($start->isBiggerThan($end)) {
             throw new NegativeValueException("Start time cannot be greater than end time");
         }
-
-        echo $start->format("m");
-        echo "\n";
-        echo $end->format("m");
-        echo "-------------------\n";
-        $i = 0;
+        $timeSlots = [];
+        $index = 0;
         while ($end->diff($start, "m") >= $limit) {
-            echo $start->format("m");
+            $startString = $start->format("m");
             $start->addTime(new Time(0, $intervalTime));
-            echo " - ";
-            echo $start->format("m");
-            echo "\n";
-            $i++;
+            $endString = $start->format("m");
+
+            TimeslotModel::generateTimeslots($startString, $endString, $intervalTime, $limit);
+
+            $index++;
         }
+        //var_dump($timeSlots);
 
     }
 }
