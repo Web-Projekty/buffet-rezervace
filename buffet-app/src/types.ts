@@ -25,6 +25,7 @@ export type Order = {
   date: string;
   pickupDate: string;
   items: string;
+  pickUpId: string;
 };
 
 export type MenuItem = {
