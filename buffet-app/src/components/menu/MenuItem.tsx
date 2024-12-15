@@ -35,7 +35,7 @@ const MenuItem = ({ item }: MenuItemProps) => {
     >
       <MenuItemImage {...item} />
 
-      <div className="flex flex-col rounded-lg p-2">
+      <div className="flex h-full flex-col rounded-lg p-2">
         <MenuItemText {...item} />
         <MenuItemButtons
           isItemInCart={isItemInCart}
