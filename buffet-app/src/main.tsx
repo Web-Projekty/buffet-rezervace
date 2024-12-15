@@ -17,6 +17,7 @@ import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
 import SuccessOrder from "./components/orders/SuccessOrder.tsx";
 import { UserData } from "./hooks/useLogin.ts";
 import Kds from "./components/kds/Kds.tsx";
+import AdminSettings from "./components/auth/admin/AdminSettings.tsx";
 
 const store = createStore<UserData>({
   authName: "_auth",
@@ -43,7 +44,6 @@ const router = createBrowserRouter([
             <Menu />
           </ErrorBoundary>
         ),
-        //loader: () => import("./components/menu/MenuList.tsx"),
       },
       {
         path: "/menu/edit",
@@ -54,7 +54,6 @@ const router = createBrowserRouter([
             </ErrorBoundary>
           </RequireAuth>
         ),
-        //loader: () => import("./components/menu/MenuEdit.tsx"),
       },
       {
         path: "/alergeny",
@@ -63,7 +62,6 @@ const router = createBrowserRouter([
             <Allergens />
           </ErrorBoundary>
         ),
-        //loader: () => import("./components/menu/MenuList.tsx"),
       },
       {
         path: "/account",
@@ -74,7 +72,16 @@ const router = createBrowserRouter([
             </ErrorBoundary>
           </RequireAuth>
         ),
-        //loader: () => import("./components/account/AccountDashboard.tsx"),
+      },
+      {
+        path: "/settings",
+        element: (
+          //<RequireAuth requireAdmin={true} fallbackPath="/login">
+          <ErrorBoundary>
+            <AdminSettings />
+          </ErrorBoundary>
+          //</RequireAuth>
+        ),
       },
       {
         path: "/login",
@@ -83,7 +90,6 @@ const router = createBrowserRouter([
             <Login />
           </ErrorBoundary>
         ),
-        //loader: () => import("./components/account/Login.tsx"),
       },
       {
         path: "/cart",
