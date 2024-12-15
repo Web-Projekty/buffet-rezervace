@@ -13,6 +13,7 @@ class Time
      */
     public function __construct(public int $hour, public int $minute, public int $second = 0)
     {
+        $this->fixFormat();
     }
 
     /**
@@ -111,6 +112,34 @@ class Time
     {
         return $this->getValue("s") > $time->getValue("s");
     }
+    public function isSmallerThan(Time $time): bool
+    {
+        return $this->getValue("s") < $time->getValue("s");
+    }
+
+    /**
+     * @param  Time   $time
+     * @param  string $unit
+     * @return int
+     */
+    public function diff(Time $time, string $unit): int
+    {
+        $hour = $this->hour - $time->hour;
+        $minute = $this->minute - $time->minute;
+        $second = $this->second - $time->second;
+
+        switch ($unit) {
+            case "s":
+                return $second + $minute * 60 + $hour * 3600;
+            case "m":
+                return $minute + $hour * 60;
+            case "h":
+                return $hour;
+            default:
+                return 0;
+        }
+
+    }
 
     public function __toString()
     {
@@ -122,15 +151,22 @@ class Time
         if ($this->second > 59) {
             $this->minute += (int) floor($this->second / 60);
             $this->second %= 60;
+        } elseif ($this->second < 0) {
+            $this->minute += (int) floor($this->second / 60) - 1;
+            $this->second = 60 + ($this->second % 60);
         }
         if ($this->minute > 59) {
             $this->hour += (int) floor($this->minute / 60);
             $this->minute %= 60;
+        } elseif ($this->minute < 0) {
+            $this->hour += (int) floor($this->minute / 60) - 1;
+            $this->minute = 60 + ($this->minute % 60);
         }
         if ($this->hour > 23) {
             $this->hour %= 24;
+        } elseif ($this->hour < 0) {
+            $this->hour = 24 + ($this->hour % 24);
         }
-
     }
 
     /**
