@@ -49,6 +49,69 @@ class Time
         $this->fixFormat();
     }
 
+    /**
+     * @param Time $time
+     */
+    public function addTime(Time $time): void
+    {
+        $this->hour += $time->hour;
+        $this->minute += $time->minute;
+        $this->second += $time->second;
+
+        $this->fixFormat();
+    }
+
+    /**
+     * returns complete time in specified unit
+     * s - seconds
+     * m - minutes
+     * h - hours
+     * @param string $unit
+     */
+    public function getValue(string $unit): int
+    {
+        switch ($unit) {
+            case "s":
+                return $this->second + $this->minute * 60 + $this->hour * 3600;
+            case "m":
+                return $this->minute + $this->hour * 60;
+            case "h":
+                return $this->hour;
+            default:
+                return 0;
+        }
+    }
+
+    /**
+     * @param string $lastUnit
+     */
+    public function format(string $lastUnit): string
+    {
+        $hour = str_pad((string) $this->hour, 2, '0', STR_PAD_LEFT);
+        $minute = str_pad((string) $this->minute, 2, '0', STR_PAD_LEFT);
+        $second = str_pad((string) $this->second, 2, '0', STR_PAD_LEFT);
+
+        switch ($lastUnit) {
+            case "s":
+                return "{$hour}:{$minute}:{$second}";
+            case "m":
+                return "{$hour}:{$minute}";
+            case "h":
+                return "{$hour}";
+        }
+
+        return "{$hour}:{$minute}:{$second}";
+    }
+
+    /**
+     * @param  Time   $time
+     * @return bool
+     */
+    public function isBiggerThan(Time $time): bool
+    {
+        return $this->getValue("s") > $time->getValue("s");
+    }
+
     public function __toString()
     {
         return "{$this->hour}:{$this->minute}:{$this->second}";
@@ -57,16 +120,28 @@ class Time
     public function fixFormat(): void
     {
         if ($this->second > 59) {
-            $this->minute = (int) floor($this->second / 60);
+            $this->minute += (int) floor($this->second / 60);
             $this->second %= 60;
         }
         if ($this->minute > 59) {
-            $this->hour = (int) floor($this->minute / 60);
+            $this->hour += (int) floor($this->minute / 60);
             $this->minute %= 60;
         }
         if ($this->hour > 23) {
             $this->hour %= 24;
         }
 
+    }
+
+    /**
+     * @param string $time
+     */
+    public static function fromString(string $time): Time
+    {
+        $time = explode(":", $time);
+        if (sizeof($time) <= 5) {
+            return new Time((int) $time[0], (int) $time[1]);
+        }
+        return new Time((int) $time[0], (int) $time[1], (int) $time[2]);
     }
 }
