@@ -35,6 +35,14 @@ export type MenuItem = {
   description: string;
   image: string;
   allergens: Allergen[];
+  category: "fastfood" | "drink" | "other";
+  variants: Variant[];
+};
+
+export type Variant = {
+  name: string;
+  quantity: number;
+  price: number;
 };
 
 export type Allergen = {
