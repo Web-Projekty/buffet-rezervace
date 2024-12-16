@@ -57,7 +57,7 @@ export const useLogin = (loginData: LoginData): UseLoginReturn => {
             class: data.payload.class,
           },
         });
-        setTokenExpiration(data.payload.token);
+        setTokenExpiration(data.payload.token as string);
         navigate("/");
         window.location.reload();
       } else {
