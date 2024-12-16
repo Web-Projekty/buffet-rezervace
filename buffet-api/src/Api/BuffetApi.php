@@ -6,6 +6,7 @@ namespace Buffet\Api;
 
 use Buffet\Api\AuthApi;
 use Buffet\Database\DatabaseManager;
+use Buffet\Database\Models\CategoryModel;
 use Buffet\Database\Models\ItemModel;
 use Buffet\Database\Models\OrderModel;
 use Buffet\Database\Models\UserModel;
@@ -187,6 +188,15 @@ class BuffetApi
         $response->setPayloadKeys(["data"]);
 
         $queryResult = null;
+        $categories = CategoryModel::getAll()->toArray();
+
+        $getName = function ($needle, $haystack) {
+            foreach ($haystack as $item) {
+                if ($item['id'] == $needle) {
+                    return $item["name"];
+                }
+            }
+        };
 
         $page = (int) $response->getRequestByKey("page");
         $itemsCount = (int) $response->getRequestByKey("itemsCount");
@@ -199,9 +209,20 @@ class BuffetApi
         $array = $queryResult->toArray();
         for ($i = 0; $i < sizeof($array); $i++) {
             // parse allergens
-            $array[$i]["allergens"] = json_decode($array[$i]["allergens"]);
+            $alergenList = [];
+            $alergens = json_decode($array[$i]["allergens"]);
+
+            foreach ($alergens as $alergen) {
+                $alergenList[] = ["id" => $alergen];
+            }
+
+            $array[$i]["allergens"] = $alergenList;
 
             // add image
+            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
+
+            // get category name
+            $array[$i]["categoryName"] = $getName($array[$i]["category"], $categories);
             $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
         }
 
