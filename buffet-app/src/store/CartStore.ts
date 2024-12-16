@@ -7,7 +7,7 @@ import {
 } from "../constants";
 import { getItem, removeItem, setItem } from "../components/utils/localStorage";
 
-type CartItem = MenuItem & { quantity: number };
+export type CartItem = MenuItem & { quantity: number };
 
 type CartItems = {
   isOpen: boolean;
