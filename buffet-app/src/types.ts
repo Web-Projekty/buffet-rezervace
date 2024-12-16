@@ -35,7 +35,7 @@ export type MenuItem = {
   description: string;
   image: string;
   allergens: Allergen[];
-  category: "fastfood" | "drink" | "other";
+  category: "all" | "fastfood" | "drink" | "other";
   variants: Variant[];
 };
 
