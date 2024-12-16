@@ -2,7 +2,7 @@ export const MAX_ITEMS: number = 5;
 
 export const MAX_ITEMS_CART: number = 10;
 
-export const ITEMS_PER_PAGE: number = 8;
+export const ITEMS_PER_PAGE: number = 12;
 
 export const ADMIN_ORDERS_PER_PAGE: number = 10;
 
