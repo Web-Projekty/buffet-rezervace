@@ -34,6 +34,7 @@ export default {
         secondary: "#00A699",
         transparentBlack: "rgba(0, 0, 0, 0.5)",
         descriptionColor: "#9ca3af",
+        interactiveColor: "#06b6d4",
       },
     },
   },
