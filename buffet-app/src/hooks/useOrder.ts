@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Order, OrderStatus } from "../types";
-import { getColorByStatus, statusToText } from "../components/utils/utils";
+import { getColorByStatus, getTextByStatus } from "../components/utils/utils";
 
 type UseStatusOrderReturn = {
   isOpen: boolean;
@@ -16,7 +16,7 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
   const [color, setColor] = useState<string>(getColorByStatus(order.status));
   const [status, setStatus] = useState<OrderStatus>(order.status);
   const [statusText, setStatusText] = useState<string>(
-    statusToText(order.status),
+    getTextByStatus(order.status),
   );
   const [delayed, setDelayed] = useState<boolean>(false);
 
@@ -35,7 +35,7 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
 
   useEffect(() => {
     setColor(getColorByStatus(status));
-    setStatusText(statusToText(status));
+    setStatusText(getTextByStatus(status));
   }, [status]);
 
   useEffect(() => {

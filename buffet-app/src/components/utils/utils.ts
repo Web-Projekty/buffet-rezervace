@@ -42,7 +42,7 @@ export const getColorByStatus = (status: OrderStatus): string => {
           : "bg-red-400";
 };
 
-export const statusToText = (status: OrderStatus): string => {
+export const getTextByStatus = (status: OrderStatus): string => {
   return status === "sent"
     ? "Čeká na zpracování"
     : status === "waiting"
