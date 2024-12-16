@@ -6,12 +6,16 @@ import { User } from "../types";
 type UseUserReturn = {
   user: User | null;
   token: string | null;
+  isAdmin: boolean;
+  fullName: string | null;
 };
 
 export const useUser = (): UseUserReturn => {
   const header: string | null = useAuthHeader();
   const user: User | null = useAuthUser();
-  const token = extractToken(header);
+  const token: string = extractToken(header);
+  const isAdmin: boolean = user?.isAdmin || false;
+  const fullName: string | null = user?.fullName || null;
 
-  return { user, token };
+  return { user, token, isAdmin, fullName };
 };
