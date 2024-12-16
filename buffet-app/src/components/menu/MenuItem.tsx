@@ -5,6 +5,7 @@ import MenuItemImage from "./MenuItemImage";
 import MenuItemText from "./MenuItemText";
 import MenuItemButtons from "./MenuItemButtons";
 import { menuItemShowAnimation } from "../../animations";
+import MenuItemVariants from "./MenuItemVariants";
 
 type MenuItemProps = {
   item: MenuItemType;
@@ -37,6 +38,7 @@ const MenuItem = ({ item }: MenuItemProps) => {
 
       <div className="flex h-full flex-col rounded-lg p-2">
         <MenuItemText {...item} />
+        <MenuItemVariants variants={item.variants} />
         <MenuItemButtons
           isItemInCart={isItemInCart}
           id={item.id}
