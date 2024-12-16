@@ -1,19 +1,27 @@
 import axios from "axios";
-import { Order, OrderStatus } from "../../types";
+import { MenuItem, Order, OrderStatus } from "../../types";
 import { FETCH_URL } from "../../constants";
+import { CartItem } from "../../store/CartStore";
 
-type CreateOrderReturn = {
+type OrderApiReturn = {
   order: Order;
+  error: boolean;
+};
+
+type MenuItemApiReturn = {
+  menuItem: MenuItem;
   error: boolean;
 };
 
 export const createOrder = async (
   token: string,
-): Promise<CreateOrderReturn> => {
+  cartItems: CartItem,
+): Promise<OrderApiReturn> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "makeOrderEvent",
       token: token,
+      items: cartItems,
     });
 
     return {
@@ -25,17 +33,99 @@ export const createOrder = async (
   }
 };
 
-export const updateOrder = async (requestData: {
-  token: string;
-  [key: string]: string | OrderStatus;
-}): Promise<Order> => {
+export const updateOrder = async (
+  token: string,
+  orderId: string,
+  status: OrderStatus,
+): Promise<OrderApiReturn> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "updateOrderEvent",
-      ...requestData,
+      token: token,
+      orderId: orderId,
+      status: status,
     });
-    return data.payload.data as Order;
+    return {
+      order: data.payload.data as Order,
+      error: data.status === "success" ? false : true,
+    };
   } catch {
     throw new Error("Chyba při aktualizaci objednávky.");
+  }
+};
+
+export const deleteOrder = async (
+  token: string,
+  orderId: string,
+): Promise<OrderApiReturn> => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "deleteOrderEvent",
+      token: token,
+      orderId: orderId,
+    });
+    return {
+      order: data.payload.data as Order,
+      error: data.status === "success" ? false : true,
+    };
+  } catch {
+    throw new Error("Chyba při mazání objednávky.");
+  }
+};
+
+export const createMenuItem = async (
+  token: string,
+  menuItem: MenuItem,
+): Promise<MenuItemApiReturn> => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "createMenuItemEvent",
+      token: token,
+      ...menuItem,
+    });
+    return {
+      menuItem: data.payload.data as MenuItem,
+      error: data.status === "success" ? false : true,
+    };
+  } catch {
+    throw new Error("Chyba při vytváření položky menu.");
+  }
+};
+
+export const updateMenuItem = async (
+  token: string,
+  menuItem: MenuItem,
+): Promise<MenuItemApiReturn> => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "updateMenuItemEvent",
+      token: token,
+      ...menuItem,
+    });
+    return {
+      menuItem: data.payload.data as MenuItem,
+      error: data.status === "success" ? false : true,
+    };
+  } catch {
+    throw new Error("Chyba při aktualizaci položky menu.");
+  }
+};
+
+export const deleteMenuItem = async (
+  token: string,
+  menuItemId: number,
+): Promise<MenuItemApiReturn> => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "deleteMenuItemEvent",
+      token: token,
+      menuItemId: menuItemId,
+    });
+    return {
+      menuItem: data.payload.data as MenuItem,
+      error: data.status === "success" ? false : true,
+    };
+  } catch {
+    throw new Error("Chyba při mazání položky menu.");
   }
 };
