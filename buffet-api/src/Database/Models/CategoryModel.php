@@ -12,7 +12,7 @@ class CategoryModel extends Model
     protected $table = 'Categories';
 
     /**
-     * @var array
+     * @var array<string>
      */
     protected $fillable = [
         'name', 'image', 'description'
