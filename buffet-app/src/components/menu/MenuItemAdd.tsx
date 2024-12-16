@@ -3,7 +3,7 @@ import { menuItemShowAnimation } from "../../animations";
 import { Plus } from "lucide-react";
 
 type MenuItemAddProps = {
-  handleBarOpen: () => void;
+  handleBarOpen: (id?: number) => void;
 };
 
 const MenuItemAdd = ({ handleBarOpen }: MenuItemAddProps) => {
