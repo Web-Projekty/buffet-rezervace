@@ -198,8 +198,11 @@ class BuffetApi
         // testing only !!!
         $array = $queryResult->toArray();
         for ($i = 0; $i < sizeof($array); $i++) {
+            // parse allergens
             $array[$i]["allergens"] = json_decode($array[$i]["allergens"]);
-            //$array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
+
+            // add image
+            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
         }
 
         //var_dump($array);
