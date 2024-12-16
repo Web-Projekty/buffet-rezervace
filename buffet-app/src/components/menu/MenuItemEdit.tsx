@@ -7,10 +7,14 @@ import Button from "../Button";
 
 type MenuItemProps = {
   item: MenuItemType;
+  handleBarOpen: (id: number) => void;
+  isBarOpen: boolean;
 };
 
-const MenuItemEdit = ({ item }: MenuItemProps) => {
-  const handleEdit = () => {};
+const MenuItemEdit = ({ item, handleBarOpen, isBarOpen }: MenuItemProps) => {
+  const handleEdit = () => {
+    handleBarOpen(item.id);
+  };
 
   return (
     <motion.div
@@ -22,7 +26,11 @@ const MenuItemEdit = ({ item }: MenuItemProps) => {
       <div className="flex h-full flex-col rounded-lg p-2">
         <MenuItemText {...item} />
       </div>
-      <Button className="absolute bottom-2 w-[16rem]" onClick={handleEdit}>
+      <Button
+        className="absolute bottom-2 w-[16rem]"
+        onClick={handleEdit}
+        disabled={isBarOpen}
+      >
         Upravit
       </Button>
     </motion.div>
