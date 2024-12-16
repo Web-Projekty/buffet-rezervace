@@ -198,15 +198,10 @@ class BuffetApi
         // testing only !!!
         $array = $queryResult->toArray();
         for ($i = 0; $i < sizeof($array); $i++) {
-            $array[$i]["allergens"] = null;
+            //var_dump($array);
 
-            $alergen["id"] = rand(1, 14);
-            $alergen["name"] = "test";
-            $alergen["description"] = "test_desc";
 
-            $array[$i]["allergens"][0] = $alergen;
-
-            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
+            //$array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
         }
 
         //var_dump($array);
@@ -280,7 +275,7 @@ class BuffetApi
     }
 
     /**
-     * @param ApiResponse $reponse
+     * @param  ApiResponse   $reponse
      * @return ApiResponse
      */
     function handleMakeOrderEvent(ApiResponse $reponse): ApiResponse
