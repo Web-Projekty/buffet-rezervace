@@ -29,13 +29,13 @@ const UserMenu = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-5">
       <h1 className="text-3xl font-bold text-white">Menu</h1>
-      {/* {isLoading && <Loading size={30} />} */}
+
       {currentPage > totalPagesCount ? (
         <p className="italic text-white">
           "Meow? (Waiting for something to happen?)"
         </p>
       ) : (
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {dataList.map((item) => (
             <MenuItem key={item.id} item={item} />
           ))}
