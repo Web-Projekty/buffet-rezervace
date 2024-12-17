@@ -55,7 +55,7 @@ const MenuEdit = () => {
           )}
 
           <div
-            className={`grid grid-cols-1 gap-10 md:grid-cols-2 ${isBarOpen ? "xl:grid-cols-3" : "xl:grid-cols-4"}`}
+            className={`grid grid-cols-1 gap-5 md:grid-cols-2 xl:gap-10 ${isBarOpen ? "xl:grid-cols-3" : "xl:grid-cols-4"}`}
           >
             <MenuItemAdd handleBarOpen={handleBarOpen} />
             {dataList.map((item) => (
