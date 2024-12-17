@@ -18,7 +18,6 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
   const [statusText, setStatusText] = useState<string>(
     getTextByStatus(order.status),
   );
-  const [delayed, setDelayed] = useState<boolean>(false);
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
@@ -29,33 +28,28 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
   };
 
   const handleDelayed = () => {
-    setDelayed(true);
     setColor("bg-red-400");
   };
 
+  console.log(new Date(order.pickupDate).toLocaleString());
+
+  const checkDelayed = () => {
+    const currentTime = new Date().getTime();
+    const pickupTime = new Date(order.pickupDate).getTime();
+    return currentTime > pickupTime;
+  };
+
   useEffect(() => {
-    setColor(getColorByStatus(status));
+    setColor(checkDelayed() ? "bg-red-400" : getColorByStatus(status));
     setStatusText(getTextByStatus(status));
-  }, [status]);
 
-  useEffect(() => {
-    if (status === "sent" && !delayed) {
+    if (!checkDelayed()) {
       const intervalId = setInterval(() => {
-        const currentTime = new Date().getTime();
-        const pickupTime = new Date(order.pickupDate).getTime();
-        console.log(currentTime, pickupTime);
-        if (
-          currentTime > pickupTime &&
-          status === "sent" &&
-          color !== "bg-red-500"
-        ) {
-          handleDelayed();
-        }
+        handleDelayed();
       }, 1000);
-
       return () => clearInterval(intervalId);
     }
-  }, [order.pickupDate, status, delayed]);
+  }, [status, order.pickupDate]);
 
   return { isOpen, toggleOpen, color, status, statusText, handleStatus };
 };
