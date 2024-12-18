@@ -35,7 +35,8 @@ export type MenuItem = {
   description: string;
   image: string;
   allergens: Allergen[];
-  category: "all" | "fastfood" | "drink" | "other";
+  category: number;
+  categoryName: string;
   variants: Variant[];
 };
 
@@ -51,6 +52,18 @@ export type Allergen = {
   description: string;
   image?: string;
   icon?: LucideIcon;
+};
+
+export type Category = {
+  id: number;
+  name: string;
+  image: string;
+  description: string;
+};
+
+export type MenuData = {
+  categoryList: Category[];
+  data: MenuItem[];
 };
 
 export type RequestData = {
