@@ -304,7 +304,7 @@ class BuffetApi
      */
     function handleGenerateTimeslots(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(["token", "startTime", "endTime", "interval", "limit"]);
+        $response->setRequestKeys(["token", "startTime", "endTime", "interval", "limit", "clear"]);
 
         $jwt = new JWTApi;
         $orderApi = new OrderApi;
