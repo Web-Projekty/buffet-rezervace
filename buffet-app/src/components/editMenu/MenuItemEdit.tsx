@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { MenuItem as MenuItemType } from "../../types";
-import MenuItemImage from "./MenuItemImage";
-import MenuItemText from "./MenuItemText";
+import MenuItemImage from "../menu/MenuItemImage";
+import MenuItemText from "../menu/MenuItemText";
 import { menuItemShowAnimation } from "../../animations";
 import Button from "../Button";
 
