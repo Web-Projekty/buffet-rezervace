@@ -32,7 +32,7 @@ const MenuItem = ({ item }: MenuItemProps) => {
   return (
     <motion.div
       {...menuItemShowAnimation(0.5)}
-      className="relative flex h-[26rem] w-[18rem] flex-col justify-start gap-2 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black"
+      className="relative flex h-[26rem] w-[18rem] flex-shrink-0 flex-col justify-start gap-2 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black"
     >
       <MenuItemImage {...item} />
 
