@@ -181,6 +181,7 @@ class BuffetApi
 
     /**
      * @param ApiResponse $response
+     * @todo cleanup
      */
     function handleGetMenu(ApiResponse $response): ApiResponse
     {
@@ -190,13 +191,7 @@ class BuffetApi
         $queryResult = null;
         $categories = CategoryModel::getAll()->toArray();
 
-        $getName = function ($needle, $haystack) {
-            foreach ($haystack as $item) {
-                if ($item['id'] == $needle) {
-                    return $item["name"];
-                }
-            }
-        };
+        //var_dump($categories);
 
         $page = (int) $response->getRequestByKey("page");
         $itemsCount = (int) $response->getRequestByKey("itemsCount");
@@ -205,7 +200,10 @@ class BuffetApi
             return $response->setError(Error::QueryFailed);
         }
 
-        // testing only !!!
+        // adding category list
+
+        $response->addPayload("categoryList",$categories);
+
         $array = $queryResult->toArray();
         for ($i = 0; $i < sizeof($array); $i++) {
             // parse allergens
@@ -222,7 +220,7 @@ class BuffetApi
             $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
 
             // get category name
-            $array[$i]["categoryName"] = $getName($array[$i]["category"], $categories);
+            //$array[$i]["categoryName"] = $getName($array[$i]["category"], $categories);
             $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
         }
 
