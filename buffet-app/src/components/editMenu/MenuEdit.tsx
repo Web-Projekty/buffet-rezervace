@@ -9,6 +9,9 @@ import MenuItemEdit from "./MenuItemEdit";
 import MenuItemEditBar from "./MenuItemEditBar";
 import { useFetch } from "../../hooks/useFetch";
 import { usePaging } from "../../hooks/usePaging";
+import { Pen } from "lucide-react";
+import MenuCategoryEditBar from "./MenuCategoryEditBar";
+import MenuCategoryAdd from "./MenuCategoryAdd";
 
 const MenuEdit = () => {
   const { data, error, isLoading } = useFetch<MenuData>(FETCH_URL, {
@@ -20,10 +23,11 @@ const MenuEdit = () => {
   const { dataList, currentPage, totalPagesCount, arrayOfPages, handlePage } =
     usePaging<MenuItemType>(data?.data, ITEMS_PER_PAGE, "menuPage");
 
-  /*const { dataList, currentPage, arrayOfPages, totalPagesCount, handlePage } =
-    useBackendPaging<MenuItemType>("getMenu", ITEMS_PER_PAGE - 1);*/
-  const [isBarOpen, setIsBarOpen] = useState<boolean>(false);
+  const [isItemBarOpen, setIsItemBarOpen] = useState<boolean>(false);
   const [editItem, setEditItem] = useState<MenuItemType | null>(null);
+  const [isCategoryBarOpen, setIsCategoryBarOpen] = useState<boolean>(false);
+  const [editCategory, setEditCategory] = useState<Category | null>(null);
+
   const [categories, setCategories] = useState<Category[]>([]);
 
   const handleBarOpen = (id?: number) => {
@@ -32,7 +36,20 @@ const MenuEdit = () => {
     } else {
       setEditItem(null);
     }
-    setIsBarOpen(!isBarOpen);
+    setIsItemBarOpen(!isItemBarOpen);
+    setIsCategoryBarOpen(false);
+  };
+
+  const handleCategoryBarOpen = (id?: number) => {
+    if (id) {
+      setEditCategory(
+        categories.find((category) => category.id === id) || null,
+      );
+    } else {
+      setEditCategory(null);
+    }
+    setIsCategoryBarOpen(!isCategoryBarOpen);
+    setIsItemBarOpen(false);
   };
 
   useEffect(() => {
@@ -53,9 +70,8 @@ const MenuEdit = () => {
   return (
     <div className="relative flex flex-col items-center justify-center gap-5">
       <h1 className="text-3xl font-bold text-white">Úprava menu</h1>
-      {/* {isLoading && <Loading size={30} />} */}
       <div className="flex flex-row-reverse items-start gap-5">
-        {isBarOpen && (
+        {isItemBarOpen && (
           <div className="flex-shrink-0">
             <MenuItemEditBar
               handleBarOpen={handleBarOpen}
@@ -64,14 +80,38 @@ const MenuEdit = () => {
             />
           </div>
         )}
+        {isCategoryBarOpen && (
+          <div className="flex-shrink-0">
+            <MenuCategoryEditBar
+              handleBarOpen={handleCategoryBarOpen}
+              category={editCategory}
+            />
+          </div>
+        )}
         <div className="flex-col">
           {categories?.map((category) => (
             <div className="mt-5 flex flex-col gap-5" key={category.id}>
-              <h1 className="text-4xl font-bold text-white">{category.name}</h1>
+              <div className="flex items-center justify-between">
+                <h1 className="text-4xl font-bold text-white">
+                  {category.name}
+                </h1>
+                <div className="flex gap-2">
+                  <div className="mr-5 text-white">{category.description}</div>
+                  <button
+                    onClick={() => handleCategoryBarOpen(category.id)}
+                    disabled={isCategoryBarOpen}
+                  >
+                    <Pen className="text-white" />
+                  </button>
+                </div>
+              </div>
               <div
-                className={`grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-10 ${isBarOpen ? "xl:grid-cols-2 2xl:grid-cols-3" : "xl:grid-cols-2 2xl:grid-cols-4"}`}
+                className={`grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-10 ${isItemBarOpen || isCategoryBarOpen ? "xl:grid-cols-2 2xl:grid-cols-3" : "xl:grid-cols-2 2xl:grid-cols-4"}`}
               >
-                <MenuItemAdd handleBarOpen={handleBarOpen} />
+                <MenuItemAdd
+                  handleBarOpen={handleBarOpen}
+                  isBarOpen={isItemBarOpen}
+                />
                 {dataList
                   ?.filter(
                     (item) =>
@@ -82,10 +122,14 @@ const MenuEdit = () => {
                       key={item.id}
                       item={item}
                       handleBarOpen={handleBarOpen}
-                      isBarOpen={isBarOpen}
+                      isBarOpen={isItemBarOpen}
                     />
                   ))}
               </div>
+              <MenuCategoryAdd
+                handleCategoryBarOpen={handleCategoryBarOpen}
+                isCategoryBarOpen={isCategoryBarOpen}
+              />
             </div>
           ))}
         </div>
