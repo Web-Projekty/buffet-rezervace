@@ -67,12 +67,6 @@ export type MenuData = {
 };
 
 export type RequestData = {
-  requestType:
-    | "login"
-    | "verify"
-    | "isAdmin"
-    | "getMenu"
-    | "getOrders"
-    | "getAllergens";
+  requestType: "login" | "verify" | "getMenu" | "getOrders";
   [key: string]: string | number | boolean | object | undefined;
 };
