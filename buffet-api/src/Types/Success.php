@@ -18,6 +18,10 @@ enum Success: string {
     // JWT
     case Verification = 'Token verified succesfully';
 
+    ############################ Channels ############################
+    case ChannelConnected = 'Channel connected successfully';
+    case Subscribed = 'Subscribed successfully';
+    
     /**
      * @return string
      */
@@ -26,7 +30,7 @@ enum Success: string {
         if ($this->isProd()) {
             return "Api call finished successfully";
         }
-        return $this->value;
+        return $this->value ?? "Api call finished successfully (missing success message)";
     }
 
     /**

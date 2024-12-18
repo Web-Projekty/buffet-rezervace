@@ -15,16 +15,16 @@ class AllergenModel extends Model
 
     // Define the columns that are mass assignable
     /**
-     * @var array
+     * @var array<string>
      */
     protected $fillable = ['name', 'description', 'image'];
 
     /**
-     * @var mixed
+     * @var bool
      */
     public $timestamps = false;
 
-    public static function getAll()
+    public static function getAll(): \Illuminate\Database\Eloquent\Collection  | bool
     {
         try {
             return AllergenModel::all();

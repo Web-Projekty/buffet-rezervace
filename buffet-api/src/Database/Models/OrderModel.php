@@ -15,19 +15,31 @@ class OrderModel extends Model
 
     // Define the columns that are mass assignable
     /**
-     * @var array
+     * @var array<string>
      */
     protected $fillable = ['userId', 'status', 'date', 'pickupDate', 'items'];
 
     /**
-     * @var mixed
+     * @var bool
      */
     public $timestamps = true;
 
-    public static function getAll()
+    public static function getAll(): bool | \Illuminate\Database\Eloquent\Collection
     {
         try {
             return OrderModel::all();
+        } catch (QueryException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @param $userId
+     */
+    public static function getByUser(int $userId): bool | \Illuminate\Database\Eloquent\Collection
+    {
+        try {
+            return OrderModel::query()->where('userId', $userId)->get();
         } catch (QueryException $e) {
             return false;
         }

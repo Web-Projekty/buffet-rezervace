@@ -6,11 +6,14 @@ namespace Buffet\Api;
 
 use Buffet\Api\AuthApi;
 use Buffet\Database\DatabaseManager;
+use Buffet\Database\Models\CategoryModel;
 use Buffet\Database\Models\ItemModel;
+use Buffet\Database\Models\OrderModel;
 use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\Types\Success;
+use Buffet\Utils\WebsocketClient;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
@@ -33,7 +36,8 @@ class BuffetApi
          * @var ApiResponse
          */
         $response = $this->handleApiCall();
-        if ($response == null || !isset($response) || empty($response) || get_class($response) != "Buffet\Types\ApiResponse") {
+
+        if ($response == null || get_class($response) != "Buffet\Types\ApiResponse") {
             $response = new ApiResponse();
             $response->setError(Error::InvalidDataType);
         }
@@ -50,12 +54,17 @@ class BuffetApi
      *
      * Calls specified requestType methods
      *
-     * @return array API response
+     * @param  string      $request
+     * @return ApiResponse API response
      */
 
-    function handleApiCall(): ApiResponse
+    function handleApiCall(string $request = null): ApiResponse
     {
-        $request = $this->getPostJson();
+        if (!$request) {
+            $request = $this->getPostJson();
+        } else {
+            $request = json_decode($request, true);
+        }
 
         /**
          * @var ApiResponse
@@ -72,32 +81,32 @@ class BuffetApi
         switch ($response->getRequestType()) {
             case "test":
                 return $this->handleTest($response);
-                break;
 
             case "register";
                 return $this->handleRegister($response);
-                break;
 
             case "login":
                 return $this->handleLogin($response);
-                break;
 
             case "verify":
                 return $this->handleVerify($response);
-                break;
 
             case "getMenu":
                 return $this->handleGetMenu($response);
-                break;
+
             case "isAdmin":
                 return $this->handleIsAdmin($response);
-                break;
+
+            case "getOrders":
+                return $this->handleGetOrders($response);
+
+            case "makeOrderEvent":
+                return $this->handleMakeOrderEvent($response);
 
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
 
-                break;
         }
     }
 
@@ -134,7 +143,7 @@ class BuffetApi
  * API handler for user registration
  *
  *
- * @param  ApiResponse $request API request
+ * @param  ApiResponse $response API request
  * @return ApiResponse API response
  */
 
@@ -154,7 +163,7 @@ class BuffetApi
  * API handler for user lgoin
  *
  *
- * @param  ApiResponse $request API request
+ * @param  ApiResponse $response API request
  * @return ApiResponse API response with JWT token
  */
 
@@ -172,13 +181,17 @@ class BuffetApi
 
     /**
      * @param ApiResponse $response
+     * @todo cleanup
      */
     function handleGetMenu(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["page", "itemsCount"]);
-        $response->setPayloadKeys(["menuItems"]);
+        $response->setPayloadKeys(["data"]);
 
         $queryResult = null;
+        $categories = CategoryModel::getAll()->toArray();
+
+        //var_dump($categories);
 
         $page = (int) $response->getRequestByKey("page");
         $itemsCount = (int) $response->getRequestByKey("itemsCount");
@@ -187,26 +200,37 @@ class BuffetApi
             return $response->setError(Error::QueryFailed);
         }
 
-        // testing only !!!
+        // adding category list
+
+        $response->addPayload("categoryList",$categories);
+
         $array = $queryResult->toArray();
         for ($i = 0; $i < sizeof($array); $i++) {
-            $alergen["id"] = 7;
-            $alergen["name"] = "test";
-            $alergen["description"] = "test_desc";
+            // parse allergens
+            $alergenList = [];
+            $alergens = json_decode($array[$i]["allergens"]);
 
-            $array[$i]["allergens"] = null;
-            $array[$i]["allergens"][0] = $alergen;
+            foreach ($alergens as $alergen) {
+                $alergenList[] = ["id" => $alergen];
+            }
 
-            $alergen["id"] = 13;
-            $alergen["name"] = "test2";
-            $alergen["description"] = "test_desc2";
+            $array[$i]["allergens"] = $alergenList;
 
-            $array[$i]["allergens"][1] = $alergen;
-            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/";
+            // add image
+            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
+
+            // get category name
+            //$array[$i]["categoryName"] = $getName($array[$i]["category"], $categories);
+            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
         }
-        // var_dump($array);
 
-        $response->setPayload("menuItems", $array);
+        //var_dump($array);
+
+        $response->setPayload("data", $array);
+
+        // paging info
+
+        $response->setPayload("itemsCount", ItemModel::countAll());
 
         /* // production
         $response->setPayload("menuItems", $queryResult->toArray());
@@ -217,8 +241,37 @@ class BuffetApi
     }
 
     /**
-     * @param  ApiResponse $response
-     * @return mixed
+     * @param ApiResponse $response
+     */
+    function handleGetOrders(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token"]);
+        $response->setPayloadKeys(["data"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+        $isAdmin = UserModel::isAdmin($uid);
+
+        if ($isAdmin) {
+            $response->setPayload("data", OrderModel::getAll());
+        } else {
+            $response->setPayload("data", OrderModel::getByUser((int) $uid));
+        }
+
+        $response->setStatus(true);
+        return $response;
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
      */
     function handleIsAdmin(ApiResponse $response): ApiResponse
     {
@@ -227,12 +280,7 @@ class BuffetApi
 
         $jwt = new JWTApi;
 
-        $token = $response->getRequestByKey("token");
         $jwt->validateToken($response);
-
-        if ($response->hasFailed()) {
-            return $response;
-        }
 
         $uid = $jwt->decodeToken($response)->sub;
 
@@ -246,11 +294,21 @@ class BuffetApi
         return $response;
     }
 
+    /**
+     * @param  ApiResponse   $reponse
+     * @return ApiResponse
+     */
+    function handleMakeOrderEvent(ApiResponse $reponse): ApiResponse
+    {
+        WebsocketClient::send("kds", json_encode(["requestType" => "publish"]));
+        return $reponse->setStatus(true);
+    }
+
 /**
  * API handler for data transit testing
  *
  *
- * @param  ApiResponse $request API request
+ * @param  ApiResponse $response API request
  * @return ApiResponse copy of the request
  */
 
@@ -267,11 +325,10 @@ class BuffetApi
 
 /**
  * Utility function for checking if all keys are present and carry data
- *
- *
- * @param  array      $request API request
- * @param  array      $members list of all the required members
- * @return bool|error if members missing kills the process and sends error otherwise true
+ * @deprecated
+ * @param  array<mixed> $request API request
+ * @param  array<mixed> $members list of all the required members
+ * @return bool|error   if members missing kills the process and sends error otherwise true
  */
 
     function hasAllMembers($request, $members)
@@ -291,7 +348,7 @@ class BuffetApi
  *
  * Retrieves json data from POST method raw data and returns decode json
  *
- * @return array decoded json from POST raw data
+ * @return array<mixed> decoded json from POST raw data
  */
 
     function getPostJson()

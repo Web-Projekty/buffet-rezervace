@@ -2,13 +2,13 @@
 
 declare (strict_types = 1);
 
-namespace Buffet\Tests;
+namespace Buffet\Tests\Utils;
 
 use Buffet\Utils\EnvSetup;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../../../vendor/autoload.php';
 
 class EnvSetupTest extends TestCase
 {
@@ -22,9 +22,10 @@ class EnvSetupTest extends TestCase
     }
 
     #[TestDox('Env file creation')]
-    public function testEnvSetup()
+    public function testEnvSetup(): void
     {
         $this->assertFalse($this->envSetup->returnOriginalEnv);
+        $hadOrginalEnv = false;
 
         // checks for original env file
         if (file_exists($this->envSetup->envPath)) {
@@ -44,7 +45,7 @@ class EnvSetupTest extends TestCase
     }
 
     #[TestDox('Env file custom content')]
-    public function testEnvFileContent()
+    public function testEnvFileContent(): void
     {
         $customEnvContent = 'CUSTOM=CONTENT';
         $this->envSetup->setupDummyEnv($customEnvContent);
@@ -55,9 +56,10 @@ class EnvSetupTest extends TestCase
     }
 
     #[TestDox('Env file backup')]
-    public function testEnvFileBackup()
+    public function testEnvFileBackup(): void
     {
         $customEnvContent = 'CUSTOM=CONTENT';
+        $hadOrginalEnv = false;
 
         // checks for original env file
         if (file_exists($this->envSetup->envPath)) {
@@ -75,7 +77,7 @@ class EnvSetupTest extends TestCase
     }
 
     #[TestDox('Env file keep original')]
-    public function testEnvFileKeepOriginal()
+    public function testEnvFileKeepOriginal(): void
     {
         // manually backup original env file
         if (file_exists($this->envSetup->envPath)) {
@@ -96,7 +98,6 @@ class EnvSetupTest extends TestCase
 
         $this->envSetup->cleanupDummyEnv();
         $this->assertStringEqualsFile(expectedFile: $this->envSetup->envPath, actualString: $customEnvContent);
-
 
         ### Custom teardown sequence ###
 

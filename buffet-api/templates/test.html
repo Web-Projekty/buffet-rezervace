@@ -1,72 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Test</title>
-  </head>
 
-  <body>
-    <form id="myForm">
-      <select name="requestType">
-        <option value="getMenu">getMenu</option>
-        <option value="isAdmin">isAdmin</option>
-        <option value="login">login</option>
-        <option value="register">register</option>
-        <option value="verify">verify</option>
-        <option value="test">test</option>
-        <option value="random_stuff_here">non-existent-call</option>
-      </select>
-      <input type="text" name="username" placeholder="username" />
-      <input type="text" name="password" placeholder="password" />
-      <input type="text" name="token" placeholder="token" />
-      <input type="text" name="page" placeholder="page" value="1"/>
-      <input type="text" name="itemsCount" placeholder="itemsCount" value="1"/>
-      <input type="button" value="Submit" onclick="submitForm()" />
-    </form>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test</title>
+</head>
 
-    <pre><code id="json"></code></pre>
+<body>
+  <form id="myForm">
+    <select name="requestType">
+      <option value="makeOrderEvent">makeOrderEvent</option>
+      <option value="getOrders">getOrders</option>
+      <option value="getMenu">getMenu</option>
+      <option value="isAdmin">isAdmin</option>
+      <option value="login">login</option>
+      <option value="register">register</option>
+      <option value="verify">verify</option>
+      <option value="test">test</option>
+      <option value="random_stuff_here">non-existent-call</option>
+    </select>
+    <input type="text" name="username" placeholder="username" />
+    <input type="text" name="password" placeholder="password" />
+    <input type="text" name="token" placeholder="token" />
+    <input type="text" name="page" placeholder="page" value="1" />
+    <input type="text" name="itemsCount" placeholder="itemsCount" value="1" />
+    <input type="button" value="Submit" onclick="submitForm()" />
+  </form>
 
-    <script>
-      function submitForm() {
-        const form = document.getElementById("myForm");
-        const formData = new FormData(form);
+  <pre><code id="json"></code></pre>
 
-        // Convert FormData to a plain object
-        const data = {};
-        formData.forEach((value, key) => {
-          data[key] = value;
-        });
+  <script>
+    function submitForm() {
+      const form = document.getElementById("myForm");
+      const formData = new FormData(form);
 
-        // Send data as JSON
-        fetch(window.location.href + "/api", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
+      // Convert FormData to a plain object
+      const data = {};
+      formData.forEach((value, key) => {
+        data[key] = value;
+      });
+
+      // Send data as JSON
+      fetch(window.location.href + "/api", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => {
+          if (
+            response.headers.get("Content-Type").includes("application/json")
+          ) {
+            return response.json();
+          } else {
+            // Handle HTML or other response types
+            return response.text();
+          }
         })
-          .then((response) => {
-            if (
-              response.headers.get("Content-Type").includes("application/json")
-            ) {
-              return response.json();
-            } else {
-              // Handle HTML or other response types
-              return response.text();
-            }
-          })
-          .then((result) => {
-            if (typeof result === "string") {
-              // Handle HTML or other response types
-              document.getElementById("json").innerHTML = result;
-            } else {
-              console.log(result);
-              document.getElementById("json").innerHTML =
-                JSON.stringify(result);
-            }
-          });
-      }
-    </script>
-  </body>
+        .then((result) => {
+          if (typeof result === "string") {
+            // Handle HTML or other response types
+            document.getElementById("json").innerHTML = result;
+          } else {
+            console.log(result);
+            document.getElementById("json").innerHTML =
+              JSON.stringify(result);
+          }
+        });
+    }
+  </script>
+</body>
+
 </html>

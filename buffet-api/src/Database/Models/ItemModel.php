@@ -17,12 +17,12 @@ class ItemModel extends Model
 
     // Define the columns that are mass assignable
     /**
-     * @var array
+     * @var array<string>
      */
     protected $fillable = ['name', 'price', 'description', 'image', 'allergens'];
 
     /**
-     * @var mixed
+     * @var bool
      */
     public $timestamps = false;
 
@@ -35,10 +35,23 @@ class ItemModel extends Model
         }
     }
 
-    public static function getAllByPage(int $page, int $itemsCount): \Illuminate\Database\Eloquent\Collection  | bool
+    /**
+     * @param int $page
+     * @param int $itemsCount
+     */
+    public static function getAllByPage(int $page, int $itemsCount): bool | \Illuminate\Database\Eloquent\Collection  | \Illuminate\Support\Collection
     {
         try {
-            return ItemModel::select()->offset(($page - 1) * $itemsCount)->limit($itemsCount)->get();
+            return ItemModel::query()->offset(($page - 1) * $itemsCount)->limit($itemsCount)->get();
+        } catch (QueryException $e) {
+            return false;
+        }
+    }
+
+    public static function countAll(): int | bool
+    {
+        try {
+            return ItemModel::query()->count();
         } catch (QueryException $e) {
             return false;
         }
