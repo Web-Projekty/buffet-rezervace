@@ -12,7 +12,7 @@ type UseFetchReturn<T> = {
 export const useFetch = <T>(
   url: string,
   requestData: Record<string, unknown>,
-  initialValue?: T,
+  initialValue?: T | null,
   dependencies: unknown[] = [],
 ): UseFetchReturn<T> => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -30,13 +30,13 @@ export const useFetch = <T>(
     async function fetchData() {
       try {
         const { data } = await axios.post(url, requestData);
-        setData(data.payload.data as T);
+        setData(data.payload);
         setItemsCount(data.payload.itemsCount as number);
-        console.log("useFetch data", data.payload);
+        console.log("useFetch data", data);
       } catch (e) {
         console.log(e);
         setError("Chyba načítání dat ze serveru.");
-        setData(data as T);
+        setData(null);
       } finally {
         setIsLoading(false);
       }
