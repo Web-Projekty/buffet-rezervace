@@ -6,6 +6,7 @@ namespace Buffet\Api;
 
 use Buffet\Api\AuthApi;
 use Buffet\Database\DatabaseManager;
+use Buffet\Database\Models\CategoryModel;
 use Buffet\Database\Models\ItemModel;
 use Buffet\Database\Models\OrderModel;
 use Buffet\Database\Models\UserModel;
@@ -184,6 +185,7 @@ class BuffetApi
     }
 
     /**
+     * @todo cleanup
      * @param ApiResponse $response
      */
     function handleGetMenu(ApiResponse $response): ApiResponse
@@ -192,6 +194,9 @@ class BuffetApi
         $response->setPayloadKeys(["data"]);
 
         $queryResult = null;
+        $categories = CategoryModel::getAll()->toArray();
+
+        //var_dump($categories);
 
         $page = (int) $response->getRequestByKey("page");
         $itemsCount = (int) $response->getRequestByKey("itemsCount");
@@ -200,17 +205,27 @@ class BuffetApi
             return $response->setError(Error::QueryFailed);
         }
 
-        // testing only !!!
+        // adding category list
+
+        $response->addPayload("categoryList", $categories);
+
         $array = $queryResult->toArray();
         for ($i = 0; $i < sizeof($array); $i++) {
-            $array[$i]["allergens"] = null;
+            // parse allergens
+            $alergenList = [];
+            $alergens = json_decode($array[$i]["allergens"]);
 
-            $alergen["id"] = rand(1, 14);
-            $alergen["name"] = "test";
-            $alergen["description"] = "test_desc";
+            foreach ($alergens as $alergen) {
+                $alergenList[] = ["id" => $alergen];
+            }
 
-            $array[$i]["allergens"][0] = $alergen;
+            $array[$i]["allergens"] = $alergenList;
 
+            // add image
+            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
+
+            // get category name
+            //$array[$i]["categoryName"] = $getName($array[$i]["category"], $categories);
             $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
         }
 
@@ -316,7 +331,7 @@ class BuffetApi
             $orderApi->generateTimeslots($startTime, $endTime, $interval, $limit);
         } catch (DateException $e) {
             $response->setError(Error::DateTimeInvalid);
-        }catch (NegativeValueException $e) {
+        } catch (NegativeValueException $e) {
             $response->setError(Error::DateTimeInvalid);
         }
 
