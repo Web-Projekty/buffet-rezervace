@@ -1,21 +1,30 @@
-import { ITEMS_PER_PAGE } from "../../constants";
-import { useBackendPaging } from "../../hooks/useBackendPaging";
-import { MenuItem as MenuItemType } from "../../types";
+import { useEffect, useState } from "react";
+import { FETCH_URL, ITEMS_PER_PAGE } from "../../constants";
+import { Category, MenuData, MenuItem as MenuItemType } from "../../types";
 import ErrorComponent from "../error/ErrorComponent";
 import Loading from "../Loading";
 import PagingButtons from "../PagingButtons";
+import { useFetch } from "../../hooks/useFetch";
+import { usePaging } from "../../hooks/usePaging";
 import MenuItem from "./MenuItem";
 
 const UserMenu = () => {
-  const {
-    dataList,
-    error,
-    isLoading,
-    currentPage,
-    arrayOfPages,
-    totalPagesCount,
-    handlePage,
-  } = useBackendPaging<MenuItemType>("getMenu", ITEMS_PER_PAGE);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  const { data, error, isLoading } = useFetch<MenuData>(FETCH_URL, {
+    requestType: "getMenu",
+    itemsCount: ITEMS_PER_PAGE,
+    page: 1,
+  });
+
+  const { dataList, currentPage, totalPagesCount, arrayOfPages, handlePage } =
+    usePaging<MenuItemType>(data?.data, ITEMS_PER_PAGE, "menuPage");
+
+  useEffect(() => {
+    if (data) {
+      setCategories(data.categoryList);
+    }
+  }, [data]);
 
   if (isLoading) {
     return <Loading size={30} />;
@@ -35,9 +44,27 @@ const UserMenu = () => {
           "Meow? (Waiting for something to happen?)"
         </p>
       ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {dataList.map((item) => (
-            <MenuItem key={item.id} item={item} />
+        <div className="flex-col">
+          {categories?.map((category) => (
+            <div className="mt-5 flex flex-col gap-5" key={category.id}>
+              <div className="flex justify-between">
+                <h1 className="text-4xl font-bold text-white">
+                  {category.name}
+                </h1>
+                <div className="mr-5 text-white">{category.description}</div>
+              </div>
+
+              <div
+                className={`grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-10`}
+              >
+                {dataList
+                  ?.filter(
+                    (item) =>
+                      categories.length > 0 && item.category === category.id,
+                  )
+                  .map((item) => <MenuItem key={item.id} item={item} />)}
+              </div>
+            </div>
           ))}
         </div>
       )}
