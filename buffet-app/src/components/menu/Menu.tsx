@@ -1,5 +1,5 @@
 import { useUser } from "../../hooks/useUser";
-import MenuEdit from "./MenuEdit";
+import MenuEdit from "../editMenu/MenuEdit";
 import UserMenu from "./UserMenu";
 
 const Menu = () => {

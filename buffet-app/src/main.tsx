@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
 import Menu from "./components/menu/Menu.tsx";
-import MenuEdit from "./components/menu/MenuEdit.tsx";
+import MenuEdit from "./components/editMenu/MenuEdit.tsx";
 import Login from "./components/auth/login/Login.tsx";
 import Dashboard from "./components/auth/Dashboard.tsx";
 import Allergens from "./components/allergens/Allergens.tsx";
