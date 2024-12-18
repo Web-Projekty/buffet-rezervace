@@ -14,6 +14,7 @@ enum Error: string {
     case MissingRequestKeys = 'Some or all of the request keys have been left undefined';
     case MissingPayloadKeys = 'Some or all of the payload keys have been left undefined';
     case MissingRequestType = 'Api request type is missing';
+    case InvalidJson = 'Invalid JSON format';
 
     ############################ Auth ############################
     // credManager
@@ -38,9 +39,15 @@ enum Error: string {
     case CorruptedOrNull = "Token's data have been corrupted or are null";
     case UnexpectedValue = "Token value is unexpected";
 
+    // Admin status
+    case Unauthorized = "User does not have appropriate permissions";
+
     ############################ Database ############################
     case QueryFailed = 'Query from database has failed';
-    
+
+    ############################ Ws Channels ############################
+    case NonexistentChannel = 'Channel doesn\'t exist';
+    case AlreadySubscribed = 'User is already subscribed to this channel';
     /**
      * @return string
      */
@@ -49,7 +56,7 @@ enum Error: string {
         if ($this->isProd()) {
             return "Oops something has gone wrong";
         }
-        return $this->value;
+        return $this->value ?? "Oops something has gone wrong (missing error message)";
     }
 
     /**

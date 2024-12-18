@@ -23,7 +23,7 @@ class EnvSetup
      * Set up a mock .env environment for testing
      * @param $fileContent
      */
-    public function setupDummyEnv($fileContent = ""): void
+    public function setupDummyEnv(string $fileContent = ""): void
     {
         // takes default content if custom content is not provided
         if (empty($fileContent)) {

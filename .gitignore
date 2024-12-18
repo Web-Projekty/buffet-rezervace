@@ -4,3 +4,5 @@ buffet-api/src/Database/.env
 buffet-api/.phpunit.result.cache
 /buffet-api/tests/result
 /buffet-api/logs
+buffet-api/.env
+conf/.env
