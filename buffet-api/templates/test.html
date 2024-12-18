@@ -75,6 +75,7 @@
             console.log(result);
             document.getElementById("json").innerHTML =
               JSON.stringify(result);
+              // auto - copy token
             if (formData.get("requestType") === "login" && result.status === "success") {
               navigator.clipboard.writeText(result.payload.token);
               console.log("Token copied to clipboard");
