@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MenuItem, Variant } from "../../types";
+import { Category, MenuItem, Variant } from "../../types";
 import Input from "../Input";
 import Button from "../Button";
 import MenuItemEditInput from "./MenuItemEditInput";
@@ -9,9 +9,14 @@ import ToggleSwitch from "../ToggleSwitch";
 type MenuItemEditBarProps = {
   handleBarOpen: () => void;
   menuItem: MenuItem | null;
+  categories: Category[];
 };
 
-const MenuItemEditBar = ({ handleBarOpen, menuItem }: MenuItemEditBarProps) => {
+const MenuItemEditBar = ({
+  handleBarOpen,
+  menuItem,
+  categories,
+}: MenuItemEditBarProps) => {
   const [itemName, setItemName] = useState<string>(menuItem?.name || "");
   const [itemPrice, setItemPrice] = useState<number>(menuItem?.price || 0);
   const [itemDescription, setItemDescription] = useState<string>(
@@ -21,12 +26,14 @@ const MenuItemEditBar = ({ handleBarOpen, menuItem }: MenuItemEditBarProps) => {
     menuItem?.allergens.map((allergen) => allergen.id) || [],
   );
   const [itemImage, setItemImage] = useState<string>(menuItem?.image || "");
-  const [itemCategory, setItemCategory] = useState<MenuItem["category"]>(
-    menuItem?.category || "other",
+  const [itemCategory, setItemCategory] = useState<Category["id"]>(
+    menuItem?.category || 0,
   );
   const [itemVariants, setItemVariants] = useState<Variant[]>(
     menuItem?.variants || [],
   );
+  const [cashPayment, setCashPayment] = useState<boolean>(false);
+  const [cashVariants, setCashVariants] = useState<boolean>(false);
 
   const handleSave = () => {
     // Save item to backend
@@ -75,7 +82,7 @@ const MenuItemEditBar = ({ handleBarOpen, menuItem }: MenuItemEditBarProps) => {
   };
 
   return (
-    <div className="right-3 z-10 flex w-[29rem] flex-col gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black">
+    <div className="sticky right-3 top-0 z-10 flex w-[29rem] flex-col gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black">
       <h1 className="text-center">Úprava itemu</h1>
       <div className="flex w-full flex-col gap-4">
         <label htmlFor="itemImage" className="m-auto w-48 cursor-pointer">
@@ -130,17 +137,28 @@ const MenuItemEditBar = ({ handleBarOpen, menuItem }: MenuItemEditBarProps) => {
           <select
             id="category"
             className="w-[10rem] rounded-md border-none p-1 text-black"
+            value={itemCategory}
+            onChange={(e) => setItemCategory(Number(e.target.value))}
           >
-            <option value="other">Ostatní</option>
-            <option value="main">Hlavní jídlo</option>
-            <option value="drink">Nápoj</option>
-            <option value="dessert">Dezert</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
           </select>
         </div>
 
         <div className="flex flex-col gap-2">
-          <ToggleSwitch label="Povolit placení na pokladně" />
-          <ToggleSwitch label="Povolit placení na pokladně i pro varianty" />
+          <ToggleSwitch
+            label="Povolit placení na pokladně"
+            checked={cashPayment}
+            onChange={() => setCashPayment((prev) => !prev)}
+          />
+          <ToggleSwitch
+            label="Povolit placení na pokladně i pro varianty"
+            checked={cashVariants}
+            onChange={() => setCashVariants((prev) => !prev)}
+          />
         </div>
 
         <div className="flex flex-col gap-2">
