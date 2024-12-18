@@ -8,18 +8,22 @@ import { useFetch } from "../../hooks/useFetch";
 import Loading from "../Loading";
 import { useUser } from "../../hooks/useUser";
 
+type OrderData = {
+  data: OrderType[];
+};
+
 const UserOrderHistory = () => {
   const { token } = useUser();
 
-  const { data, isLoading, error } = useFetch<OrderType[]>(
+  const { data, isLoading, error } = useFetch<OrderData>(
     FETCH_URL,
     { requestType: "getOrders", token: token },
-    [],
+    { data: [] },
     [token],
   );
 
   const { currentPage, totalPagesCount, dataList, arrayOfPages, handlePage } =
-    usePaging<OrderType>(data, ORDERS_PER_PAGE, "orderPage");
+    usePaging<OrderType>(data?.data, ORDERS_PER_PAGE, "orderPage");
 
   if (isLoading) {
     return <Loading size={30} />;
