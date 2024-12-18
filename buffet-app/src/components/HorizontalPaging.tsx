@@ -51,14 +51,14 @@ const HorizontalScrollBar = ({ children }: HorizontalScrollBarProps) => {
       {canScrollLeft && (
         <button
           onClick={scrollLeft}
-          className="absolute left-0 z-10 h-full bg-gray-800 px-2 text-white"
+          className="absolute -left-2 z-10 h-full rounded-lg bg-gradient-to-r from-backgroundColor via-backgroundColor to-transparent px-2 pr-10 text-white"
         >
           <ChevronLeft />
         </button>
       )}
 
       <div
-        className="scrollbar-hide flex w-[100rem] gap-5 overflow-x-auto px-10 py-3"
+        className="flex w-[100rem] gap-5 overflow-x-auto px-10 py-3"
         ref={scrollContainerRef}
       >
         {children}
@@ -66,7 +66,7 @@ const HorizontalScrollBar = ({ children }: HorizontalScrollBarProps) => {
       {canScrollRight && (
         <button
           onClick={scrollRight}
-          className="absolute right-0 z-10 h-full bg-gray-800 px-2 text-white"
+          className="absolute -right-2 z-10 h-full rounded-lg bg-gradient-to-l from-backgroundColor via-backgroundColor to-transparent px-2 pl-10 text-white"
         >
           <ChevronRight />
         </button>
