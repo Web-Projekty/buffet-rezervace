@@ -33,6 +33,8 @@
     <input type="text" name="paymentMethod" placeholder="paymentMethod" value="thePay">
     <input type="number" name="limit" placeholder="limit" value="5">
     <input type="number" name="interval" placeholder="interval" value="5">
+    <label for="clear">clear</label>
+    <input type="checkbox" name="clear">
     <input type="button" value="Submit" onclick="submitForm()" />
   </form>
 
@@ -48,6 +50,7 @@
       formData.forEach((value, key) => {
         data[key] = value;
       });
+      data["clear"] = formData.get("clear") === "on"
 
       // Send data as JSON
       fetch(window.location.href + "/api", {
