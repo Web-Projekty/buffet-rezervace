@@ -16,18 +16,19 @@ class OrderApi
      * @param int    $intervalTime
      * @param int    $limit
      */
-    public function generateTimeslots(string $startTime, string $endTime, int $intervalTime, int $limit): void
+    public function generateTimeslots(string $startTime, string $endTime, int $intervalTime, int $limit, bool $clear): void
     {
         try {
             $start = Time::fromString($startTime);
             $end = Time::fromString($endTime);
+
         } catch (\Exception $e) {
             throw new DateException();
         }
         if ($start->isBiggerThan($end)) {
             throw new NegativeValueException("Start time cannot be greater than end time");
         }
-        $timeSlots = [];
+
         $index = 0;
         while ($end->diff($start, "m") >= $limit) {
             $startString = $start->format("m");
@@ -38,7 +39,6 @@ class OrderApi
 
             $index++;
         }
-        //var_dump($timeSlots);
 
     }
 }

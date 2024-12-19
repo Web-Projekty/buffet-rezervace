@@ -327,14 +327,19 @@ class BuffetApi
         }
         $isAdmin = UserModel::isAdmin($uid);
 
+        if (!$isAdmin) {
+            return $response->setError(Error::Unauthorized);
+        }
+
         try {
-            $orderApi->generateTimeslots($startTime, $endTime, $interval, $limit);
+            $orderApi->generateTimeslots($startTime, $endTime, $interval, $limit, (bool) $response->getRequestByKey("clear"));
         } catch (DateException $e) {
             $response->setError(Error::DateTimeInvalid);
         } catch (NegativeValueException $e) {
             $response->setError(Error::DateTimeInvalid);
         }
 
+        $response->setStatus(true);
         return $response;
     }
 
