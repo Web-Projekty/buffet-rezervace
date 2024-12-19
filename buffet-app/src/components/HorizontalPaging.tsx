@@ -36,41 +36,43 @@ const HorizontalScrollBar = ({ children }: HorizontalScrollBarProps) => {
     const scrollContainer = scrollContainerRef.current;
     if (scrollContainer) {
       scrollContainer.addEventListener("scroll", updateScrollButtons);
-      window.addEventListener("resize", updateScrollButtons);
+      // window.addEventListener("resize", updateScrollButtons);
     }
     return () => {
       if (scrollContainer) {
         scrollContainer.removeEventListener("scroll", updateScrollButtons);
       }
-      window.removeEventListener("resize", updateScrollButtons);
+      // window.removeEventListener("resize", updateScrollButtons);
     };
   }, []);
 
   return (
-    <div className="relative flex items-center">
-      {canScrollLeft && (
-        <button
-          onClick={scrollLeft}
-          className="absolute -left-2 z-10 h-full rounded-lg bg-gradient-to-r from-backgroundColor via-backgroundColor to-transparent px-2 pr-10 text-white"
-        >
-          <ChevronLeft />
-        </button>
-      )}
+    <div className="relative flex flex-row items-center">
+      <div className="absolute -left-2 z-10 flex h-full items-center rounded-lg bg-gradient-to-r from-backgroundColor via-backgroundColor to-transparent px-2 pr-10">
+        {canScrollLeft && (
+          <ChevronLeft
+            size={30}
+            onClick={scrollLeft}
+            className="hidden cursor-pointer text-white md:block"
+          />
+        )}
+      </div>
 
       <div
-        className="flex w-[70rem] gap-5 overflow-x-auto px-10 py-3 2xl:w-[100rem]"
+        className="flex w-[25rem] gap-5 overflow-x-auto px-10 py-3 md:w-[70rem] 2xl:w-[100rem]"
         ref={scrollContainerRef}
       >
         {children}
       </div>
-      {canScrollRight && (
-        <button
-          onClick={scrollRight}
-          className="absolute -right-2 z-10 h-full rounded-lg bg-gradient-to-l from-backgroundColor via-backgroundColor to-transparent px-2 pl-10 text-white"
-        >
-          <ChevronRight />
-        </button>
-      )}
+      <div className="absolute -right-2 z-10 flex h-full items-center rounded-lg bg-gradient-to-l from-backgroundColor via-backgroundColor to-transparent px-2 pl-10">
+        {canScrollRight && (
+          <ChevronRight
+            size={30}
+            onClick={scrollRight}
+            className="hidden cursor-pointer text-white md:block"
+          />
+        )}
+      </div>
     </div>
   );
 };
