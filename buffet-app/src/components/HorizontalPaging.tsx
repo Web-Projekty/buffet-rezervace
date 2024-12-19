@@ -58,7 +58,7 @@ const HorizontalScrollBar = ({ children }: HorizontalScrollBarProps) => {
       )}
 
       <div
-        className="flex w-[100rem] gap-5 overflow-x-auto px-10 py-3"
+        className="flex w-[70rem] gap-5 overflow-x-auto px-10 py-3 2xl:w-[100rem]"
         ref={scrollContainerRef}
       >
         {children}
