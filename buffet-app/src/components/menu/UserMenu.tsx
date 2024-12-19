@@ -1,26 +1,11 @@
-import { useEffect, useState } from "react";
-import { FETCH_URL, ITEMS_PER_PAGE } from "../../constants";
-import { Category, MenuData } from "../../types";
 import ErrorComponent from "../error/ErrorComponent";
 import Loading from "../Loading";
-import { useFetch } from "../../hooks/useFetch";
 import MenuItem from "./MenuItem";
 import HorizontalPaging from "../HorizontalPaging";
+import useMenu from "../../hooks/useMenu";
 
 const UserMenu = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  const { data, error, isLoading } = useFetch<MenuData>(FETCH_URL, {
-    requestType: "getMenu",
-    itemsCount: ITEMS_PER_PAGE + ITEMS_PER_PAGE,
-    page: 1,
-  });
-
-  useEffect(() => {
-    if (data) {
-      setCategories(data.categoryList);
-    }
-  }, [data]);
+  const { menuItems, error, isLoading, categories } = useMenu();
 
   if (isLoading) {
     return <Loading size={30} />;
@@ -35,32 +20,34 @@ const UserMenu = () => {
     <div className="flex flex-col items-center justify-center gap-5">
       <h1 className="text-3xl font-bold text-white">Menu</h1>
 
-      {data && data.data.length <= 0 ? (
+      {menuItems && menuItems.length <= 0 ? (
         <p className="italic text-white">
           "Meow? (Waiting for something to happen?)"
         </p>
       ) : (
         <div className="mx-[40rem] flex flex-col items-start">
-          {categories?.map((category) => (
-            <div className="mt-5 flex flex-col gap-5" key={category.id}>
-              <div className="flex justify-between">
-                <h1 className="text-4xl font-bold text-white">
-                  {category.name}
-                </h1>
-                <div className="mr-5 text-white">{category.description}</div>
-              </div>
+          {categories &&
+            categories.map((category) => (
+              <div className="mt-5 flex flex-col gap-3" key={category.id}>
+                <div className="mx-10 flex flex-col items-center gap-2 md:flex-row md:justify-between md:gap-0">
+                  <h1 className="text-4xl font-bold text-white">
+                    {category.name}
+                  </h1>
+                  <p className="text-white md:mr-5">{category.description}</p>
+                </div>
 
-              <HorizontalPaging>
-                {data &&
-                  data.data
-                    ?.filter(
-                      (item) =>
-                        categories.length > 0 && item.category === category.id,
-                    )
-                    .map((item) => <MenuItem key={item.id} item={item} />)}
-              </HorizontalPaging>
-            </div>
-          ))}
+                <HorizontalPaging>
+                  {menuItems &&
+                    menuItems
+                      .filter(
+                        (item) =>
+                          categories.length > 0 &&
+                          item.category === category.id,
+                      )
+                      .map((item) => <MenuItem key={item.id} item={item} />)}
+                </HorizontalPaging>
+              </div>
+            ))}
         </div>
       )}
     </div>

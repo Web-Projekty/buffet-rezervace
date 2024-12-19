@@ -1,38 +1,26 @@
-import { useEffect, useState } from "react";
-import { FETCH_URL, ITEMS_PER_PAGE } from "../../constants";
-import { Category, MenuData, MenuItem as MenuItemType } from "../../types";
+import { useState } from "react";
+import { Category, MenuItem as MenuItemType } from "../../types";
 import ErrorComponent from "../error/ErrorComponent";
 import Loading from "../Loading";
-import PagingButtons from "../PagingButtons";
 import MenuItemAdd from "./MenuItemAdd";
 import MenuItemEdit from "./MenuItemEdit";
 import MenuItemEditBar from "./MenuItemEditBar";
-import { useFetch } from "../../hooks/useFetch";
-import { usePaging } from "../../hooks/usePaging";
 import { Pen } from "lucide-react";
 import MenuCategoryEditBar from "./MenuCategoryEditBar";
 import MenuCategoryAdd from "./MenuCategoryAdd";
+import useMenu from "../../hooks/useMenu";
 
 const MenuEdit = () => {
-  const { data, error, isLoading } = useFetch<MenuData>(FETCH_URL, {
-    requestType: "getMenu",
-    itemsCount: ITEMS_PER_PAGE,
-    page: 1,
-  });
-
-  const { dataList, currentPage, totalPagesCount, arrayOfPages, handlePage } =
-    usePaging<MenuItemType>(data?.data, ITEMS_PER_PAGE, "menuPage");
+  const { menuItems, error, isLoading, categories } = useMenu();
 
   const [isItemBarOpen, setIsItemBarOpen] = useState<boolean>(false);
   const [editItem, setEditItem] = useState<MenuItemType | null>(null);
   const [isCategoryBarOpen, setIsCategoryBarOpen] = useState<boolean>(false);
   const [editCategory, setEditCategory] = useState<Category | null>(null);
 
-  const [categories, setCategories] = useState<Category[]>([]);
-
   const handleBarOpen = (id?: number) => {
     if (id) {
-      setEditItem(dataList.find((item) => item.id === id) || null);
+      setEditItem(menuItems?.find((item) => item.id === id) || null);
     } else {
       setEditItem(null);
     }
@@ -52,12 +40,6 @@ const MenuEdit = () => {
     setIsItemBarOpen(false);
   };
 
-  useEffect(() => {
-    if (data) {
-      setCategories(data.categoryList);
-    }
-  }, [data]);
-
   if (isLoading) {
     return <Loading size={30} />;
   }
@@ -67,6 +49,7 @@ const MenuEdit = () => {
       <ErrorComponent title="Načítání položek se nezdařilo." subtitle="🛠️👷" />
     );
   }
+
   return (
     <div className="relative flex flex-col items-center justify-center gap-5">
       <h1 className="text-3xl font-bold text-white">Úprava menu</h1>
@@ -88,7 +71,7 @@ const MenuEdit = () => {
             />
           </div>
         )}
-        <div className="flex-col">
+        <div className="flex flex-col">
           {categories?.map((category) => (
             <div className="mt-5 flex flex-col gap-5" key={category.id}>
               <div className="flex items-center justify-between">
@@ -97,12 +80,15 @@ const MenuEdit = () => {
                 </h1>
                 <div className="flex gap-2">
                   <div className="mr-5 text-white">{category.description}</div>
-                  <button
-                    onClick={() => handleCategoryBarOpen(category.id)}
-                    disabled={isCategoryBarOpen}
-                  >
-                    <Pen className="text-white" />
-                  </button>
+
+                  <Pen
+                    className={`text-white ${isCategoryBarOpen ? "cursor-not-allowed opacity-75" : "cursor-pointer"}`}
+                    onClick={() =>
+                      !isCategoryBarOpen
+                        ? handleCategoryBarOpen(category.id)
+                        : undefined
+                    }
+                  />
                 </div>
               </div>
               <div
@@ -112,7 +98,7 @@ const MenuEdit = () => {
                   handleBarOpen={handleBarOpen}
                   isBarOpen={isItemBarOpen}
                 />
-                {dataList
+                {menuItems
                   ?.filter(
                     (item) =>
                       categories.length > 0 && item.category === category.id,
@@ -134,13 +120,6 @@ const MenuEdit = () => {
           ))}
         </div>
       </div>
-
-      <PagingButtons
-        currentPage={currentPage}
-        totalPagesCount={totalPagesCount}
-        listOfPages={arrayOfPages}
-        handlePage={handlePage}
-      />
     </div>
   );
 };
