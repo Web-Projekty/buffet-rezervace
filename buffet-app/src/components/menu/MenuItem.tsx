@@ -3,30 +3,19 @@ import { MenuItem as MenuItemType } from "../../types";
 import useCart from "../../store/CartStore";
 import MenuItemImage from "./MenuItemImage";
 import MenuItemText from "./MenuItemText";
-import MenuItemButtons from "./MenuItemButtons";
 import { menuItemShowAnimation } from "../../animations";
-import MenuItemVariants from "./MenuItemVariants";
+import Button from "../Button";
+import { formatCurrency } from "../utils/utils";
 
 type MenuItemProps = {
   item: MenuItemType;
 };
 
 const MenuItem = ({ item }: MenuItemProps) => {
-  const {
-    addToCart,
-    removeFromCart,
-    getItemQuantity,
-    isItemInCart,
-    isCartFull,
-    isItemMaxQuantity,
-  } = useCart();
+  const { addToCart } = useCart();
 
   const handleAddToCart = () => {
     addToCart(item);
-  };
-
-  const handleRemoveFromCart = () => {
-    removeFromCart(item.id);
   };
 
   return (
@@ -36,10 +25,10 @@ const MenuItem = ({ item }: MenuItemProps) => {
     >
       <MenuItemImage {...item} />
 
-      <div className="flex h-full flex-col rounded-lg p-2">
+      <div className="flex h-full flex-col justify-between rounded-lg p-2">
         <MenuItemText {...item} />
-        <MenuItemVariants variants={item.variants} />
-        <MenuItemButtons
+        {/* <MenuItemVariants menuItemId={item.id} variants={item.variants} /> */}
+        {/* <MenuItemButtons
           isItemInCart={isItemInCart}
           id={item.id}
           getItemQuantity={getItemQuantity}
@@ -47,7 +36,16 @@ const MenuItem = ({ item }: MenuItemProps) => {
           handleRemoveFromCart={handleRemoveFromCart}
           isCartFull={isCartFull}
           isItemMaxQuantity={isItemMaxQuantity(item.id)}
-        />
+        /> */}
+        <Button
+          onClick={handleAddToCart}
+          className="flex items-center justify-between"
+        >
+          <p>Do košíku</p>
+          <span className="rounded-lg font-normal italic">
+            od {formatCurrency(item.price)}
+          </span>
+        </Button>
       </div>
     </motion.div>
   );
