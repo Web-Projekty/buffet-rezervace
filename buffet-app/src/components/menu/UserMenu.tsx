@@ -18,7 +18,7 @@ const UserMenu = () => {
   }
   return (
     <div className="flex flex-col items-center justify-center gap-5">
-      <h1 className="text-3xl font-bold text-white">Menu</h1>
+      <h1 className="text-3xl font-bold text-white">Naše menu</h1>
 
       {menuItems && menuItems.length <= 0 ? (
         <p className="italic text-white">
