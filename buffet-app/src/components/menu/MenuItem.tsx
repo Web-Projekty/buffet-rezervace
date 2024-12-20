@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { MenuItem as MenuItemType } from "../../types";
 import useCart from "../../store/CartStore";
-import MenuItemImage from "./MenuItemImage";
-import MenuItemText from "./MenuItemText";
+import ItemImage from "../items/ItemImage";
+import ItemText from "../items/ItemText";
 import { menuItemShowAnimation } from "../../animations";
 import Button from "../Button";
 import { formatCurrency } from "../utils/utils";
@@ -27,10 +27,10 @@ const MenuItem = ({ item }: MenuItemProps) => {
       {...menuItemShowAnimation(0.5)}
       className="relative flex h-[26rem] w-[18rem] flex-shrink-0 flex-col justify-start gap-2 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black"
     >
-      <MenuItemImage {...item} />
+      <ItemImage {...item} />
 
       <div className="flex h-full flex-col justify-between rounded-lg p-2">
-        <MenuItemText {...item} />
+        <ItemText {...item} />
         {/* <MenuItemVariants menuItemId={item.id} variants={item.variants} /> */}
         {/* <MenuItemButtons
           isItemInCart={isItemInCart}
