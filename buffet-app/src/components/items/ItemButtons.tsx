@@ -4,7 +4,7 @@ import { scaleUpAnimation, tapScaleAnimation } from "../../animations";
 import useCart from "../../store/CartStore";
 import { MenuItem } from "../../types";
 
-type MenuItemButtonsProps = {
+type ItemButtonsProps = {
   item: MenuItem;
 };
 
@@ -15,7 +15,7 @@ const quantChangeAnimation = {
   transition: { duration: 0.2 },
 };
 
-const MenuItemButtons = ({ item }: MenuItemButtonsProps) => {
+const ItemButtons = ({ item }: ItemButtonsProps) => {
   const {
     getItemQuantity,
     addToCart,
@@ -75,4 +75,4 @@ const MenuItemButtons = ({ item }: MenuItemButtonsProps) => {
   );
 };
 
-export default MenuItemButtons;
+export default ItemButtons;

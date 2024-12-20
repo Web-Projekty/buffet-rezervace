@@ -1,11 +1,11 @@
 import { Allergen } from "../../types";
 import { allergens as AllergensList } from "../../allergens";
 
-type MenuItemAllergensProps = {
+type ItemAllergensProps = {
   allergens: Allergen[];
 };
 
-const MenuItemAllergens = ({ allergens }: MenuItemAllergensProps) => {
+const ItemAllergens = ({ allergens }: ItemAllergensProps) => {
   return (
     <ul className="absolute bottom-0 m-1 flex flex-row gap-1">
       {allergens.map((allergen) => (
@@ -21,4 +21,4 @@ const MenuItemAllergens = ({ allergens }: MenuItemAllergensProps) => {
   );
 };
 
-export default MenuItemAllergens;
+export default ItemAllergens;

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { MenuItem as MenuItemType } from "../../types";
-import MenuItemImage from "../menu/MenuItemImage";
-import MenuItemText from "../menu/MenuItemText";
+import ItemImage from "../items/ItemImage";
+import ItemText from "../items/ItemText";
 import { menuItemShowAnimation } from "../../animations";
 import Button from "../Button";
 
@@ -21,10 +21,10 @@ const MenuItemEdit = ({ item, handleBarOpen, isBarOpen }: MenuItemProps) => {
       {...menuItemShowAnimation(0.5)}
       className="relative flex h-[24rem] w-[16rem] flex-col justify-start gap-2 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black xl:h-[26rem] xl:w-[18rem]"
     >
-      <MenuItemImage {...item} />
+      <ItemImage {...item} />
 
       <div className="flex h-full flex-col rounded-lg p-2">
-        <MenuItemText {...item} />
+        <ItemText {...item} />
       </div>
       <Button
         className="absolute bottom-2 w-[14rem] xl:w-[16rem]"

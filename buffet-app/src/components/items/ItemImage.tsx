@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Allergen } from "../../types";
-import MenuItemAllergens from "./MenuItemAllergens";
+import ItemAllergens from "./ItemAllergens";
 import { motion } from "framer-motion";
 
-type MenuItemImageProps = {
+type ItemImageProps = {
   image: string;
   name: string;
   allergens: Allergen[];
 };
 
-const MenuItemImage = ({ image, name, allergens }: MenuItemImageProps) => {
+const ItemImage = ({ image, name, allergens }: ItemImageProps) => {
   const [loading, setLoading] = useState(true);
   const [imageSrc, setImageSrc] = useState<string>(image);
 
@@ -42,9 +42,9 @@ const MenuItemImage = ({ image, name, allergens }: MenuItemImageProps) => {
         transition={{ duration: 0.5 }}
       />
 
-      <MenuItemAllergens allergens={allergens} />
+      <ItemAllergens allergens={allergens} />
     </div>
   );
 };
 
-export default MenuItemImage;
+export default ItemImage;
