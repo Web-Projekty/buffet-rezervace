@@ -19,7 +19,19 @@ const UserMenu = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-5">
       <h1 className="text-3xl font-bold text-white">Naše menu</h1>
-
+      <div className="flex flex-row items-center justify-center gap-5 text-white">
+        {categories.map((category) => {
+          return (
+            <div
+              key={category.name}
+              className="flex h-10 w-auto flex-row items-center justify-center gap-3 rounded-xl bg-slate-900 p-4"
+            >
+              <img src={category.image} alt={category.name + "'s image"} />
+              <h1>{category.name}</h1>
+            </div>
+          );
+        })}
+      </div>
       {menuItems && menuItems.length <= 0 ? (
         <p className="italic text-white">
           "Meow? (Waiting for something to happen?)"
