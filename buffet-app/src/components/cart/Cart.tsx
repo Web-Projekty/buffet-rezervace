@@ -3,14 +3,28 @@ import useCart from "../../store/CartStore";
 import Button from "../Button";
 import CartItem from "./CartItem";
 import EmptyCart from "./EmptyCart";
+import { createOrder } from "../utils/api";
+import { useUser } from "../../hooks/useUser";
 
 const Cart = () => {
-  const { cartItems, isCartEmpty } = useCart();
+  const { cartItems, isCartEmpty, clearCart } = useCart();
   const navigate = useNavigate();
+  const { token } = useUser();
 
-  const handleSubmitOrder = () => {
-    // TODO: process the order
-    navigate("/success-order?id=" + 5);
+  const handleSubmitOrder = async () => {
+    if (isCartEmpty()) return;
+    if (!token) return;
+
+    const { error, order } = await createOrder(token ? token : "");
+
+    console.log(order);
+
+    if (!error && order) {
+      navigate("/success-order", { state: { order } });
+      clearCart();
+    } else {
+      navigate("/error-order");
+    }
   };
 
   const handleBack = () => {

@@ -1,3 +1,5 @@
+import { LucideIcon } from "lucide-react";
+
 export type User = {
   id: number;
   username: string;
@@ -8,12 +10,22 @@ export type User = {
   orders: Order[];
 };
 
+export type OrderStatus =
+  | "sent"
+  | "waiting"
+  | "done"
+  | "storno"
+  | "cancelled"
+  | "preparing";
+
 export type Order = {
   id: number;
-  status: "pending" | "pickedup" | "notpickedup";
+  userId: number;
+  status: OrderStatus;
   date: string;
-  items: MenuItem[];
-  user: User | null;
+  pickupDate: string;
+  items: string;
+  pickUpId: string;
 };
 
 export type MenuItem = {
@@ -23,6 +35,15 @@ export type MenuItem = {
   description: string;
   image: string;
   allergens: Allergen[];
+  category: number;
+  categoryName: string;
+  variants: Variant[];
+};
+
+export type Variant = {
+  name: string;
+  quantity: number;
+  price: number;
 };
 
 export type Allergen = {
@@ -30,15 +51,22 @@ export type Allergen = {
   name: string;
   description: string;
   image?: string;
+  icon?: LucideIcon;
+};
+
+export type Category = {
+  id: number;
+  name: string;
+  image: string;
+  description: string;
+};
+
+export type MenuData = {
+  categoryList: Category[];
+  data: MenuItem[];
 };
 
 export type RequestData = {
-  requestType:
-    | "login"
-    | "verify"
-    | "isAdmin"
-    | "getMenu"
-    | "getOrders"
-    | "getAllergens";
+  requestType: "login" | "verify" | "getMenu" | "getOrders";
   [key: string]: string | number | boolean | object | undefined;
 };
