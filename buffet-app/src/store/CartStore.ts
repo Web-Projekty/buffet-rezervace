@@ -12,6 +12,8 @@ export type CartItem = MenuItem & { quantity: number };
 type CartItems = {
   isOpen: boolean;
   handleOpenCart: () => void;
+  handleCloseCart: () => void;
+  toggleCart: () => void;
   cartItems: CartItem[];
   addToCart: (item: MenuItem) => void;
   removeFromCart: (id: number) => void;
@@ -105,7 +107,9 @@ const useCart = create<CartItems>((set, get) => ({
   },
   isItemMaxQuantity: (id: number) => get().getItemQuantity(id) >= MAX_ITEMS,
   isOpen: false,
-  handleOpenCart: () => set((state) => ({ isOpen: !state.isOpen })),
+  handleOpenCart: () => set({ isOpen: true }),
+  handleCloseCart: () => set({ isOpen: false }),
+  toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
 }));
 
 export default useCart;
