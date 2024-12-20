@@ -12,10 +12,14 @@ type MenuItemProps = {
 };
 
 const MenuItem = ({ item }: MenuItemProps) => {
-  const { addToCart } = useCart();
+  const { addToCart, isItemMaxQuantity, isCartFull } = useCart();
 
   const handleAddToCart = () => {
     addToCart(item);
+  };
+
+  const canAddToCart = () => {
+    return !isItemMaxQuantity(item.id) && !isCartFull();
   };
 
   return (
@@ -39,7 +43,8 @@ const MenuItem = ({ item }: MenuItemProps) => {
         /> */}
         <Button
           onClick={handleAddToCart}
-          className="flex items-center justify-between"
+          className={`flex items-center justify-between ${canAddToCart() ? "" : "bg-gray-400 hover:bg-gray-400"}`}
+          disabled={!canAddToCart()}
         >
           <p>Do košíku</p>
           <span className="rounded-lg font-normal italic">
