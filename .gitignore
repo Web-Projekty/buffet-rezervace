@@ -1,8 +1,11 @@
-buffet-app/package-lock.json
-buffet-api/src/Database/.env
-#.env
+### backend ###
 buffet-api/.phpunit.result.cache
-/buffet-api/tests/result
-/buffet-api/logs
+buffet-api/tests/result
 buffet-api/.env
+buffet-api/logs
+buffet-api/vendor
+
+### frontend ###
+buffet-api/src/Database/.env
 conf/.env
+buffet-app/package-lock.json
