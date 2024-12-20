@@ -8,12 +8,11 @@ import Button from "../Button";
 import EmptyCart from "./EmptyCart";
 
 const CartModal = () => {
-  const { isOpen, handleCloseCart, handleOpenCart, cartItems, isCartEmpty } =
-    useCart();
+  const { isOpen, handleCloseCart, cartItems, isCartEmpty } = useCart();
   const navigate = useNavigate();
 
   const handleContinue = () => {
-    handleOpenCart();
+    handleCloseCart();
     navigate("/cart");
   };
 
