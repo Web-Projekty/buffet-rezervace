@@ -32,6 +32,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
           title="Omlouváme se, něco se pokazilo."
           subtitle="🛠️👷"
           onBack={() => setTimeout(() => window.location.reload(), 0)}
+          className="h-screen"
         />
       );
     }

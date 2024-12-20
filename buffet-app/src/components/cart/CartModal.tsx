@@ -20,14 +20,14 @@ const CartModal = () => {
     <Modal isOpen={isOpen} darkBackground>
       <motion.div
         {...scaleUpAnimation(0.3)}
-        className="relative flex h-[500px] w-[800px] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black"
+        className="relative flex h-[600px] w-[900px] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black"
       >
         <h1 className="flex h-10 w-full items-center justify-center rounded-t-lg bg-primary text-center text-xl font-bold text-black">
           Váš košík
         </h1>
 
         <div
-          className={`${isCartEmpty() ? "" : "grid grid-flow-row grid-cols-2"} gap-5 overflow-auto px-10 py-5`}
+          className={`${isCartEmpty() ? "" : "flex flex-col"} gap-5 overflow-auto px-10 py-5`}
         >
           {isCartEmpty() && <EmptyCart />}
           {cartItems.map((item) => {
