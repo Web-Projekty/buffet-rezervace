@@ -20,14 +20,14 @@ export const dummyVariants = [
 const MenuItemVariants = ({ variants }: MenuItemVariantsProps) => {
   return (
     <div className="flex flex-col gap-1">
-      {variants &&
-        variants.map((item) => {
+      {dummyVariants &&
+        dummyVariants.map((item) => {
           return (
             <label className="flex items-center gap-2" key={item.name}>
               <input type="checkbox" />
               <div className="flex w-full items-center justify-between">
                 <p>{item.name}</p>
-                <p className="text-descriptionColor">
+                <p className="line-clamp-3 overflow-hidden rounded-lg px-2 text-descriptionColor">
                   +{formatCurrency(item.price)}
                 </p>
               </div>
