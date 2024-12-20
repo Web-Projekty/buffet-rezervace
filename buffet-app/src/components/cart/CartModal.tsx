@@ -8,7 +8,8 @@ import Button from "../Button";
 import EmptyCart from "./EmptyCart";
 
 const CartModal = () => {
-  const { isOpen, handleOpenCart, cartItems, isCartEmpty } = useCart();
+  const { isOpen, handleCloseCart, handleOpenCart, cartItems, isCartEmpty } =
+    useCart();
   const navigate = useNavigate();
 
   const handleContinue = () => {
@@ -17,7 +18,11 @@ const CartModal = () => {
   };
 
   return (
-    <Modal isOpen={isOpen} darkBackground>
+    <Modal
+      isOpen={isOpen}
+      darkBackground
+      handleContainerClick={handleCloseCart}
+    >
       <motion.div
         {...scaleUpAnimation(0.3)}
         className="relative flex h-[600px] w-[900px] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black"
@@ -35,7 +40,7 @@ const CartModal = () => {
           })}
         </div>
         <div className="my-2 grid h-10 grid-cols-2 grid-rows-1 justify-between gap-10 text-white">
-          <Button onClick={handleOpenCart}>Zavřít</Button>
+          <Button onClick={handleCloseCart}>Zavřít</Button>
           <Button onClick={handleContinue} disabled={isCartEmpty()}>
             Pokračovat
           </Button>
