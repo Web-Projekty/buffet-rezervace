@@ -305,7 +305,9 @@ class BuffetApi
      */
     function handleGenerateTimeslots(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(["token", "startTime", "endTime", "interval", "limit", "clear"]);
+        $response->setRequestKeys(["token", "startTime", "endTime", "interval", "limit"]);
+
+        $response->setRequestByKey("clear", (bool) $response->getRequestByKey("clear"));
 
         $jwt = new JWTApi;
         $orderApi = new OrderApi;
@@ -314,6 +316,7 @@ class BuffetApi
         $endTime = $response->getRequestByKey("endTime");
         $interval = (int) $response->getRequestByKey("interval");
         $limit = (int) $response->getRequestByKey("limit");
+        $clear = (bool) $response->getRequestByKey("clear");
 
         if ($interval <= 0 || $limit <= 0) {
             $response->setError(Error::InvalidLimitOrInterval);
@@ -333,7 +336,7 @@ class BuffetApi
         }
 
         try {
-            $orderApi->generateTimeslots($startTime, $endTime, $interval, $limit, (bool) $response->getRequestByKey("clear"));
+            $orderApi->generateTimeslots($startTime, $endTime, $interval, $limit, $clear);
         } catch (DateException $e) {
             $response->setError(Error::DateTimeInvalid);
         } catch (NegativeValueException $e) {
@@ -341,6 +344,7 @@ class BuffetApi
         }
 
         $response->setStatus(true);
+        $response->setSuccess(Success::GenerateTimeslots);
         return $response;
     }
 
