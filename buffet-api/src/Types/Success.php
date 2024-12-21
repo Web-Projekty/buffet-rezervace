@@ -7,7 +7,7 @@ namespace Buffet\Types;
 enum Success: string {
     ############################ Api ############################
     // api methods
-
+    case GenerateTimeslots = 'Timeslots generated successfully';
     ############################ Auth ############################
     // registration
     case Registration = 'Registered successfully';
@@ -21,7 +21,7 @@ enum Success: string {
     ############################ Channels ############################
     case ChannelConnected = 'Channel connected successfully';
     case Subscribed = 'Subscribed successfully';
-    
+
     /**
      * @return string
      */

@@ -151,6 +151,15 @@ class ApiResponse
     }
 
     /**
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function setRequestByKey(string $key, mixed $value): void
+    {
+        $this->request[$key] = $value ?? null;
+    }
+
+    /**
      * @return array<string>
      */
     public function getPayloadKeys(): array | null
