@@ -6,8 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
 import Menu from "./components/menu/Menu.tsx";
-import MenuEdit from "./components/menu/MenuEdit.tsx";
-import AdminOrderHistory from "./components/orders/AdminOrderHistory.tsx";
+import MenuEdit from "./components/editMenu/MenuEdit.tsx";
 import Login from "./components/auth/login/Login.tsx";
 import Dashboard from "./components/auth/Dashboard.tsx";
 import Allergens from "./components/allergens/Allergens.tsx";
@@ -17,6 +16,8 @@ import Cart from "./components/cart/Cart.tsx";
 import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
 import SuccessOrder from "./components/orders/SuccessOrder.tsx";
 import { UserData } from "./hooks/useLogin.ts";
+import Kds from "./components/kds/Kds.tsx";
+import AdminSettings from "./components/auth/admin/AdminSettings.tsx";
 
 const store = createStore<UserData>({
   authName: "_auth",
@@ -43,7 +44,6 @@ const router = createBrowserRouter([
             <Menu />
           </ErrorBoundary>
         ),
-        //loader: () => import("./components/menu/MenuList.tsx"),
       },
       {
         path: "/menu/edit",
@@ -54,7 +54,6 @@ const router = createBrowserRouter([
             </ErrorBoundary>
           </RequireAuth>
         ),
-        //loader: () => import("./components/menu/MenuEdit.tsx"),
       },
       {
         path: "/alergeny",
@@ -63,18 +62,6 @@ const router = createBrowserRouter([
             <Allergens />
           </ErrorBoundary>
         ),
-        //loader: () => import("./components/menu/MenuList.tsx"),
-      },
-      {
-        path: "/objednavky",
-        element: (
-          //<RequireAuth requireAdmin={true} fallbackPath="/login">
-          <ErrorBoundary>
-            <AdminOrderHistory />
-          </ErrorBoundary>
-          //</RequireAuth>
-        ),
-        //loader: () => import("./components/orders/AdminOrderHistory.tsx"),
       },
       {
         path: "/account",
@@ -85,7 +72,16 @@ const router = createBrowserRouter([
             </ErrorBoundary>
           </RequireAuth>
         ),
-        //loader: () => import("./components/account/AccountDashboard.tsx"),
+      },
+      {
+        path: "/settings",
+        element: (
+          //<RequireAuth requireAdmin={true} fallbackPath="/login">
+          <ErrorBoundary>
+            <AdminSettings />
+          </ErrorBoundary>
+          //</RequireAuth>
+        ),
       },
       {
         path: "/login",
@@ -94,7 +90,6 @@ const router = createBrowserRouter([
             <Login />
           </ErrorBoundary>
         ),
-        //loader: () => import("./components/account/Login.tsx"),
       },
       {
         path: "/cart",
@@ -115,20 +110,55 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/kds",
-        element: (
-          <ErrorBoundary>
-            {/*<RequireAuth requireAdmin={true} fallbackPath="/">*/}
-            <h1>KDS</h1>
-            {/*</RequireAuth>*/}
-          </ErrorBoundary>
-        ),
-      },
-      {
         path: "/*",
         element: (
           <ErrorBoundary>
             <PageNotFound />
+          </ErrorBoundary>
+        ),
+      },
+      {
+        path: "/page-not-found",
+        element: (
+          <ErrorBoundary>
+            <PageNotFound />
+          </ErrorBoundary>
+        ),
+      },
+    ],
+  },
+  {
+    path: "/kds",
+    element: (
+      <ErrorBoundary>
+        <RequireAuth requireAdmin={true}>
+          <Kds />
+        </RequireAuth>
+      </ErrorBoundary>
+    ),
+    children: [
+      {
+        path: "souhrn",
+        element: (
+          <ErrorBoundary>
+            <Kds />
+          </ErrorBoundary>
+        ),
+      },
+      {
+        path: "objednavky",
+        index: true,
+        element: (
+          <ErrorBoundary>
+            <Kds />
+          </ErrorBoundary>
+        ),
+      },
+      {
+        path: "uprava-menu",
+        element: (
+          <ErrorBoundary>
+            <Kds />
           </ErrorBoundary>
         ),
       },

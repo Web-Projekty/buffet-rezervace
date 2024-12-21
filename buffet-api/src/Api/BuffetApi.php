@@ -6,13 +6,16 @@ namespace Buffet\Api;
 
 use Buffet\Api\AuthApi;
 use Buffet\Database\DatabaseManager;
+use Buffet\Database\Models\CategoryModel;
 use Buffet\Database\Models\ItemModel;
 use Buffet\Database\Models\OrderModel;
 use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Success;
 use Buffet\Utils\WebsocketClient;
+use DateException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
@@ -101,6 +104,8 @@ class BuffetApi
 
             case "createOrder":
                 return $this->handleCreateOrder($response);
+            case "generateTimeslots":
+                return $this->handleGenerateTimeslots($response);
 
             case "makeOrderEvent":
                 return $this->handleMakeOrderEvent($response); // for testing
@@ -182,6 +187,7 @@ class BuffetApi
     }
 
     /**
+     * @todo cleanup
      * @param ApiResponse $response
      */
     function handleGetMenu(ApiResponse $response): ApiResponse
@@ -190,6 +196,9 @@ class BuffetApi
         $response->setPayloadKeys(["data"]);
 
         $queryResult = null;
+        $categories = CategoryModel::getAll()->toArray();
+
+        //var_dump($categories);
 
         $page = (int) $response->getRequestByKey("page");
         $itemsCount = (int) $response->getRequestByKey("itemsCount");
@@ -198,18 +207,29 @@ class BuffetApi
             return $response->setError(Error::QueryFailed);
         }
 
-        // testing only !!!
+        // adding category list
+
+        $response->addPayload("categoryList", $categories);
+
         $array = $queryResult->toArray();
         for ($i = 0; $i < sizeof($array); $i++) {
-            $array[$i]["allergens"] = null;
+            // parse allergens
+            $alergenList = [];
+            $alergens = json_decode($array[$i]["allergens"]);
 
-            $alergen["id"] = rand(1, 14);
-            $alergen["name"] = "test";
-            $alergen["description"] = "test_desc";
+            foreach ($alergens as $alergen) {
+                $alergenList[] = ["id" => $alergen];
+            }
 
-            $array[$i]["allergens"][0] = $alergen;
+            $array[$i]["allergens"] = $alergenList;
 
+            // add image
             $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
+            //$array[$i]["image"] = "http://localhost:8080/image/items/" . $array[$i]['id'];
+
+            // get category name
+            //$array[$i]["categoryName"] = $getName($array[$i]["category"], $categories);
+            //  $array[$i]["image"] = "http://localhost:8080/image/items/" . $array[$i]['id'];
         }
 
         //var_dump($array);
@@ -284,6 +304,7 @@ class BuffetApi
 
     /**
      * @param ApiResponse $response
+     * @return mixed
      */
     function handleCreateOrder(ApiResponse $response): ApiResponse
     {
@@ -305,6 +326,55 @@ class BuffetApi
         }
 
         return $response->setStatus(true);
+    }
+
+    /**
+     * @param ApiResponse $response
+     */
+
+    function handleGenerateTimeslots(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "startTime", "endTime", "interval", "limit"]);
+
+        $response->setRequestByKey("clear", (bool) $response->getRequestByKey("clear"));
+
+        $jwt = new JWTApi;
+        $orderApi = new OrderApi;
+
+        $startTime = $response->getRequestByKey("startTime");
+        $endTime = $response->getRequestByKey("endTime");
+        $interval = (int) $response->getRequestByKey("interval");
+        $limit = (int) $response->getRequestByKey("limit");
+        $clear = (bool) $response->getRequestByKey("clear");
+
+        if ($interval <= 0 || $limit <= 0) {
+            $response->setError(Error::InvalidLimitOrInterval);
+        }
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+        $isAdmin = UserModel::isAdmin($uid);
+
+        if (!$isAdmin) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        try {
+            $orderApi->generateTimeslots($startTime, $endTime, $interval, $limit, $clear);
+        } catch (DateException $e) {
+            $response->setError(Error::DateTimeInvalid);
+        } catch (NegativeValueException $e) {
+            $response->setError(Error::DateTimeInvalid);
+        }
+
+        $response->setStatus(true);
+        $response->setSuccess(Success::GenerateTimeslots);
+        return $response;
     }
 
     /**
