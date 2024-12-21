@@ -49,8 +49,13 @@
       const data = {};
       formData.forEach((value, key) => {
         data[key] = value;
+
       });
-      data["clear"] = formData.get("clear") === "on"
+      if (formData.get("clear") === "on") {
+        data["clear"] = 1;
+      } else {
+        data["clear"] = 0;
+      }
 
       // Send data as JSON
       fetch(window.location.href + "/api", {
