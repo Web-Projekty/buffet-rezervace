@@ -1,12 +1,19 @@
 import { User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const AccountButton = () => {
+  const location = useLocation();
+  const isOnDashboard: boolean =
+    location.pathname === "/account" ||
+    location.pathname === "/login" ||
+    location.pathname === "/register";
+
   return (
-    <Link to="/account">
-      <div className="rounded-full bg-white p-2 hover:cursor-pointer">
-        <User size={36} />
-      </div>
+    <Link
+      to="/account"
+      className={`rounded-full hover:cursor-pointer ${isOnDashboard ? "bg-white" : "bg-transparent"} p-2`}
+    >
+      <User size={36} />
     </Link>
   );
 };

@@ -2,52 +2,44 @@ import Order from "./Order";
 import { usePaging } from "../../hooks/usePaging";
 import { Order as OrderType } from "../../types";
 import PagingButtons from "../PagingButtons";
-import { AnimatePresence, motion } from "framer-motion";
-import { ordersPerPage } from "../../constants";
-import useFetch from "../../hooks/useFetch";
-import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { AnimatePresence } from "framer-motion";
+import { FETCH_URL, ORDERS_PER_PAGE } from "../../constants";
+import { useFetch } from "../../hooks/useFetch";
 import Loading from "../Loading";
+import { useUser } from "../../hooks/useUser";
 
-type UserOrderHistoryProps = {
-  list: OrderType[];
+type OrderData = {
+  data: OrderType[];
 };
 
-const UserOrderHistory = ({ list }: UserOrderHistoryProps) => {
-  /* Test pro získání tokenu */
-  // const token = useAuthHeader()?.split(" ")[1];
+const UserOrderHistory = () => {
+  const { token } = useUser();
 
-  // const { data, isLoading, error } = useFetch<OrderType[]>(
-  //   "https://wlczak.vlastas.cc/backend/api",
-  //   { requestType: "getOrders", token: token },
-  // );
+  const { data, isLoading, error } = useFetch<OrderData>(
+    FETCH_URL,
+    { requestType: "getOrders", token: token },
+    { data: [] },
+    [token],
+  );
 
   const { currentPage, totalPagesCount, dataList, arrayOfPages, handlePage } =
-    usePaging(list, ordersPerPage, "orderPage");
+    usePaging<OrderType>(data?.data, ORDERS_PER_PAGE, "orderPage");
 
-  // if (isLoading) {
-  //   return <Loading size={30} />;
-  // }
+  if (isLoading) {
+    return <Loading size={30} />;
+  }
 
-  // if (error) {
-  //   return <div className="text-white">Chyba načítání dat ze serveru.</div>;
-  // }
+  if (error) {
+    return <div className="text-white">{error}</div>;
+  }
 
   return (
-    <div className="flex w-[22rem] flex-col gap-2 md:w-[45rem]">
+    <div className="flex w-auto flex-col gap-2">
       <h1 className="text-2xl">Tvá historie objednávek ({dataList.length})</h1>
       <AnimatePresence>
         <ul className="flex flex-col gap-2">
           {dataList.map((order) => (
-            <motion.div
-              key={order.id}
-              layout
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 50 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Order key={order.id} order={order} />
-            </motion.div>
+            <Order key={order.id} order={order} />
           ))}
         </ul>
       </AnimatePresence>

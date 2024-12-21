@@ -1,15 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { BadgeMinus, BadgePlus } from "lucide-react";
+import { MinusCircle, PlusCircle } from "lucide-react";
 import { scaleUpAnimation, tapScaleAnimation } from "../../animations";
+import useCart from "../../store/CartStore";
+import { MenuItem } from "../../types";
 
 type MenuItemButtonsProps = {
-  isItemInCart: (id: number) => boolean;
-  id: number;
-  getItemQuantity: (id: number) => number;
-  handleAddToCart: () => void;
-  handleRemoveFromCart: () => void;
-  isCartFull: () => boolean;
-  isItemMaxQuantity: boolean;
+  item: MenuItem;
 };
 
 const quantChangeAnimation = {
@@ -19,33 +15,36 @@ const quantChangeAnimation = {
   transition: { duration: 0.2 },
 };
 
-const quantButtonShowAnimation = {
-  initial: { opacity: 0, scale: 0.8 },
-  animate: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.8 },
-  transition: { duration: 0.2 },
-};
+const MenuItemButtons = ({ item }: MenuItemButtonsProps) => {
+  const {
+    getItemQuantity,
+    addToCart,
+    removeFromCart,
+    isItemMaxQuantity,
+    isCartFull,
+  } = useCart();
 
-const MenuItemButtons = ({
-  isItemInCart,
-  id,
-  getItemQuantity,
-  handleAddToCart,
-  handleRemoveFromCart,
-  isItemMaxQuantity,
-  isCartFull,
-}: MenuItemButtonsProps) => {
+  const { id } = item;
+
+  const handleAddToCart = () => {
+    addToCart(item);
+  };
+
+  const handleRemoveFromCart = () => {
+    removeFromCart(item.id);
+  };
+
   return (
     <AnimatePresence>
-      <div className="absolute bottom-[0.30rem] left-1/2 flex -translate-x-1/2 transform flex-row items-center justify-center">
-        {isItemInCart(id) ? (
+      <div className="flex flex-row items-center justify-center">
+        {
           <motion.div
             key="remove-from-cart"
             {...scaleUpAnimation}
-            className="flex transform flex-row items-center gap-3"
+            className="flex transform flex-row items-center"
           >
             <motion.div {...tapScaleAnimation}>
-              <BadgeMinus
+              <MinusCircle
                 key={"remove-from-cart"}
                 size={48}
                 className="cursor-pointer p-2"
@@ -56,34 +55,21 @@ const MenuItemButtons = ({
             <motion.span
               key={getItemQuantity(id)}
               {...quantChangeAnimation}
-              className={`rounded-lg px-2 text-lg ${isItemMaxQuantity || isCartFull() ? "bg-red-400" : "bg-slate-800"}`}
+              className={`rounded-lg px-2 text-lg ${isItemMaxQuantity(id) || isCartFull() ? "bg-red-400" : "bg-slate-800"}`}
             >
               {getItemQuantity(id)}
             </motion.span>
 
             <motion.div {...tapScaleAnimation}>
-              <BadgePlus
+              <PlusCircle
                 key={"add-to-cart"}
                 size={48}
-                className={`p-2 ${isItemMaxQuantity || isCartFull() ? "cursor-not-allowed text-gray-400" : "cursor-pointer"} transition-colors duration-500`}
+                className={`p-2 ${isItemMaxQuantity(id) || isCartFull() ? "cursor-not-allowed text-gray-400" : "cursor-pointer"} transition-colors duration-500`}
                 onClick={handleAddToCart}
               />
             </motion.div>
           </motion.div>
-        ) : (
-          <motion.div
-            key="add-to-cart"
-            {...quantButtonShowAnimation}
-            {...tapScaleAnimation}
-            className="flex transform items-center justify-center"
-          >
-            <BadgePlus
-              size={48}
-              className={`${isItemMaxQuantity || isCartFull() ? "cursor-not-allowed text-gray-400" : "cursor-pointer"} p-2 transition-colors duration-500`}
-              onClick={handleAddToCart}
-            />
-          </motion.div>
-        )}
+        }
       </div>
     </AnimatePresence>
   );

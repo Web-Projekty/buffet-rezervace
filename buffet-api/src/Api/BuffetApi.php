@@ -223,10 +223,11 @@ class BuffetApi
 
             // add image
             $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
+            //$array[$i]["image"] = "http://localhost:8080/image/items/" . $array[$i]['id'];
 
             // get category name
             //$array[$i]["categoryName"] = $getName($array[$i]["category"], $categories);
-            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
+            //  $array[$i]["image"] = "http://localhost:8080/image/items/" . $array[$i]['id'];
         }
 
         //var_dump($array);
