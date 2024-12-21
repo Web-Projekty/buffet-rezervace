@@ -12,8 +12,10 @@ use Buffet\Database\Models\OrderModel;
 use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Success;
 use Buffet\Utils\WebsocketClient;
+use DateException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
@@ -99,6 +101,9 @@ class BuffetApi
 
             case "getOrders":
                 return $this->handleGetOrders($response);
+
+            case "generateTimeslots":
+                return $this->handleGenerateTimeslots($response);
 
             case "makeOrderEvent":
                 return $this->handleMakeOrderEvent($response);
@@ -292,6 +297,54 @@ class BuffetApi
         $response->setPayload("isAdmin", $isAdmin);
 
         $response->setStatus(true);
+        return $response;
+    }
+
+    /**
+     * @param ApiResponse $response
+     */
+    function handleGenerateTimeslots(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "startTime", "endTime", "interval", "limit"]);
+
+        $response->setRequestByKey("clear", (bool) $response->getRequestByKey("clear"));
+
+        $jwt = new JWTApi;
+        $orderApi = new OrderApi;
+
+        $startTime = $response->getRequestByKey("startTime");
+        $endTime = $response->getRequestByKey("endTime");
+        $interval = (int) $response->getRequestByKey("interval");
+        $limit = (int) $response->getRequestByKey("limit");
+        $clear = (bool) $response->getRequestByKey("clear");
+
+        if ($interval <= 0 || $limit <= 0) {
+            $response->setError(Error::InvalidLimitOrInterval);
+        }
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+        $isAdmin = UserModel::isAdmin($uid);
+
+        if (!$isAdmin) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        try {
+            $orderApi->generateTimeslots($startTime, $endTime, $interval, $limit, $clear);
+        } catch (DateException $e) {
+            $response->setError(Error::DateTimeInvalid);
+        } catch (NegativeValueException $e) {
+            $response->setError(Error::DateTimeInvalid);
+        }
+
+        $response->setStatus(true);
+        $response->setSuccess(Success::GenerateTimeslots);
         return $response;
     }
 
