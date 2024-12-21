@@ -30,6 +30,11 @@ class OrderApi
         }
 
         $index = 0;
+
+        if ($clear) {
+            TimeslotModel::query()->delete();
+        }
+
         while ($end->diff($start, "m") >= $limit) {
             $startString = $start->format("m");
             $start->addTime(new Time(0, $intervalTime));
