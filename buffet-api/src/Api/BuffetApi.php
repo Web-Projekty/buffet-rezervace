@@ -303,8 +303,8 @@ class BuffetApi
     }
 
     /**
-     * @param ApiResponse $response
-     * @return mixed
+     * @param  ApiResponse   $response
+     * @return ApiResponse
      */
     function handleCreateOrder(ApiResponse $response): ApiResponse
     {
