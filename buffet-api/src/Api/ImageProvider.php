@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace Buffet\Api;
 
+use Buffet\Types\Settings;
+use Buffet\Utils\EnvReader;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use Slim\Exception\HttpNotFoundException;
@@ -35,7 +37,7 @@ class ImageProvider
 
         $html->getBody()->write(file_get_contents($path));
 
-        $cacheDuration = 300;
+        $cacheDuration = EnvReader::getEnvProperty(Settings::ImageCacheTime) * 60;
         $lastModifiedTime = filemtime($path);
         $md5 = md5_file($path);
 
