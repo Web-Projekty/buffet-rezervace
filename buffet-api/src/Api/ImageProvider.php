@@ -37,7 +37,7 @@ class ImageProvider
 
         $html->getBody()->write(file_get_contents($path));
 
-        $cacheDuration = EnvReader::getEnvProperty(Settings::ImageCacheTime) * 60;
+        $cacheDuration = (int) EnvReader::getEnvProperty(Settings::ImageCacheTime) * 60;
         $lastModifiedTime = filemtime($path);
         $md5 = md5_file($path);
 
