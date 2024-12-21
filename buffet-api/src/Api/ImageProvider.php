@@ -18,6 +18,15 @@ class ImageProvider
     function main(RequestInterface $request, ResponseInterface $html, mixed $args): ResponseInterface
     {
         $urlPath = $args['path'];
+
+        // Check for query parameters
+        $queryParams = $request->getQueryParams();
+        if (!empty($queryParams)) {
+            $uri = $request->getUri();
+            $uriWithoutQuery = $uri->withQuery('');
+            return $html->withStatus(302)->withHeader('Location', (string) $uriWithoutQuery);
+        }
+
         $path = $this->getFilePath($urlPath, $request);
 
         if (explode("/", mime_content_type($path))[0] != "image") {
@@ -26,16 +35,20 @@ class ImageProvider
 
         $html->getBody()->write(file_get_contents($path));
 
-        $cacheDuration = 3660;
+        $cacheDuration = 300;
         $lastModifiedTime = filemtime($path);
-        $etag = md5_file($path);
+        $md5 = md5_file($path);
 
         return $html->withHeader('Content-Type', mime_content_type($path))
             ->withHeader('Content-Length', (string) filesize($path))
-            ->withHeader('Cache-Control', 'public, max-age=' . $cacheDuration)
-            ->withHeader('Expires', gmdate('D, d M Y H:i:s', time() + $cacheDuration) . ' GMT')
-            ->withHeader('Last-Modified', gmdate('D, d M Y H:i:s', $lastModifiedTime) . ' GMT')
-            ->withHeader('ETag', '"' . $etag . '"');
+            ->withHeader('Cache-Control', 'public, max-age=' . $cacheDuration . ", immutable")
+            ->withHeader('Expires', gmdate('D, d M Y H:i:s', time() + $cacheDuration + 3600) . ' CET')
+            ->withHeader('Last-Modified', gmdate('D, d M Y H:i:s', $lastModifiedTime) . ' CET')
+            ->withHeader('ETag', '"' . $md5 . '"')
+            ->withHeader('Content-Disposition', 'inline; filename="' . basename($path) . '"')
+            ->withHeader('Content-MD5', base64_encode($md5))
+            ->withHeader('Access-Control-Allow-Headers', '*')
+            ->withHeader('Access-Control-Allow-Methods', '*');
     }
 
     /**
