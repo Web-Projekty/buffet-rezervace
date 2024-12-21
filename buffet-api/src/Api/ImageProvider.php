@@ -26,8 +26,16 @@ class ImageProvider
 
         $html->getBody()->write(file_get_contents($path));
 
+        $cacheDuration = 3660;
+        $lastModifiedTime = filemtime($path);
+        $etag = md5_file($path);
+
         return $html->withHeader('Content-Type', mime_content_type($path))
-            ->withHeader('Content-Length', (string) filesize($path));
+            ->withHeader('Content-Length', (string) filesize($path))
+            ->withHeader('Cache-Control', 'public, max-age=' . $cacheDuration)
+            ->withHeader('Expires', gmdate('D, d M Y H:i:s', time() + $cacheDuration) . ' GMT')
+            ->withHeader('Last-Modified', gmdate('D, d M Y H:i:s', $lastModifiedTime) . ' GMT')
+            ->withHeader('ETag', '"' . $etag . '"');
     }
 
     /**
