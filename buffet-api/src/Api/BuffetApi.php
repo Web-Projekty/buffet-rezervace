@@ -180,8 +180,8 @@ class BuffetApi
     }
 
     /**
-     * @param ApiResponse $response
      * @todo cleanup
+     * @param ApiResponse $response
      */
     function handleGetMenu(ApiResponse $response): ApiResponse
     {
@@ -202,7 +202,7 @@ class BuffetApi
 
         // adding category list
 
-        $response->addPayload("categoryList",$categories);
+        $response->addPayload("categoryList", $categories);
 
         $array = $queryResult->toArray();
         for ($i = 0; $i < sizeof($array); $i++) {
@@ -217,11 +217,11 @@ class BuffetApi
             $array[$i]["allergens"] = $alergenList;
 
             // add image
-            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
+            $array[$i]["image"] = "http://localhost:8080/image/items/" . $array[$i]['id'];
 
             // get category name
             //$array[$i]["categoryName"] = $getName($array[$i]["category"], $categories);
-            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
+            //  $array[$i]["image"] = "http://localhost:8080/image/items/" . $array[$i]['id'];
         }
 
         //var_dump($array);
