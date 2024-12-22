@@ -3,9 +3,13 @@ import React, { useEffect, useRef, useState } from "react";
 
 type HorizontalScrollBarProps = {
   children: React.ReactNode;
+  className?: string;
 };
 
-const HorizontalScrollBar = ({ children }: HorizontalScrollBarProps) => {
+const HorizontalScrollBar = ({
+  children,
+  className,
+}: HorizontalScrollBarProps) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState<boolean>(false);
   const [canScrollRight, setCanScrollRight] = useState<boolean>(false);
@@ -53,23 +57,24 @@ const HorizontalScrollBar = ({ children }: HorizontalScrollBarProps) => {
           <ChevronLeft
             size={30}
             onClick={scrollLeft}
-            className="hidden cursor-pointer text-white md:block"
+            className="invisible hidden cursor-pointer text-white md:visible md:block"
           />
         )}
       </div>
 
       <div
-        className="flex w-[25rem] gap-5 overflow-x-auto px-10 py-3 md:w-[70rem] 2xl:w-[100rem]"
+        className={`flex w-[25rem] gap-5 overflow-x-auto px-10 py-3 md:w-[70rem] 2xl:w-[100rem] ${className}`}
         ref={scrollContainerRef}
       >
         {children}
       </div>
+
       <div className="absolute -right-2 z-10 flex h-full items-center rounded-lg bg-gradient-to-l from-backgroundColor via-backgroundColor to-transparent px-2 pl-10">
         {canScrollRight && (
           <ChevronRight
             size={30}
             onClick={scrollRight}
-            className="hidden cursor-pointer text-white md:block"
+            className="invisible hidden cursor-pointer text-white md:visible md:inline"
           />
         )}
       </div>
