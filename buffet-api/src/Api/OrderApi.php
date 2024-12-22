@@ -79,10 +79,12 @@ class OrderApi
 
         $tempTimeslots = [];
 
+        $countedOrders = $orders->empty();
+
         foreach ($days as $day) {
 
             foreach ($timeslots as $timeslot) {
-                $startTime = $timeslot['startTime'];
+                $startTime = Carbon::createFromFormat('H:i:s', $timeslot["startTime"]);
                 $endTime = Carbon::createFromFormat('H:i:s', $timeslot["endTime"]);
 
                 echo $day;
@@ -91,11 +93,15 @@ class OrderApi
                 echo " - ";
                 echo $endTime->subSecond()->format('H:i:s');
                 echo " | ";
-                $startItems = $orders->where('pickupDate', '=', $day)->whereBetween('startTime', [$startTime, $endTime->format('H:i:s')]);
+                $startItems = $orders->where('pickupDate', '=', $day)->whereBetween('startTime', [$startTime->format('H:i:s'), $endTime->subSecond()->format('H:i:s')]);
+                $countedOrders->merge($startItems);
+
                 echo $startItems->count();
                 echo " | ";
-                echo $orders->where('pickupDate', '=', $day)->whereBetween('endTime', [$startTime, $endTime->subSecond()->format('H:i:s')])->diffAssoc($startItems)->count();
+                echo $endOrders = $orders->where('pickupDate', '=', $day)->whereBetween('endTime', [$startTime->addSecond()->format('H:i:s'), $endTime->format('H:i:s')])->whereNotIn('id', $countedOrders->pluck('id'))->count();
                 echo "\n";
+
+                $countedOrders->merge($endOrders);
 
                 $tempTimeslots[] = [
                     'date' => $day,
