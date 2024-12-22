@@ -31,16 +31,7 @@ const MenuItem = ({ item }: MenuItemProps) => {
 
       <div className="flex h-full flex-col justify-between rounded-lg p-2">
         <ItemText {...item} />
-        {/* <MenuItemVariants menuItemId={item.id} variants={item.variants} /> */}
-        {/* <MenuItemButtons
-          isItemInCart={isItemInCart}
-          id={item.id}
-          getItemQuantity={getItemQuantity}
-          handleAddToCart={handleAddToCart}
-          handleRemoveFromCart={handleRemoveFromCart}
-          isCartFull={isCartFull}
-          isItemMaxQuantity={isItemMaxQuantity(item.id)}
-        /> */}
+
         <Button
           onClick={handleAddToCart}
           className={`flex items-center justify-between ${canAddToCart() ? "" : "bg-gray-400 hover:bg-gray-400"}`}
