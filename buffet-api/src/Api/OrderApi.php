@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace Buffet\Api;
 
 use Buffet\Database\Models\OrderModel;
@@ -9,6 +11,7 @@ use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Settings;
 use Buffet\Types\Time;
 use Buffet\Utils\EnvReader;
+use Carbon\Carbon;
 use DateException;
 
 class OrderApi
@@ -70,12 +73,30 @@ class OrderApi
         $firstDay = $days[0];
         $lastDay = $days[sizeof($days) - 1];
 
-        var_dump(OrderModel::selectByDateRange($firstDay, $lastDay)->toArray());
+        $orders = OrderModel::selectByDateRange($firstDay, $lastDay);
+
+        //var_dump($orders->toArray());
 
         $tempTimeslots = [];
 
         foreach ($days as $day) {
+
             foreach ($timeslots as $timeslot) {
+                $startTime = $timeslot['startTime'];
+                $endTime = Carbon::createFromFormat('H:i:s', $timeslot["endTime"]);
+
+                echo $day;
+                echo " | ";
+                echo $timeslot['startTime'];
+                echo " - ";
+                echo $endTime->subSecond()->format('H:i:s');
+                echo " | ";
+                $startItems = $orders->where('pickupDate', '=', $day)->whereBetween('startTime', [$startTime, $endTime->format('H:i:s')]);
+                echo $startItems->count();
+                echo " | ";
+                echo $orders->where('pickupDate', '=', $day)->whereBetween('endTime', [$startTime, $endTime->subSecond()->format('H:i:s')])->diffAssoc($startItems)->count();
+                echo "\n";
+
                 $tempTimeslots[] = [
                     'date' => $day,
                     'startTime' => $timeslot['startTime'],

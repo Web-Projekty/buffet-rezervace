@@ -52,7 +52,7 @@ class OrderModel extends Model
     public static function selectByDateRange(string $from, string $to): bool | \Illuminate\Support\Collection
     {
         try {
-            return OrderModel::query()->getQuery()->whereDate('pickupDate', ">=", $from)->whereDate('pickupDate', "<=", $to)->select()->get();
+            return OrderModel::query()->getQuery()->whereDate('pickupDate', ">=", $from)->whereDate('pickupDate', "<=", $to)->orderBy('pickupDate')->get();
         } catch (QueryException $e) {
 
             return false;
