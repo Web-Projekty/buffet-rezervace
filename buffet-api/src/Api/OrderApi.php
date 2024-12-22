@@ -5,7 +5,6 @@ declare (strict_types = 1);
 namespace Buffet\Api;
 
 use Buffet\Database\Models\OrderModel;
-use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\TimeslotModel;
 use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Settings;
@@ -79,29 +78,31 @@ class OrderApi
 
         $tempTimeslots = [];
 
-        $countedOrders = $orders->empty();
+        $countedOrderIds = [];
 
         foreach ($days as $day) {
+            $todaysOrders = $orders->where('pickupDate', '=', $day);
+            //var_dump($todaysOrders->toArray());
 
             foreach ($timeslots as $timeslot) {
                 $startTime = Carbon::createFromFormat('H:i:s', $timeslot["startTime"]);
                 $endTime = Carbon::createFromFormat('H:i:s', $timeslot["endTime"]);
 
-                echo $day;
-                echo " | ";
-                echo $timeslot['startTime'];
-                echo " - ";
-                echo $endTime->subSecond()->format('H:i:s');
-                echo " | ";
-                $startItems = $orders->where('pickupDate', '=', $day)->whereBetween('startTime', [$startTime->format('H:i:s'), $endTime->subSecond()->format('H:i:s')]);
-                $countedOrders->merge($startItems);
+                $currentOrders = $todaysOrders->where('startTime', '<', $endTime->format('H:i:s'))->where('endTime', '>', $startTime->format('H:i:s'));//->whereNotIn('id', $countedOrderIds);
 
-                echo $startItems->count();
-                echo " | ";
-                echo $endOrders = $orders->where('pickupDate', '=', $day)->whereBetween('endTime', [$startTime->addSecond()->format('H:i:s'), $endTime->format('H:i:s')])->whereNotIn('id', $countedOrders->pluck('id'))->count();
-                echo "\n";
+                $countedOrderIds = array_unique(array_merge($countedOrderIds, $currentOrders->pluck('id')->toArray()));
+                //var_dump($countedOrderIds);
 
-                $countedOrders->merge($endOrders);
+                $count = $currentOrders->count();
+
+                $message = $day . " from " . $startTime->format('H:i:s') . " to " . $endTime->format('H:i:s') . " has " . $count . " orders";
+                if ($count > 0) {
+                    echo "<span style='color:red'>" . $message . "</span><br>";
+                } else {
+                    echo $message . "<br>";
+                }
+
+                //var_dump($currentOrders->toArray());
 
                 $tempTimeslots[] = [
                     'date' => $day,
@@ -112,6 +113,6 @@ class OrderApi
             }
         }
         // var_dump($tempTimeslots);
-        TempModel::regenerate($tempTimeslots);
+        //TempModel::regenerate($tempTimeslots);
     }
 }
