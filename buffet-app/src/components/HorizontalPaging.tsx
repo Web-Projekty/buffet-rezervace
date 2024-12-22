@@ -1,5 +1,7 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { fadeInAnimation } from "../animations";
 
 type HorizontalScrollBarProps = {
   children: React.ReactNode;
@@ -40,44 +42,57 @@ const HorizontalScrollBar = ({
     const scrollContainer = scrollContainerRef.current;
     if (scrollContainer) {
       scrollContainer.addEventListener("scroll", updateScrollButtons);
-      // window.addEventListener("resize", updateScrollButtons);
+      window.addEventListener("resize", updateScrollButtons);
     }
     return () => {
       if (scrollContainer) {
         scrollContainer.removeEventListener("scroll", updateScrollButtons);
       }
-      // window.removeEventListener("resize", updateScrollButtons);
+      window.removeEventListener("resize", updateScrollButtons);
     };
   }, []);
 
+  useEffect(() => {
+    updateScrollButtons();
+  }, [children]);
+
   return (
-    <div className="relative flex flex-row items-center">
-      <div className="absolute -left-2 z-10 flex h-full items-center rounded-lg bg-gradient-to-r from-backgroundColor via-backgroundColor to-transparent px-2 pr-10">
+    <div className="relative flex flex-row">
+      <AnimatePresence>
         {canScrollLeft && (
-          <ChevronLeft
-            size={30}
-            onClick={scrollLeft}
-            className="invisible hidden cursor-pointer text-white md:visible md:block"
-          />
+          <motion.div
+            {...fadeInAnimation(0.2)}
+            className="absolute -left-2 z-10 flex h-full items-center rounded-lg bg-gradient-to-r from-backgroundColor via-backgroundColor to-transparent px-2 pr-10"
+          >
+            <ChevronLeft
+              size={30}
+              onClick={scrollLeft}
+              className="invisible hidden cursor-pointer text-white md:visible md:block"
+            />
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
 
       <div
-        className={`flex w-[25rem] gap-5 overflow-x-auto px-10 py-3 md:w-[70rem] 2xl:w-[100rem] ${className}`}
+        className={`flex w-[25rem] gap-5 overflow-x-auto md:w-[70rem] 2xl:w-[100rem] ${className}`}
         ref={scrollContainerRef}
       >
         {children}
       </div>
-
-      <div className="absolute -right-2 z-10 flex h-full items-center rounded-lg bg-gradient-to-l from-backgroundColor via-backgroundColor to-transparent px-2 pl-10">
+      <AnimatePresence>
         {canScrollRight && (
-          <ChevronRight
-            size={30}
-            onClick={scrollRight}
-            className="invisible hidden cursor-pointer text-white md:visible md:inline"
-          />
+          <motion.div
+            {...fadeInAnimation(0.2)}
+            className="absolute -right-2 z-10 flex h-full items-center rounded-lg bg-gradient-to-l from-backgroundColor via-backgroundColor to-transparent px-2 pl-10"
+          >
+            <ChevronRight
+              size={30}
+              onClick={scrollRight}
+              className="invisible hidden cursor-pointer text-white md:visible md:block"
+            />
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
     </div>
   );
 };
