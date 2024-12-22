@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace Buffet\Api;
 
+use Buffet\Types\Settings;
+use Buffet\Utils\EnvReader;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use Slim\Exception\HttpNotFoundException;
@@ -18,6 +20,15 @@ class ImageProvider
     function main(RequestInterface $request, ResponseInterface $html, mixed $args): ResponseInterface
     {
         $urlPath = $args['path'];
+
+        // Check for query parameters
+        $queryParams = $request->getQueryParams();
+        if (!empty($queryParams)) {
+            $uri = $request->getUri();
+            $uriWithoutQuery = $uri->withQuery('');
+            return $html->withStatus(302)->withHeader('Location', (string) $uriWithoutQuery);
+        }
+
         $path = $this->getFilePath($urlPath, $request);
 
         if (explode("/", mime_content_type($path))[0] != "image") {
@@ -26,8 +37,20 @@ class ImageProvider
 
         $html->getBody()->write(file_get_contents($path));
 
+        $cacheDuration = (int) EnvReader::getEnvProperty(Settings::ImageCacheTime) * 60;
+        $lastModifiedTime = filemtime($path);
+        $md5 = md5_file($path);
+
         return $html->withHeader('Content-Type', mime_content_type($path))
-            ->withHeader('Content-Length', (string) filesize($path));
+            ->withHeader('Content-Length', (string) filesize($path))
+            ->withHeader('Cache-Control', 'public, max-age=' . $cacheDuration . ", immutable")
+            ->withHeader('Expires', gmdate('D, d M Y H:i:s', time() + $cacheDuration) . ' UTC')
+            ->withHeader('Last-Modified', gmdate('D, d M Y H:i:s', $lastModifiedTime) . ' UTC')
+            ->withHeader('ETag', '"' . $md5 . '"')
+            ->withHeader('Content-Disposition', 'inline; filename="' . basename($path) . '"')
+            ->withHeader('Content-MD5', base64_encode($md5))
+            ->withHeader('Access-Control-Allow-Headers', '*')
+            ->withHeader('Access-Control-Allow-Methods', '*');
     }
 
     /**
