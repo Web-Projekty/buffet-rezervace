@@ -1,6 +1,7 @@
 export const menuItemShowAnimation = (duration: number = 0.5) => ({
   initial: { x: 50, opacity: 0 },
   whileInView: { x: 0, opacity: 1 },
+  exit: { x: -50, opacity: 0 },
   transition: { duration },
 });
 
