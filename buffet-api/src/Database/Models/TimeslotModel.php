@@ -32,18 +32,11 @@ class TimeslotModel extends Model
     /**
      * Generate timeslots based on start and end times with intervals.
      *
-     * @param  string $startTime
-     * @param  string $endTime
-     * @param  int    $intervalTime
-     * @param  int    $limit
+     * @param  list<array{startTime:string,endTime:string,orderLimit:int}> $timeslots
      * @return void
      */
-    public static function generateTimeslots(string $startTime, string $endTime, int $intervalTime, int $limit): void
+    public static function generateTimeslots(array $timeslots): void
     {
-        TimeslotModel::query()->create([
-            'startTime' => $startTime,
-            'endTime' => $endTime,
-            'orderLimit' => $limit
-        ]);
+        TimeslotModel::query()->getQuery()->insert($timeslots);
     }
 }
