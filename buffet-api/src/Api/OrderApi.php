@@ -70,6 +70,7 @@ class OrderApi
         $firstDay = $days[0];
         $lastDay = $days[sizeof($days) - 1];
 
+        var_dump(OrderModel::selectByDateRange($firstDay, $lastDay)->toArray());
 
         $tempTimeslots = [];
 
