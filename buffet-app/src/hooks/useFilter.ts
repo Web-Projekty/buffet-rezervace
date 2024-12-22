@@ -9,6 +9,7 @@ type UseFilterReturn<T> = {
 
 export const useFilter = <T>(
   filterKey: keyof T,
+  filterName: string = "filter",
   dataList: T[] | null = [],
 ): UseFilterReturn<T> => {
   const [searchParams, setSearchParams] = useSearchParams("");
@@ -22,12 +23,10 @@ export const useFilter = <T>(
       setData(dataList ? dataList : []);
       return;
     }
-    setSearchParams({ [filterKey as string]: filter });
+    setSearchParams({ [filterName]: filter });
     const filteredData = dataList
       ? dataList.filter((item) =>
-          String(item[filterKey])
-            .toLowerCase()
-            .includes(filterValue.toLowerCase()),
+          String(item[filterKey]).toLowerCase().includes(filter.toLowerCase()),
         )
       : [];
     setData(filteredData);
