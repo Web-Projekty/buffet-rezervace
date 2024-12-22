@@ -34,17 +34,22 @@ class OrderApi
         if ($clear) {
             TimeslotModel::query()->delete();
         }
+        $timeslots = [];
 
         while ($end->diff($start, "m") >= $limit) {
             $startString = $start->format("m");
             $start->addTime(new Time(0, $intervalTime));
             $endString = $start->format("m");
 
-            TimeslotModel::generateTimeslots($startString, $endString, $intervalTime, $limit);
+            $timeslots[] = [
+                'startTime' => $startString,
+                'endTime' => $endString,
+                'orderLimit' => $limit
+            ];
 
             $index++;
         }
-
+        TimeslotModel::generateTimeslots($timeslots);
     }
 
     public function generateTemp(): void
