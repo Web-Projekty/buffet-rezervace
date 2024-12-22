@@ -3,6 +3,7 @@ import { Category } from "../../types";
 import Input from "../Input";
 import Button from "../Button";
 import MenuItemEditInput from "./MenuItemEditInput";
+import { onImageChange } from "../utils/utils";
 
 type MenuCategoryEditBarProps = {
   handleBarOpen: () => void;
@@ -20,7 +21,6 @@ const MenuCategoryEditBar = ({
   );
 
   const handleSave = () => {
-    // Save item to backend
     handleClose();
   };
 
@@ -29,13 +29,7 @@ const MenuCategoryEditBar = ({
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setItemImage(event.target?.result as string);
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    }
+    onImageChange(e, setItemImage);
   };
 
   return (
@@ -57,8 +51,8 @@ const MenuCategoryEditBar = ({
 
           <Input
             type="file"
-            id="categoryImage"
-            name="categoryImage"
+            id="itemImage"
+            name="itemImage"
             onChange={handleImageChange}
             className="hidden"
             accept="image/*"

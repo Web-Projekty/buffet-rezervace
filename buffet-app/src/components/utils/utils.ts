@@ -16,6 +16,19 @@ export const formatDate = (date: string): string => {
   return dateObject.toLocaleDateString("cs-CZ");
 };
 
+export const onImageChange = (
+  e: React.ChangeEvent<HTMLInputElement>,
+  setImage: (image: string) => void,
+) => {
+  if (e.target.files && e.target.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setImage(event.target?.result as string);
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  }
+};
+
 export const formatUnixDate = (date: string): string => {
   const dateObject = new Date(parseInt(date));
   return dateObject.toLocaleDateString("cs-CZ");
