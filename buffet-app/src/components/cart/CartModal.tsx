@@ -41,7 +41,7 @@ const CartModal = () => {
         <div className="my-2 grid h-10 grid-cols-2 grid-rows-1 justify-between gap-10 text-white">
           <Button onClick={handleCloseCart}>Zavřít</Button>
           <Button onClick={handleContinue} disabled={isCartEmpty()}>
-            Pokračovat
+            K pokladně
           </Button>
         </div>
       </motion.div>
