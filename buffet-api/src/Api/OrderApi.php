@@ -46,4 +46,9 @@ class OrderApi
         }
 
     }
+
+    public function generateTemp(): void
+    {
+
+    }
 }

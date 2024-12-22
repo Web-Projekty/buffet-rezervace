@@ -9,6 +9,7 @@ use Buffet\Database\DatabaseManager;
 use Buffet\Database\Models\CategoryModel;
 use Buffet\Database\Models\ItemModel;
 use Buffet\Database\Models\OrderModel;
+use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
@@ -104,8 +105,12 @@ class BuffetApi
 
             case "createOrder":
                 return $this->handleCreateOrder($response);
+
             case "generateTimeslots":
                 return $this->handleGenerateTimeslots($response);
+
+            case "generateTemp":
+                return $this->handleGenerateTemp($response);
 
             case "makeOrderEvent":
                 return $this->handleMakeOrderEvent($response); // for testing
@@ -375,6 +380,37 @@ class BuffetApi
         $response->setStatus(true);
         $response->setSuccess(Success::GenerateTimeslots);
         return $response;
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    public function handleGenerateTemp(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token"]);
+
+        $jwt = new JWTApi;
+        $order = new OrderApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+        $isAdmin = UserModel::isAdmin($uid);
+
+        if (!$isAdmin) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        $order->generateTemp();
+
+        $response->setSuccess(Success::GenerateTemp);
+
+        return $response->setStatus(true);
     }
 
     /**

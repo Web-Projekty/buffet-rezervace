@@ -11,7 +11,7 @@ class TempModel extends Model
     /**
      * @var string
      */
-    protected $table = 'temp';
+    protected $table = 'Temp';
 
     /**
      * @var array<string>
