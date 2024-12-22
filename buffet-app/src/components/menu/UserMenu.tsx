@@ -4,12 +4,13 @@ import MenuItem from "./MenuItem";
 import HorizontalPaging from "../HorizontalPaging";
 import useMenu from "../../hooks/useMenu";
 import { useFilter } from "../../hooks/useFilter";
+import MenuCategory from "./MenuCategory";
 
 const UserMenu = () => {
   const { menuItems, error, isLoading, categories } = useMenu();
-
   const { data: filteredCategories, handleFilter } = useFilter(
     "name",
+    "category",
     categories,
   );
 
@@ -23,29 +24,27 @@ const UserMenu = () => {
     );
   }
   return (
-    <div className="flex flex-col items-center justify-center gap-5">
+    <div className="flex flex-col items-center justify-center gap-1">
       <h1 className="text-3xl font-bold text-white">Naše menu</h1>
       <div className="flex flex-row items-center justify-center gap-5 text-white">
-        <div
-          key="allCategory"
-          className="flex h-10 w-auto flex-row items-center justify-center gap-3 rounded-xl bg-slate-900 p-4"
-          onClick={() => handleFilter(null)}
-        >
-          <img src={"allCategory"} alt={"allCategory's image"} />
-          <h1>Vše</h1>
-        </div>
-        {categories.map((category) => {
-          return (
-            <div
-              key={category.name}
-              className="flex h-10 w-auto flex-row items-center justify-center gap-3 rounded-xl bg-slate-900 p-4"
-              onClick={() => handleFilter(category.name)}
-            >
-              <img src={category.image} alt={category.name + "'s image"} />
-              <h1>{category.name}</h1>
-            </div>
-          );
-        })}
+        <HorizontalPaging className="justify-center">
+          <MenuCategory
+            name="Vše"
+            image={""}
+            handleFilter={handleFilter}
+            filterValue=""
+          />
+          {categories.map((category) => {
+            return (
+              <MenuCategory
+                key={category.id}
+                {...category}
+                handleFilter={handleFilter}
+                filterValue={category.name}
+              />
+            );
+          })}
+        </HorizontalPaging>
       </div>
       {filteredCategories && filteredCategories.length <= 0 ? (
         <p className="italic text-white">
