@@ -17,12 +17,24 @@ class TempModel extends Model
      * @var array<string>
      */
     protected $fillable = [
-        'id',
         'date',
         'startTime',
         'endTime',
         'orderLimit',
         'orderCount'
     ];
+    /**
+     * @param list<array<string,mixed>> $timeslots
+     */
+    public static function regenerate(array $timeslots): void
+    {
+        TempModel::query()->delete();
+        TempModel::resetAutoIncrement();
+        TempModel::query()->getQuery()->insert($timeslots);
+    }
 
+    public static function resetAutoIncrement(): void
+    {
+        TempModel::query()->getConnection()->statement('ALTER TABLE Temp AUTO_INCREMENT = 1;');
+    }
 }

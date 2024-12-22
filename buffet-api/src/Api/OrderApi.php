@@ -2,9 +2,13 @@
 
 namespace Buffet\Api;
 
+use Buffet\Database\Models\OrderModel;
+use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\TimeslotModel;
 use Buffet\Types\Exceptions\NegativeValueException;
+use Buffet\Types\Settings;
 use Buffet\Types\Time;
+use Buffet\Utils\EnvReader;
 use DateException;
 
 class OrderApi
@@ -54,6 +58,32 @@ class OrderApi
 
     public function generateTemp(): void
     {
+        $timeslots = TimeslotModel::all()->toArray();
+        //var_dump($timeslots);
+        $days = [];
 
+        for ($i = 0; $i < (int) EnvReader::getEnvProperty(Settings::OrderDateLimitMax); $i++) {
+            $days[] = date('Y-m-d', strtotime('+' . $i . ' days'));
+        }
+        //  var_dump($days);
+
+        $firstDay = $days[0];
+        $lastDay = $days[sizeof($days) - 1];
+
+
+        $tempTimeslots = [];
+
+        foreach ($days as $day) {
+            foreach ($timeslots as $timeslot) {
+                $tempTimeslots[] = [
+                    'date' => $day,
+                    'startTime' => $timeslot['startTime'],
+                    'endTime' => $timeslot['endTime'],
+                    'orderLimit' => $timeslot['orderLimit'],
+                    'orderCount' => 0];
+            }
+        }
+        // var_dump($tempTimeslots);
+        TempModel::regenerate($tempTimeslots);
     }
 }
