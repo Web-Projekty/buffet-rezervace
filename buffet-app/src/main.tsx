@@ -12,7 +12,7 @@ import Dashboard from "./components/auth/Dashboard.tsx";
 import Allergens from "./components/allergens/Allergens.tsx";
 import RequireAuth from "./components/auth/RequireAuth.tsx";
 import PageNotFound from "./components/error/PageNotFound.tsx";
-import Cart from "./components/cart/Cart.tsx";
+import CartPurchase from "./components/cart/CartPurchase.tsx";
 import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
 import SuccessOrder from "./components/orders/SuccessOrder.tsx";
 import { UserData } from "./hooks/useLogin.ts";
@@ -95,7 +95,7 @@ const router = createBrowserRouter([
         path: "/cart",
         element: (
           <ErrorBoundary>
-            <Cart />
+            <CartPurchase />
           </ErrorBoundary>
         ),
       },

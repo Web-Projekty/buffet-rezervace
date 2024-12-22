@@ -1,0 +1,171 @@
+import useCart from "../../store/CartStore";
+import Button from "../Button";
+import { useUser } from "../../hooks/useUser";
+import { useState } from "react";
+import { formatCurrency } from "../utils/utils";
+import CartPurchaseCalendar from "./CartPurchaseCalendar";
+
+type PaymentMethod = {
+  name: string;
+  input: "checkbox" | "radio";
+};
+
+const paymentMethods: PaymentMethod[] = [
+  { name: "Předplacené kredity", input: "checkbox" },
+  { name: "Platba kartou, Google Pay, Apple Pay a další", input: "radio" },
+  { name: "Platba na pokladně", input: "radio" },
+];
+
+const CartPurchase = () => {
+  const { cartItems, isCartEmpty } = useCart();
+  const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<
+    PaymentMethod[]
+  >([]);
+  const { token, fullName, email } = useUser();
+
+  const handleSubmitOrder = async () => {
+    if (!token) return;
+    if (isCartEmpty()) return;
+  };
+
+  const handlePaymentMethodChange = (method: PaymentMethod) => {
+    setSelectedPaymentMethods((prev) => {
+      if (method.input === "radio") {
+        const filtered = prev.filter((m) => m.input !== "radio");
+        return [...filtered, method];
+      }
+      if (prev.includes(method)) {
+        return prev.filter((m) => m !== method);
+      }
+      return [...prev, method];
+    });
+  };
+
+  const sortedSelectedPaymentMethods = selectedPaymentMethods.sort((a, b) => {
+    if (a.name === "Předplacené kredity") return -1;
+    if (b.name === "Předplacené kredity") return 1;
+    return 0;
+  });
+
+  return (
+    <div className="m-auto grid w-[60%] grid-cols-2 gap-10 text-white">
+      <div className="flex flex-col gap-5">
+        <CartPurchaseCalendar />
+
+        <div className="flex flex-col rounded-lg bg-slate-700 p-3">
+          <h2 className="text-2xl font-bold">Platba</h2>
+          <div className="flex flex-col gap-2 rounded-lg bg-backgroundColor p-3">
+            {paymentMethods.map((method) => {
+              return (
+                <div
+                  key={method.name}
+                  className="flex flex-row items-center justify-between rounded-lg border border-white p-2"
+                  onClick={() => handlePaymentMethodChange(method)}
+                >
+                  <img src={method.name} alt="." />
+                  <label htmlFor={method.name} className="mx-3 text-sm">
+                    {method.name}
+                  </label>
+                  <input
+                    type={method.input}
+                    name={method.input === "radio" ? "payment" : undefined}
+                    id={method.name}
+                    checked={selectedPaymentMethods.includes(method)}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="flex flex-col rounded-lg bg-slate-700 p-3">
+          <h2 className="text-2xl font-bold">Kontaktní údaje</h2>
+          <div className="flex flex-col gap-2 rounded-lg bg-backgroundColor p-3">
+            <div className="flex flex-col">
+              <h3 className="font-bold">Jméno a příjmení</h3>
+              <p className="ml-3 text-sm">{fullName}</p>
+            </div>
+            <div className="flex flex-col">
+              <h3 className="font-bold">Emailová adresa</h3>
+              <p className="ml-3 text-sm">{email}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-col rounded-lg bg-slate-700 p-3">
+          <h2 className="text-2xl font-bold">Objednávka</h2>
+          <div className="flex flex-col gap-2 rounded-lg p-5">
+            {cartItems &&
+              cartItems.map(({ name, variants, price, quantity }) => {
+                return (
+                  <div key={name} className="flex flex-col gap-1">
+                    <div className="flex flex-row items-center justify-between">
+                      <h3>
+                        {name} <span>x {quantity}</span>
+                      </h3>
+                      <p className="italic">
+                        {formatCurrency(quantity * price)}
+                      </p>
+                    </div>
+
+                    <div>
+                      {variants &&
+                        variants.map((variant) => {
+                          return (
+                            <div className="flex flex-row items-center justify-between">
+                              <p>{variant.name}</p>
+                              <p className="italic">+{variant.price}</p>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  </div>
+                );
+              })}
+            <hr />
+            <div className="flex flex-row items-center justify-between font-bold">
+              <h3>Celkem</h3>
+              <p className="italic">
+                {formatCurrency(
+                  cartItems.reduce(
+                    (acc, { price, quantity }) => acc + price * quantity,
+                    0,
+                  ),
+                )}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-row items-center justify-between rounded-lg bg-slate-700 p-3">
+          <h2 className="text-2xl font-bold">Čas vyzvednutí</h2>{" "}
+          <p>Út 17.12. 10:10 - 10:15</p>
+        </div>
+
+        <div
+          className={`flex flex-row ${sortedSelectedPaymentMethods.length > 1 ? "items-start" : "items-center"} justify-between rounded-lg bg-slate-700 p-3`}
+        >
+          <h2 className="text-2xl font-bold">Platba</h2>
+          <div className="flex flex-col items-end rounded-lg">
+            {sortedSelectedPaymentMethods.length > 0 ? (
+              sortedSelectedPaymentMethods.map((method) => (
+                <p key={method.name}>{method.name}</p>
+              ))
+            ) : (
+              <p>Nebyla vybrána žádná metoda</p>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col rounded-lg bg-slate-700 p-3">
+          <Button>Potvrdit objednávku</Button>
+          <p className="text-center text-xs text-descriptionColor">
+            Potvrzením objednávky uživatel souhlasí se všeobecnými obchodními
+            podmínkami a zavazuje se k platbě.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CartPurchase;
