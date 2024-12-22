@@ -24,7 +24,13 @@ const MenuEdit = () => {
     } else {
       setEditItem(null);
     }
-    setIsItemBarOpen(!isItemBarOpen);
+    setIsItemBarOpen((prev) => {
+      const newState = !prev;
+      if (newState) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      return newState;
+    });
     setIsCategoryBarOpen(false);
   };
 
@@ -36,7 +42,13 @@ const MenuEdit = () => {
     } else {
       setEditCategory(null);
     }
-    setIsCategoryBarOpen(!isCategoryBarOpen);
+    setIsCategoryBarOpen((prev) => {
+      const newState = !prev;
+      if (newState) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      return newState;
+    });
     setIsItemBarOpen(false);
   };
 
@@ -53,9 +65,9 @@ const MenuEdit = () => {
   return (
     <div className="relative flex flex-col items-center justify-center gap-5">
       <h1 className="text-3xl font-bold text-white">Úprava menu</h1>
-      <div className="flex flex-row-reverse items-start gap-5">
+      <div className="relative flex flex-row-reverse items-start gap-5">
         {isItemBarOpen && (
-          <div className="flex-shrink-0">
+          <div className="sticky top-0 h-screen flex-shrink-0">
             <MenuItemEditBar
               handleBarOpen={handleBarOpen}
               menuItem={editItem}
@@ -64,7 +76,7 @@ const MenuEdit = () => {
           </div>
         )}
         {isCategoryBarOpen && (
-          <div className="flex-shrink-0">
+          <div className="sticky top-0 h-screen flex-shrink-0">
             <MenuCategoryEditBar
               handleBarOpen={handleCategoryBarOpen}
               category={editCategory}
@@ -72,6 +84,10 @@ const MenuEdit = () => {
           </div>
         )}
         <div className="flex flex-col">
+          <MenuCategoryAdd
+            handleCategoryBarOpen={handleCategoryBarOpen}
+            isCategoryBarOpen={isCategoryBarOpen}
+          />
           {categories?.map((category) => (
             <div className="mt-5 flex flex-col gap-5" key={category.id}>
               <div className="flex items-center justify-between">
@@ -91,6 +107,7 @@ const MenuEdit = () => {
                   />
                 </div>
               </div>
+
               <div
                 className={`grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-10 ${isItemBarOpen || isCategoryBarOpen ? "xl:grid-cols-2 2xl:grid-cols-3" : "xl:grid-cols-2 2xl:grid-cols-4"}`}
               >
@@ -112,10 +129,6 @@ const MenuEdit = () => {
                     />
                   ))}
               </div>
-              <MenuCategoryAdd
-                handleCategoryBarOpen={handleCategoryBarOpen}
-                isCategoryBarOpen={isCategoryBarOpen}
-              />
             </div>
           ))}
         </div>
