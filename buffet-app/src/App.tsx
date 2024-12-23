@@ -2,14 +2,18 @@ import { Outlet } from "react-router-dom";
 import Footer from "./components/Footer";
 import Header from "./components/header/Header";
 import RouteScrollToTop from "./components/RouteScrollToTop";
-import CartModal from "./components/cart/CartModal";
+import { lazy, Suspense } from "react";
+
+const CartModal = lazy(() => import("./components/cart/CartModal"));
 
 const App = () => {
   return (
     <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-slate-800 font-FiraSans">
       <Header />
       <RouteScrollToTop />
-      <CartModal />
+      <Suspense fallback={<div></div>}>
+        <CartModal />
+      </Suspense>
       <div className="mb-[3rem] mt-[10rem] flex-1">
         <Outlet />
       </div>
