@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
-import { MenuItem as MenuItemType } from "../../types";
-import ItemImage from "../items/ItemImage";
-import ItemText from "../items/ItemText";
-import { menuItemShowAnimation } from "../../animations";
-import Button from "../Button";
+import { MenuItem as MenuItemType } from "../../../types";
+import ItemImage from "../../items/ItemImage";
+import ItemText from "../../items/ItemText";
+import { menuItemShowAnimation } from "../../../animations";
+import Button from "../../Button";
 
 type MenuItemProps = {
   item: MenuItemType;

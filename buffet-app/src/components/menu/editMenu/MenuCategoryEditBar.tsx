@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Category } from "../../types";
-import Input from "../Input";
-import Button from "../Button";
+import { Category } from "../../../types";
+import Input from "../../Input";
+import Button from "../../Button";
 import MenuItemEditInput from "./MenuItemEditInput";
-import { onImageChange } from "../utils/utils";
+import { onImageChange } from "../../utils/utils";
 
 type MenuCategoryEditBarProps = {
   handleBarOpen: () => void;

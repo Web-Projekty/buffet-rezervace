@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Category, MenuItem, Variant } from "../../types";
-import Input from "../Input";
-import Button from "../Button";
+import { Category, MenuItem, Variant } from "../../../types";
+import Input from "../../Input";
+import Button from "../../Button";
 import MenuItemEditInput from "./MenuItemEditInput";
-import { allergens } from "../../allergens";
-import ToggleSwitch from "../ToggleSwitch";
-import { onImageChange } from "../utils/utils";
+import { allergens } from "../../../allergens";
+import ToggleSwitch from "../../ToggleSwitch";
+import { onImageChange } from "../../utils/utils";
 
 type MenuItemEditBarProps = {
   handleBarOpen: () => void;

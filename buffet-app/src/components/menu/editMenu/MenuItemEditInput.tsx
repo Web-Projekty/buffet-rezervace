@@ -1,4 +1,4 @@
-import Input, { InputProps } from "../Input";
+import Input, { InputProps } from "../../Input";
 
 type MenuItemEditInputProps = {
   label: string;

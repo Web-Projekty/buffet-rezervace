@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
 import Menu from "./components/menu/Menu.tsx";
-import MenuEdit from "./components/editMenu/MenuEdit.tsx";
+import MenuEdit from "./components/menu/editMenu/MenuEdit.tsx";
 import Login from "./components/auth/login/Login.tsx";
 import Dashboard from "./components/auth/Dashboard.tsx";
 import Allergens from "./components/allergens/Allergens.tsx";
@@ -18,6 +18,7 @@ import SuccessOrder from "./components/orders/SuccessOrder.tsx";
 import { UserData } from "./hooks/useLogin.ts";
 import Kds from "./components/kds/Kds.tsx";
 import AdminSettings from "./components/auth/admin/AdminSettings.tsx";
+import OrderOverview from "./components/orders/OrderOverview.tsx";
 
 const store = createStore<UserData>({
   authName: "_auth",
@@ -110,6 +111,16 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/order",
+        element: (
+          <ErrorBoundary>
+            {/*<RequireAuth requireAdmin={false} fallbackPath="/">*/}
+            <OrderOverview />
+            {/*</RequireAuth>*/}
+          </ErrorBoundary>
+        ),
+      },
+      {
         path: "/*",
         element: (
           <ErrorBoundary>
@@ -148,14 +159,6 @@ const router = createBrowserRouter([
       {
         path: "objednavky",
         index: true,
-        element: (
-          <ErrorBoundary>
-            <Kds />
-          </ErrorBoundary>
-        ),
-      },
-      {
-        path: "uprava-menu",
         element: (
           <ErrorBoundary>
             <Kds />

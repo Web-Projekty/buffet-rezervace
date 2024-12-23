@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { Category, MenuItem as MenuItemType } from "../../types";
-import ErrorComponent from "../error/ErrorComponent";
-import Loading from "../Loading";
+import { useEffect, useState } from "react";
+import { Category, MenuItem as MenuItemType } from "../../../types";
+import ErrorComponent from "../../error/ErrorComponent";
+import Loading from "../../Loading";
 import MenuItemAdd from "./MenuItemAdd";
 import MenuItemEdit from "./MenuItemEdit";
 import MenuItemEditBar from "./MenuItemEditBar";
 import { Pen } from "lucide-react";
 import MenuCategoryEditBar from "./MenuCategoryEditBar";
 import MenuCategoryAdd from "./MenuCategoryAdd";
-import useMenu from "../../hooks/useMenu";
+import useMenu from "../../../hooks/useMenu";
 
 const MenuEdit = () => {
   const { menuItems, error, isLoading, categories } = useMenu();
@@ -24,13 +24,7 @@ const MenuEdit = () => {
     } else {
       setEditItem(null);
     }
-    setIsItemBarOpen((prev) => {
-      const newState = !prev;
-      if (newState) {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-      return newState;
-    });
+    setIsItemBarOpen((prev) => !prev);
     setIsCategoryBarOpen(false);
   };
 
@@ -42,15 +36,14 @@ const MenuEdit = () => {
     } else {
       setEditCategory(null);
     }
-    setIsCategoryBarOpen((prev) => {
-      const newState = !prev;
-      if (newState) {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-      return newState;
-    });
+    setIsCategoryBarOpen((prev) => !prev);
     setIsItemBarOpen(false);
   };
+
+  useEffect(() => {
+    if (isItemBarOpen || isCategoryBarOpen)
+      window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [isItemBarOpen, isCategoryBarOpen]);
 
   if (isLoading) {
     return <Loading size={30} />;
