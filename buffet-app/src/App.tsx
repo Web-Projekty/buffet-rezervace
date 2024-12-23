@@ -3,17 +3,21 @@ import Footer from "./components/Footer";
 import Header from "./components/header/Header";
 import RouteScrollToTop from "./components/RouteScrollToTop";
 import { lazy, Suspense } from "react";
+import { Fallback } from "./main";
 
 const CartModal = lazy(() => import("./components/cart/CartModal"));
 
 const App = () => {
+  // const { isOpen } = useCart();
   return (
     <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-slate-800 font-FiraSans">
       <Header />
       <RouteScrollToTop />
-      <Suspense fallback={<div></div>}>
+      {/* {isOpen && ( */}
+      <Suspense fallback={<Fallback />}>
         <CartModal />
       </Suspense>
+      {/* )} */}
       <div className="mb-[3rem] mt-[10rem] flex-1">
         <Outlet />
       </div>
