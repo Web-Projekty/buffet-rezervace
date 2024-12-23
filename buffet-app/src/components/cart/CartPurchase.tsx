@@ -23,31 +23,31 @@ type PaymentMethod = {
 type PaymentMethodImage = {
   src: string;
   alt: string;
-};
-
-type SelectedTime = {
-  day: Day;
-  hour: Hour;
-  minute: Minute;
+  width?: number;
+  height?: number;
 };
 
 const paymentMethods: PaymentMethod[] = [
   {
     name: "Předplacené kredity",
     input: "checkbox",
-    image: [{ src: kredity, alt: "Předplacené kredity" }],
+    image: [
+      { src: kredity, alt: "Předplacené kredity", width: 50, height: 50 },
+    ],
   },
   {
     name: "Platba kartou, Google Pay, Apple Pay a další",
     input: "radio",
-    image: [{ src: thePay, alt: "The Pay (platební brána)" }],
+    image: [
+      { src: thePay, alt: "The Pay (platební brána)", width: 50, height: 50 },
+    ],
   },
   {
     name: "Platba na pokladně",
     input: "radio",
     image: [
-      { src: creditCart, alt: "Kreditní/debetní karta" },
-      { src: wallet, alt: "Hotovost" },
+      { src: creditCart, alt: "Kreditní/debetní karta", width: 50, height: 50 },
+      { src: wallet, alt: "Hotovost", width: 50, height: 50 },
     ],
   },
 ];
@@ -58,7 +58,7 @@ const CartPurchase = () => {
   const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<
     PaymentMethod[]
   >([]);
-  const [selectedTime, setSelectedTime] = useState<SelectedTime | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   const handleSubmit = async () => {
     if (!token) return;
@@ -84,7 +84,14 @@ const CartPurchase = () => {
   };
 
   const handleSelectTime = (day: Day, hour: Hour, minute: Minute) => {
-    setSelectedTime({ day, hour, minute });
+    const selectedTime =
+      day.label +
+      " " +
+      hour.label.substring(0, 2) +
+      minute.label.substring(0, 3) +
+      "-" +
+      minute.label.substring(7, 9);
+    setSelectedTime(selectedTime);
   };
 
   const sortedSelectedPaymentMethods = selectedPaymentMethods.sort((a, b) => {
@@ -116,7 +123,11 @@ const CartPurchase = () => {
                         key={image.alt}
                         src={image.src}
                         alt={image.alt}
-                        className="h-6 w-6"
+                        className={
+                          image.width && image.height
+                            ? `w-${image.width} h-${image.height}`
+                            : "h-10 w-10"
+                        }
                       />
                     ))}
                   </div>
@@ -208,11 +219,7 @@ const CartPurchase = () => {
 
         <div className="flex flex-row items-center justify-between rounded-lg bg-slate-700 p-3">
           <h2 className="text-2xl font-bold">Čas vyzvednutí</h2>{" "}
-          <p>
-            {selectedTime
-              ? `${selectedTime.day.label} ${selectedTime.hour.label}:${selectedTime.minute.label}`
-              : "Není vybrán žádný čas"}
-          </p>
+          <p>{selectedTime ? selectedTime : "Není vybrán žádný čas"}</p>
         </div>
 
         <div
