@@ -5,6 +5,7 @@ declare (strict_types = 1);
 namespace Buffet\Api;
 
 use Buffet\Database\Models\OrderModel;
+use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\TimeslotModel;
 use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Settings;
@@ -61,12 +62,16 @@ class OrderApi
     public function generateTemp(): void
     {
         $timeslots = TimeslotModel::all()->toArray();
-        //var_dump($timeslots);
         $days = [];
+        $orderDateLimitMax = (int) EnvReader::getEnvProperty(Settings::OrderDateLimitMax);
 
-        for ($i = 0; $i < (int) EnvReader::getEnvProperty(Settings::OrderDateLimitMax); $i++) {
+        if ($orderDateLimitMax <= 1) {
+            throw new NegativeValueException("Order date limit must be greater than 1");
+        }
+        for ($i = 0; $i < $orderDateLimitMax; $i++) {
             $days[] = date('Y-m-d', strtotime('+' . $i . ' days'));
         }
+
         //  var_dump($days);
 
         $firstDay = $days[0];
@@ -74,45 +79,41 @@ class OrderApi
 
         $orders = OrderModel::selectByDateRange($firstDay, $lastDay);
 
-        //var_dump($orders->toArray());
-
         $tempTimeslots = [];
 
-        $countedOrderIds = [];
+        //$countedOrderIds = [];
 
         foreach ($days as $day) {
             $todaysOrders = $orders->where('pickupDate', '=', $day);
-            //var_dump($todaysOrders->toArray());
 
             foreach ($timeslots as $timeslot) {
                 $startTime = Carbon::createFromFormat('H:i:s', $timeslot["startTime"]);
                 $endTime = Carbon::createFromFormat('H:i:s', $timeslot["endTime"]);
 
-                $currentOrders = $todaysOrders->where('startTime', '<', $endTime->format('H:i:s'))->where('endTime', '>', $startTime->format('H:i:s'));//->whereNotIn('id', $countedOrderIds);
+                $currentOrders = $todaysOrders->where('startTime', '<', $endTime->format('H:i:s'))->where('endTime', '>', $startTime->format('H:i:s')); //->whereNotIn('id', $countedOrderIds);
 
-                $countedOrderIds = array_unique(array_merge($countedOrderIds, $currentOrders->pluck('id')->toArray()));
-                //var_dump($countedOrderIds);
+                //$countedOrderIds = array_unique(array_merge($countedOrderIds, $currentOrders->pluck('id')->toArray())); // i don't know why I wrote this. Its working but completely useless
 
                 $count = $currentOrders->count();
 
-                $message = $day . " from " . $startTime->format('H:i:s') . " to " . $endTime->format('H:i:s') . " has " . $count . " orders";
-                if ($count > 0) {
-                    echo "<span style='color:red'>" . $message . "</span><br>";
-                } else {
-                    echo $message . "<br>";
-                }
+                ### Debug output ###
 
-                //var_dump($currentOrders->toArray());
+                /*$message = $day . " from " . $startTime->format('H:i:s') . " to " . $endTime->format('H:i:s') . " has " . $count . " orders";
+                if ($count > 0) {
+                echo "<span style='color:red'>" . $message . "</span><br>";
+                } else {
+                echo $message . "<br>";
+                }*/
 
                 $tempTimeslots[] = [
                     'date' => $day,
                     'startTime' => $timeslot['startTime'],
                     'endTime' => $timeslot['endTime'],
                     'orderLimit' => $timeslot['orderLimit'],
-                    'orderCount' => 0];
+                    'orderCount' => $count];
             }
         }
-        // var_dump($tempTimeslots);
-        //TempModel::regenerate($tempTimeslots);
+
+        TempModel::regenerate($tempTimeslots);
     }
 }

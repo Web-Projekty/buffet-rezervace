@@ -9,7 +9,6 @@ use Buffet\Database\DatabaseManager;
 use Buffet\Database\Models\CategoryModel;
 use Buffet\Database\Models\ItemModel;
 use Buffet\Database\Models\OrderModel;
-use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
@@ -406,8 +405,11 @@ class BuffetApi
             return $response->setError(Error::Unauthorized);
         }
 
-        $order->generateTemp();
-
+        try {
+            $order->generateTemp();
+        } catch (NegativeValueException $e) {
+            $response->setError(Error::DateTimeInvalid);
+        }
         $response->setSuccess(Success::GenerateTemp);
 
         return $response->setStatus(true);
