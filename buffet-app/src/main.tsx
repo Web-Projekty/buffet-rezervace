@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { lazy, StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
@@ -6,19 +6,24 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
 import Menu from "./components/menu/Menu.tsx";
-import MenuEdit from "./components/menu/editMenu/MenuEdit.tsx";
-import Login from "./components/auth/login/Login.tsx";
-import Dashboard from "./components/auth/Dashboard.tsx";
-import Allergens from "./components/allergens/Allergens.tsx";
-import RequireAuth from "./components/auth/RequireAuth.tsx";
-import PageNotFound from "./components/error/PageNotFound.tsx";
-import CartPurchase from "./components/cart/CartPurchase.tsx";
 import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
-import SuccessOrder from "./components/orders/SuccessOrder.tsx";
 import { UserData } from "./hooks/useLogin.ts";
-import Kds from "./components/kds/Kds.tsx";
-import AdminSettings from "./components/auth/admin/AdminSettings.tsx";
-import OrderOverview from "./components/orders/OrderOverview.tsx";
+
+const MenuEdit = lazy(() => import("./components/menu/editMenu/MenuEdit.tsx"));
+const Login = lazy(() => import("./components/auth/login/Login.tsx"));
+const Dashboard = lazy(() => import("./components/auth/Dashboard.tsx"));
+const Allergens = lazy(() => import("./components/allergens/Allergens.tsx"));
+const RequireAuth = lazy(() => import("./components/auth/RequireAuth.tsx"));
+const CartPurchase = lazy(() => import("./components/cart/CartPurchase.tsx"));
+const SuccessOrder = lazy(() => import("./components/orders/SuccessOrder.tsx"));
+const AdminSettings = lazy(
+  () => import("./components/auth/admin/AdminSettings.tsx"),
+);
+const OrderOverview = lazy(
+  () => import("./components/orders/OrderOverview.tsx"),
+);
+const PageNotFound = lazy(() => import("./components/error/PageNotFound.tsx"));
+const Kds = lazy(() => import("./components/kds/Kds.tsx"));
 
 const store = createStore<UserData>({
   authName: "_auth",
@@ -32,7 +37,9 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <ErrorBoundary>
-        <App />
+        <Suspense fallback={<div>Loading...</div>}>
+          <App />
+        </Suspense>
       </ErrorBoundary>
     ),
     //loader: () => import("./App.tsx"),
@@ -49,91 +56,111 @@ const router = createBrowserRouter([
       {
         path: "/menu/edit",
         element: (
-          <RequireAuth requireAdmin={true}>
-            <ErrorBoundary>
-              <MenuEdit />
-            </ErrorBoundary>
-          </RequireAuth>
+          <Suspense fallback={<div>Loading...</div>}>
+            <RequireAuth requireAdmin={true}>
+              <ErrorBoundary>
+                <MenuEdit />
+              </ErrorBoundary>
+            </RequireAuth>
+          </Suspense>
         ),
       },
       {
         path: "/alergeny",
         element: (
-          <ErrorBoundary>
-            <Allergens />
-          </ErrorBoundary>
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <Allergens />
+            </ErrorBoundary>
+          </Suspense>
         ),
       },
       {
         path: "/account",
         element: (
-          <RequireAuth requireAdmin={false} fallbackPath="/login">
-            <ErrorBoundary>
-              <Dashboard />
-            </ErrorBoundary>
-          </RequireAuth>
+          <Suspense fallback={<div>Loading...</div>}>
+            <RequireAuth requireAdmin={false} fallbackPath="/login">
+              <ErrorBoundary>
+                <Dashboard />
+              </ErrorBoundary>
+            </RequireAuth>
+          </Suspense>
         ),
       },
       {
         path: "/settings",
         element: (
-          //<RequireAuth requireAdmin={true} fallbackPath="/login">
-          <ErrorBoundary>
-            <AdminSettings />
-          </ErrorBoundary>
-          //</RequireAuth>
+          <Suspense fallback={<div>Loading...</div>}>
+            {/* <RequireAuth requireAdmin={true} fallbackPath="/login"> */}
+            <ErrorBoundary>
+              <AdminSettings />
+            </ErrorBoundary>
+            {/* </RequireAuth> */}
+          </Suspense>
         ),
       },
       {
         path: "/login",
         element: (
-          <ErrorBoundary>
-            <Login />
-          </ErrorBoundary>
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <Login />
+            </ErrorBoundary>
+          </Suspense>
         ),
       },
       {
         path: "/cart",
         element: (
-          <ErrorBoundary>
-            <CartPurchase />
-          </ErrorBoundary>
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <CartPurchase />
+            </ErrorBoundary>
+          </Suspense>
         ),
       },
       {
         path: "/success-order",
         element: (
-          <ErrorBoundary>
-            {/*<RequireAuth requireAdmin={false} fallbackPath="/">*/}
-            <SuccessOrder />
-            {/*</RequireAuth>*/}
-          </ErrorBoundary>
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              {/*<RequireAuth requireAdmin={false} fallbackPath="/">*/}
+              <SuccessOrder />
+              {/*</RequireAuth>*/}
+            </ErrorBoundary>
+          </Suspense>
         ),
       },
       {
         path: "/order",
         element: (
-          <ErrorBoundary>
-            {/*<RequireAuth requireAdmin={false} fallbackPath="/">*/}
-            <OrderOverview />
-            {/*</RequireAuth>*/}
-          </ErrorBoundary>
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              {/*<RequireAuth requireAdmin={false} fallbackPath="/">*/}
+              <OrderOverview />
+              {/*</RequireAuth>*/}
+            </ErrorBoundary>
+          </Suspense>
         ),
       },
       {
         path: "/*",
         element: (
-          <ErrorBoundary>
-            <PageNotFound />
-          </ErrorBoundary>
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <PageNotFound />
+            </ErrorBoundary>
+          </Suspense>
         ),
       },
       {
         path: "/page-not-found",
         element: (
-          <ErrorBoundary>
-            <PageNotFound />
-          </ErrorBoundary>
+          <Suspense fallback={<div>Loading...</div>}>
+            <ErrorBoundary>
+              <PageNotFound />
+            </ErrorBoundary>
+          </Suspense>
         ),
       },
     ],
@@ -141,11 +168,13 @@ const router = createBrowserRouter([
   {
     path: "/kds",
     element: (
-      <ErrorBoundary>
-        <RequireAuth requireAdmin={true}>
-          <Kds />
-        </RequireAuth>
-      </ErrorBoundary>
+      <Suspense key="kds" fallback={<div>Loading...</div>}>
+        <ErrorBoundary>
+          <RequireAuth requireAdmin={true}>
+            <Kds />
+          </RequireAuth>
+        </ErrorBoundary>
+      </Suspense>
     ),
     children: [
       {
