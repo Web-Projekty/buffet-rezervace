@@ -2,6 +2,7 @@
 
 namespace Buffet\Api;
 
+use Buffet\Types\ApiResponse;
 use Buffet\Database\Models\TimeslotModel;
 use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Time;
