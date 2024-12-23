@@ -14,8 +14,8 @@ export type Hour = {
 };
 
 export type Minute = {
-  label: string;
   available: boolean;
+  label: string;
 };
 
 type CartReservationCalendarProps = {
@@ -28,19 +28,19 @@ const Hours: Hour[] = [
     available: false,
     minutes: [
       {
-        label: "00",
+        label: ":00 - :05",
         available: true,
       },
       {
-        label: "15",
+        label: ":10 - :15",
         available: true,
       },
       {
-        label: "30",
+        label: ":20 - :25",
         available: true,
       },
       {
-        label: "45",
+        label: ":30 - :35",
         available: true,
       },
     ],
@@ -50,19 +50,19 @@ const Hours: Hour[] = [
     available: true,
     minutes: [
       {
-        label: "00",
+        label: ":00 - :05",
         available: true,
       },
       {
-        label: "15",
-        available: false,
-      },
-      {
-        label: "30",
+        label: ":10 - :15",
         available: true,
       },
       {
-        label: "45",
+        label: ":20 - :25",
+        available: true,
+      },
+      {
+        label: ":30 - :35",
         available: true,
       },
     ],
@@ -72,19 +72,19 @@ const Hours: Hour[] = [
     available: true,
     minutes: [
       {
-        label: "00",
+        label: ":00 - :05",
+        available: true,
+      },
+      {
+        label: ":10 - :15",
         available: false,
       },
       {
-        label: "15",
+        label: ":20 - :25",
         available: true,
       },
       {
-        label: "30",
-        available: true,
-      },
-      {
-        label: "45",
+        label: ":30 - :35",
         available: true,
       },
     ],
@@ -94,19 +94,19 @@ const Hours: Hour[] = [
     available: true,
     minutes: [
       {
-        label: "00",
+        label: ":00 - :05",
         available: true,
       },
       {
-        label: "15",
+        label: ":10 - :15",
         available: true,
       },
       {
-        label: "30",
+        label: ":20 - :25",
         available: true,
       },
       {
-        label: "45",
+        label: ":30 - :35",
         available: true,
       },
     ],
@@ -116,19 +116,19 @@ const Hours: Hour[] = [
     available: true,
     minutes: [
       {
-        label: "00",
+        label: ":00 - :05",
         available: true,
       },
       {
-        label: "15",
+        label: ":10 - :15",
         available: true,
       },
       {
-        label: "30",
+        label: ":20 - :25",
         available: true,
       },
       {
-        label: "45",
+        label: ":30 - :35",
         available: true,
       },
     ],
@@ -138,19 +138,19 @@ const Hours: Hour[] = [
     available: true,
     minutes: [
       {
-        label: "00",
+        label: ":00 - :05",
         available: true,
       },
       {
-        label: "15",
+        label: ":10 - :15",
         available: true,
       },
       {
-        label: "30",
+        label: ":20 - :25",
         available: true,
       },
       {
-        label: "45",
+        label: ":30 - :35",
         available: true,
       },
     ],
@@ -160,19 +160,19 @@ const Hours: Hour[] = [
     available: true,
     minutes: [
       {
-        label: "00",
+        label: ":00 - :05",
         available: true,
       },
       {
-        label: "15",
+        label: ":10 - :15",
         available: true,
       },
       {
-        label: "30",
-        available: false,
+        label: ":20 - :25",
+        available: true,
       },
       {
-        label: "45",
+        label: ":30 - :35",
         available: true,
       },
     ],
@@ -182,19 +182,19 @@ const Hours: Hour[] = [
     available: true,
     minutes: [
       {
-        label: "00",
+        label: ":00 - :05",
         available: true,
       },
       {
-        label: "15",
+        label: ":10 - :15",
         available: true,
       },
       {
-        label: "30",
-        available: false,
+        label: ":20 - :25",
+        available: true,
       },
       {
-        label: "45",
+        label: ":30 - :35",
         available: true,
       },
     ],
@@ -204,19 +204,19 @@ const Hours: Hour[] = [
     available: true,
     minutes: [
       {
-        label: "00",
+        label: ":00 - :05",
         available: true,
       },
       {
-        label: "15",
+        label: ":10 - :15",
         available: true,
       },
       {
-        label: "30",
-        available: false,
+        label: ":20 - :25",
+        available: true,
       },
       {
-        label: "45",
+        label: ":30 - :35",
         available: true,
       },
     ],
@@ -226,19 +226,19 @@ const Hours: Hour[] = [
     available: true,
     minutes: [
       {
-        label: "00",
+        label: ":00 - :05",
         available: true,
       },
       {
-        label: "15",
+        label: ":10 - :15",
         available: true,
       },
       {
-        label: "30",
-        available: false,
+        label: ":20 - :25",
+        available: true,
       },
       {
-        label: "45",
+        label: ":30 - :35",
         available: true,
       },
     ],
@@ -248,41 +248,41 @@ const Hours: Hour[] = [
     available: true,
     minutes: [
       {
-        label: "00",
+        label: ":00 - :05",
         available: true,
       },
       {
-        label: "15",
+        label: ":10 - :15",
         available: true,
       },
       {
-        label: "30",
-        available: false,
+        label: ":20 - :25",
+        available: true,
       },
       {
-        label: "45",
+        label: ":30 - :35",
         available: true,
       },
     ],
   },
   {
     label: "21:00",
-    available: true,
+    available: false,
     minutes: [
       {
-        label: "00",
+        label: ":00 - :05",
         available: true,
       },
       {
-        label: "15",
+        label: ":10 - :15",
         available: true,
       },
       {
-        label: "30",
-        available: false,
+        label: ":20 - :25",
+        available: true,
       },
       {
-        label: "45",
+        label: ":30 - :35",
         available: true,
       },
     ],
@@ -305,7 +305,7 @@ const CartReservationCalendar = ({
         date.setDate(today.getDate() + i);
         return {
           hours: Hours,
-          available: true,
+          available: !Hours.every((hour) => !hour.available),
           label: date.toLocaleDateString("cs-CZ", {
             weekday: "long",
             day: "numeric",
@@ -343,29 +343,29 @@ const CartReservationCalendar = ({
     <div className="flex flex-col gap-2 rounded-lg bg-slate-700 p-6 font-sans">
       <h2 className="text-2xl font-bold">Čas vyzvednutí</h2>
       <div className="flex flex-col gap-4 rounded-lg bg-backgroundColor p-6 shadow-md">
-        {/* Date Tabs */}
-
+        {/* Day */}
         <div className="w-full overflow-x-auto">
           <HorizontalPaging className="m-0 p-0">
-            {days.map((d) => (
+            {days.map((day) => (
               <button
-                key={d.label}
-                className={`flex-shrink-0 rounded px-4 py-1 text-white ${selectedDate === d ? "bg-green-500" : "bg-sky-400"}`}
-                onClick={() => handleDateClick(d)}
+                key={day.label}
+                className={`flex-shrink-0 rounded px-4 py-1 text-white ${day.available ? (selectedDate === day ? "bg-green-500" : "bg-sky-400") : "bg-gray-600"}`}
+                onClick={() => handleDateClick(day)}
+                disabled={!day.available}
               >
-                {d.label}
+                {day.label}
               </button>
             ))}
           </HorizontalPaging>
         </div>
 
-        {/* Time Slots */}
+        {/* Hours */}
         <div className="flex flex-row items-center justify-between gap-6">
           <div className="grid w-full grid-cols-2 gap-4">
             {selectedDate?.hours?.map((hour) => (
               <button
                 key={hour.label}
-                className={`rounded px-4 py-2 text-white disabled:text-white ${hour.available ? (selectedHour === hour ? "bg-green-500" : "bg-sky-400") : "bg-gray-600"}`}
+                className={`flex-shrink-0 rounded px-4 py-2 text-white disabled:text-white ${hour.available ? (selectedHour === hour ? "bg-green-500" : "bg-sky-400") : "bg-gray-600"}`}
                 onClick={() => hour.available && handleHourClick(hour)}
                 disabled={!hour.available}
               >
@@ -373,12 +373,14 @@ const CartReservationCalendar = ({
               </button>
             ))}
           </div>
+
+          {/* Minutes */}
           <div className="grid w-full grid-cols-2 gap-4">
             {selectedHour?.minutes?.map((minute) => {
               return (
                 <button
                   key={minute.label}
-                  className={`rounded px-4 py-2 text-white disabled:text-white ${minute.available ? (selectedMinute === minute ? "bg-green-500" : "bg-sky-400") : "bg-gray-600"}`}
+                  className={`text-nowrap rounded px-4 py-2 text-white disabled:text-white ${minute.available ? (selectedMinute === minute ? "bg-green-500" : "bg-sky-400") : "bg-gray-600"}`}
                   onClick={() => minute.available && handleMinuteClick(minute)}
                   disabled={!minute.available}
                 >
