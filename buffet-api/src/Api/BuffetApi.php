@@ -408,7 +408,7 @@ class BuffetApi
         try {
             $order->generateTemp();
         } catch (NegativeValueException $e) {
-            $response->setError(Error::DateTimeInvalid);
+            $response->setError(Error::InvalidOrderDateLimitMax);
         }
         $response->setSuccess(Success::GenerateTemp);
 
