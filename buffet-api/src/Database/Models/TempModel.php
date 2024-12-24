@@ -43,6 +43,6 @@ class TempModel extends Model
      */
     public static function getFormatedArray(): array
     {
-        return TempModel::query()->get(['id','startTime','endTime','orderLimit','orderCount'])->groupBy('date')->toArray();
+        return TempModel::query()->get(['id', 'startTime', 'endTime', 'orderLimit', 'orderCount', 'date'])->toArray();
     }
 }
