@@ -17,7 +17,6 @@ class EnvReader
     public static function getEnvProperty(Settings $needle): string | bool | null
     {
         if (!file_exists(self::$envPath)) {
-            echo "create";
             self::createEnv();
         }
         if (!$envContent = file_get_contents(self::$envPath)) {

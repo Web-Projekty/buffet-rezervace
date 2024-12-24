@@ -52,6 +52,9 @@ enum Error: string {
     ############################ Other ############################
     case DateTimeInvalid = 'Date or time is invalid';
     case InvalidLimitOrInterval = 'Limit or interval is invalid';
+
+    ############################ Settings ############################
+    case InvalidOrderDateLimitMax = 'Order date limit max is invalid';
     /**
      * @return string
      */
