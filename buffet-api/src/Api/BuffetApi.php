@@ -9,6 +9,7 @@ use Buffet\Database\DatabaseManager;
 use Buffet\Database\Models\CategoryModel;
 use Buffet\Database\Models\ItemModel;
 use Buffet\Database\Models\OrderModel;
+use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
@@ -102,11 +103,20 @@ class BuffetApi
             case "getOrders":
                 return $this->handleGetOrders($response);
 
+            case "createOrder":
+                return $this->handleCreateOrder($response);
+
             case "generateTimeslots":
                 return $this->handleGenerateTimeslots($response);
 
+            case "generateTemp":
+                return $this->handleGenerateTemp($response);
+
+            case "getOrderTimeTable":
+                return $this->handleGetOrderTimeTable($response);
+
             case "makeOrderEvent":
-                return $this->handleMakeOrderEvent($response);
+                return $this->handleMakeOrderEvent($response); // for testing
 
             case null:
             default:
@@ -288,7 +298,7 @@ class BuffetApi
 
         $jwt->validateToken($response);
 
-        $uid = $jwt->decodeToken($response)->sub;
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
 
         if ($response->hasFailed()) {
             return $response;
@@ -301,8 +311,35 @@ class BuffetApi
     }
 
     /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleCreateOrder(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "items", "startTime", "endTime", "pickUpDate", "paymentMethod"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+        $isAdmin = UserModel::isAdmin($uid);
+
+        if ($isAdmin) {
+
+        }
+
+        return $response->setStatus(true);
+    }
+
+    /**
      * @param ApiResponse $response
      */
+
     function handleGenerateTimeslots(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "startTime", "endTime", "interval", "limit"]);
@@ -346,6 +383,60 @@ class BuffetApi
         $response->setStatus(true);
         $response->setSuccess(Success::GenerateTimeslots);
         return $response;
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    public function handleGenerateTemp(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token"]);
+
+        $jwt = new JWTApi;
+        $order = new OrderApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+        $isAdmin = UserModel::isAdmin($uid);
+
+        if (!$isAdmin) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        try {
+            $order->generateTemp();
+        } catch (NegativeValueException $e) {
+            $response->setError(Error::InvalidOrderDateLimitMax);
+        }
+        $response->setSuccess(Success::GenerateTemp);
+
+        return $response->setStatus(true);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    public function handleGetOrderTimeTable(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+        $data = TempModel::getFormatedArray();
+        $response->setPayload("data", $data);
+        return $response->setStatus(true);
     }
 
     /**
