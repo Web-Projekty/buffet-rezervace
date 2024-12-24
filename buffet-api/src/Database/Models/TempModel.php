@@ -37,4 +37,12 @@ class TempModel extends Model
     {
         TempModel::query()->getConnection()->statement('ALTER TABLE Temp AUTO_INCREMENT = 1;');
     }
+
+    /**
+     * @return array<string|int,mixed>
+     */
+    public static function getFormatedArray(): array
+    {
+        return TempModel::query()->get(['id','startTime','endTime','orderLimit','orderCount'])->groupBy('date')->toArray();
+    }
 }

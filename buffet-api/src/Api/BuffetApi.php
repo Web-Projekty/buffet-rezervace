@@ -9,6 +9,7 @@ use Buffet\Database\DatabaseManager;
 use Buffet\Database\Models\CategoryModel;
 use Buffet\Database\Models\ItemModel;
 use Buffet\Database\Models\OrderModel;
+use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
@@ -110,6 +111,9 @@ class BuffetApi
 
             case "generateTemp":
                 return $this->handleGenerateTemp($response);
+
+            case "getOrderTimeTable":
+                return $this->handleGetOrderTimeTable($response);
 
             case "makeOrderEvent":
                 return $this->handleMakeOrderEvent($response); // for testing
@@ -412,6 +416,26 @@ class BuffetApi
         }
         $response->setSuccess(Success::GenerateTemp);
 
+        return $response->setStatus(true);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    public function handleGetOrderTimeTable(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+        $data = TempModel::getFormatedArray();
+        $response->setPayload("data", $data);
         return $response->setStatus(true);
     }
 
