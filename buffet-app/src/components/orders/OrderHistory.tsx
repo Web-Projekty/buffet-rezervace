@@ -12,7 +12,7 @@ type OrderData = {
   data: OrderType[];
 };
 
-const UserOrderHistory = () => {
+const OrderHistory = () => {
   const { token } = useUser();
 
   const { data, isLoading, error } = useFetch<OrderData>(
@@ -53,4 +53,4 @@ const UserOrderHistory = () => {
   );
 };
 
-export default UserOrderHistory;
+export default OrderHistory;
