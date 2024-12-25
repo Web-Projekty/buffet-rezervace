@@ -32,58 +32,54 @@ const loadCartItems = (): CartItem[] => {
   return cartItems ? (cartItems as CartItem[]) : [];
 };
 
+const isItemInCart = (cartItems: CartItem[], id: number): boolean => {
+  return cartItems.some((cartItem) => cartItem.id === id);
+};
+
+const getItemQuantity = (cartItems: CartItem[], id: number): number => {
+  return cartItems.find((cartItem) => cartItem.id === id)?.quantity || 0;
+};
+
+const updateCartItemQuantity = (
+  cartItems: CartItem[],
+  id: number,
+  quantity: number,
+): CartItem[] => {
+  return cartItems.map((cartItem) =>
+    cartItem.id === id
+      ? { ...cartItem, quantity: cartItem.quantity + quantity }
+      : cartItem,
+  );
+};
+
 const useCart = create<CartItems>((set, get) => ({
   cartItems: loadCartItems(),
   addToCart: (item: MenuItem) => {
-    const hasReachedMaxCartQuantity = get().isCartFull();
-
-    if (hasReachedMaxCartQuantity) {
+    const cartItems = get().cartItems;
+    const quantity = getItemQuantity(cartItems, item.id);
+    if (quantity >= MAX_ITEMS || get().getCartQuantity() >= MAX_ITEMS_CART)
       return;
-    }
 
-    const isAlreadyInCart = get().isItemInCart(item.id);
+    const updatedItems = isItemInCart(cartItems, item.id)
+      ? updateCartItemQuantity(cartItems, item.id, 1)
+      : [...cartItems, { ...item, quantity: 1 }];
 
-    if (isAlreadyInCart) {
-      const hasReachedMaxItemQuantity = get().isItemMaxQuantity(item.id);
-      if (hasReachedMaxItemQuantity) {
-        return;
-      }
-
-      set((state) => ({
-        cartItems: state.cartItems.map((cartItem) =>
-          cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : cartItem,
-        ),
-      }));
-    } else {
-      set((state) => ({
-        cartItems: [...state.cartItems, { ...item, quantity: 1 }],
-      }));
-    }
-
-    setItem(CART_LOCAL_STORAGE_KEY, get().cartItems);
+    set({ cartItems: updatedItems });
+    setItem(CART_LOCAL_STORAGE_KEY, updatedItems);
   },
   removeFromCart: (id: number) => {
-    const isAlreadyInCart = get().isItemInCart(id);
+    const cartItems = get().cartItems;
+    if (!isItemInCart(cartItems, id)) return;
 
-    if (!isAlreadyInCart) {
-      return;
-    }
+    const quantity = getItemQuantity(cartItems, id);
+    const updatedItems =
+      quantity === 1
+        ? cartItems.filter((item) => item.id !== id)
+        : updateCartItemQuantity(cartItems, id, -1);
 
-    if (get().getItemQuantity(id) === 1) {
-      set((state) => ({
-        cartItems: state.cartItems.filter((cartItem) => cartItem.id !== id),
-      }));
-    } else {
-      set((state) => ({
-        cartItems: state.cartItems.map((cartItem) =>
-          cartItem.id === id
-            ? { ...cartItem, quantity: cartItem.quantity - 1 }
-            : cartItem,
-        ),
-      }));
-    }
+    set({ cartItems: updatedItems });
+    setItem(CART_LOCAL_STORAGE_KEY, updatedItems);
+
     setItem(CART_LOCAL_STORAGE_KEY, get().cartItems);
   },
   clearCart: () => {
