@@ -15,7 +15,7 @@ const useMenu = (): UseMenuReturn => {
 
   const { data, error, isLoading } = useFetch<MenuData>(FETCH_URL, {
     requestType: "getMenu",
-    itemsCount: ITEMS_PER_PAGE + ITEMS_PER_PAGE,
+    itemsCount: ITEMS_PER_PAGE,
     page: 1,
   });
 
@@ -23,7 +23,7 @@ const useMenu = (): UseMenuReturn => {
 
   useEffect(() => {
     if (data) {
-      setCategories(data.categoryList.sort((a, b) => a.id - b.id));
+      setCategories([...data.categoryList].sort((a, b) => a.id - b.id));
     }
   }, [data]);
 
