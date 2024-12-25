@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Category, MenuItem as MenuItemType } from "../../../types";
 import ErrorComponent from "../../error/ErrorComponent";
 import Loading from "../../Loading";
@@ -18,27 +18,33 @@ const MenuEdit = () => {
   const [isCategoryBarOpen, setIsCategoryBarOpen] = useState<boolean>(false);
   const [editCategory, setEditCategory] = useState<Category | null>(null);
 
-  const handleBarOpen = (id?: number) => {
-    if (id) {
-      setEditItem(menuItems?.find((item) => item.id === id) || null);
-    } else {
-      setEditItem(null);
-    }
-    setIsItemBarOpen((prev) => !prev);
-    setIsCategoryBarOpen(false);
-  };
+  const handleBarOpen = useCallback(
+    (id?: number) => {
+      if (id) {
+        setEditItem(menuItems?.find((item) => item.id === id) || null);
+      } else {
+        setEditItem(null);
+      }
+      setIsItemBarOpen((prev) => !prev);
+      setIsCategoryBarOpen(false);
+    },
+    [menuItems],
+  );
 
-  const handleCategoryBarOpen = (id?: number) => {
-    if (id) {
-      setEditCategory(
-        categories.find((category) => category.id === id) || null,
-      );
-    } else {
-      setEditCategory(null);
-    }
-    setIsCategoryBarOpen((prev) => !prev);
-    setIsItemBarOpen(false);
-  };
+  const handleCategoryBarOpen = useCallback(
+    (id?: number) => {
+      if (id) {
+        setEditCategory(
+          categories.find((category) => category.id === id) || null,
+        );
+      } else {
+        setEditCategory(null);
+      }
+      setIsCategoryBarOpen((prev) => !prev);
+      setIsItemBarOpen(false);
+    },
+    [categories],
+  );
 
   useEffect(() => {
     if (isItemBarOpen || isCategoryBarOpen)
