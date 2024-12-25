@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
 import { UserData } from "./hooks/useLogin.ts";
-import Loading from "./components/Loading.tsx";
+import Loading from "./components/ui/Loading.tsx";
 
 const Menu = lazy(() => import("./components/menu/Menu.tsx"));
 const MenuEdit = lazy(() => import("./components/menu/editMenu/MenuEdit.tsx"));
@@ -31,9 +31,6 @@ const ErrorBoundary = lazy(
 export const Fallback = () => (
   <div
     style={{
-      position: "fixed",
-      top: 0,
-      left: 0,
       backgroundColor: "#1e293b",
       color: "white",
       display: "flex",

@@ -1,5 +1,5 @@
 import { Allergen } from "../../types";
-import LazyImage from "../LazyImage";
+import LazyImage from "../ui/LazyImage";
 import ItemAllergens from "./ItemAllergens";
 
 type ItemImageProps = {

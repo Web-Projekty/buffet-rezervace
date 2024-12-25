@@ -1,11 +1,11 @@
 import Order from "./Order";
 import { usePaging } from "../../hooks/usePaging";
 import { Order as OrderType } from "../../types";
-import PagingButtons from "../PagingButtons";
+import PagingButtons from "../ui/PagingButtons";
 import { AnimatePresence } from "framer-motion";
 import { FETCH_URL, ORDERS_PER_PAGE } from "../../constants";
 import { useFetch } from "../../hooks/useFetch";
-import Loading from "../Loading";
+import Loading from "../ui/Loading";
 import { useUser } from "../../hooks/useUser";
 
 type OrderData = {

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Category, MenuItem as MenuItemType } from "../../../types";
 import ErrorComponent from "../../error/ErrorComponent";
-import Loading from "../../Loading";
+import Loading from "../../ui/Loading";
 import MenuItemAdd from "./MenuItemAdd";
 import MenuItemEdit from "./MenuItemEdit";
 import MenuItemEditBar from "./MenuItemEditBar";

@@ -2,9 +2,9 @@ import { motion } from "framer-motion";
 import { scaleUpAnimation } from "../../animations";
 import { useNavigate } from "react-router-dom";
 import useCart from "../../store/CartStore";
-import Modal from "../Modal";
+import Modal from "../ui/Modal";
 import CartItem from "./CartItem";
-import Button from "../Button";
+import Button from "../ui/Button";
 import EmptyCart from "./EmptyCart";
 
 const CartModal = () => {

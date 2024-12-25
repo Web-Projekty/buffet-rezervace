@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Input from "../../Input";
-import Button from "../../Button";
+import Input from "../../ui/Input";
+import Button from "../../ui/Button";
 import LoginError from "./LoginError";
 import { useLogin } from "../../../hooks/useLogin";
-import Loading from "../../Loading";
+import Loading from "../../ui/Loading";
 
 type LoginFormData = {
   username: string;

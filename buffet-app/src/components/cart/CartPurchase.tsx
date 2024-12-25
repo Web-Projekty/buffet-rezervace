@@ -1,5 +1,5 @@
 import useCart from "../../store/CartStore";
-import Button from "../Button";
+import Button from "../ui/Button";
 import { useUser } from "../../hooks/useUser";
 import { useState } from "react";
 import { formatCurrency } from "../utils/utils";

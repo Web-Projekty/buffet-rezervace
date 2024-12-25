@@ -4,7 +4,7 @@ import useCart from "../../store/CartStore";
 import ItemImage from "../items/ItemImage";
 import ItemText from "../items/ItemText";
 import { menuItemShowAnimation } from "../../animations";
-import Button from "../Button";
+import Button from "../ui/Button";
 import { formatCurrency } from "../utils/utils";
 
 type MenuItemProps = {

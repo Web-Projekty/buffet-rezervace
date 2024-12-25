@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import HorizontalPaging from "../HorizontalPaging";
+import HorizontalPaging from "../ui/HorizontalPaging";
 
 export type Day = {
   hours: Hour[];

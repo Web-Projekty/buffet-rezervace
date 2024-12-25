@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
-import Footer from "./components/Footer";
+import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
-import RouteScrollToTop from "./components/RouteScrollToTop";
+import RouteScrollToTop from "./components/ui/RouteScrollToTop";
 import { lazy, Suspense } from "react";
 import { Fallback } from "./main";
 import useCart from "./store/CartStore";

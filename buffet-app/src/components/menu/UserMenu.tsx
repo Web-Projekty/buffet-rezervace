@@ -1,7 +1,7 @@
 import ErrorComponent from "../error/ErrorComponent";
-import Loading from "../Loading";
+import Loading from "../ui/Loading";
 import MenuItem from "./MenuItem";
-import HorizontalPaging from "../HorizontalPaging";
+import HorizontalPaging from "../ui/HorizontalPaging";
 import useMenu from "../../hooks/useMenu";
 import { useFilter } from "../../hooks/useFilter";
 import MenuCategory from "./MenuCategory";

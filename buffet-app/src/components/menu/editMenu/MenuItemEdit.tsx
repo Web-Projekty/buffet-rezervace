@@ -3,7 +3,7 @@ import { MenuItem as MenuItemType } from "../../../types";
 import ItemImage from "../../items/ItemImage";
 import ItemText from "../../items/ItemText";
 import { menuItemShowAnimation } from "../../../animations";
-import Button from "../../Button";
+import Button from "../../ui/Button";
 
 type MenuItemProps = {
   item: MenuItemType;

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { scaleUpAnimation } from "../../animations";
 import { removeTokenExpiration } from "./login/login";
-import Button from "../Button";
+import Button from "../ui/Button";
 import { useUser } from "../../hooks/useUser";
 
 const AccountInformation = () => {

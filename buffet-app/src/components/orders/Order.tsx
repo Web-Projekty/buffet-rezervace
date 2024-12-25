@@ -5,7 +5,7 @@ import { ChevronLeft } from "lucide-react";
 import { useOrder } from "../../hooks/useOrder";
 import OrderPrice from "./OrderPrice";
 import OrderItems from "./OrderItems";
-import Button from "../Button";
+import Button from "../ui/Button";
 
 type OrderProps = {
   order: OrderType;

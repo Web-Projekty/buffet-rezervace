@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Category, MenuItem, Variant } from "../../../types";
-import Input from "../../Input";
-import Button from "../../Button";
+import Input from "../../ui/Input";
+import Button from "../../ui/Button";
 import MenuItemEditInput from "./MenuItemEditInput";
 import { allergens } from "../../../allergens";
-import ToggleSwitch from "../../ToggleSwitch";
+import ToggleSwitch from "../../ui/ToggleSwitch";
 import { onImageChange } from "../../utils/utils";
 
 type MenuItemEditBarProps = {
