@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Category, MenuData, MenuItem } from "../types";
 import { useFetch } from "./useFetch";
-import { FETCH_URL, ITEMS_PER_PAGE } from "../constants";
+import { FETCH_URL } from "../constants";
 
 type UseMenuReturn = {
   categories: Category[];
@@ -15,8 +15,8 @@ const useMenu = (): UseMenuReturn => {
 
   const { data, error, isLoading } = useFetch<MenuData>(FETCH_URL, {
     requestType: "getMenu",
-    itemsCount: ITEMS_PER_PAGE,
-    page: 1,
+    // itemsCount: ITEMS_PER_PAGE,
+    // page: 1,
   });
 
   const menuItems: MenuItem[] | null = data ? data.data : null;
