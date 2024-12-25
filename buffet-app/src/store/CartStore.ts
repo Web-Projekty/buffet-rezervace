@@ -13,7 +13,7 @@ type CartItems = {
   isOpen: boolean;
   handleOpenCart: () => void;
   handleCloseCart: () => void;
-  toggleCart: () => void;
+  handleToggleCart: () => void;
   cartItems: CartItem[];
   addToCart: (item: MenuItem) => void;
   removeFromCart: (id: number) => void;
@@ -105,7 +105,7 @@ const useCart = create<CartItems>((set, get) => ({
   isOpen: false,
   handleOpenCart: () => set({ isOpen: true }),
   handleCloseCart: () => set({ isOpen: false }),
-  toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
+  handleToggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
 }));
 
 export default useCart;
