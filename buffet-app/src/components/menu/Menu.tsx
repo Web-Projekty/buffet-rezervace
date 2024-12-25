@@ -2,8 +2,8 @@ import { lazy, Suspense } from "react";
 import { useUser } from "../../hooks/useUser";
 import { Fallback } from "../../main.tsx";
 
-const MenuEdit = lazy(() => import("./editMenu/MenuEdit"));
-const UserMenu = lazy(() => import("./UserMenu"));
+const MenuEdit = lazy(() => import("./editMenu/MenuEdit.tsx"));
+const UserMenu = lazy(() => import("./UserMenu.tsx"));
 
 const Menu = () => {
   const { isAdmin } = useUser();
