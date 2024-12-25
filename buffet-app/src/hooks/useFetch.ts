@@ -25,7 +25,7 @@ export const useFetch = <T>(
   useEffect(() => {
     setIsLoading(true);
 
-    console.log("useFetch", url, requestData);
+    // console.log("useFetch", url, requestData);
 
     async function fetchData() {
       try {
