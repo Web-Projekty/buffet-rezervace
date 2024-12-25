@@ -31,6 +31,9 @@ const ErrorBoundary = lazy(
 export const Fallback = () => (
   <div
     style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
       backgroundColor: "#1e293b",
       color: "white",
       display: "flex",
