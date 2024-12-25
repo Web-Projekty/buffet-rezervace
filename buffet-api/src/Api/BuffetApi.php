@@ -200,7 +200,7 @@ class BuffetApi
      */
     function handleGetMenu(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(["page", "itemsCount"]);
+        $response->setRequestKeys([]); // optional - "page", "itemsCount"
         $response->setPayloadKeys(["data"]);
 
         $queryResult = null;
@@ -211,8 +211,14 @@ class BuffetApi
         $page = (int) $response->getRequestByKey("page");
         $itemsCount = (int) $response->getRequestByKey("itemsCount");
 
-        if (!$queryResult = ItemModel::getAllByPage($page, $itemsCount)) {
-            return $response->setError(Error::QueryFailed);
+        if ($page > 0 && $itemsCount > 0) {
+            if (!$queryResult = ItemModel::getAllByPage($page, $itemsCount)) {
+                return $response->setError(Error::QueryFailed);
+            }
+        } else {
+            if (!$queryResult = ItemModel::getAll()) {
+                return $response->setError(Error::QueryFailed);
+            }
         }
 
         // adding category list
