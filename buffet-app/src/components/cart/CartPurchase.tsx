@@ -132,10 +132,7 @@ const CartPurchase = () => {
                     ))}
                   </div>
 
-                  <label
-                    htmlFor={method.name}
-                    className="mx-3 ml-auto text-base"
-                  >
+                  <label htmlFor={method.name} className="mx-1 ml-auto text-sm">
                     {method.name}
                   </label>
                   <input

@@ -50,7 +50,7 @@ const Order = ({ order }: OrderProps) => {
     >
       <div className="flex flex-row items-center justify-between text-xl">
         <div
-          className={`absolute left-0 h-[64px] w-2 ${color} round-bl-lg rounded-tl-lg`}
+          className={`absolute left-0 h-[64px] w-2 ${color} round-bl-lg rounded-bl-lg rounded-tl-lg`}
         ></div>
         <div className="flex flex-row items-center gap-2 text-xl">
           <h2 className="font-bold">#{order.id}</h2>
