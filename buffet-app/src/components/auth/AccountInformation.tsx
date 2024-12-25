@@ -21,18 +21,28 @@ const AccountInformation = () => {
   };
 
   return (
-    <div className="flex h-[220px] w-[22rem] flex-col justify-center gap-5 md:w-[300px]">
-      <h1 className="text-2xl">{isAdmin ? "Administrátor" : "Uživatel"}</h1>
+    <div className="flex w-full flex-row justify-between">
       <motion.div
         {...scaleUpAnimation(0.5)}
-        className="rounded-md bg-slate-900 p-4"
+        className="flex flex-row items-center gap-2 rounded-lg bg-slate-900 p-2"
       >
-        <h2 className="text-2xl font-bold">{fullName}</h2>
-        <p className="text-lg">Email: {email}</p>
-        <p className="text-lg">Třída: {userClass}</p>
+        <h2>
+          <span className="font-bold">
+            {isAdmin ? "Administrátor" : "Uživatel"}:{" "}
+          </span>
+          {fullName}
+        </h2>
+        <p>
+          <span className="font-bold">Email:</span> {email}
+        </p>
+        {userClass && (
+          <p>
+            <span className="font-bold">Třída:</span> {userClass}
+          </p>
+        )}
       </motion.div>
 
-      <Button onClick={handleLogout}>Odhlásit</Button>
+      <Button onClick={handleLogout}>Odhlásit se</Button>
     </div>
   );
 };
