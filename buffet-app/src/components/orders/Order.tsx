@@ -46,7 +46,7 @@ const Order = ({ order }: OrderProps) => {
       initial={{ x: 100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className={`relative flex w-auto flex-col rounded-lg bg-slate-900 p-4 md:w-[45rem]`}
+      className={`relative flex w-auto flex-col rounded-lg bg-backgroundColor p-4 md:w-[45rem]`}
     >
       <div className="flex flex-row items-center justify-between text-xl">
         <div
