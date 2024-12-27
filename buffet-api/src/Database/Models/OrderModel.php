@@ -58,4 +58,16 @@ class OrderModel extends Model
             return false;
         }
     }
+
+    /**
+     * @param string $userId
+     * @param string $status
+     * @param string $date
+     * @param string $pickupDate
+     * @param string $items
+     */
+    public static function createOrder(string $userId, string $status, string $date, string $pickupDate, string $items): void
+    {
+
+    }
 }
