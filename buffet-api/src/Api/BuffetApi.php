@@ -325,6 +325,12 @@ class BuffetApi
         $response->setRequestKeys(["token", "items", "startTime", "endTime", "pickUpDate", "paymentMethod"]);
 
         $jwt = new JWTApi;
+        $orderApi = new OrderApi;
+
+        $startTime = $response->getRequestByKey("startTime");
+        $endTime = $response->getRequestByKey("endTime");
+        $pickUpDate = $response->getRequestByKey("pickUpDate");
+        $items = $response->getRequestByKey("items");
 
         $jwt->validateToken($response);
 
@@ -337,6 +343,11 @@ class BuffetApi
 
         if ($isAdmin) {
 
+        } else {
+            if (!$orderApi->isFree($startTime, $endTime, $pickUpDate)) {
+                return $response->setError(Error::OrderTimeslotsFull);
+            }
+            OrderModel::createOrder($uid, "pending", $pickUpDate, $pickUpDate, $items);
         }
 
         return $response->setStatus(true);

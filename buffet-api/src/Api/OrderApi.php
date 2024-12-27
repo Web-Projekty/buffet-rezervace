@@ -116,4 +116,14 @@ class OrderApi
 
         TempModel::regenerate($tempTimeslots);
     }
+
+    /**
+     * @param string $startTime
+     * @param string $endTime
+     * @param string $date
+     */
+    public function isFree(string $startTime, string $endTime, string $date): bool
+    {
+        return false;
+    }
 }
