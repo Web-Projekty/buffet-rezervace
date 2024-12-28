@@ -11,6 +11,7 @@ import Loading from "./components/ui/Loading.tsx";
 const Menu = lazy(() => import("./components/menu/Menu.tsx"));
 const MenuEdit = lazy(() => import("./components/menu/editMenu/MenuEdit.tsx"));
 const Login = lazy(() => import("./components/auth/login/Login.tsx"));
+const Register = lazy(() => import("./components/auth/register/Register.tsx"));
 const Dashboard = lazy(() => import("./components/auth/Dashboard.tsx"));
 const Allergens = lazy(() => import("./components/allergens/Allergens.tsx"));
 const RequireAuth = lazy(() => import("./components/auth/RequireAuth.tsx"));
@@ -121,6 +122,16 @@ const router = createBrowserRouter([
           <Suspense fallback={<Fallback />}>
             <ErrorBoundary>
               <Login />
+            </ErrorBoundary>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/register",
+        element: (
+          <Suspense fallback={<Fallback />}>
+            <ErrorBoundary>
+              <Register />
             </ErrorBoundary>
           </Suspense>
         ),
