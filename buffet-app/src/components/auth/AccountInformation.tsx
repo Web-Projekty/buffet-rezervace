@@ -7,11 +7,9 @@ import Button from "../ui/Button";
 import { useUser } from "../../hooks/useUser";
 
 const AccountInformation = () => {
-  const { user } = useUser();
+  const { fullName, email, isAdmin, classTitle } = useUser();
   const logout = useSignOut();
   const navigate = useNavigate();
-
-  const { isAdmin, fullName, email, class: userClass } = user!;
 
   const handleLogout = () => {
     logout();
@@ -21,7 +19,7 @@ const AccountInformation = () => {
   };
 
   return (
-    <div className="flex w-full flex-row justify-between">
+    <div className="flex w-full flex-col gap-2 md:flex-row md:justify-between">
       <motion.div
         {...scaleUpAnimation(0.5)}
         className="flex flex-row items-center gap-2 rounded-lg bg-slate-900 p-2"
@@ -35,9 +33,9 @@ const AccountInformation = () => {
         <p>
           <span className="font-bold">Email:</span> {email}
         </p>
-        {userClass && (
+        {classTitle && (
           <p>
-            <span className="font-bold">Třída:</span> {userClass}
+            <span className="font-bold">Třída:</span> {classTitle}
           </p>
         )}
       </motion.div>
