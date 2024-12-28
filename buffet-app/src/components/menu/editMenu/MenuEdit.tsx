@@ -1,14 +1,16 @@
-import { useCallback, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { Category, MenuItem as MenuItemType } from "../../../types";
 import ErrorComponent from "../../error/ErrorComponent";
 import Loading from "../../ui/Loading";
 import MenuItemAdd from "./MenuItemAdd";
 import MenuItemEdit from "./MenuItemEdit";
-import MenuItemEditBar from "./MenuItemEditBar";
 import { Pen } from "lucide-react";
-import MenuCategoryEditBar from "./MenuCategoryEditBar";
 import MenuCategoryAdd from "./MenuCategoryAdd";
 import useMenu from "../../../hooks/useMenu";
+import { Fallback } from "../../../main";
+
+const MenuItemEditBar = lazy(() => import("./MenuItemEditBar"));
+const MenuCategoryEditBar = lazy(() => import("./MenuCategoryEditBar"));
 
 const MenuEdit = () => {
   const { menuItems, error, isLoading, categories } = useMenu();
@@ -66,21 +68,21 @@ const MenuEdit = () => {
       <h1 className="text-3xl font-bold text-white">Úprava menu</h1>
       <div className="relative flex flex-row-reverse items-start gap-5">
         {isItemBarOpen && (
-          <div className="sticky top-0 h-screen flex-shrink-0">
+          <Suspense fallback={<Fallback />}>
             <MenuItemEditBar
               handleBarOpen={handleBarOpen}
               menuItem={editItem}
               categories={categories}
             />
-          </div>
+          </Suspense>
         )}
         {isCategoryBarOpen && (
-          <div className="sticky top-0 h-screen flex-shrink-0">
+          <Suspense fallback={<Fallback />}>
             <MenuCategoryEditBar
               handleBarOpen={handleCategoryBarOpen}
               category={editCategory}
             />
-          </div>
+          </Suspense>
         )}
         <div className="flex flex-col">
           <MenuCategoryAdd
