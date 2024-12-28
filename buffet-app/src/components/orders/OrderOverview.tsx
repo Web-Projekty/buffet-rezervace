@@ -1,6 +1,8 @@
-import { useState } from "react";
-import OrderTracking from "./OrderTracking";
-import OrderHistory from "./OrderHistory";
+import { lazy, Suspense, useState } from "react";
+import { Fallback } from "../../main";
+
+const OrderTracking = lazy(() => import("./OrderTracking"));
+const OrderHistory = lazy(() => import("./OrderHistory"));
 
 const Buttons = [{ name: "Přehled" }, { name: "Historie" }];
 
@@ -14,8 +16,8 @@ const OrderOverview = () => {
   };
 
   return (
-    <div className="m-auto grid w-[75rem] grid-cols-3 gap-2">
-      <div className="col-span-1 flex flex-col gap-2 rounded-lg bg-slate-900 p-2 text-white">
+    <div className="grid w-full grid-cols-1 gap-2 md:m-auto md:w-[75rem] md:grid-cols-3">
+      <div className="flex flex-col gap-2 rounded-lg bg-slate-900 p-2 text-white md:col-span-1">
         {Buttons.map(({ name }) => (
           <button
             key={name}
@@ -26,8 +28,16 @@ const OrderOverview = () => {
           </button>
         ))}
       </div>
-      <div className="col-span-2 flex flex-col items-center gap-2 rounded-lg bg-slate-900 p-2 text-white">
-        {page === "Přehled" ? <OrderTracking /> : <OrderHistory />}
+      <div className="flex flex-col items-center gap-2 rounded-lg bg-slate-900 p-2 text-white md:col-span-2">
+        {page === "Přehled" ? (
+          <Suspense fallback={<Fallback />}>
+            <OrderTracking />
+          </Suspense>
+        ) : (
+          <Suspense fallback={<Fallback />}>
+            <OrderHistory />
+          </Suspense>
+        )}
       </div>
     </div>
   );
