@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace Buffet\Database\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -7,6 +9,8 @@ use Illuminate\Database\QueryException;
 
 class OrderModel extends Model
 {
+    const CREATED_AT = 'dateCreated';
+    const UPDATED_AT = null;
     // Specify the table if it's not the pluralized form of the class name
     /**
      * @var string
@@ -17,7 +21,45 @@ class OrderModel extends Model
     /**
      * @var array<string>
      */
-    protected $fillable = ['userId', 'status', 'date', 'pickupDate', 'items'];
+    protected $fillable = ['userId', 'status', 'dateCreated', 'pickupDate', 'items', 'startTime', 'endTime', 'pickUpId', 'paymentMethod'];
+
+    /**
+     * @var array<string>
+     */
+    protected $casts = [
+        'dateCreated' => 'datetime',
+        'pickupDate' => 'date'
+    ];
+
+    /**
+     * @var array<string>
+     */
+    protected $dates = ['dateCreated', 'pickupDate'];
+
+    /**
+     * @var array<string>
+     */
+    protected $hidden = ['id'];
+
+    /**
+     * @var array<string>
+     */
+    protected $visible = ['userId', 'status', 'pickupDate', 'items', 'startTime', 'endTime', 'pickUpId', 'paymentMethod'];
+
+    /**
+     * @var array<string>
+     */
+    protected $indexTypes = [
+        'userId' => 'fulltext',
+        'status' => 'fulltext',
+        'dateCreated' => 'datetime',
+        'pickupDate' => 'date',
+        'items' => 'fulltext',
+        'startTime' => 'time',
+        'endTime' => 'time',
+        'pickUpId' => 'string',
+        'paymentMethod' => 'string'
+    ];
 
     /**
      * @var bool
@@ -57,5 +99,28 @@ class OrderModel extends Model
 
             return false;
         }
+    }
+
+    /**
+     * @param int    $userId
+     * @param string $status
+     * @param string $pickupDate
+     * @param string $items
+     * @param string $paymentMethod
+     * @param string $startTime
+     * @param string $endTime
+     */
+    public static function createOrder(int $userId, string $status, string $pickupDate, string $items, string $paymentMethod, string $startTime, string $endTime): void
+    {
+        OrderModel::query()->create([
+            'userId' => $userId,
+            'status' => $status,
+            'pickupDate' => $pickupDate,
+            'items' => $items,
+            'startTime' => $startTime,
+            'endTime' => $endTime,
+            'pickUpId' => '000',
+            'paymentMethod' => $paymentMethod
+        ]);
     }
 }

@@ -6,7 +6,7 @@ namespace Buffet\Types;
 
 class ApiResponse
 {
-    public Status $status = Status::Pending;
+    public ApiStatus $status = ApiStatus::Pending;
 
     /**
      * @var array<mixed>
@@ -37,7 +37,7 @@ class ApiResponse
      */
     public function addPayload(string $key, mixed $payload = ''): void
     {
-        if ($this->status == Status::Failed) {
+        if ($this->status == ApiStatus::Failed) {
             return;
         }
         if (!key_exists($key, $this->payload)) {
@@ -52,7 +52,7 @@ class ApiResponse
      */
     public function setPayload(string $key, mixed $payload = ''): void
     {
-        if ($this->status == Status::Failed) {
+        if ($this->status == ApiStatus::Failed) {
             return;
         }
         $this->payload[$key] = $payload;
@@ -97,7 +97,7 @@ class ApiResponse
      */
     public function removePayload(string $key): void
     {
-        if ($this->status == Status::Failed) {
+        if ($this->status == ApiStatus::Failed) {
             return;
         }
         unset($this->payload[$key]);
@@ -109,8 +109,8 @@ class ApiResponse
      */
     public function setError(Error $msg): ApiResponse
     {
-        if ($this->status !== Status::Failed) {
-            $this->status = Status::Failed;
+        if ($this->status !== ApiStatus::Failed) {
+            $this->status = ApiStatus::Failed;
             unset($this->payload);
             $this->payload["msg"] = $msg->getValue();
         }
@@ -124,8 +124,8 @@ class ApiResponse
      */
     public function setSuccess(Success $msg): ApiResponse
     {
-        if ($this->status !== Status::Failed) {
-            $this->status = Status::Success;
+        if ($this->status !== ApiStatus::Failed) {
+            $this->status = ApiStatus::Success;
             $this->addPayload("msg", $msg->getValue());
         }
 
@@ -181,7 +181,7 @@ class ApiResponse
      */
     public function getStatus(): bool
     {
-        if ($this->status === Status::Failed) {
+        if ($this->status === ApiStatus::Failed) {
             return false;
         }
         return true;
@@ -192,7 +192,7 @@ class ApiResponse
      */
     public function setStatus(bool $status): ApiResponse
     {
-        $this->status = $status ? Status::Success : Status::Failed;
+        $this->status = $status ? ApiStatus::Success : ApiStatus::Failed;
         return $this;
     }
 
@@ -224,7 +224,7 @@ class ApiResponse
      */
     public function hasFailed(): bool
     {
-        return $this->status === Status::Failed;
+        return $this->status === ApiStatus::Failed;
     }
 
     public function __toString()
@@ -241,7 +241,7 @@ class ApiResponse
             $this->setError(Error::MissingPayloadKeys);
         }
 
-        if ($this->status === Status::Pending) {
+        if ($this->status === ApiStatus::Pending) {
             $this->setError(Error::StatusPending);
         }
 

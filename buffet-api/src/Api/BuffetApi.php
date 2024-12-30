@@ -10,6 +10,7 @@ use Buffet\Database\Models\CategoryModel;
 use Buffet\Database\Models\ItemModel;
 use Buffet\Database\Models\OrderModel;
 use Buffet\Database\Models\TempModel;
+use Buffet\Database\Models\TimeslotModel;
 use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
@@ -324,8 +325,18 @@ class BuffetApi
     {
         $response->setRequestKeys(["token", "items", "startTime", "endTime", "pickUpDate", "paymentMethod"]);
 
+        // object declaration
         $jwt = new JWTApi;
+        $orderApi = new OrderApi;
 
+        // variable declaration
+        $startTime = $response->getRequestByKey("startTime");
+        $endTime = $response->getRequestByKey("endTime");
+        $pickUpDate = $response->getRequestByKey("pickUpDate");
+        $items = $response->getRequestByKey("items");
+        $paymentMethod = $response->getRequestByKey("paymentMethod");
+
+        // token validation
         $jwt->validateToken($response);
 
         $uid = $jwt->decodeToken($response)->sub ?? 0;
@@ -335,11 +346,31 @@ class BuffetApi
         }
         $isAdmin = UserModel::isAdmin($uid);
 
-        if ($isAdmin) {
-
+        // checking for timeslot existence
+        if (!TimeslotModel::timeslotExists($startTime, $endTime)) {
+            return $response->setError(Error::NonexistentTimeslot);
+        } else {
+            $limit = TimeslotModel::getLimit($startTime, $endTime);
         }
 
-        return $response->setStatus(true);
+        // order creation logic
+        if ($isAdmin) {
+
+        } else {
+            if (!$orderApi->isFree($startTime, $endTime, $pickUpDate, $limit)) {
+                return $response->setError(Error::OrderTimeslotsFull);
+            }
+            OrderModel::createOrder($uid, "sent", $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
+        }
+        try {
+            $orderApi->generateTemp();
+        } catch (NegativeValueException $e) {
+            /**
+             * @todo handle exception
+             */
+        }
+
+        return $response->setStatus(true)->setSuccess(Success::OrderCreated);
     }
 
     /**
