@@ -39,4 +39,28 @@ class TimeslotModel extends Model
     {
         TimeslotModel::query()->getQuery()->insert($timeslots);
     }
+
+    /**
+     * @param $startTime
+     * @param $endTime
+     */
+    public static function timeslotExists(string $startTime, string $endTime): bool
+    {
+        $timeslotCount = TimeslotModel::query()->where("startTime", $startTime)->where("endTime", $endTime)->getQuery()->count();
+        if ($timeslotCount > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param string $startTime
+     * @param string $endTime
+     */
+    public static function getLimit(string $startTime, string $endTime): int
+    {
+        $limit = TimeslotModel::query()->where("startTime", $startTime)->where("endTime", $endTime)->first('orderLimit')->orderLimit;
+
+        return $limit;
+    }
 }
