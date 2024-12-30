@@ -48,6 +48,15 @@ enum Error: string {
     ############################ Ws Channels ############################
     case NonexistentChannel = 'Channel doesn\'t exist';
     case AlreadySubscribed = 'User is already subscribed to this channel';
+    case OrderTimeslotsFull = 'Order timeslots are full';
+    case NonexistentTimeslot = 'Timeslot doesn\'t exist';
+
+    ############################ Other ############################
+    case DateTimeInvalid = 'Date or time is invalid';
+    case InvalidLimitOrInterval = 'Limit or interval is invalid';
+
+    ############################ Settings ############################
+    case InvalidOrderDateLimitMax = 'Order date limit max is invalid';
     /**
      * @return string
      */

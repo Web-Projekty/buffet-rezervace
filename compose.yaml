@@ -16,7 +16,7 @@ services:
             - db
         environment:
             - APACHE_DOCUMENT_ROOT=/var/www/html
-        command: ["bash", "-c", "mkdir -p ./logs && cp ./src/WebSockets/apache.conf /etc/apache2/sites-available/000-default.conf && composer update && supervisord -c ./src/WebSockets/supervisor.conf && usermod -a -G root www-data && chown -R www-data:www-data /var/www/html/conf && apache2-foreground"]
+        command: ["bash", "-c", "mkdir -p ./logs && cp ./src/WebSockets/apache.conf /etc/apache2/sites-available/000-default.conf && composer install && supervisord -c ./src/WebSockets/supervisor.conf && usermod -a -G root www-data && chown -R www-data:www-data /var/www/html/conf && apache2-foreground"]
 
     # MariaDB Database Service
     db:

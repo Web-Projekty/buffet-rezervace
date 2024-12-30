@@ -3,6 +3,7 @@ import axios from "axios";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useNavigate } from "react-router-dom";
 import { setTokenExpiration } from "../components/auth/login/login";
+import { FETCH_URL } from "../constants";
 
 type UseLoginReturn = {
   loading: boolean;
@@ -24,7 +25,7 @@ export type UserData = {
   class: string;
 };
 
-const useLogin = (loginData: LoginData, url: string): UseLoginReturn => {
+export const useLogin = (loginData: LoginData): UseLoginReturn => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const signIn = useSignIn<UserData>();
@@ -34,7 +35,7 @@ const useLogin = (loginData: LoginData, url: string): UseLoginReturn => {
     try {
       setLoading(true);
       const { data } = await axios.post(
-        url,
+        FETCH_URL,
         // "http://localhost:8080/api",
         loginData,
       );
@@ -56,8 +57,9 @@ const useLogin = (loginData: LoginData, url: string): UseLoginReturn => {
             class: data.payload.class,
           },
         });
-        setTokenExpiration(data.payload.token);
+        setTokenExpiration(data.payload.token as string);
         navigate("/");
+        window.location.reload();
       } else {
         setError("Error occured");
         console.log("Error occured");
@@ -77,5 +79,3 @@ const useLogin = (loginData: LoginData, url: string): UseLoginReturn => {
     login,
   };
 };
-
-export default useLogin;

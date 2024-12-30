@@ -1,4 +1,4 @@
-type InputProps = {
+export type InputProps = {
   type:
     | "button"
     | "checkbox"
@@ -24,7 +24,7 @@ type InputProps = {
     | "week";
   id: string;
   name: string;
-  value?: string;
+  value?: string | number;
   required?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
@@ -32,6 +32,8 @@ type InputProps = {
   disabled?: boolean;
   min?: number;
   max?: number;
+  accept?: string;
+  autoComplete?: "on" | "off";
 };
 
 const Input = ({
@@ -46,6 +48,8 @@ const Input = ({
   disabled,
   min = 0,
   max = Infinity,
+  accept,
+  autoComplete = "off",
 }: InputProps) => {
   return (
     <input
@@ -57,10 +61,11 @@ const Input = ({
       onChange={onChange}
       className={className}
       placeholder={placeholder}
-      autoComplete="off"
+      autoComplete={autoComplete}
       disabled={disabled}
       min={min}
       max={max}
+      accept={accept || (type === "file" ? "image/*" : undefined)}
     />
   );
 };

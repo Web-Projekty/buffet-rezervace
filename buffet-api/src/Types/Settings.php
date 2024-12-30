@@ -6,4 +6,6 @@ namespace Buffet\Types;
 enum Settings: string {
     case DecryptKey = 'DECRYPT_KEY';
     case IsProd = 'IS_PRODUCTION';
+    case ImageCacheTime = 'IMAGE_CACHE_TIME';
+    case OrderDateLimitMax = 'ORDER_DATE_LIMIT_MAX';
 }
