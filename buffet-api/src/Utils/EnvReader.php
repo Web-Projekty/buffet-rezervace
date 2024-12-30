@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace Buffet\Utils;
 
 use Buffet\Types\Settings;

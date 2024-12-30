@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace Buffet\Types;
 
 use Buffet\Types\Exceptions\NegativeValueException;
@@ -112,6 +114,11 @@ class Time
     {
         return $this->getValue("s") > $time->getValue("s");
     }
+
+    /**
+     * @param  Time   $time
+     * @return bool
+     */
     public function isSmallerThan(Time $time): bool
     {
         return $this->getValue("s") < $time->getValue("s");
