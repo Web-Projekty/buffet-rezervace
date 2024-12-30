@@ -59,6 +59,10 @@ class OrderApi
         TimeslotModel::generateTimeslots($timeslots);
     }
 
+    /**
+     * @throws NegativeValueException
+     */
+
     public function generateTemp(): void
     {
         $timeslots = TimeslotModel::all()->toArray();

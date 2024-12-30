@@ -362,6 +362,13 @@ class BuffetApi
             }
             OrderModel::createOrder($uid, "sent", $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
         }
+        try {
+            $orderApi->generateTemp();
+        } catch (NegativeValueException $e) {
+            /**
+             * @todo handle exception
+             */
+        }
 
         return $response->setStatus(true)->setSuccess(Success::OrderCreated);
     }
