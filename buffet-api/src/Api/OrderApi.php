@@ -122,8 +122,16 @@ class OrderApi
      * @param string $endTime
      * @param string $date
      */
-    public function isFree(string $startTime, string $endTime, string $date): bool
+    public function isFree(string $startTime, string $endTime, string $date, int $limit): bool
     {
-        return false;
+        $startTime = Carbon::createFromFormat('H:i', $startTime);
+        $endTime = Carbon::createFromFormat('H:i', $endTime);
+        $currentOrders = OrderModel::query()->where('pickupDate', '=', $date);
+
+        $currentOrders = $currentOrders->where('startTime', '<', $endTime->format('H:i:s'))->where('endTime', '>', $startTime->format('H:i:s'));
+
+        $count = $currentOrders->count();
+
+        return $count < $limit;
     }
 }
