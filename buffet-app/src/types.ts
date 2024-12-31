@@ -1,5 +1,3 @@
-import { LucideIcon } from "lucide-react";
-
 export type User = {
   id: number;
   username: string;
@@ -24,7 +22,7 @@ export type Order = {
   status: OrderStatus;
   date: string;
   pickupDate: string;
-  items: string;
+  items: [];
   pickUpId: string;
 };
 
@@ -51,7 +49,7 @@ export type Allergen = {
   name: string;
   description: string;
   image?: string;
-  icon?: LucideIcon;
+  icon?: string;
 };
 
 export type Category = {

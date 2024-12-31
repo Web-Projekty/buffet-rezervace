@@ -1,4 +1,3 @@
-import React from "react";
 import { scaleUpAnimation } from "../../animations";
 import { Allergen as AllergenType } from "../../types";
 import { motion } from "framer-motion";
@@ -8,8 +7,6 @@ type AlergenProps = {
 };
 
 const Allergen = ({ allergen }: AlergenProps) => {
-  const Icon = ({ size }: { size: number }) =>
-    allergen.icon ? React.createElement(allergen.icon, { size }) : null;
   return (
     <motion.li
       {...scaleUpAnimation(0.5)}
@@ -22,7 +19,7 @@ const Allergen = ({ allergen }: AlergenProps) => {
         alt={allergen.name + "'s image"}
         className="w-[8rem] rounded-lg object-cover"
       />*/}
-      <Icon size={70} />
+      <div className="text-4xl">{allergen.icon ? allergen.icon : null}</div>
       <span className="rounded-full bg-slate-800 px-4 py-2 text-xl">
         {allergen.id}
       </span>

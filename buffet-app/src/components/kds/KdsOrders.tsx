@@ -1,4 +1,4 @@
-import Loading from "../Loading";
+import Loading from "../ui/Loading";
 import KdsStatusBar from "./KdsStatusBar";
 import KdsOrder from "./KdsOrder";
 
