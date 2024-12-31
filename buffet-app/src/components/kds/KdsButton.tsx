@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { ButtonProps } from "../Button";
+import { ButtonProps } from "../ui/Button";
 
 type KdsLinkTo = {
   linkTo: "souhrn" | "objednavky" | "uprava-menu";

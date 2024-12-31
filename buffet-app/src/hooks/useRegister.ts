@@ -12,12 +12,12 @@ type UseRegisterReturn = {
   register: () => void;
 };
 
-type RegisterData = {
+export type RegisterData = {
   username: string;
   email: string;
-  class: string;
   password: string;
   confirmPassword: string;
+  [key: string]: string;
 };
 
 export const useRegister = (registerData: RegisterData): UseRegisterReturn => {
@@ -32,7 +32,7 @@ export const useRegister = (registerData: RegisterData): UseRegisterReturn => {
       const { data } = await axios.post(
         FETCH_URL,
         // "http://localhost:8080/api",
-        registerData,
+        { requestType: "register", ...registerData },
       );
 
       const success: boolean = data.status === "success";
@@ -46,10 +46,7 @@ export const useRegister = (registerData: RegisterData): UseRegisterReturn => {
           // refresh:
           //   "5iQldrf4LwmkgVPoiVBCSRzDu4qeIFOyKdqT3OtJbXJI1Vxmzge0Au11dGmMbeuI",
           userState: {
-            fullName: data.payload.fullName,
-            email: data.payload.email,
-            isAdmin: data.payload.isAdmin === 1 ? true : false,
-            class: data.payload.class,
+            ...data.payload.data,
           },
         });
         navigate("/login");

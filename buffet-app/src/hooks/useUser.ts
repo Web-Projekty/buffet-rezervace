@@ -8,6 +8,8 @@ type UseUserReturn = {
   token: string | null;
   isAdmin: boolean;
   fullName: string | null;
+  email: string | null;
+  classTitle: string | null;
 };
 
 export const useUser = (): UseUserReturn => {
@@ -16,6 +18,8 @@ export const useUser = (): UseUserReturn => {
   const token: string = extractToken(header);
   const isAdmin: boolean = user?.isAdmin || false;
   const fullName: string | null = user?.fullName || null;
+  const email: string | null = user?.email || null;
+  const classTitle: string | null = user?.class || null;
 
-  return { user, token, isAdmin, fullName };
+  return { user, token, isAdmin, fullName, email, classTitle };
 };

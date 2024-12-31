@@ -1,5 +1,5 @@
 import { Order } from "../../types";
-import Button from "../Button";
+import Button from "../ui/Button";
 import { useOrder } from "../../hooks/useOrder";
 
 type KdsOrderProps = {

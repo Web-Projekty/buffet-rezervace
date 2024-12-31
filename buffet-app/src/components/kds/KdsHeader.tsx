@@ -1,5 +1,5 @@
-import DateComponent from "../DateComponent";
-import TimeComponent from "../TimeComponent";
+import DateComponent from "../ui/DateComponent";
+import TimeComponent from "../ui/TimeComponent";
 import KdsNavbar from "./KdsNavbar";
 
 const KdsHeader = () => {
