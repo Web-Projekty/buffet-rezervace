@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Button from "../Button";
+import Button from "../ui/Button";
 import Logo from "../../assets/images/logo.svg";
 
 type Error = {

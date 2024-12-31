@@ -1,21 +1,14 @@
-import useCart from "../../store/CartStore";
 import { MenuItem } from "../../types";
-import MenuItemButtons from "../menu/MenuItemButtons";
-import MenuItemImage from "../menu/MenuItemImage";
-import MenuItemVariants from "../menu/MenuItemVariants";
-import { formatCurrency } from "../utils/utils";
+import ItemButtons from "../items/ItemButtons";
+import ItemImage from "../items/ItemImage";
+import ItemVariants from "../items/ItemVariants";
+import ItemPrice from "../items/ItemPrice";
 
 type CartItemProps = {
   item: MenuItem;
 };
 
 const CartItem = ({ item }: CartItemProps) => {
-  const { getItemQuantity } = useCart();
-
-  const variantsPrice = item.variants
-    ? item.variants.reduce((acc, variant) => acc + variant.price, 0)
-    : 0;
-
   return (
     <div
       key={item.id}
@@ -28,26 +21,16 @@ const CartItem = ({ item }: CartItemProps) => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <MenuItemVariants menuItemId={item.id} variants={item.variants} />
+          <ItemVariants {...item} />
           <hr />
-          <div className="flex items-center justify-between text-lg">
-            <div className="flex flex-row gap-3">
-              <p>Celkem</p>
-              <span>x {getItemQuantity(item.id)}</span>
-            </div>
-            <p className="font-bold">
-              {formatCurrency(
-                getItemQuantity(item.id) * (item.price + variantsPrice),
-              )}
-            </p>
-          </div>
+          <ItemPrice {...item} />
           <div className="flex flex-row items-center justify-center">
-            <MenuItemButtons item={item} />
+            <ItemButtons item={item} />
           </div>
         </div>
       </div>
       <div className="hidden md:flex md:h-full md:flex-col md:items-center md:justify-center">
-        <MenuItemImage {...item} />
+        <ItemImage {...item} />
       </div>
     </div>
   );

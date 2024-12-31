@@ -1,15 +1,3 @@
-import {
-  Egg,
-  Fish,
-  Flower2,
-  Leaf,
-  Milk,
-  Nut,
-  Shell,
-  Snail,
-  Sprout,
-  Wheat,
-} from "lucide-react";
 import { Allergen } from "./types";
 
 export const allergens: Allergen[] = [
@@ -17,60 +5,61 @@ export const allergens: Allergen[] = [
     id: 1,
     name: "Lepek",
     description: "Tento produkt obsahuje lepek",
-    icon: Wheat,
+    icon: "🌾",
   },
   {
     id: 2,
     name: "Mléko",
     description: "Tento produkt obsahuje mléko",
-    icon: Milk,
+    icon: "🥛",
   },
   {
     id: 3,
     name: "Vejce",
     description: "Tento produkt obsahuje vejce",
-    icon: Egg,
+    icon: "🥚",
   },
   {
     id: 4,
     name: "Ořechy",
     description: "Tento produkt obsahuje ořechy",
-    icon: Nut,
+    icon: "🌰",
   },
   {
     id: 5,
     name: "Arašídové ořechy",
     description: "Tento produkt obsahuje arašídy",
-    icon: Nut,
+    icon: "🥜",
   },
   {
     id: 6,
     name: "Ryby",
     description: "Tento produkt obsahuje ryby",
-    icon: Fish,
+    icon: "🐟",
   },
   {
     id: 7,
     name: "Korýši",
     description: "Tento produkt obsahuje korýše",
-    icon: Shell,
+    icon: "🦐",
   },
   {
     id: 8,
     name: "Sója",
     description: "Tento produkt obsahuje sóju",
-    icon: Leaf,
+    icon: "🫛",
   },
   {
     id: 9,
     name: "Sezam",
     description: "Tento produkt obsahuje sezam",
-    icon: Sprout,
+    icon: "🧂",
   },
   {
     id: 10,
     name: "Celer",
     description: "Tento produkt obsahuje celer",
+    icon: "",
   },
   {
     id: 11,
@@ -86,12 +75,12 @@ export const allergens: Allergen[] = [
     id: 13,
     name: "Vlčí bob",
     description: "Tento produkt obsahuje vlčí bob",
-    icon: Flower2,
+    icon: "🐺",
   },
   {
     id: 14,
     name: "Měkkýši",
     description: "Tento produkt obsahuje měkkýše",
-    icon: Snail,
+    icon: "🐌",
   },
 ];

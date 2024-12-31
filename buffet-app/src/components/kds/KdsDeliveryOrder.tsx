@@ -1,6 +1,6 @@
 import { useOrder } from "../../hooks/useOrder";
 import { Order } from "../../types";
-import Button from "../Button";
+import Button from "../ui/Button";
 import { ChevronLeft } from "lucide-react";
 
 type KdsDeliveryOrderProps = {

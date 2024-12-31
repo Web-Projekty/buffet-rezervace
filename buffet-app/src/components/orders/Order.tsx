@@ -5,7 +5,7 @@ import { ChevronLeft } from "lucide-react";
 import { useOrder } from "../../hooks/useOrder";
 import OrderPrice from "./OrderPrice";
 import OrderItems from "./OrderItems";
-import Button from "../Button";
+import Button from "../ui/Button";
 
 type OrderProps = {
   order: OrderType;
@@ -46,11 +46,11 @@ const Order = ({ order }: OrderProps) => {
       initial={{ x: 100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className={`relative flex w-auto flex-col rounded-lg bg-slate-900 p-4 md:w-[45rem]`}
+      className={`relative flex w-auto flex-col rounded-lg bg-backgroundColor p-4 md:w-[45rem]`}
     >
       <div className="flex flex-row items-center justify-between text-xl">
         <div
-          className={`absolute left-0 h-[64px] w-2 ${color} round-bl-lg rounded-tl-lg`}
+          className={`absolute left-0 h-[64px] w-2 ${color} round-bl-lg rounded-bl-lg rounded-tl-lg`}
         ></div>
         <div className="flex flex-row items-center gap-2 text-xl">
           <h2 className="font-bold">#{order.id}</h2>

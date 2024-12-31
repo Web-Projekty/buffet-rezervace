@@ -22,7 +22,7 @@ const NavLinks: NavLinks[] = [
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { user } = useUser();
+  const { user, isAdmin } = useUser();
 
   const handleOpenMobileMenu = (): void => {
     setIsOpen(!isOpen);
@@ -33,13 +33,13 @@ const Navbar = () => {
       <div className="hidden flex-row md:flex">
         <ul className="relative flex w-auto flex-row items-center justify-between gap-5 text-xl text-black">
           {NavLinks.map(({ id, path, name, requireAdmin }) => {
-            if (requireAdmin && (!user || !user.isAdmin)) {
+            if (requireAdmin && (!user || !isAdmin)) {
               return null;
             }
             return <Link key={id} path={path} name={name} />;
           })}
           <div className="flex flex-row gap-5">
-            <CartButton />
+            {!isAdmin && <CartButton />}
             <AccountButton />
           </div>
         </ul>
