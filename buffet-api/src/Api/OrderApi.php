@@ -8,6 +8,8 @@ use Buffet\Database\Models\OrderModel;
 use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\TimeslotModel;
 use Buffet\Types\Exceptions\NegativeValueException;
+use Buffet\Types\Exceptions\OutOfOrderIdsException;
+use Buffet\Types\OrderStatus;
 use Buffet\Types\Settings;
 use Buffet\Types\Time;
 use Buffet\Utils\EnvReader;
@@ -137,5 +139,34 @@ class OrderApi
         $count = $currentOrders->count();
 
         return $count < $limit;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getOrderPickupId(): string
+    {
+
+        $orders = OrderModel::query()->where("status", "=", OrderStatus::Sent)->orWhere("status", "=", OrderStatus::Preparing)->orWhere("status", "=", OrderStatus::Waiting)->orWhere("status", "=", OrderStatus::Waiting)->get();
+        $counter = 0;
+
+        if ($orders->count() > 1000) {
+            throw new OutOfOrderIdsException();
+        }
+
+        do {
+            $counter++;
+            $randomId = random_int(0, 999);
+
+            $randomId = str_pad(strval($randomId), 3, '0', STR_PAD_LEFT);
+
+            $count = $orders->where("pickUpId", "=", $randomId)->count();
+
+        } while ($count > 0);
+
+        echo "counter: " . $counter . PHP_EOL;
+        var_dump($randomId);
+
+        return $randomId;
     }
 }
