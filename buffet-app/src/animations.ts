@@ -1,6 +1,7 @@
 export const menuItemShowAnimation = (duration: number = 0.5) => ({
   initial: { x: 50, opacity: 0 },
   whileInView: { x: 0, opacity: 1 },
+  exit: { x: -50, opacity: 0 },
   transition: { duration },
 });
 
@@ -15,3 +16,10 @@ export const tapScaleAnimation = {
   initial: { scale: 1 },
   whileTap: { scale: 0.9 },
 };
+
+export const fadeInAnimation = (duration: number = 0.5) => ({
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+  transition: { duration },
+});

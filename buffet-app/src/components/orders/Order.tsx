@@ -1,113 +1,62 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { formatCurrency } from "../../utils";
-import { useState } from "react";
-import { MenuItem, Order as OrderType } from "../../types";
+import { Order as OrderType } from "../../types";
 import { scaleUpAnimation } from "../../animations";
-import { ChevronLeft, BadgeCheck, BadgeInfo, BadgeX } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { useOrder } from "../../hooks/useOrder";
+import OrderPrice from "./OrderPrice";
+import OrderItems from "./OrderItems";
+import Button from "../ui/Button";
 
 type OrderProps = {
   order: OrderType;
-  isAdmin?: boolean;
-};
-
-type StatusBadgeProps = {
-  status: OrderType["status"];
-};
-
-type CancelButtonProps = {
-  handleCancel: () => void;
-};
-
-type PickupButtonProps = {
-  handlePickup: () => void;
 };
 
 type AnimationWrapperProps = {
   children: React.ReactNode;
   keyValue: string;
+  className?: string;
 };
 
-const StatusBadge = ({ status }: StatusBadgeProps) => {
-  return status === "pickedup" ? (
-    <BadgeCheck size={32} className="text-green-500" />
-  ) : status === "notpickedup" ? (
-    <BadgeX size={32} className="text-red-500" />
-  ) : (
-    <BadgeInfo size={32} className="text-yellow-300" />
-  );
-};
-
-const CancelButton = ({ handleCancel }: CancelButtonProps) => {
+const AnimationWrapper = ({
+  children,
+  keyValue,
+  className,
+}: AnimationWrapperProps) => {
   return (
-    <motion.button
-      {...scaleUpAnimation()}
-      className="rounded-md border bg-red-500 p-2 text-white hover:bg-red-700"
-      onClick={handleCancel}
-    >
-      Zrušit
-    </motion.button>
-  );
-};
-
-const PickupButton = ({ handlePickup }: PickupButtonProps) => {
-  return (
-    <motion.button
-      {...scaleUpAnimation()}
-      className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
-      onClick={handlePickup}
-    >
-      Vyzvednuto
-    </motion.button>
-  );
-};
-
-const AnimationWrapper = ({ children, keyValue }: AnimationWrapperProps) => {
-  return (
-    <motion.div key={keyValue} {...scaleUpAnimation()}>
+    <motion.div key={keyValue} className={className} {...scaleUpAnimation()}>
       {children}
     </motion.div>
   );
 };
 
-const Order = ({ order, isAdmin }: OrderProps) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [status, setStatus] = useState<OrderType["status"]>(order.status);
+const Order = ({ order }: OrderProps) => {
+  const { color, isOpen, toggleOpen, status, statusText, handleStatus } =
+    useOrder(order);
 
   const handleOpen = () => {
-    setIsOpen(!isOpen);
+    toggleOpen();
   };
 
   const handleCancel = () => {
-    setStatus("notpickedup");
-  };
-
-  const handlePickup = () => {
-    setStatus("pickedup");
+    handleStatus("storno");
   };
 
   return (
     <motion.div
-      initial={{ y: 100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
+      initial={{ x: 100, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className={`flex w-auto flex-col rounded-lg bg-slate-900 p-4 md:w-[45rem]`}
+      className={`relative flex w-auto flex-col rounded-lg bg-backgroundColor p-4 md:w-[45rem]`}
     >
       <div className="flex flex-row items-center justify-between text-xl">
+        <div
+          className={`absolute left-0 h-[64px] w-2 ${color} round-bl-lg rounded-bl-lg rounded-tl-lg`}
+        ></div>
         <div className="flex flex-row items-center gap-2 text-xl">
           <h2 className="font-bold">#{order.id}</h2>
-          {/*<p>{formatUnixDate(order.date)}</p>*/}
-          {isAdmin && order.user && (
-            <p className="text-base">{order.user.fullName}</p>
-          )}
+          {/* <p>{formatUnixDate(order.date)}</p> */}
         </div>
         <div className="flex flex-row items-center">
-          <AnimatePresence>
-            {!isOpen && (
-              <AnimationWrapper keyValue="pickedup">
-                <StatusBadge status={status} />
-              </AnimationWrapper>
-            )}
-          </AnimatePresence>
           <ChevronLeft
             size={32}
             className={`${isOpen ? "-rotate-90" : null} cursor-pointer transition-transform duration-300 ease-in-out`}
@@ -126,59 +75,25 @@ const Order = ({ order, isAdmin }: OrderProps) => {
         transition={{ duration: 0.3 }}
         className="flex flex-col gap-3 overflow-hidden"
       >
-        <div className="flex flex-col">
-          {order.items.map((item) => (
-            <li
-              key={item.id}
-              className="flex w-[240px] flex-row items-center justify-center gap-2"
-            >
-              <h3>{item.name}</h3>
-              <div className="mt-3 flex-1 border-b-2 border-dotted border-white"></div>
-              <p>{formatCurrency(item.price)}</p>
-            </li>
-          ))}
-        </div>
+        <OrderItems items={order.items} />
 
         <hr />
 
         <div className="flex flex-col justify-between md:flex-row">
-          <div className="flex w-[240px] flex-row items-center justify-center gap-2 font-bold">
-            <span>Celkem</span>
-            <div className="mt-3 flex-1 border-b-2 border-dotted border-white"></div>
-            <p>
-              {formatCurrency(
-                order.items.reduce(
-                  (acc: number, item: MenuItem) => acc + item.price,
-                  0,
-                ),
-              )}
-            </p>
-          </div>
+          <OrderPrice items={order.items} />
           <div className="flex flex-col items-center gap-2 md:flex-row">
-            <AnimatePresence>
-              {status === "pending" && isAdmin && (
-                <PickupButton handlePickup={handlePickup} />
-              )}
-              {status === "pending" && (
-                <CancelButton
-                  key={"cancel-button"}
-                  handleCancel={handleCancel}
-                />
-              )}
-            </AnimatePresence>
+            {status === "sent" && (
+              <Button key="cancel-button" onClick={handleCancel}>
+                Zrušit
+              </Button>
+            )}
 
             <AnimatePresence>
-              <AnimationWrapper keyValue="status-button">
-                <div className="flex flex-row items-center gap-2">
-                  <span>
-                    {status === "pending"
-                      ? "Čeká na vyzvednutí"
-                      : status === "pickedup"
-                        ? "Vyzvednuto"
-                        : "Nevyzvednuto"}
-                  </span>
-                  <StatusBadge status={status} />
-                </div>
+              <AnimationWrapper
+                keyValue="status-button"
+                className="flex flex-row items-center gap-2"
+              >
+                <span>{statusText}</span>
               </AnimationWrapper>
             </AnimatePresence>
           </div>

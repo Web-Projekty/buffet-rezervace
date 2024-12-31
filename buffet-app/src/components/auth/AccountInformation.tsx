@@ -1,33 +1,13 @@
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { User } from "../../types";
 import { scaleUpAnimation } from "../../animations";
 import { removeTokenExpiration } from "./login/login";
-import Button from "../Button";
+import Button from "../ui/Button";
+import { useUser } from "../../hooks/useUser";
 
-type AccountInformationProps = {
-  user: User;
-};
-
-type AdminButtonsProps = {
-  handleMenuEdit: () => void;
-};
-
-const AdminButtons = ({ handleMenuEdit }: AdminButtonsProps) => {
-  return (
-    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-      <button
-        className="rounded-md border bg-cyan-500 p-2 text-white hover:bg-cyan-700"
-        onClick={handleMenuEdit}
-      >
-        Upravit menu
-      </button>
-    </div>
-  );
-};
-
-const AccountInformation = ({ user }: AccountInformationProps) => {
+const AccountInformation = () => {
+  const { fullName, email, isAdmin, classTitle } = useUser();
   const logout = useSignOut();
   const navigate = useNavigate();
 
@@ -35,28 +15,32 @@ const AccountInformation = ({ user }: AccountInformationProps) => {
     logout();
     removeTokenExpiration();
     navigate("/login");
-  };
-
-  const handleMenuEdit = () => {
-    navigate("/menu/edit");
+    window.location.reload();
   };
 
   return (
-    <div className="flex h-[220px] w-[22rem] flex-col justify-center gap-5 md:w-[300px]">
-      <h1 className="text-2xl">
-        {user.isAdmin ? "Administrátor" : "Uživatel"}
-      </h1>
+    <div className="flex w-full flex-col gap-2 md:flex-row md:justify-between">
       <motion.div
         {...scaleUpAnimation(0.5)}
-        className="rounded-md bg-slate-900 p-4"
+        className="flex flex-row items-center gap-2 rounded-lg bg-slate-900 p-2"
       >
-        <h2 className="text-2xl font-bold">{user.fullName}</h2>
-        <p className="text-lg">Email: {user.email}</p>
-        <p className="text-lg">Třída: {user.class}</p>
+        <h2>
+          <span className="font-bold">
+            {isAdmin ? "Administrátor" : "Uživatel"}:{" "}
+          </span>
+          {fullName}
+        </h2>
+        <p>
+          <span className="font-bold">Email:</span> {email}
+        </p>
+        {classTitle && (
+          <p>
+            <span className="font-bold">Třída:</span> {classTitle}
+          </p>
+        )}
       </motion.div>
 
-      <Button onClick={handleLogout}>Odhlásit</Button>
-      {user.isAdmin && <AdminButtons handleMenuEdit={handleMenuEdit} />}
+      <Button onClick={handleLogout}>Odhlásit se</Button>
     </div>
   );
 };

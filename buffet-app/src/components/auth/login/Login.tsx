@@ -1,10 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Input from "../../Input";
-import Button from "../../Button";
+import Input from "../../ui/Input";
+import Button from "../../ui/Button";
 import LoginError from "./LoginError";
-import useLogin from "../../../hooks/useLogin";
-import Loading from "../../Loading";
+import { useLogin } from "../../../hooks/useLogin";
+import Loading from "../../ui/Loading";
+import { Link } from "react-router-dom";
 
 type LoginFormData = {
   username: string;
@@ -23,10 +24,10 @@ const Login = () => {
     password: "u",
   });
 
-  const { loading, error, setError, login } = useLogin(
-    { requestType: "login", ...formData },
-    "https://wlczak.vlastas.cc/backend/api",
-  );
+  const { loading, error, setError, login } = useLogin({
+    requestType: "login",
+    ...formData,
+  });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,7 +53,7 @@ const Login = () => {
         onSubmit={handleSubmit}
         className="flex w-[300px] flex-col gap-10 font-FiraSans"
       >
-        <div className="flex flex-col gap-5">
+        <div className="flex w-full flex-col gap-5">
           <Input
             type="text"
             id="username"
@@ -75,17 +76,27 @@ const Login = () => {
             placeholder="Heslo"
             disabled={loading}
           />
-        </div>
-        <div className="flex w-full items-center justify-center">
-          {error ? (
-            <LoginError />
-          ) : loading ? (
-            <Loading />
-          ) : (
-            <Button type="submit" className="w-full">
-              Přihlásit se
-            </Button>
-          )}
+
+          <div className="flex w-full flex-col items-center justify-center gap-1">
+            <div className="text-base">
+              Nejste ještě registrovaný?{" "}
+              <Link
+                to="/register"
+                className="cursor-pointer text-cyan-400 hover:text-cyan-500"
+              >
+                Registruje se
+              </Link>
+            </div>
+            {error ? (
+              <LoginError />
+            ) : loading ? (
+              <Loading />
+            ) : (
+              <Button type="submit" className="w-full">
+                Přihlásit se
+              </Button>
+            )}
+          </div>
         </div>
       </form>
     </motion.div>

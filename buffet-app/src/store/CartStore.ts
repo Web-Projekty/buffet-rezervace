@@ -1,13 +1,19 @@
 import { create } from "zustand";
 import { MenuItem } from "../types";
-import { cartLocalStorageKey, maxItems, maxItemsInCart } from "../constants";
+import {
+  CART_LOCAL_STORAGE_KEY,
+  MAX_ITEMS,
+  MAX_ITEMS_CART,
+} from "../constants";
 import { getItem, removeItem, setItem } from "../components/utils/localStorage";
 
-type CartItem = MenuItem & { quantity: number };
+export type CartItem = MenuItem & { quantity: number };
 
 type CartItems = {
   isOpen: boolean;
   handleOpenCart: () => void;
+  handleCloseCart: () => void;
+  handleToggleCart: () => void;
   cartItems: CartItem[];
   addToCart: (item: MenuItem) => void;
   removeFromCart: (id: number) => void;
@@ -22,67 +28,63 @@ type CartItems = {
 };
 
 const loadCartItems = (): CartItem[] => {
-  const cartItems = getItem(cartLocalStorageKey);
+  const cartItems = getItem(CART_LOCAL_STORAGE_KEY);
   return cartItems ? (cartItems as CartItem[]) : [];
+};
+
+const isItemInCart = (cartItems: CartItem[], id: number): boolean => {
+  return cartItems.some((cartItem) => cartItem.id === id);
+};
+
+const getItemQuantity = (cartItems: CartItem[], id: number): number => {
+  return cartItems.find((cartItem) => cartItem.id === id)?.quantity || 0;
+};
+
+const updateCartItemQuantity = (
+  cartItems: CartItem[],
+  id: number,
+  quantity: number,
+): CartItem[] => {
+  return cartItems.map((cartItem) =>
+    cartItem.id === id
+      ? { ...cartItem, quantity: cartItem.quantity + quantity }
+      : cartItem,
+  );
 };
 
 const useCart = create<CartItems>((set, get) => ({
   cartItems: loadCartItems(),
   addToCart: (item: MenuItem) => {
-    const hasReachedMaxCartQuantity = get().isCartFull();
-
-    if (hasReachedMaxCartQuantity) {
+    const cartItems = get().cartItems;
+    const quantity = getItemQuantity(cartItems, item.id);
+    if (quantity >= MAX_ITEMS || get().getCartQuantity() >= MAX_ITEMS_CART)
       return;
-    }
 
-    const isAlreadyInCart = get().isItemInCart(item.id);
+    const updatedItems = isItemInCart(cartItems, item.id)
+      ? updateCartItemQuantity(cartItems, item.id, 1)
+      : [...cartItems, { ...item, quantity: 1 }];
 
-    if (isAlreadyInCart) {
-      const hasReachedMaxItemQuantity = get().isItemMaxQuantity(item.id);
-      if (hasReachedMaxItemQuantity) {
-        return;
-      }
-
-      set((state) => ({
-        cartItems: state.cartItems.map((cartItem) =>
-          cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : cartItem,
-        ),
-      }));
-    } else {
-      set((state) => ({
-        cartItems: [...state.cartItems, { ...item, quantity: 1 }],
-      }));
-    }
-
-    setItem(cartLocalStorageKey, get().cartItems);
+    set({ cartItems: updatedItems });
+    setItem(CART_LOCAL_STORAGE_KEY, updatedItems);
   },
   removeFromCart: (id: number) => {
-    const isAlreadyInCart = get().isItemInCart(id);
+    const cartItems = get().cartItems;
+    if (!isItemInCart(cartItems, id)) return;
 
-    if (!isAlreadyInCart) {
-      return;
-    }
+    const quantity = getItemQuantity(cartItems, id);
+    const updatedItems =
+      quantity === 1
+        ? cartItems.filter((item) => item.id !== id)
+        : updateCartItemQuantity(cartItems, id, -1);
 
-    if (get().getItemQuantity(id) === 1) {
-      set((state) => ({
-        cartItems: state.cartItems.filter((cartItem) => cartItem.id !== id),
-      }));
-    } else {
-      set((state) => ({
-        cartItems: state.cartItems.map((cartItem) =>
-          cartItem.id === id
-            ? { ...cartItem, quantity: cartItem.quantity - 1 }
-            : cartItem,
-        ),
-      }));
-    }
-    setItem(cartLocalStorageKey, get().cartItems);
+    set({ cartItems: updatedItems });
+    setItem(CART_LOCAL_STORAGE_KEY, updatedItems);
+
+    setItem(CART_LOCAL_STORAGE_KEY, get().cartItems);
   },
   clearCart: () => {
     set({ cartItems: [] });
-    removeItem(cartLocalStorageKey);
+    removeItem(CART_LOCAL_STORAGE_KEY);
   },
   getCartTotal: () =>
     get().cartItems.reduce(
@@ -91,7 +93,7 @@ const useCart = create<CartItems>((set, get) => ({
     ),
   getCartQuantity: () =>
     get().cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0),
-  isCartFull: () => get().getCartQuantity() >= maxItemsInCart,
+  isCartFull: () => get().getCartQuantity() >= MAX_ITEMS_CART,
   isCartEmpty: () => get().cartItems.length === 0,
   isItemInCart: (id: number) =>
     get().cartItems.some((cartItem) => cartItem.id === id),
@@ -99,9 +101,11 @@ const useCart = create<CartItems>((set, get) => ({
     const cartItem = get().cartItems.find((cartItem) => cartItem.id === id);
     return cartItem?.quantity || 0;
   },
-  isItemMaxQuantity: (id: number) => get().getItemQuantity(id) >= maxItems,
+  isItemMaxQuantity: (id: number) => get().getItemQuantity(id) >= MAX_ITEMS,
   isOpen: false,
-  handleOpenCart: () => set((state) => ({ isOpen: !state.isOpen })),
+  handleOpenCart: () => set({ isOpen: true }),
+  handleCloseCart: () => set({ isOpen: false }),
+  handleToggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
 }));
 
 export default useCart;

@@ -1,15 +1,15 @@
 stages:
-    - PHP Static Analysis
-    - PHP Unit Tests
+    - Tests
+    - Code Coverage
 
 # Job to run PHPStan
-phpstan-analysis:
-    stage: PHP Static Analysis
+phpstan:
+    stage: Tests
     image: wlczak/buffet-test-prebuild:latest
     script:
         - cd buffet-api
         - composer install
-        - ./vendor/bin/phpstan analyse -c phpstan.neon --autoload-file vendor/autoload.php --error-format=gitlab src
+        - ./vendor/bin/phpstan analyse --memory-limit 4G -c phpstan.neon --autoload-file vendor/autoload.php --error-format=gitlab src
           tests >> phpstan-result.json
     artifacts:
         reports:
@@ -17,11 +17,14 @@ phpstan-analysis:
 
 # Job to run PHPUnit tests and generate the coverage output
 phpunit:
-    stage: PHP Unit Tests
+    stage: Tests
     image: wlczak/buffet-test-prebuild:latest
     script:
+        - echo ${ENV_CONFIG} >> conf/.env
+        - cp -r conf/ buffet-api/
         - cd buffet-api
         - composer install
+        - chown -R 1000:1000 conf/
         - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-html tests/result
           --display-deprecations --display-phpunit-deprecations --fail-on-deprecation
           --fail-on-phpunit-deprecation
@@ -32,10 +35,13 @@ phpunit:
 
 # Job to extract the coverage percentage from the PHPUnit output
 phpunit-coverage:
-    stage: PHP Unit Tests
+    stage: Code Coverage
     image: wlczak/buffet-test-prebuild:latest
     script:
+        - echo ${ENV_CONFIG} >> conf/.env
+        - cp -r conf/ buffet-api/
         - cd buffet-api
         - composer install
+        - chown -R 1000:1000 conf/
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'

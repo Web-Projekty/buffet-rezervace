@@ -14,6 +14,7 @@ enum Error: string {
     case MissingRequestKeys = 'Some or all of the request keys have been left undefined';
     case MissingPayloadKeys = 'Some or all of the payload keys have been left undefined';
     case MissingRequestType = 'Api request type is missing';
+    case InvalidJson = 'Invalid JSON format';
 
     ############################ Auth ############################
     // credManager
@@ -38,9 +39,25 @@ enum Error: string {
     case CorruptedOrNull = "Token's data have been corrupted or are null";
     case UnexpectedValue = "Token value is unexpected";
 
+    // Admin status
+    case Unauthorized = "User does not have appropriate permissions";
+
     ############################ Database ############################
     case QueryFailed = 'Query from database has failed';
-    
+
+    ############################ Ws Channels ############################
+    case NonexistentChannel = 'Channel doesn\'t exist';
+    case AlreadySubscribed = 'User is already subscribed to this channel';
+    case OrderTimeslotsFull = 'Order timeslots are full';
+    case NonexistentTimeslot = 'Timeslot doesn\'t exist';
+    case OutOfOrderIds = 'There are no more order ids available';
+
+    ############################ Other ############################
+    case DateTimeInvalid = 'Date or time is invalid';
+    case InvalidLimitOrInterval = 'Limit or interval is invalid';
+
+    ############################ Settings ############################
+    case InvalidOrderDateLimitMax = 'Order date limit max is invalid';
     /**
      * @return string
      */

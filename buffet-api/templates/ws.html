@@ -8,6 +8,26 @@
 </head>
 
 <body>
+    <form id="myForm">
+        <select name="requestType">
+            <option value="subscribe">subscribe</option>
+            <option value="getOrders">getOrders</option>
+            <option value="getMenu">getMenu</option>
+            <option value="isAdmin">isAdmin</option>
+            <option value="login">login</option>
+            <option value="register">register</option>
+            <option value="verify">verify</option>
+            <option value="test">test</option>
+            <option value="random_stuff_here">non-existent-call</option>
+        </select>
+        <input type="text" name="username" placeholder="username" />
+        <input type="text" name="password" placeholder="password" />
+        <input type="text" name="token" placeholder="token" />
+        <input type="text" name="page" placeholder="page" value="1" />
+        <input type="text" name="itemsCount" placeholder="itemsCount" value="1" />
+        <input type="button" value="Submit" onclick="submitForm()" />
+    </form>
+
     <div style="display: flex; justify-content: space-between; ">
         <p id="time"></p>
         <p id="authCount" style="text-align: center"></p>
@@ -15,7 +35,25 @@
     </div>
 
     <div style="width: 50%; margin: auto;">
+
+        <div id="chat"></div>
+        <input type="text" id="text">
+        <button id="send" onclick="send()">send</button>
         <script>
+            function submitForm() {
+                const form = document.getElementById("myForm");
+                const formData = new FormData(form);
+
+                // Convert FormData to a plain object
+                const data = {};
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+                json = JSON.stringify(data)
+                send(json)
+            }
+
+
             time = 0;
             let timer;
 
@@ -24,25 +62,25 @@
                     const data = JSON.parse(str);
                     return true
                 } catch (error) {
-                    console.log('Received non-JSON data:', event.data);
+                    //console.log('Received non-JSON data:', event.data);
                     return false
                 }
             }
 
 
             protocol = window.location.protocol
-            console.log(window.location.protocol)
+            //console.log(window.location.protocol)
             if (protocol == 'http:') {
-                address = 'ws://' + window.location.host + '/backend/'
+                address = 'ws://' + window.location.host + '/kds/'
             } else {
-                address = 'wss://' + window.location.host + '/backend/'
+                address = 'wss://' + window.location.host + '/kds/'
             }
             const ws = new WebSocket(address);
             ws.onmessage = (event) => {
                 console.log(event.data)
-                if (isJson(event.data)) {
+                /*if (isJson(event.data)) {
                     return
-                }
+                }*/
                 element = document.createElement('p')
                 element.innerText = event.data
                 document.getElementById('chat').append(element)
@@ -58,17 +96,20 @@
                 }, 1000);
 
             };
-            function send() {
-
+            function send(msg = '') {
+                console.log(msg)
+                if (msg.length == 0) {
+                    msg = document.getElementById('text').value;
+                }
                 element = document.createElement('p')
-                element.innerText = document.getElementById('text').value
+                element.innerText = msg
                 element.style.textAlign = 'right';
                 document.getElementById('chat').append(element)
 
-                ws.send(document.getElementById('text').value);
+                ws.send(msg);
             }
             ws.onclose = () => {
-                console.log('Connection closed');
+                console.debug('Connection closed');
 
                 element = document.createElement('p')
                 element.innerText = 'Connection closed'
@@ -79,20 +120,23 @@
                 clearInterval(timer);
             };
 
+
+            if (protocol == 'http:') {
+                address = 'ws://' + window.location.host + '/stats/'
+            } else {
+                address = 'wss://' + window.location.host + '/stats/'
+            }
             couner = new WebSocket(address)
             couner.onmessage = (event) => {
                 const data = event.data
                 if (isJson(data)) {
-                    console.log(JSON.parse(data).count)
+                    //console.table(JSON.parse(data))
                     document.getElementById('authCount').innerHTML = "Authenticated user count: " + JSON.parse(data).authCount
                     document.getElementById('userCount').innerHTML = "Connected user count: " + JSON.parse(data).userCount
                 }
             }
 
         </script>
-        <div id="chat"></div>
-        <input type="text" id="text">
-        <button id="send" onclick="send()">send</button>
     </div>
 </body>
 

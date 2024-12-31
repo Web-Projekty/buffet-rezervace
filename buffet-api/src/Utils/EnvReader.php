@@ -1,0 +1,67 @@
+<?php
+
+declare (strict_types = 1);
+
+namespace Buffet\Utils;
+
+use Buffet\Types\Settings;
+
+require __DIR__ . '/../../vendor/autoload.php';
+
+class EnvReader
+{
+
+    private static string $envPath = __DIR__ . "/../../conf/.env";
+
+    /**
+     * @param Settings $needle
+     */
+    public static function getEnvProperty(Settings $needle): string | bool | null
+    {
+        if (!file_exists(self::$envPath)) {
+            self::createEnv();
+        }
+        if (!$envContent = file_get_contents(self::$envPath)) {
+            return null;
+        }
+
+        $lines = explode("\n", $envContent);
+
+        foreach ($lines as $line) {
+            $line = explode("=", $line);
+            $key = trim($line[0]);
+
+            $value = trim($line[1] ?? "");
+
+            if ($needle->value == $key && $value != "") {
+                if ($value == "true") {
+                    return true;
+                }
+                if ($value == "false") {
+                    return false;
+                }
+                return $value;
+            }
+        }
+        return null;
+    }
+
+    public static function createEnv(): void
+    {
+
+        $env = fopen(self::$envPath, "w+");
+
+        $settings = Settings::cases();
+
+        foreach ($settings as $setting) {
+            fwrite($env, $setting->value . "=" . "\n");
+        }
+
+        fclose($env);
+
+        chmod(self::$envPath, 0777);
+
+    }
+}
+
+//var_dump(EnvReader::getEnvProperty(Settings::IsProd));

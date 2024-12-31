@@ -1,22 +1,47 @@
-import { StrictMode } from "react";
+import { lazy, StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
-import Menu from "./components/menu/Menu.tsx";
-import MenuEdit from "./components/menu/MenuEdit.tsx";
-import AdminOrderHistory from "./components/orders/AdminOrderHistory.tsx";
-import Login from "./components/auth/login/Login.tsx";
-import Dashboard from "./components/auth/Dashboard.tsx";
-import Allergens from "./components/allergens/Allergens.tsx";
-import RequireAuth from "./components/auth/RequireAuth.tsx";
-import PageNotFound from "./components/error/PageNotFound.tsx";
-import Cart from "./components/cart/Cart.tsx";
-import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
-import SuccessOrder from "./components/orders/SuccessOrder.tsx";
 import { UserData } from "./hooks/useLogin.ts";
+import Loading from "./components/ui/Loading.tsx";
+
+const Menu = lazy(() => import("./components/menu/Menu.tsx"));
+const MenuEdit = lazy(() => import("./components/menu/editMenu/MenuEdit.tsx"));
+const Login = lazy(() => import("./components/auth/login/Login.tsx"));
+const Register = lazy(() => import("./components/auth/register/Register.tsx"));
+const Dashboard = lazy(() => import("./components/auth/Dashboard.tsx"));
+const Allergens = lazy(() => import("./components/allergens/Allergens.tsx"));
+const RequireAuth = lazy(() => import("./components/auth/RequireAuth.tsx"));
+const CartPurchase = lazy(() => import("./components/cart/CartPurchase.tsx"));
+const SuccessOrder = lazy(() => import("./components/orders/SuccessOrder.tsx"));
+const AdminSettings = lazy(
+  () => import("./components/auth/admin/AdminSettings.tsx"),
+);
+const OrderOverview = lazy(
+  () => import("./components/orders/OrderOverview.tsx"),
+);
+const PageNotFound = lazy(() => import("./components/error/PageNotFound.tsx"));
+const Kds = lazy(() => import("./components/kds/Kds.tsx"));
+const ErrorBoundary = lazy(
+  () => import("./components/error/ErrorBoundary.tsx"),
+);
+
+export const Fallback = () => (
+  <div
+    style={{
+      backgroundColor: "#1e293b",
+      color: "white",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  >
+    <Loading size={30} />
+  </div>
+);
 
 const store = createStore<UserData>({
   authName: "_auth",
@@ -29,107 +54,171 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
+      <Suspense fallback={<Fallback />}>
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
+      </Suspense>
     ),
-    //loader: () => import("./App.tsx"),
     children: [
       {
         path: "/",
         index: true,
         element: (
-          <ErrorBoundary>
-            <Menu />
-          </ErrorBoundary>
+          <Suspense fallback={<Fallback />}>
+            <ErrorBoundary>
+              <Menu />
+            </ErrorBoundary>
+          </Suspense>
         ),
-        //loader: () => import("./components/menu/MenuList.tsx"),
       },
       {
         path: "/menu/edit",
         element: (
-          <RequireAuth requireAdmin={true}>
-            <ErrorBoundary>
-              <MenuEdit />
-            </ErrorBoundary>
-          </RequireAuth>
+          <Suspense fallback={<Fallback />}>
+            <RequireAuth requireAdmin={true}>
+              <ErrorBoundary>
+                <MenuEdit />
+              </ErrorBoundary>
+            </RequireAuth>
+          </Suspense>
         ),
-        //loader: () => import("./components/menu/MenuEdit.tsx"),
       },
       {
         path: "/alergeny",
         element: (
-          <ErrorBoundary>
-            <Allergens />
-          </ErrorBoundary>
+          <Suspense fallback={<Fallback />}>
+            <ErrorBoundary>
+              <Allergens />
+            </ErrorBoundary>
+          </Suspense>
         ),
-        //loader: () => import("./components/menu/MenuList.tsx"),
-      },
-      {
-        path: "/objednavky",
-        element: (
-          //<RequireAuth requireAdmin={true} fallbackPath="/login">
-          <ErrorBoundary>
-            <AdminOrderHistory />
-          </ErrorBoundary>
-          //</RequireAuth>
-        ),
-        //loader: () => import("./components/orders/AdminOrderHistory.tsx"),
       },
       {
         path: "/account",
         element: (
-          <RequireAuth requireAdmin={false} fallbackPath="/login">
-            <ErrorBoundary>
-              <Dashboard />
-            </ErrorBoundary>
-          </RequireAuth>
+          <Suspense fallback={<Fallback />}>
+            <RequireAuth requireAdmin={false} fallbackPath="/login">
+              <ErrorBoundary>
+                <Dashboard />
+              </ErrorBoundary>
+            </RequireAuth>
+          </Suspense>
         ),
-        //loader: () => import("./components/account/AccountDashboard.tsx"),
+      },
+      {
+        path: "/settings",
+        element: (
+          <Suspense fallback={<Fallback />}>
+            <ErrorBoundary>
+              <AdminSettings />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: "/login",
         element: (
-          <ErrorBoundary>
-            <Login />
-          </ErrorBoundary>
+          <Suspense fallback={<Fallback />}>
+            <ErrorBoundary>
+              <Login />
+            </ErrorBoundary>
+          </Suspense>
         ),
-        //loader: () => import("./components/account/Login.tsx"),
+      },
+      {
+        path: "/register",
+        element: (
+          <Suspense fallback={<Fallback />}>
+            <ErrorBoundary>
+              <Register />
+            </ErrorBoundary>
+          </Suspense>
+        ),
       },
       {
         path: "/cart",
         element: (
-          <ErrorBoundary>
-            <Cart />
-          </ErrorBoundary>
+          <Suspense fallback={<Fallback />}>
+            <ErrorBoundary>
+              <CartPurchase />
+            </ErrorBoundary>
+          </Suspense>
         ),
       },
       {
         path: "/success-order",
         element: (
-          <ErrorBoundary>
-            {/*<RequireAuth requireAdmin={false} fallbackPath="/">*/}
-            <SuccessOrder />
-            {/*</RequireAuth>*/}
-          </ErrorBoundary>
+          <Suspense fallback={<Fallback />}>
+            <ErrorBoundary>
+              <SuccessOrder />
+            </ErrorBoundary>
+          </Suspense>
         ),
       },
       {
-        path: "/kds",
+        path: "/order",
         element: (
-          <ErrorBoundary>
-            {/*<RequireAuth requireAdmin={true} fallbackPath="/">*/}
-            <h1>KDS</h1>
-            {/*</RequireAuth>*/}
-          </ErrorBoundary>
+          <Suspense fallback={<Fallback />}>
+            <ErrorBoundary>
+              <OrderOverview />
+            </ErrorBoundary>
+          </Suspense>
         ),
       },
       {
         path: "/*",
         element: (
-          <ErrorBoundary>
-            <PageNotFound />
-          </ErrorBoundary>
+          <Suspense fallback={<Fallback />}>
+            <ErrorBoundary>
+              <PageNotFound />
+            </ErrorBoundary>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/page-not-found",
+        element: (
+          <Suspense fallback={<Fallback />}>
+            <ErrorBoundary>
+              <PageNotFound />
+            </ErrorBoundary>
+          </Suspense>
+        ),
+      },
+    ],
+  },
+  {
+    path: "/kds",
+    element: (
+      <Suspense key="kds" fallback={<Fallback />}>
+        <ErrorBoundary>
+          <RequireAuth requireAdmin={true}>
+            <Kds />
+          </RequireAuth>
+        </ErrorBoundary>
+      </Suspense>
+    ),
+    children: [
+      {
+        path: "souhrn",
+        element: (
+          <Suspense fallback={<Fallback />}>
+            <ErrorBoundary>
+              <Kds />
+            </ErrorBoundary>
+          </Suspense>
+        ),
+      },
+      {
+        path: "objednavky",
+        index: true,
+        element: (
+          <Suspense fallback={<Fallback />}>
+            <ErrorBoundary>
+              <Kds />
+            </ErrorBoundary>
+          </Suspense>
         ),
       },
     ],

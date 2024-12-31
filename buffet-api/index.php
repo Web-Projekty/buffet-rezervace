@@ -2,6 +2,8 @@
 
 use Buffet\Api\BuffetApi;
 use Buffet\Api\ImageProvider;
+use Buffet\Types\Settings;
+use Buffet\Utils\EnvReader;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -10,8 +12,10 @@ require __DIR__ . '/vendor/autoload.php';
 //require __DIR__ . '/src/Database/config.php'; // Databse config file
 
 $app = AppFactory::create();
-
-$isProd = 0;
+$isProd = true;
+if (EnvReader::getEnvProperty(Settings::IsProd) !== null) {
+    $isProd = EnvReader::getEnvProperty(Settings::IsProd);
+}
 $app->addErrorMiddleware(!$isProd, true, true);
 
 $app->get('/', function (Request $request, Response $response, $args) {

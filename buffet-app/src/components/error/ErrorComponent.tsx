@@ -1,16 +1,26 @@
 import { Link } from "react-router-dom";
-import Button from "../Button";
+import Button from "../ui/Button";
 import Logo from "../../assets/images/logo.svg";
 
 type Error = {
   title: string;
   subtitle: string;
   onBack?: () => void;
+  linkTo?: string;
+  className?: string;
 };
 
-const ErrorComponent = ({ title, subtitle, onBack }: Error) => {
+const ErrorComponent = ({
+  title,
+  subtitle,
+  onBack,
+  linkTo,
+  className,
+}: Error) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-5 overflow-x-hidden bg-slate-800 font-sans text-white">
+    <div
+      className={`flex flex-col items-center justify-center gap-5 overflow-x-hidden bg-slate-800 font-sans text-white ${className}`}
+    >
       <img
         src={Logo}
         alt="Hamburger Logo"
@@ -20,10 +30,7 @@ const ErrorComponent = ({ title, subtitle, onBack }: Error) => {
         <h1 className="text-2xl">{title}</h1>
         <span className="text-4xl">{subtitle}</span>
       </div>
-      <Link
-        to="/"
-        onClick={onBack}
-      >
+      <Link to={linkTo ? linkTo : "/"} onClick={onBack}>
         <Button>Zpět na hlavní stránku</Button>
       </Link>
     </div>

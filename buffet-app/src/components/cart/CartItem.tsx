@@ -1,45 +1,36 @@
-import useCart from "../../store/CartStore";
 import { MenuItem } from "../../types";
-import { formatCurrency } from "../../utils";
+import ItemButtons from "../items/ItemButtons";
+import ItemImage from "../items/ItemImage";
+import ItemVariants from "../items/ItemVariants";
+import ItemPrice from "../items/ItemPrice";
 
 type CartItemProps = {
   item: MenuItem;
 };
 
 const CartItem = ({ item }: CartItemProps) => {
-  const { getItemQuantity, removeFromCart, addToCart } = useCart();
-
-  const handleAddItem = (item: MenuItem) => {
-    addToCart(item);
-  };
-
-  const handleRemoveItem = (id: number) => {
-    removeFromCart(id);
-  };
   return (
     <div
       key={item.id}
-      className="flex h-[90px] w-[300px] flex-row items-center justify-between rounded-lg bg-slate-900 p-4 text-white shadow-md"
+      className="grid w-[22rem] grid-cols-1 gap-5 rounded-lg bg-slate-700 p-4 text-white shadow-sm shadow-black md:w-[32rem] md:grid-cols-2"
     >
-      <div className="flex flex-row gap-2">
-        <img
-          src={item.image}
-          alt={item.name}
-          className="h-16 w-16 rounded-md object-cover"
-        />
-        <div className="flex flex-col">
-          <h1 className="text-xl font-bold">{item.name}</h1>
+      <div className="flex h-full flex-col justify-between gap-5">
+        <div className="flex flex-col items-start">
+          <h1 className="text-lg font-bold">{item.name}</h1>
+          <p className="text-base text-descriptionColor">{item.description}</p>
+        </div>
 
-          <p className="font-bold text-gray-200">
-            {formatCurrency(item.price * getItemQuantity(item.id))}
-          </p>
+        <div className="flex flex-col gap-2">
+          <ItemVariants {...item} />
+          <hr />
+          <ItemPrice {...item} />
+          <div className="flex flex-row items-center justify-center">
+            <ItemButtons item={item} />
+          </div>
         </div>
       </div>
-
-      <div className="flex flex-row gap-2">
-        <button onClick={() => handleRemoveItem(item.id)}>-</button>
-        <span>{getItemQuantity(item.id)}</span>
-        <button onClick={() => handleAddItem(item)}>+</button>
+      <div className="hidden md:flex md:h-full md:flex-col md:items-center md:justify-center">
+        <ItemImage {...item} />
       </div>
     </div>
   );

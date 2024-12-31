@@ -2,32 +2,36 @@ import { motion } from "framer-motion";
 import { scaleUpAnimation } from "../../animations";
 import { useNavigate } from "react-router-dom";
 import useCart from "../../store/CartStore";
-import Modal from "../Modal";
+import Modal from "../ui/Modal";
 import CartItem from "./CartItem";
-import Button from "../Button";
+import Button from "../ui/Button";
 import EmptyCart from "./EmptyCart";
 
 const CartModal = () => {
-  const { isOpen, handleOpenCart, cartItems, isCartEmpty } = useCart();
+  const { isOpen, handleCloseCart, cartItems, isCartEmpty } = useCart();
   const navigate = useNavigate();
 
   const handleContinue = () => {
-    handleOpenCart();
+    handleCloseCart();
     navigate("/cart");
   };
 
   return (
-    <Modal isOpen={isOpen} darkBackground>
+    <Modal
+      isOpen={isOpen}
+      darkBackground
+      handleContainerClick={handleCloseCart}
+    >
       <motion.div
         {...scaleUpAnimation(0.3)}
-        className="relative flex h-[500px] w-[800px] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black"
+        className="relative flex h-[600px] w-[900px] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black"
       >
         <h1 className="flex h-10 w-full items-center justify-center rounded-t-lg bg-primary text-center text-xl font-bold text-black">
           Váš košík
         </h1>
 
         <div
-          className={`${isCartEmpty() ? "" : "grid grid-flow-row grid-cols-2"} gap-5 overflow-auto px-10 py-5`}
+          className={`${isCartEmpty() ? "" : "flex flex-col"} gap-5 overflow-auto px-10 py-5`}
         >
           {isCartEmpty() && <EmptyCart />}
           {cartItems.map((item) => {
@@ -35,9 +39,9 @@ const CartModal = () => {
           })}
         </div>
         <div className="my-2 grid h-10 grid-cols-2 grid-rows-1 justify-between gap-10 text-white">
-          <Button onClick={handleOpenCart}>Zavřít</Button>
+          <Button onClick={handleCloseCart}>Zavřít</Button>
           <Button onClick={handleContinue} disabled={isCartEmpty()}>
-            Pokračovat
+            K pokladně
           </Button>
         </div>
       </motion.div>
