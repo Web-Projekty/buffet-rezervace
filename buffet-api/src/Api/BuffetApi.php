@@ -17,6 +17,7 @@ use Buffet\Types\Error;
 use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Success;
 use Buffet\Utils\WebsocketClient;
+use Carbon\Carbon;
 use DateException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
@@ -345,6 +346,13 @@ class BuffetApi
             return $response;
         }
         $isAdmin = UserModel::isAdmin($uid);
+
+        // checking date validity
+        $today = Carbon::now()->format("Y-m-d");
+
+        if ($pickUpDate < $today) {
+            return $response->setError(Error::DateTimeInvalid);
+        }
 
         // checking for timeslot existence
         if (!TimeslotModel::timeslotExists($startTime, $endTime)) {
