@@ -15,6 +15,8 @@ use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\Types\Exceptions\NegativeValueException;
+use Buffet\Types\Exceptions\OutOfOrderIdsException;
+use Buffet\Types\Exceptions\OutOfTimeslotsException;
 use Buffet\Types\OrderStatus;
 use Buffet\Types\Success;
 use Buffet\Utils\WebsocketClient;
@@ -367,9 +369,13 @@ class BuffetApi
 
         } else {
             if (!$orderApi->isFree($startTime, $endTime, $pickUpDate, $limit)) {
-                return $response->setError(Error::OrderTimeslotsFull);
+                //return $response->setError(Error::OrderTimeslotsFull);
             }
-            OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
+            try {
+                OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
+            } catch (OutOfOrderIdsException $e) {
+                return $response->setError(Error::OutOfOrderIds);
+            }
         }
         try {
             $orderApi->generateTemp();
