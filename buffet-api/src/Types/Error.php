@@ -50,6 +50,7 @@ enum Error: string {
     case AlreadySubscribed = 'User is already subscribed to this channel';
     case OrderTimeslotsFull = 'Order timeslots are full';
     case NonexistentTimeslot = 'Timeslot doesn\'t exist';
+    case OutOfOrderIds = 'There are no more order ids available';
 
     ############################ Other ############################
     case DateTimeInvalid = 'Date or time is invalid';

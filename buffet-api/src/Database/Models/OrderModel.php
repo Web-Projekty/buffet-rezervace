@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace Buffet\Database\Models;
 
+use Buffet\Api\OrderApi;
 use Buffet\Types\OrderStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
@@ -113,6 +114,8 @@ class OrderModel extends Model
      */
     public static function createOrder(int $userId, OrderStatus $status, string $pickupDate, string $items, string $paymentMethod, string $startTime, string $endTime): void
     {
+        $pickupId = OrderApi::getOrderPickupId();
+
         OrderModel::query()->create([
             'userId' => $userId,
             'status' => $status->value,
@@ -120,7 +123,7 @@ class OrderModel extends Model
             'items' => $items,
             'startTime' => $startTime,
             'endTime' => $endTime,
-            'pickUpId' => '000',
+            'pickUpId' => $pickupId,
             'paymentMethod' => $paymentMethod
         ]);
     }
