@@ -15,6 +15,7 @@ use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\Types\Exceptions\NegativeValueException;
+use Buffet\Types\OrderStatus;
 use Buffet\Types\Success;
 use Buffet\Utils\WebsocketClient;
 use Carbon\Carbon;
@@ -368,7 +369,7 @@ class BuffetApi
             if (!$orderApi->isFree($startTime, $endTime, $pickUpDate, $limit)) {
                 return $response->setError(Error::OrderTimeslotsFull);
             }
-            OrderModel::createOrder($uid, "sent", $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
+            OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
         }
         try {
             $orderApi->generateTemp();
