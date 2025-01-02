@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace Buffet\Api;
 
+use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use DomainException;
@@ -46,6 +47,19 @@ class JWTApi
         $jwt = JWT::encode($payload, $key, 'HS384');
 
         return $jwt;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getAdminToken(): string
+    {
+        $admin = UserModel::query()->where('isAdmin', 1)->first()->toArray();
+
+        $jwt = new JWTApi();
+        $token = $jwt->getToken($admin['id'], $admin['username']);
+
+        return $token;
     }
 
     /**

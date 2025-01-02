@@ -14,9 +14,9 @@ use Buffet\Database\Models\TimeslotModel;
 use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\Types\EventTypes;
 use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Exceptions\OutOfOrderIdsException;
-use Buffet\Types\Exceptions\OutOfTimeslotsException;
 use Buffet\Types\OrderStatus;
 use Buffet\Types\Success;
 use Buffet\Utils\WebsocketClient;
@@ -366,13 +366,13 @@ class BuffetApi
 
         // order creation logic
         if ($isAdmin) {
-
+            return $response->setError(Error::CannotOrderAsAdmin);
         } else {
             if (!$orderApi->isFree($startTime, $endTime, $pickUpDate, $limit)) {
-                //return $response->setError(Error::OrderTimeslotsFull);
+                return $response->setError(Error::OrderTimeslotsFull);
             }
             try {
-                OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
+                $order = OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
             } catch (OutOfOrderIdsException $e) {
                 return $response->setError(Error::OutOfOrderIds);
             }
@@ -384,6 +384,8 @@ class BuffetApi
              * @todo handle exception
              */
         }
+
+        WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
 
         return $response->setStatus(true)->setSuccess(Success::OrderCreated);
     }
@@ -497,7 +499,7 @@ class BuffetApi
      */
     function handleMakeOrderEvent(ApiResponse $reponse): ApiResponse
     {
-        WebsocketClient::send("kds", json_encode(["requestType" => "publish"]));
+        WebsocketClient::send("kds", json_encode(["requestType" => "publish", "eventType" => "updateOrder", "payload" => "{order here}"]));
         return $reponse->setStatus(true);
     }
 

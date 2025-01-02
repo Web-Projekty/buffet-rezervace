@@ -41,6 +41,7 @@ enum Error: string {
 
     // Admin status
     case Unauthorized = "User does not have appropriate permissions";
+    case CannotOrderAsAdmin = "Admins cannot order";
 
     ############################ Database ############################
     case QueryFailed = 'Query from database has failed';

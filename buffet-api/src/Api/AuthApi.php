@@ -77,7 +77,7 @@ class AuthApi
             $token = $jwt->getToken($uid, $username); // is acutally used don't trust the intelephense
 
             foreach ($response->getPayloadKeys() as $key) {
-                $response->setPayload($key, $$key);
+                $response->setPayload($key, $$key); // $token used right here
             }
             $response->setSuccess(Success::Login);
         } else {
