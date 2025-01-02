@@ -104,19 +104,20 @@ class OrderModel extends Model
     }
 
     /**
-     * @param int         $userId
-     * @param OrderStatus $status
-     * @param string      $pickupDate
-     * @param string      $items
-     * @param string      $paymentMethod
-     * @param string      $startTime
-     * @param string      $endTime
+     * @param  int                                                                                                                                $userId
+     * @param  OrderStatus                                                                                                                        $status
+     * @param  string                                                                                                                             $pickupDate
+     * @param  string                                                                                                                             $items
+     * @param  string                                                                                                                             $paymentMethod
+     * @param  string                                                                                                                             $startTime
+     * @param  string                                                                                                                             $endTime
+     * @return array{userId:int,status:int,pickupDate:string,items:string,startTime:string,endTime:string,pickUpId:string,paymentMethod:string}
      */
-    public static function createOrder(int $userId, OrderStatus $status, string $pickupDate, string $items, string $paymentMethod, string $startTime, string $endTime): void
+    public static function createOrder(int $userId, OrderStatus $status, string $pickupDate, string $items, string $paymentMethod, string $startTime, string $endTime): array
     {
         $pickupId = OrderApi::getOrderPickupId();
 
-        OrderModel::query()->create([
+        $order = OrderModel::query()->create([
             'userId' => $userId,
             'status' => $status->value,
             'pickupDate' => $pickupDate,
@@ -126,5 +127,7 @@ class OrderModel extends Model
             'pickUpId' => $pickupId,
             'paymentMethod' => $paymentMethod
         ]);
+
+        return $order->toArray();
     }
 }

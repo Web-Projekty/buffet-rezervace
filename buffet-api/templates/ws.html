@@ -71,9 +71,9 @@
             protocol = window.location.protocol
             //console.log(window.location.protocol)
             if (protocol == 'http:') {
-                address = 'ws://' + window.location.host + '/kds/'
+                address = 'ws://' + window.location.host +  window.location.pathname.slice(0,-4) + '/kds/'
             } else {
-                address = 'wss://' + window.location.host + '/kds/'
+                address = 'wss://' + window.location.host +window.location.pathname.slice(0,-4)+ '/kds/'
             }
             const ws = new WebSocket(address);
             ws.onmessage = (event) => {
