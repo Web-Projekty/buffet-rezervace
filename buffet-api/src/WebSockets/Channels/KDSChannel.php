@@ -5,6 +5,7 @@ declare (strict_types = 1);
 namespace Buffet\WebSockets\Channels;
 
 use Buffet\Api\BuffetApi;
+use Buffet\Database\Models\OrderModel;
 use Buffet\Types\Error;
 use Buffet\Types\Success;
 use Buffet\Utils\Helper;
@@ -47,13 +48,14 @@ class KDSChannel implements MessageInterface
 
             $token = $decoded->token ?? "";
 
-            if (!Helper::isAdmin($token)) {
-                $conn->send(Helper::getErrorResponse(Error::Unauthorized));
-                return;
-            }
+            $isAdmin = Helper::isAdmin($token);
 
             switch ($requestType) {
                 case "subscribe":
+                    if (!$isAdmin) {
+                        $conn->send(Helper::getErrorResponse(Error::Unauthorized));
+                        break;
+                    }
                     if (Helper::isClientInStorage($conn, $this->authenticatedClients)) {
                         $conn->send(Helper::getErrorResponse(Error::AlreadySubscribed));
                         break;
@@ -64,6 +66,10 @@ class KDSChannel implements MessageInterface
                     $conn->send(HttpClient::post('http://localhost/api', json_encode(['requestType' => 'getOrders', 'token' => $token])));
                     break;
                 case "publish":
+                    if (!$isAdmin) {
+                        $conn->send(Helper::getErrorResponse(Error::Unauthorized));
+                        break;
+                    }
                     foreach ($this->authenticatedClients as $client) {
                         $decoded = json_decode($msg);
 
@@ -72,6 +78,27 @@ class KDSChannel implements MessageInterface
 
                         $client->send(json_encode($newMsg));
                     }
+                    break;
+                case "update":
+                    if (!$isAdmin) {
+                        $conn->send(Helper::getErrorResponse(Error::Unauthorized));
+                        break;
+                    }
+
+                    $decoded = json_decode($msg);
+
+                    $updatedOrder = ['requestType' => 'updateOrder', 'token' => $token, 'orderId' => $decoded->orderId ?? ""];
+
+                    $columns = OrderModel::getCollumns();
+
+                    foreach ($columns as $column) {
+                        if (isset($decoded->$column)) {
+                            $updatedOrder[$column] = $decoded->$column;
+                        }
+                    }
+                    var_dump($updatedOrder);
+                    HttpClient::post('http://localhost/api', json_encode($updatedOrder));
+
                     break;
                 default:
                     $api = new BuffetApi();
