@@ -369,7 +369,7 @@ class BuffetApi
 
         } else {
             if (!$orderApi->isFree($startTime, $endTime, $pickUpDate, $limit)) {
-                //return $response->setError(Error::OrderTimeslotsFull);
+                return $response->setError(Error::OrderTimeslotsFull);
             }
             try {
                 OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
