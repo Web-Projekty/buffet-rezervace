@@ -45,6 +45,13 @@ class KDSChannel implements MessageInterface
 
             $requestType = $decoded->requestType ?? "";
 
+            $token = $decoded->token ?? "";
+
+            if (!Helper::isAdmin($token)) {
+                $conn->send(Helper::getErrorResponse(Error::Unauthorized));
+                return;
+            }
+
             switch ($requestType) {
                 case "subscribe":
                     if (Helper::isClientInStorage($conn, $this->authenticatedClients)) {
@@ -52,15 +59,9 @@ class KDSChannel implements MessageInterface
                         break;
                     }
 
-                    $token = $decoded->token ?? "";
-
-                    if (Helper::isAdmin($token)) {
-                        Helper::attachClient($conn, $this->authenticatedClients);
-                        $conn->send(Helper::getSuccessResponse(Success::Subscribed));
-                        $conn->send(HttpClient::post('http://localhost/api', json_encode(['requestType' => 'getOrders', 'token' => $token])));
-                    } else {
-                        $conn->send(Helper::getErrorResponse(Error::Unauthorized));
-                    }
+                    Helper::attachClient($conn, $this->authenticatedClients);
+                    $conn->send(Helper::getSuccessResponse(Success::Subscribed));
+                    $conn->send(HttpClient::post('http://localhost/api', json_encode(['requestType' => 'getOrders', 'token' => $token])));
                     break;
                 case "publish":
                     foreach ($this->authenticatedClients as $client) {
