@@ -55,12 +55,18 @@ enum Error: string {
     case NonexistentTimeslot = 'Timeslot doesn\'t exist';
     case OutOfOrderIds = 'There are no more order ids available';
 
-    ############################ Other ############################
+    ############################ Orders ############################
     case DateTimeInvalid = 'Date or time is invalid';
     case InvalidLimitOrInterval = 'Limit or interval is invalid';
+    case InvalidStatus = 'Status is invalid';
+    case UserNotFound = 'User not found';
+    case InvalidPickupId = 'Pickup id is invalid';
 
     ############################ Settings ############################
     case InvalidOrderDateLimitMax = 'Order date limit max is invalid';
+
+    ############################ General ############################
+    case GeneralError = 'Oops something has gone wrong';
     /**
      * @return string
      */
