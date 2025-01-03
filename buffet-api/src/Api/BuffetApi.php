@@ -440,7 +440,7 @@ class BuffetApi
             }
             return $response->setError(Error::GeneralError);
         }
-        return $response;
+        return $response->setSuccess(Success::OrderUpdated);
     }
 
     /**
