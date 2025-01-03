@@ -166,7 +166,6 @@ class OrderApi
         } while ($count > 0);
 
         echo "counter: " . $counter . PHP_EOL;
-        var_dump($randomId);
 
         return $randomId;
     }
@@ -210,7 +209,6 @@ class OrderApi
                     if ($pickupIdLenght > 4) {
                         throw new \Exception("Invalid pickupId", 4);
                     }
-                    var_dump($pickupIdLenght);
                     if ($pickupIdLenght < 3) {
                         $value = str_pad(strval($value), 3, '0', STR_PAD_LEFT);
                     }

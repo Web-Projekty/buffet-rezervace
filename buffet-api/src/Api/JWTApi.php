@@ -19,11 +19,8 @@ use UnexpectedValueException;
 class JWTApi
 {
 
-    /**
-     * @param bool $ignoreHost
-     */
-    public function __construct(
-        private bool $ignoreHost = false) {}
+    public function __construct()
+    {}
 
     /**
      * Generates and returns a signed JWT token
@@ -106,7 +103,7 @@ class JWTApi
 
         if (!$jwt instanceof ApiResponse) {
 
-            if (!$this->ignoreHost && $_SERVER['HTTP_HOST'] != 'localhost') {
+            if ($_SERVER['HTTP_HOST'] != 'localhost') {
                 if ($jwt->iss != $_SERVER['HTTP_HOST']) {
                     $response->setError(Error::BadDomain);
                 }

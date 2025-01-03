@@ -399,11 +399,6 @@ class BuffetApi
         $jwt = new JWTApi;
         $orderApi = new OrderApi;
 
-        $orderId = $response->getRequestByKey("orderId");
-        if ($orderId === null) {
-            return $response->setError(Error::OrderIdNotFound);
-        }
-
         $jwt->validateToken($response);
 
         $uid = $jwt->decodeToken($response)->sub ?? 0;
@@ -416,6 +411,11 @@ class BuffetApi
 
         if (!$isAdmin) {
             return $response->setError(Error::Unauthorized);
+        }
+
+        $orderId = (int) $response->getRequestByKey("orderId");
+        if ($orderId === 0) {
+            return $response->setError(Error::OrderIdNotFound);
         }
 
         $orderParameters = [];
@@ -440,7 +440,7 @@ class BuffetApi
             }
             return $response->setError(Error::GeneralError);
         }
-        return $response;
+        return $response->setSuccess(Success::OrderUpdated);
     }
 
     /**
