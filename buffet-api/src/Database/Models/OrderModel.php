@@ -52,8 +52,8 @@ class OrderModel extends Model
      * @var array<string>
      */
     protected $indexTypes = [
-        'userId' => 'fulltext',
-        'status' => 'fulltext',
+        'userId' => 'int',
+        'status' => 'enum',
         'dateCreated' => 'datetime',
         'pickupDate' => 'date',
         'items' => 'fulltext',
