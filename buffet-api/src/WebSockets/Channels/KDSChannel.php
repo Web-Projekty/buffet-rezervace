@@ -79,7 +79,7 @@ class KDSChannel implements MessageInterface
                         $client->send(json_encode($newMsg));
                     }
                     break;
-                case "update":
+                case "notifyUpdate": // will not use
                     if (!$isAdmin) {
                         $conn->send(Helper::getErrorResponse(Error::Unauthorized));
                         break;
