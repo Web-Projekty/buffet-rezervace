@@ -123,6 +123,8 @@ class BuffetApi
             case "makeOrderEvent":
                 return $this->handleMakeOrderEvent($response); // for testing
 
+            case "updateOrder":
+                return $this->handleUpdateOrder($response);
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -388,6 +390,57 @@ class BuffetApi
         WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
 
         return $response->setStatus(true)->setSuccess(Success::OrderCreated);
+    }
+
+    public function handleUpdateOrder(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "orderId"]);
+
+        $jwt = new JWTApi;
+        $orderApi = new OrderApi;
+
+        $orderId = $response->getRequestByKey("orderId");
+        if ($orderId === null) {
+            return $response->setError(Error::OrderIdNotFound);
+        }
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $isAdmin = UserModel::isAdmin($uid);
+
+        if (!$isAdmin) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        $orderParameters = [];
+        foreach (OrderModel::getCollumns() as $column) {
+            if ($response->hasRequestByKey($column)) {
+                $orderParameters["$column"] = $response->getRequestByKey($column);
+            }
+        }
+        try {
+            $orderApi->updateOrder($orderId, $orderParameters);
+        } catch (\Exception $e) {
+            switch ($e->getCode()) {
+                case 1:
+                    return $response->setError(Error::OrderIdNotFound);
+                case 2:
+                    return $response->setError(Error::InvalidStatus);
+                case 3:
+                    return $response->setError(Error::UserNotFound);
+                case 4:
+                    return $response->setError(Error::InvalidPickupId);
+
+            }
+            return $response->setError(Error::GeneralError);
+        }
+        return $response;
     }
 
     /**
