@@ -399,8 +399,8 @@ class BuffetApi
         $jwt = new JWTApi;
         $orderApi = new OrderApi;
 
-        $orderId = $response->getRequestByKey("orderId");
-        if ($orderId === null) {
+        $orderId = (int) $response->getRequestByKey("orderId");
+        if ($orderId === 0) {
             return $response->setError(Error::OrderIdNotFound);
         }
 

@@ -4,8 +4,6 @@ declare (strict_types = 1);
 
 namespace Buffet\WebSockets\Channels;
 
-use Buffet\Api\BuffetApi;
-use Buffet\Database\Models\OrderModel;
 use Buffet\Types\Error;
 use Buffet\Types\Success;
 use Buffet\Utils\Helper;
@@ -79,31 +77,9 @@ class KDSChannel implements MessageInterface
                         $client->send(json_encode($newMsg));
                     }
                     break;
-                case "notifyUpdate": // will not use
-                    if (!$isAdmin) {
-                        $conn->send(Helper::getErrorResponse(Error::Unauthorized));
-                        break;
-                    }
 
-                    $decoded = json_decode($msg);
-
-                    $updatedOrder = ['requestType' => 'updateOrder', 'token' => $token, 'orderId' => $decoded->orderId ?? ""];
-
-                    $columns = OrderModel::getCollumns();
-
-                    foreach ($columns as $column) {
-                        if (isset($decoded->$column)) {
-                            $updatedOrder[$column] = $decoded->$column;
-                        }
-                    }
-                    var_dump($updatedOrder);
-                    HttpClient::post('http://localhost/api', json_encode($updatedOrder));
-
-                    break;
                 default:
-                    $api = new BuffetApi();
-
-                    $response = $api->handleApiCall($msg);
+                    $response = HttpClient::post('http://localhost/api', $msg);
 
                     $conn->send((string) $response);
             }
