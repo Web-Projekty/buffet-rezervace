@@ -17,13 +17,13 @@ class OrderModel extends Model
     /**
      * @var string
      */
-    protected $table = 'Orders';
+    public $table = 'Orders';
 
     // Define the columns that are mass assignable
     /**
      * @var array<string>
      */
-    protected $fillable = ['userId', 'status', 'dateCreated', 'pickupDate', 'items', 'startTime', 'endTime', 'pickUpId', 'paymentMethod'];
+    public $fillable = ['userId', 'status', 'dateCreated', 'pickupDate', 'items', 'startTime', 'endTime', 'pickUpId', 'paymentMethod'];
 
     /**
      * @var array<string>
@@ -52,8 +52,8 @@ class OrderModel extends Model
      * @var array<string>
      */
     protected $indexTypes = [
-        'userId' => 'fulltext',
-        'status' => 'fulltext',
+        'userId' => 'int',
+        'status' => 'enum',
         'dateCreated' => 'datetime',
         'pickupDate' => 'date',
         'items' => 'fulltext',
@@ -129,5 +129,14 @@ class OrderModel extends Model
         ]);
 
         return $order->toArray();
+    }
+
+    /**
+     * @return array<string>
+     */
+    public static function getCollumns(): array
+    {
+        $model = new OrderModel();
+        return $model->fillable;
     }
 }

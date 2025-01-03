@@ -7,6 +7,7 @@ namespace Buffet\Api;
 use Buffet\Database\Models\OrderModel;
 use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\TimeslotModel;
+use Buffet\Database\Models\UserModel;
 use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Exceptions\OutOfOrderIdsException;
 use Buffet\Types\OrderStatus;
@@ -168,5 +169,58 @@ class OrderApi
         var_dump($randomId);
 
         return $randomId;
+    }
+
+    /**
+     * @param int          $orderId
+     * @param array<mixed> $parameters
+     */
+    public function updateOrder(int $orderId, array $parameters): void
+    {
+        $order = OrderModel::query()->find($orderId);
+
+        if ($order === null) {
+            throw new \Exception("Order not found", 1);
+        }
+
+        foreach ($parameters as $key => $value) {
+            // check if key is valid by type
+            switch ($key) {
+                case "status":
+                    $stausOptions = OrderStatus::cases();
+
+                    foreach ($stausOptions as $option) {
+                        if ($value === $option->value) {
+                            break;
+                        }
+                    }
+                    break;
+
+                case "userId":
+                    if (!UserModel::query()->find($value)->exists()) {
+                        throw new \Exception("User not found", 3);
+                    }
+                    break;
+
+                case "dateCreated":
+                    break;
+
+                case "pickUpId":
+                    $pickupIdLenght = strlen(strval($value));
+                    if ($pickupIdLenght > 4) {
+                        throw new \Exception("Invalid pickupId", 4);
+                    }
+                    var_dump($pickupIdLenght);
+                    if ($pickupIdLenght < 3) {
+                        $value = str_pad(strval($value), 3, '0', STR_PAD_LEFT);
+                    }
+                    break;
+
+            }
+
+            $order->$key = $value;
+        }
+
+        $order->save();
     }
 }

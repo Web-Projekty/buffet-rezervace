@@ -18,7 +18,7 @@ class HttpClient
     }
 
     /**
-     * @param string        $url
+     * @param string $url
      * @param string $data
      */
     public static function post(string $url, string $data): string
