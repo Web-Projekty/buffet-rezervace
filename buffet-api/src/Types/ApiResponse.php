@@ -92,6 +92,11 @@ class ApiResponse
         return $this->request[$key] ?? null;
     }
 
+    public function hasRequestByKey(string $key): bool
+    {
+        return isset($this->request[$key]);
+    }
+
     /**
      * @param string $key
      */

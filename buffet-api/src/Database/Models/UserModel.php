@@ -96,4 +96,14 @@ class UserModel extends Model
         } catch (QueryException) {}
         return false;
     }
+
+    /**
+     * @return array<string>
+     */
+    public static function getColums(): array
+    {
+        $model = new UserModel();
+        return $model->fillable;
+    }
+
 }

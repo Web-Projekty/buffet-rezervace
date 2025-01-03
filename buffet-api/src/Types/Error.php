@@ -38,6 +38,7 @@ enum Error: string {
     case Corrupted = "Token's data have been corrupted";
     case CorruptedOrNull = "Token's data have been corrupted or are null";
     case UnexpectedValue = "Token value is unexpected";
+    case MissingToken = "Token is missing";
 
     // Admin status
     case Unauthorized = "User does not have appropriate permissions";
@@ -45,6 +46,7 @@ enum Error: string {
 
     ############################ Database ############################
     case QueryFailed = 'Query from database has failed';
+    case OrderIdNotFound = 'Order id not found';
 
     ############################ Ws Channels ############################
     case NonexistentChannel = 'Channel doesn\'t exist';
@@ -53,12 +55,18 @@ enum Error: string {
     case NonexistentTimeslot = 'Timeslot doesn\'t exist';
     case OutOfOrderIds = 'There are no more order ids available';
 
-    ############################ Other ############################
+    ############################ Orders ############################
     case DateTimeInvalid = 'Date or time is invalid';
     case InvalidLimitOrInterval = 'Limit or interval is invalid';
+    case InvalidStatus = 'Status is invalid';
+    case UserNotFound = 'User not found';
+    case InvalidPickupId = 'Pickup id is invalid';
 
     ############################ Settings ############################
     case InvalidOrderDateLimitMax = 'Order date limit max is invalid';
+
+    ############################ General ############################
+    case GeneralError = 'Oops something has gone wrong';
     /**
      * @return string
      */

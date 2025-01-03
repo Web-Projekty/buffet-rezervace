@@ -71,8 +71,11 @@ class JWTApi
 
     function decodeToken(ApiResponse $response): ApiResponse | stdClass
     {
-        $token = $response->getRequestByKey('token');
+        $token = (string) $response->getRequestByKey('token');
         $key = 'example_key';
+        if ($token == "") {
+            return $response->setError(Error::MissingToken);
+        }
         try {
             $dec = JWT::decode($token, new Key($key, 'HS384'));
         } catch (SignatureInvalidException) {
