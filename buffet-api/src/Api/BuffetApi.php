@@ -440,6 +440,16 @@ class BuffetApi
             }
             return $response->setError(Error::GeneralError);
         }
+
+        $ws = [
+            "requestType" => "publish",
+            "token" => JWTApi::getAdminToken(),
+            "eventType" => EventTypes::UpdateOrder,
+            "orderId" => $orderId,
+            "payload" => OrderModel::getById($orderId)
+        ];
+
+        WebsocketClient::send("kds", json_encode($ws));
         return $response->setSuccess(Success::OrderUpdated);
     }
 

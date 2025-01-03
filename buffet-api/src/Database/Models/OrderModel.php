@@ -90,6 +90,19 @@ class OrderModel extends Model
     }
 
     /**
+     * @param int $id
+     * @return array<mixed>
+     */
+    public static function getById(int $id): array
+    {
+        try {
+            return OrderModel::query()->find($id)->toArray();
+        } catch (QueryException $e) {
+            return [];
+        }
+    }
+
+    /**
      * @param string $from
      * @param string $to
      */
@@ -98,7 +111,6 @@ class OrderModel extends Model
         try {
             return OrderModel::query()->getQuery()->whereDate('pickupDate', ">=", $from)->whereDate('pickupDate', "<=", $to)->orderBy('pickupDate')->get();
         } catch (QueryException $e) {
-
             return false;
         }
     }
