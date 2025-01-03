@@ -38,6 +38,7 @@ enum Error: string {
     case Corrupted = "Token's data have been corrupted";
     case CorruptedOrNull = "Token's data have been corrupted or are null";
     case UnexpectedValue = "Token value is unexpected";
+    case MissingToken = "Token is missing";
 
     // Admin status
     case Unauthorized = "User does not have appropriate permissions";
@@ -45,6 +46,7 @@ enum Error: string {
 
     ############################ Database ############################
     case QueryFailed = 'Query from database has failed';
+    case OrderIdNotFound = 'Order id not found';
 
     ############################ Ws Channels ############################
     case NonexistentChannel = 'Channel doesn\'t exist';
