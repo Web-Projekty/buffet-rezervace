@@ -24,6 +24,8 @@ export type Order = {
   status: OrderStatus;
   date: string;
   pickupDate: string;
+  startTime: string;
+  endTime: string;
   items: [];
   pickUpId: string;
 };
