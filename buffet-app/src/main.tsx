@@ -12,16 +12,17 @@ const Menu = lazy(() => import("./components/menu/Menu.tsx"));
 const MenuEdit = lazy(() => import("./components/menu/editMenu/MenuEdit.tsx"));
 const Login = lazy(() => import("./components/auth/login/Login.tsx"));
 const Register = lazy(() => import("./components/auth/register/Register.tsx"));
-const Dashboard = lazy(() => import("./components/auth/Dashboard.tsx"));
+const Dashboard = lazy(
+  () => import("./components/auth/dashboard/Dashboard.tsx"),
+);
 const Allergens = lazy(() => import("./components/allergens/Allergens.tsx"));
 const RequireAuth = lazy(() => import("./components/auth/RequireAuth.tsx"));
-const CartPurchase = lazy(() => import("./components/cart/CartPurchase.tsx"));
+const CartPurchase = lazy(
+  () => import("./components/cart/purchase/CartPurchase.tsx"),
+);
 const SuccessOrder = lazy(() => import("./components/orders/SuccessOrder.tsx"));
 const AdminSettings = lazy(
   () => import("./components/auth/admin/AdminSettings.tsx"),
-);
-const OrderOverview = lazy(
-  () => import("./components/orders/OrderOverview.tsx"),
 );
 const PageNotFound = lazy(() => import("./components/error/PageNotFound.tsx"));
 const Kds = lazy(() => import("./components/kds/Kds.tsx"));
@@ -152,16 +153,6 @@ const router = createBrowserRouter([
           <Suspense fallback={<Fallback />}>
             <ErrorBoundary>
               <SuccessOrder />
-            </ErrorBoundary>
-          </Suspense>
-        ),
-      },
-      {
-        path: "/order",
-        element: (
-          <Suspense fallback={<Fallback />}>
-            <ErrorBoundary>
-              <OrderOverview />
             </ErrorBoundary>
           </Suspense>
         ),
