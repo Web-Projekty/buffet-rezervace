@@ -34,7 +34,7 @@ const MenuCategoryEditBar = ({
 
   return (
     <div className="sticky top-0 h-screen flex-shrink-0">
-      <div className="sticky right-3 top-0 z-10 flex w-[29rem] flex-col gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black">
+      <div className="sticky right-3 top-0 z-10 flex w-[28rem] flex-col gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black">
         <h1 className="text-center">Úprava kategorie</h1>
         <div className="flex w-full flex-col gap-4">
           <label htmlFor="itemImage" className="m-auto w-48 cursor-pointer">
