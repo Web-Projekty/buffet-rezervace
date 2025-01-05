@@ -48,56 +48,52 @@ const Login = () => {
       {...loginShowAnimation}
       className="mt-14 flex flex-col items-center justify-center gap-5 text-white md:mt-16 xl:mt-20"
     >
-      <h1 className="text-2xl">Příhlášení</h1>
+      <h1 className="text-2xl">Přihlášení</h1>
       <form
         onSubmit={handleSubmit}
-        className="flex w-[300px] flex-col gap-10 font-FiraSans"
+        className="flex w-[300px] flex-col gap-2 font-FiraSans"
       >
-        <div className="flex w-full flex-col gap-5">
-          <Input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            required={true}
-            onChange={handleChange}
-            className="rounded-md border p-2 text-black"
-            placeholder="Uživatelské jméno"
-            disabled={loading}
-          />
-          <Input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            required={true}
-            onChange={handleChange}
-            className="rounded-md border p-2 text-black"
-            placeholder="Heslo"
-            disabled={loading}
-          />
+        <Input
+          type="text"
+          id="username"
+          name="username"
+          value={formData.username}
+          required={true}
+          onChange={handleChange}
+          inputClassName="rounded-md border p-2 text-black"
+          placeholder="Uživatelské jméno"
+          disabled={loading}
+        />
+        <Input
+          type="password"
+          id="password"
+          name="password"
+          value={formData.password}
+          required={true}
+          onChange={handleChange}
+          inputClassName="rounded-md border p-2 text-black"
+          placeholder="Heslo"
+          disabled={loading}
+        />
 
-          <div className="flex w-full flex-col items-center justify-center gap-1">
-            <div className="text-base">
-              Nejste ještě registrovaný?{" "}
-              <Link
-                to="/register"
-                className="cursor-pointer text-cyan-400 hover:text-cyan-500"
-              >
-                Registruje se
-              </Link>
-            </div>
-            {error ? (
-              <LoginError />
-            ) : loading ? (
-              <Loading />
-            ) : (
-              <Button type="submit" className="w-full">
-                Přihlásit se
-              </Button>
-            )}
-          </div>
+        <div className="text-center text-base">
+          Nejste ještě registrovaný?{" "}
+          <Link
+            to="/register"
+            className="cursor-pointer text-cyan-400 hover:text-cyan-500"
+          >
+            Registruje se
+          </Link>
         </div>
+        {error ? (
+          <LoginError />
+        ) : loading ? (
+          <Loading />
+        ) : (
+          <Button type="submit" className="w-full">
+            Přihlásit se
+          </Button>
+        )}
       </form>
     </motion.div>
   );
