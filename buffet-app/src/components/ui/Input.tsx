@@ -23,7 +23,8 @@ export type InputProps = {
     | "url"
     | "week";
   id: string;
-  name: string;
+  name?: string;
+  label?: string;
   value?: string | number;
   required?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -39,6 +40,7 @@ export type InputProps = {
 const Input = ({
   type,
   id,
+  label,
   name = "",
   value = "",
   required = false,
@@ -51,6 +53,35 @@ const Input = ({
   accept,
   autoComplete = "off",
 }: InputProps) => {
+  if (label) {
+    return (
+      <label
+        htmlFor={id}
+        className="flex flex-col items-start gap-1 md:flex-row"
+      >
+        <label htmlFor={id} className="w-44 font-semibold text-white">
+          {label}
+        </label>
+
+        <input
+          type={type}
+          id={id}
+          name={name}
+          value={value}
+          required={required}
+          onChange={onChange}
+          className={className}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          disabled={disabled}
+          min={min}
+          max={max}
+          accept={accept || (type === "file" ? "image/*" : undefined)}
+        />
+      </label>
+    );
+  }
+
   return (
     <input
       type={type}
