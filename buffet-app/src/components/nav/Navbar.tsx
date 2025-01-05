@@ -17,7 +17,6 @@ const NavLinks: NavLinks[] = [
   { id: 1, name: "Menu", path: "/" },
   { id: 2, name: "Alergeny", path: "/alergeny" },
   { id: 3, name: "KDS", path: "/kds", requireAdmin: true },
-  { id: 4, name: "Nastavení", path: "/settings", requireAdmin: true },
 ];
 
 const Navbar = () => {
