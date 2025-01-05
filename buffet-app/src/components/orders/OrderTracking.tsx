@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { Order } from "../../types";
 import ProgressTracker from "./OrderProgressTracker";
+import useOrders from "../../hooks/useOrders";
+import Loading from "../ui/Loading";
 
 const getTextBySteps = (step: number) => {
   switch (step) {
@@ -32,28 +34,23 @@ const getCurrentStep = (order: Order | null): number => {
 };
 
 const OrderTracking = () => {
-  const order: Order | null = useMemo(
-    () => ({
-      id: 1,
-      userId: 1,
-      status: "preparing",
-      date: Date.now().toLocaleString(),
-      pickupDate:
-        new Date(Date.now() + 1000).toLocaleTimeString() +
-        " - " +
-        new Date(Date.now() + 301000).toLocaleTimeString(),
-      items: [],
-      pickUpId: "#264",
-    }),
-    [],
-  );
+  const { latestOrder, isLoading, error } = useOrders();
+
   const currentStep: number = useMemo(
-    () => (order ? getCurrentStep(order) : -2),
-    [order],
+    () => (latestOrder ? getCurrentStep(latestOrder) : -2),
+    [latestOrder],
   );
 
+  if (isLoading) {
+    return <Loading size={30} />;
+  }
+
+  if (error) {
+    return <div className="text-white">{error}</div>;
+  }
+
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-16 rounded-lg p-6 text-white">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-16 rounded-lg p-6 text-white">
       <div className="flex flex-col gap-5">
         <h1 className="text-lg font-semibold">Aktuální objednávka</h1>
         <ProgressTracker currentStep={currentStep} />
@@ -61,13 +58,13 @@ const OrderTracking = () => {
 
       <p className="text-center">{getTextBySteps(currentStep)}</p>
 
-      {order ? (
+      {latestOrder ? (
         <div className="flex flex-row gap-5">
           <h2>Obsah</h2>
           <div>
             <p>Vaše objednávka bude k vyzvednutí pod číslem</p>
-            <h3>{order.pickUpId}</h3>
-            <p>{order.pickupDate}</p>
+            <h3>{latestOrder.pickUpId}</h3>
+            <p>{latestOrder.pickupDate}</p>
           </div>
         </div>
       ) : null}
