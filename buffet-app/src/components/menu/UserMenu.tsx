@@ -51,18 +51,18 @@ const UserMenu = () => {
           "Meow? (Waiting for something to happen?)"
         </p>
       ) : (
-        <div className="mx-[40rem] flex flex-col items-start">
+        <div className="flex flex-col items-start">
           {filteredCategories &&
             filteredCategories.map((category) => (
               <div className="mt-5 flex flex-col gap-3" key={category.id}>
-                <div className="mx-10 flex flex-col items-center gap-2 md:flex-row md:justify-between md:gap-0">
+                <div className="flex flex-col items-center gap-2 md:flex-row md:justify-between md:gap-0">
                   <h1 className="text-4xl font-bold text-white">
                     {category.name}
                   </h1>
                   <p className="text-white md:mr-5">{category.description}</p>
                 </div>
 
-                <HorizontalPaging>
+                <HorizontalPaging className="w-[25rem] md:w-[80rem] 2xl:w-[100rem]">
                   {menuItems &&
                     menuItems
                       .filter(
