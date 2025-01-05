@@ -68,10 +68,10 @@ class OrderModel extends Model
      */
     public $timestamps = true;
 
-    public static function getAll(): bool | \Illuminate\Database\Eloquent\Collection
+    public static function getAll(): false | \Illuminate\Database\Eloquent\Builder
     {
         try {
-            return OrderModel::all();
+            return OrderModel::query();
         } catch (QueryException $e) {
             return false;
         }
@@ -80,10 +80,10 @@ class OrderModel extends Model
     /**
      * @param $userId
      */
-    public static function getByUser(int $userId): bool | \Illuminate\Database\Eloquent\Collection
+    public static function getByUser(int $userId): false | \Illuminate\Database\Eloquent\Builder
     {
         try {
-            return OrderModel::query()->where('userId', $userId)->get();
+            return OrderModel::query()->where('userId', $userId);
         } catch (QueryException $e) {
             return false;
         }
