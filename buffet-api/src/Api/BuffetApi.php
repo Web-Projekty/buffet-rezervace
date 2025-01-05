@@ -274,10 +274,13 @@ class BuffetApi
      */
     function handleGetOrders(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(["token"]);
+        $response->setRequestKeys(["token"]); // optional - "page", "itemsCount"
         $response->setPayloadKeys(["data"]);
 
         $jwt = new JWTApi;
+
+        $page = (int) $response->getRequestByKey("page");
+        $itemsCount = (int) $response->getRequestByKey("itemsCount");
 
         $jwt->validateToken($response);
 
@@ -289,9 +292,19 @@ class BuffetApi
         $isAdmin = UserModel::isAdmin($uid);
 
         if ($isAdmin) {
-            $response->setPayload("data", OrderModel::getAll());
+            $orders = OrderModel::getAll();
         } else {
-            $response->setPayload("data", OrderModel::getByUser((int) $uid));
+            $orders = OrderModel::getByUser((int) $uid);
+        }
+
+        if ($page > 0 && $itemsCount > 0) {
+            if ($orders) {
+                $response->setPayload("data", $orders->simplePaginate(perPage: $itemsCount, page: $page)->items());
+            } else {
+                return $response->setError(Error::QueryFailed);
+            }
+        } else {
+            $response->setPayload("data", $orders->get()->toArray());
         }
 
         $response->setStatus(true);
