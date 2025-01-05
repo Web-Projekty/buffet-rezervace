@@ -1,5 +1,5 @@
 import axios from "axios";
-import { MenuItem, Order, OrderStatus } from "../../types";
+import { MenuItem, Order, OrderStatus, PaymentMethod } from "../../types";
 import { FETCH_URL } from "../../constants";
 import { CartItem } from "../../store/CartStore";
 
@@ -14,15 +14,25 @@ type MenuItemApiReturn = {
 };
 
 export const createOrder = async (
-  token: string,
-  cartItems: CartItem,
+  token: string | null,
+  cartItems: CartItem[],
+  selectedTime: string | null,
+  paymentMethod: PaymentMethod[],
 ): Promise<OrderApiReturn> => {
+  if (!token) throw new Error("Chyba při vytváření objednávky.");
+
   try {
     const { data } = await axios.post(FETCH_URL, {
-      requestType: "makeOrderEvent",
+      requestType: "createOrder",
       token: token,
       items: cartItems,
+      startTime: selectedTime?.split("-")[0],
+      endTime: selectedTime?.split("-")[1],
+      pickUpDate: selectedTime,
+      paymentMethod: paymentMethod,
     });
+
+    console.log(data);
 
     return {
       order: data.payload.data as Order,
