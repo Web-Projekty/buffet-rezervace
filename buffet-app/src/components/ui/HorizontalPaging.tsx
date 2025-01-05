@@ -74,7 +74,7 @@ const HorizontalScrollBar = ({
       </AnimatePresence>
 
       <div
-        className={`flex w-[25rem] gap-5 overflow-x-auto md:w-[70rem] 2xl:w-[100rem] ${className} overflow-y-hidden`}
+        className={`flex gap-5 overflow-x-auto ${className} overflow-y-hidden`}
         ref={scrollContainerRef}
       >
         {children}
