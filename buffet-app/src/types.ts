@@ -6,6 +6,8 @@ export type User = {
   class: string;
   isAdmin: boolean;
   orders: Order[];
+  phone: string;
+  credits: string;
 };
 
 export type OrderStatus =
@@ -67,4 +69,17 @@ export type MenuData = {
 export type RequestData = {
   requestType: "login" | "verify" | "getMenu" | "getOrders";
   [key: string]: string | number | boolean | object | undefined;
+};
+
+export type PaymentMethod = {
+  name: string;
+  input: "checkbox" | "radio";
+  image: PaymentMethodImage[];
+};
+
+type PaymentMethodImage = {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
 };
