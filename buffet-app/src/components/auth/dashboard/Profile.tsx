@@ -19,15 +19,16 @@ const Profile = () => {
     <div className="flex w-full flex-col gap-4">
       <h1 className="text-2xl font-bold">Nastavení profilu</h1>
       <div className="flex w-full flex-col gap-4 md:flex-row">
-        <div className="flex flex-col justify-between gap-3 rounded-lg bg-backgroundColor p-2">
+        <div className="flex w-full flex-col justify-between gap-3 rounded-lg bg-backgroundColor p-2">
           <h2 className="text-xl">Kontaktní údaje</h2>
-          <div className="flex flex-col gap-1">
+          <div className="flex w-full flex-col gap-2">
             <Input
               id="name"
               type="text"
               label="Jméno"
               placeholder="Jméno"
-              className={`rounded-lg p-1 text-black ${canEditProfile ? "" : "bg-gray-500"}`}
+              className="flex w-full flex-col md:flex-row md:items-center md:justify-between"
+              inputClassName={`rounded-lg p-1 text-black ${canEditProfile ? "" : "bg-gray-500"}`}
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -36,7 +37,8 @@ const Profile = () => {
               type="email"
               label="Email"
               placeholder="Email"
-              className={`rounded-lg p-1 text-black ${canEditProfile ? "" : "bg-gray-500"}`}
+              className="flex w-full flex-col md:flex-row md:items-center md:justify-between"
+              inputClassName={`rounded-lg p-1 text-black ${canEditProfile ? "" : "bg-gray-500"}`}
               value={mail}
               onChange={(e) => setMail(e.target.value)}
             />
@@ -45,22 +47,24 @@ const Profile = () => {
               type="tel"
               label="Telefon"
               placeholder="Telefon"
-              className="rounded-lg p-1 text-black"
+              className="flex w-full flex-col md:flex-row md:items-center md:justify-between"
+              inputClassName="rounded-lg p-1 text-black"
               value={tel}
               onChange={(e) => setTel(e.target.value)}
             />
           </div>
           <Button>Uložit změny</Button>
         </div>
-        <div className="flex flex-col justify-between gap-3 rounded-lg bg-backgroundColor p-2">
+        <div className="flex w-full flex-col justify-between gap-3 rounded-lg bg-backgroundColor p-2">
           <h2 className="text-xl">Změna hesla</h2>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex w-full flex-wrap gap-2">
             <Input
               id="password"
               label="Staré heslo"
               type="password"
               placeholder="Heslo"
-              className="rounded-lg p-1 text-black"
+              className="flex w-full flex-col md:flex-row md:items-center md:justify-between"
+              inputClassName="rounded-lg p-1 text-black"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -70,7 +74,8 @@ const Profile = () => {
               label="Nové heslo"
               type="password"
               placeholder="Nové heslo"
-              className="rounded-lg p-1 text-black"
+              className="flex w-full flex-col md:flex-row md:items-center md:justify-between"
+              inputClassName="rounded-lg p-1 text-black"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
             />
@@ -79,7 +84,8 @@ const Profile = () => {
               label="Potvrzení hesla"
               type="password"
               placeholder="Potvrzení nového hesla"
-              className="rounded-lg p-1 text-black"
+              className="flex w-full flex-col md:flex-row md:items-center md:justify-between"
+              inputClassName="rounded-lg p-1 text-black"
               value={newPasswordConfirmation}
               onChange={(e) => setNewPasswordConfirmation(e.target.value)}
             />

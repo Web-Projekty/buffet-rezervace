@@ -55,7 +55,7 @@ const MenuCategoryEditBar = ({
               id="itemImage"
               name="itemImage"
               onChange={handleImageChange}
-              className="hidden"
+              inputClassName="hidden"
               accept="image/*"
             />
           </label>

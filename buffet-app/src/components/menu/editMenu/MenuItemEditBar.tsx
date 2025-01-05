@@ -99,7 +99,7 @@ const MenuItemEditBar = ({
               id="itemImage"
               name="itemImage"
               onChange={handleImageChange}
-              className="hidden"
+              inputClassName="hidden"
               accept="image/*"
             />
           </label>
@@ -181,7 +181,7 @@ const MenuItemEditBar = ({
                   id={`variantName-${index}`}
                   name={`variantName-${index}`}
                   type="text"
-                  className="rounded-md p-1 text-black"
+                  inputClassName="rounded-md p-1 text-black"
                   value={variant.name}
                   onChange={(e) =>
                     handleVariantChange(index, "name", e.target.value)
@@ -192,7 +192,7 @@ const MenuItemEditBar = ({
                   id={`variantPrice-${index}`}
                   name={`variantPrice-${index}`}
                   type="number"
-                  className="rounded-md p-1 text-black"
+                  inputClassName="rounded-md p-1 text-black"
                   value={variant.price}
                   onChange={(e) =>
                     handleVariantChange(index, "price", e.target.value)
