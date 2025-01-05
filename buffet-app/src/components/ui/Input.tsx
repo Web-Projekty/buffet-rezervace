@@ -29,6 +29,8 @@ export type InputProps = {
   required?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  labelClassName?: string;
+  inputClassName?: string;
   placeholder?: string;
   disabled?: boolean;
   min?: number;
@@ -45,7 +47,9 @@ const Input = ({
   value = "",
   required = false,
   onChange,
-  className,
+  className = "w-full rounded-lg p-1 text-black",
+  inputClassName = "flex w-full flex-col md:flex-row md:items-center",
+  labelClassName = "w-1/2 font-semibold text-white",
   placeholder,
   disabled,
   min = 0,
@@ -55,11 +59,8 @@ const Input = ({
 }: InputProps) => {
   if (label) {
     return (
-      <label
-        htmlFor={id}
-        className="flex flex-col items-start gap-1 md:flex-row"
-      >
-        <label htmlFor={id} className="w-44 font-semibold text-white">
+      <div className={className}>
+        <label htmlFor={id} className={labelClassName}>
           {label}
         </label>
 
@@ -70,7 +71,7 @@ const Input = ({
           value={value}
           required={required}
           onChange={onChange}
-          className={className}
+          className={inputClassName}
           placeholder={placeholder}
           autoComplete={autoComplete}
           disabled={disabled}
@@ -78,7 +79,7 @@ const Input = ({
           max={max}
           accept={accept || (type === "file" ? "image/*" : undefined)}
         />
-      </label>
+      </div>
     );
   }
 
@@ -90,7 +91,7 @@ const Input = ({
       value={value}
       required={required}
       onChange={onChange}
-      className={className}
+      className={inputClassName}
       placeholder={placeholder}
       autoComplete={autoComplete}
       disabled={disabled}
