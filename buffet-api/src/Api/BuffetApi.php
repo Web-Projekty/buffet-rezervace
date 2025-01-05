@@ -299,11 +299,14 @@ class BuffetApi
 
         if ($page > 0 && $itemsCount > 0) {
             if ($orders) {
-                $response->setPayload("data", $orders->simplePaginate(perPage: $itemsCount, page: $page)->items());
+                $paginate = $orders->paginate(perPage: $itemsCount, page: $page);
+                $response->setPayload("itemsCount", $paginate->total());
+                $response->setPayload("data", $paginate->items());
             } else {
                 return $response->setError(Error::QueryFailed);
             }
         } else {
+            $response->setPayload("itemsCount", OrderModel::query()->count());
             $response->setPayload("data", $orders->get()->toArray());
         }
 
