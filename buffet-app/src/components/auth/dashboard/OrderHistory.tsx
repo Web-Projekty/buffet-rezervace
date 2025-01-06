@@ -8,6 +8,7 @@ import { useBackendPaging } from "../../../hooks/useBackendPaging";
 
 type OrderHistoryData = {
   data: OrderType[];
+  itemsCount: number;
 };
 
 const OrderHistory = () => {
@@ -35,9 +36,9 @@ const OrderHistory = () => {
   }
 
   return (
-    <div className="flex w-auto flex-col gap-2">
+    <div className="flex flex-col gap-2">
       <h1 className="text-2xl font-bold">
-        Tvá historie objednávek ({dataList?.data.length})
+        Tvá historie objednávek ({dataList?.itemsCount})
       </h1>
       <div className="flex min-h-[25rem] flex-col justify-between gap-2">
         <AnimatePresence>
