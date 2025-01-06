@@ -6,6 +6,7 @@ import MenuItemEditInput from "./MenuItemEditInput";
 import { allergens } from "../../../allergens";
 import ToggleSwitch from "../../ui/ToggleSwitch";
 import { onImageChange } from "../../utils/utils";
+import LazyImage from "../../ui/LazyImage";
 
 type MenuItemEditBarProps = {
   handleBarOpen: () => void;
@@ -83,11 +84,7 @@ const MenuItemEditBar = ({
         <div className="flex w-full flex-col gap-4">
           <label htmlFor="itemImage" className="m-auto w-48 cursor-pointer">
             {itemImage ? (
-              <img
-                src={itemImage}
-                alt="Item"
-                className="h-[12rem] w-[16rem] rounded-lg object-cover"
-              />
+              <LazyImage image={itemImage} alt={itemName + "' image"} />
             ) : (
               <div className="flex h-full w-full items-center justify-center border-2 border-gray-400">
                 <span>Upload Image</span>
