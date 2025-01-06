@@ -213,6 +213,11 @@ class BuffetApi
         $queryResult = null;
         $categories = CategoryModel::getAll()->toArray();
 
+        foreach ($categories as &$category) {
+            $category["image"] = "https://wlczak.vlastas.cc/backend/image/categories/" . $category["id"];
+            //var_dump($category);
+        }
+
         //var_dump($categories);
 
         $page = (int) $response->getRequestByKey("page");
@@ -299,7 +304,7 @@ class BuffetApi
 
         if ($page > 0 && $itemsCount > 0) {
             if ($orders) {
-                $paginate = $orders->paginate(perPage: $itemsCount, page: $page);
+                $paginate = $orders->getQuery()->orderBy("dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
                 $response->setPayload("itemsCount", $paginate->total());
                 $response->setPayload("data", $paginate->items());
             } else {
