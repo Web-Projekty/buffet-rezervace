@@ -165,8 +165,6 @@ class OrderApi
 
         } while ($count > 0);
 
-        echo "counter: " . $counter . PHP_EOL;
-
         return $randomId;
     }
 
