@@ -103,7 +103,7 @@ const Dashboard = () => {
         <Button onClick={handleLogout}>Odhlásit se</Button>
       </div>
 
-      <div className="flex w-auto flex-col rounded-lg bg-slate-900 p-4 text-white md:col-span-2">
+      <div className="flex flex-col rounded-lg bg-slate-900 p-4 text-white md:col-span-2">
         <DashboardContent page={page} />
       </div>
     </div>
