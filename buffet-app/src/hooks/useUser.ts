@@ -17,7 +17,8 @@ type UseUserReturn = {
 export const useUser = (): UseUserReturn => {
   const header: string | null = useAuthHeader();
   const user: User | null = useAuthUser();
-  const token: string = extractToken(header);
+  const token: string | null = extractToken(header);
+
   const isAdmin: boolean = user?.isAdmin || false;
   const fullName: string | null = user?.fullName || null;
   const email: string | null = user?.email || null;
