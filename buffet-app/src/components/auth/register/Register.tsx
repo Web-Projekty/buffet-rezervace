@@ -8,6 +8,7 @@ import Input from "../../ui/Input";
 
 const Register = () => {
   const [formData, setFormData] = useState<RegisterData>({
+    fullName: "",
     username: "",
     email: "",
     phone: "",
@@ -48,6 +49,16 @@ const Register = () => {
     >
       <h1 className="text-2xl">Registrace</h1>
       <form onSubmit={handleSubmit} className="flex w-[300px] flex-col gap-2">
+        <Input
+          id="fullName"
+          name="fullName"
+          inputClassName="rounded-md border p-2 text-black"
+          type="text"
+          placeholder="Jméno a příjmení"
+          value={formData.fullName}
+          onChange={handleInputChange}
+          required
+        />
         <Input
           id="username"
           name="username"
