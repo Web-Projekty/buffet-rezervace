@@ -41,12 +41,12 @@ class OrderModel extends Model
     /**
      * @var array<string>
      */
-    protected $hidden = ['id'];
+    protected $hidden = [];
 
     /**
      * @var array<string>
      */
-    protected $visible = ['userId', 'status', 'pickupDate', 'items', 'startTime', 'endTime', 'pickUpId', 'paymentMethod'];
+    protected $visible = ['id', 'userId', 'status', 'pickupDate', 'dateCreated', 'items', 'startTime', 'endTime', 'pickUpId', 'paymentMethod'];
 
     /**
      * @var array<string>
