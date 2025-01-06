@@ -22,7 +22,7 @@ export type Order = {
   id: number;
   userId: number;
   status: OrderStatus;
-  date: string;
+  dateCreated: string;
   pickupDate: string;
   startTime: string;
   endTime: string;
