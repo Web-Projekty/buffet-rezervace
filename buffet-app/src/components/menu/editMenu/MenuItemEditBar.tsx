@@ -155,23 +155,23 @@ const MenuItemEditBar = ({
           </div>
 
           <div className="flex flex-col gap-2">
-            <label>Alergeny</label>
+            <h2>Alergeny</h2>
             <div className="grid grid-cols-3">
               {allergens.map((allergen) => (
-                <label key={allergen.id} className="flex items-center gap-2">
+                <div key={allergen.id} className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={allergensInput.includes(allergen.id)}
                     onChange={() => handleAllergenChange(allergen.id)}
                   />
                   {allergen.name}
-                </label>
+                </div>
               ))}
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
-            <label>Varianty</label>
+            <h2>Varianty</h2>
             {itemVariants.map((variant, index) => (
               <div key={index} className="flex items-center gap-2">
                 <Input
@@ -183,18 +183,18 @@ const MenuItemEditBar = ({
                   onChange={(e) =>
                     handleVariantChange(index, "name", e.target.value)
                   }
-                  placeholder="Variant Name"
+                  placeholder="Název varianty"
                 />
                 <Input
                   id={`variantPrice-${index}`}
                   name={`variantPrice-${index}`}
                   type="number"
-                  inputClassName="rounded-md p-1 text-black"
+                  inputClassName="rounded-md p-1 text-black w-40"
                   value={variant.price}
                   onChange={(e) =>
                     handleVariantChange(index, "price", e.target.value)
                   }
-                  placeholder="Variant Price"
+                  placeholder="Cena varianty"
                   min={0}
                 />
                 <Button
