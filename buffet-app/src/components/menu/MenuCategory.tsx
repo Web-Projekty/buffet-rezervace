@@ -1,23 +1,21 @@
+import { Category } from "../../types";
+import LazyImage from "../ui/LazyImage";
+
 type MenuCategoryProps = {
-  name: string;
-  image: string;
-  handleFilter: (filter: string) => void;
-  filterValue: string;
+  category: Category;
+  onClick: (filterValue: string) => void;
 };
 
-const MenuCategory = ({
-  name,
-  image,
-  handleFilter,
-  filterValue = "",
-}: MenuCategoryProps) => {
+const MenuCategory = ({ category, onClick }: MenuCategoryProps) => {
   return (
     <div
-      className="flex h-10 w-auto cursor-pointer flex-row items-center justify-center gap-3 rounded-xl bg-slate-900 p-4"
-      onClick={() => handleFilter(filterValue)}
+      className={`group relative aspect-[15/3] cursor-pointer overflow-hidden rounded-lg`}
+      onClick={() => onClick(category.name === "Vše" ? "" : category.name)}
     >
-      <img src={image} alt={name + "'s image"} />
-      <h1>{name}</h1>
+      <LazyImage image={category.image} alt={category.name + "'s image"} />
+      <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+        <h2 className="text-xl font-bold text-white">{category.name}</h2>
+      </div>
     </div>
   );
 };

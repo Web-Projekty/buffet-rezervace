@@ -5,6 +5,7 @@ import HorizontalPaging from "../ui/HorizontalPaging";
 import useMenu from "../../hooks/useMenu";
 import { useFilter } from "../../hooks/useFilter";
 import MenuCategory from "./MenuCategory";
+import { Category } from "../../types";
 
 const UserMenu = () => {
   const { menuItems, error, isLoading, categories } = useMenu();
@@ -23,24 +24,26 @@ const UserMenu = () => {
       <ErrorComponent title="Načítání položek se nezdařilo." subtitle="🛠️👷" />
     );
   }
+
+  const AllCategory: Category = {
+    id: 0,
+    name: "Vše",
+    image: "",
+    description: "Zobrazit všechny položky",
+  };
+
   return (
     <div className="flex flex-col items-center justify-center gap-1">
       <h1 className="text-3xl font-bold text-white">Naše menu</h1>
       <div className="flex flex-row items-center justify-center gap-5 text-white">
         <HorizontalPaging className="justify-center">
-          <MenuCategory
-            name="Vše"
-            image={""}
-            handleFilter={handleFilter}
-            filterValue=""
-          />
+          <MenuCategory category={AllCategory} onClick={handleFilter} />
           {categories.map((category) => {
             return (
               <MenuCategory
                 key={category.id}
-                {...category}
-                handleFilter={handleFilter}
-                filterValue={category.name}
+                category={category}
+                onClick={handleFilter}
               />
             );
           })}
