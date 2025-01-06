@@ -1,3 +1,5 @@
+import { CartItem } from "./store/CartStore";
+
 export type User = {
   id: number;
   username: string;
@@ -26,7 +28,7 @@ export type Order = {
   pickupDate: string;
   startTime: string;
   endTime: string;
-  items: [];
+  items: CartItem[];
   pickUpId: string;
 };
 
