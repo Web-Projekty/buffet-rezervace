@@ -31,7 +31,7 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
     setColor("bg-red-400");
   };
 
-  console.log(new Date(order.pickupDate).toLocaleString());
+  //console.log(new Date(order.pickupDate).toLocaleString());
 
   const checkDelayed = () => {
     const currentTime = new Date().getTime();
