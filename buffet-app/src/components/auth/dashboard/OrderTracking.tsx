@@ -36,16 +36,16 @@ const getCurrentStep = (order: Order | null): number => {
 };
 
 const OrderTracking = () => {
-  const { latestOrder, isLoading, error } = useOrders();
+  const { latestOrder, isLoading, error } = useOrders(1);
 
   const currentStep: number = useMemo(
-    () => (latestOrder ? getCurrentStep(latestOrder) : -2),
+    () => (latestOrder ? getCurrentStep(latestOrder) : -1),
     [latestOrder],
   );
 
   const isCancelled = latestOrder
     ? latestOrder.status === "cancelled" || latestOrder.status === "storno"
-    : true;
+    : false;
 
   const dateText = useMemo(() => {
     if (!latestOrder) {
