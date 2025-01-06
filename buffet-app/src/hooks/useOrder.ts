@@ -9,6 +9,10 @@ type UseStatusOrderReturn = {
   status: OrderStatus;
   statusText: string;
   handleStatus: (status: OrderStatus) => void;
+  dateCreated: string;
+  pickUpDate: string;
+  startTime: string;
+  endTime: string;
 };
 
 export const useOrder = (order: Order): UseStatusOrderReturn => {
@@ -31,7 +35,11 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
     setColor("bg-red-400");
   };
 
-  //console.log(new Date(order.pickupDate).toLocaleString());
+  const dateCreated = new Date(order.dateCreated).toLocaleString();
+
+  const pickUpDate = new Date(order.pickupDate).toLocaleDateString();
+  const startTime = order.startTime.substring(0, 5);
+  const endTime = order.endTime.substring(0, 5);
 
   const checkDelayed = () => {
     const currentTime = new Date().getTime();
@@ -51,5 +59,16 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
     }
   }, [status, order.pickupDate]);
 
-  return { isOpen, toggleOpen, color, status, statusText, handleStatus };
+  return {
+    isOpen,
+    toggleOpen,
+    color,
+    status,
+    statusText,
+    handleStatus,
+    dateCreated,
+    pickUpDate,
+    startTime,
+    endTime,
+  };
 };
