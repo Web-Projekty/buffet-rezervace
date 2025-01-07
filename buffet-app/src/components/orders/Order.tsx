@@ -7,8 +7,7 @@ import OrderItems from "./OrderItems";
 import Button from "../ui/Button";
 import { lazy, Suspense } from "react";
 import { Fallback } from "../../main";
-
-const OrderDetails = lazy(() => import("./OrderDetails"));
+import OrderDetails from "./OrderDetails";
 
 type OrderProps = {
   order: OrderType;
@@ -81,13 +80,7 @@ const Order = ({ order }: OrderProps) => {
         }}
         transition={{ duration: 0.3 }}
       >
-        <Suspense fallback={<Fallback />}>
-          <OrderDetails
-            isOpen={isOpen}
-            items={order.items}
-            dateCreated={dateCreated}
-          />
-        </Suspense>
+        <OrderDetails items={order.items} dateCreated={dateCreated} />
       </motion.ul>
     </motion.div>
   );
