@@ -44,13 +44,15 @@ export const createOrder = async (
 };
 
 export const updateOrder = async (
-  token: string,
-  orderId: string,
+  token: string | null,
+  orderId: number | null,
   status: OrderStatus,
 ): Promise<OrderApiReturn> => {
+  console.log(token, orderId, status);
+  if (!token || !orderId) throw new Error("Chyba při aktualizaci objednávky.");
   try {
     const { data } = await axios.post(FETCH_URL, {
-      requestType: "updateOrderEvent",
+      requestType: "updateOrder",
       token: token,
       orderId: orderId,
       status: status,
