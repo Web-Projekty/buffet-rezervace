@@ -33,6 +33,8 @@ class OrderModel extends Model
         'pickupDate' => 'date'
     ];
 
+    public int $id;
+
     /**
      * @var array<string>
      */
@@ -90,6 +92,19 @@ class OrderModel extends Model
     }
 
     /**
+     * @param  int            $id
+     * @return array<mixed>
+     */
+    public static function getById(int $id): array
+    {
+        try {
+            return OrderModel::query()->find($id)->toArray();
+        } catch (QueryException $e) {
+            return [];
+        }
+    }
+
+    /**
      * @param string $from
      * @param string $to
      */
@@ -98,7 +113,6 @@ class OrderModel extends Model
         try {
             return OrderModel::query()->getQuery()->whereDate('pickupDate', ">=", $from)->whereDate('pickupDate', "<=", $to)->orderBy('pickupDate')->get();
         } catch (QueryException $e) {
-
             return false;
         }
     }
@@ -128,7 +142,13 @@ class OrderModel extends Model
             'paymentMethod' => $paymentMethod
         ]);
 
-        return $order->toArray();
+        $order->save();
+
+        $orderArray = $order->toArray();
+
+        $orderArray['id'] = $order->getAttribute("id");
+        return $orderArray;
+
     }
 
     /**
