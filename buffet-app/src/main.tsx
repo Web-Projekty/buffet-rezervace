@@ -7,6 +7,8 @@ import AuthProvider from "react-auth-kit";
 import createStore from "react-auth-kit/createStore";
 import { UserData } from "./hooks/useLogin.ts";
 import Loading from "./components/ui/Loading.tsx";
+import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
+import RequireAuth from "./components/auth/RequireAuth.tsx";
 
 const Menu = lazy(() => import("./components/menu/Menu.tsx"));
 const MenuEdit = lazy(() => import("./components/menu/editMenu/MenuEdit.tsx"));
@@ -16,7 +18,6 @@ const Dashboard = lazy(
   () => import("./components/auth/dashboard/Dashboard.tsx"),
 );
 const Allergens = lazy(() => import("./components/allergens/Allergens.tsx"));
-const RequireAuth = lazy(() => import("./components/auth/RequireAuth.tsx"));
 const CartPurchase = lazy(
   () => import("./components/cart/purchase/CartPurchase.tsx"),
 );
@@ -26,9 +27,6 @@ const AdminSettings = lazy(
 );
 const PageNotFound = lazy(() => import("./components/error/PageNotFound.tsx"));
 const Kds = lazy(() => import("./components/kds/Kds.tsx"));
-const ErrorBoundary = lazy(
-  () => import("./components/error/ErrorBoundary.tsx"),
-);
 
 export const Fallback = () => (
   <div
@@ -55,126 +53,126 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <Suspense fallback={<Fallback />}>
-        <ErrorBoundary>
+      <ErrorBoundary>
+        <Suspense fallback={<Fallback />}>
           <App />
-        </ErrorBoundary>
-      </Suspense>
+        </Suspense>
+      </ErrorBoundary>
     ),
     children: [
       {
         path: "/",
         index: true,
         element: (
-          <Suspense fallback={<Fallback />}>
-            <ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
               <Menu />
-            </ErrorBoundary>
-          </Suspense>
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/menu/edit",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <RequireAuth requireAdmin={true}>
-              <ErrorBoundary>
+          <RequireAuth requireAdmin={true}>
+            <ErrorBoundary>
+              <Suspense fallback={<Fallback />}>
                 <MenuEdit />
-              </ErrorBoundary>
-            </RequireAuth>
-          </Suspense>
+              </Suspense>
+            </ErrorBoundary>
+          </RequireAuth>
         ),
       },
       {
         path: "/alergeny",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
               <Allergens />
-            </ErrorBoundary>
-          </Suspense>
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/account",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <RequireAuth requireAdmin={false} fallbackPath="/login">
-              <ErrorBoundary>
+          <RequireAuth requireAdmin={false} fallbackPath="/login">
+            <ErrorBoundary>
+              <Suspense fallback={<Fallback />}>
                 <Dashboard />
-              </ErrorBoundary>
-            </RequireAuth>
-          </Suspense>
+              </Suspense>
+            </ErrorBoundary>
+          </RequireAuth>
         ),
       },
       {
         path: "/settings",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
               <AdminSettings />
-            </ErrorBoundary>
-          </Suspense>
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/login",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
               <Login />
-            </ErrorBoundary>
-          </Suspense>
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/register",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
               <Register />
-            </ErrorBoundary>
-          </Suspense>
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/cart",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
               <CartPurchase />
-            </ErrorBoundary>
-          </Suspense>
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/success-order",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
               <SuccessOrder />
-            </ErrorBoundary>
-          </Suspense>
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/*",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
               <PageNotFound />
-            </ErrorBoundary>
-          </Suspense>
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/page-not-found",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
               <PageNotFound />
-            </ErrorBoundary>
-          </Suspense>
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
     ],
@@ -182,34 +180,34 @@ const router = createBrowserRouter([
   {
     path: "/kds",
     element: (
-      <Suspense key="kds" fallback={<Fallback />}>
+      <RequireAuth requireAdmin={true}>
         <ErrorBoundary>
-          <RequireAuth requireAdmin={true}>
+          <Suspense key="kds" fallback={<Fallback />}>
             <Kds />
-          </RequireAuth>
+          </Suspense>
         </ErrorBoundary>
-      </Suspense>
+      </RequireAuth>
     ),
     children: [
       {
         path: "souhrn",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
               <Kds />
-            </ErrorBoundary>
-          </Suspense>
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "objednavky",
         index: true,
         element: (
-          <Suspense fallback={<Fallback />}>
-            <ErrorBoundary>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
               <Kds />
-            </ErrorBoundary>
-          </Suspense>
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
     ],
