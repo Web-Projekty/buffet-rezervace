@@ -3,10 +3,7 @@ import { Order as OrderType } from "../../types";
 import { ChevronLeft } from "lucide-react";
 import { useOrder } from "../../hooks/useOrder";
 import OrderPrice from "./OrderPrice";
-import OrderItems from "./OrderItems";
 import Button from "../ui/Button";
-import { lazy, Suspense } from "react";
-import { Fallback } from "../../main";
 import OrderDetails from "./OrderDetails";
 
 type OrderProps = {
@@ -53,14 +50,16 @@ const Order = ({ order }: OrderProps) => {
         ></div>
         <div className="flex w-full flex-row items-center gap-16">
           <h2 className="text-xl font-bold">#{order.pickUpId}</h2>
-
-          <p className="text-base font-semibold">
-            Stav: <span className="font-normal">{statusText}</span>
-          </p>
           {showPickUpDate && (
-            <p className="text-base">
-              {pickUpDate + " " + startTime + " - " + endTime}
-            </p>
+            <>
+              <p className="text-base font-semibold">
+                Stav: <span className="font-normal">{statusText}</span>
+              </p>
+
+              <p className="text-base text-descriptionColor">
+                {pickUpDate + " " + startTime + " - " + endTime}
+              </p>
+            </>
           )}
         </div>
         <div className="flex flex-row items-center">
@@ -80,7 +79,12 @@ const Order = ({ order }: OrderProps) => {
         }}
         transition={{ duration: 0.3 }}
       >
-        <OrderDetails items={order.items} dateCreated={dateCreated} />
+        <OrderDetails
+          items={order.items}
+          dateCreated={dateCreated}
+          status={status}
+          orderId={order.id}
+        />
       </motion.ul>
     </motion.div>
   );
