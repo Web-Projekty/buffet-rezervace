@@ -14,7 +14,7 @@ const MenuCategory = ({ category, onClick }: MenuCategoryProps) => {
     >
       <LazyImage image={category.image} alt={category.name + "'s image"} />
       <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-        <h2 className="text-base font-bold text-white md:text-xl">
+        <h2 className="text-base font-semibold text-white md:text-xl">
           {category.name}
         </h2>
       </div>
