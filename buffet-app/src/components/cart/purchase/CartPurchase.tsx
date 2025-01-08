@@ -24,7 +24,7 @@ const CartPurchase = () => {
   >([]);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (isDisabled) return;
 
     createOrder(token, cartItems, selectedTime, selectedPaymentMethods);
