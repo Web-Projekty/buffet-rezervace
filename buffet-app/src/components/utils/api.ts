@@ -13,6 +13,11 @@ type MenuItemApiReturn = {
   error: boolean;
 };
 
+type TimeSlotsApiReturn = {
+  timeslots: string[];
+  error: boolean;
+};
+
 export const createOrder = async (
   token: string | null,
   cartItems: CartItem[],
@@ -25,11 +30,11 @@ export const createOrder = async (
     const { data } = await axios.post(FETCH_URL, {
       requestType: "createOrder",
       token: token,
-      items: cartItems,
+      items: "[]",
       startTime: selectedTime?.split("-")[0],
       endTime: selectedTime?.split("-")[1],
       pickUpDate: selectedTime,
-      paymentMethod: paymentMethod,
+      paymentMethod: paymentMethod[0],
     });
 
     console.log(data);
@@ -48,7 +53,6 @@ export const updateOrder = async (
   orderId: number | null,
   status: OrderStatus,
 ): Promise<OrderApiReturn> => {
-  console.log(token, orderId, status);
   if (!token || !orderId) throw new Error("Chyba při aktualizaci objednávky.");
   try {
     const { data } = await axios.post(FETCH_URL, {
@@ -139,5 +143,19 @@ export const deleteMenuItem = async (
     };
   } catch {
     throw new Error("Chyba při mazání položky menu.");
+  }
+};
+
+export const getTimeslots = async (): Promise<TimeSlotsApiReturn> => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "getOrderTimeTable",
+    });
+    return {
+      timeslots: data.payload.data as string[],
+      error: data.status === "success" ? false : true,
+    };
+  } catch {
+    throw new Error("Chyba při načítání časových slotů.");
   }
 };
