@@ -30,7 +30,7 @@ class AuthApi
         $tel = $response->getRequestByKey("tel");
         $email = $response->getRequestByKey("email");
 
-        $password = password_hash($password, PASSWORD_BCRYPT);
+        $passwordHashed = password_hash($password, PASSWORD_BCRYPT);
 
         if (UserModel::isDuplicate("username", $username)) {
 
@@ -53,7 +53,7 @@ class AuthApi
             return $response;
         }
 
-        if (UserModel::createUser(username: $username, password: $password, fullName: $fullName, tel: $tel, email: $email)) {
+        if (UserModel::createUser(username: $username, password: $passwordHashed, fullName: $fullName, tel: $tel, email: $email)) {
             return $response->setSuccess(Success::Registration);
         }
 
