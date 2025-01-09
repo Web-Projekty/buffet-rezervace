@@ -21,12 +21,13 @@ const MobileNavbar = ({
     <motion.ul
       initial="closed"
       animate={isOpen ? "open" : "closed"}
+      exit={"closed"}
       variants={{
         open: { x: 0, opacity: 1, display: "flex" },
         closed: { x: "-100%", opacity: 0, display: "none" },
       }}
       transition={{ duration: 0.3 }}
-      className="fixed bottom-0 left-0 right-0 top-0 z-40 flex h-screen w-screen flex-col items-center justify-center gap-5 bg-primary text-xl text-white"
+      className="fixed bottom-0 left-0 right-0 top-0 z-40 flex h-screen w-screen flex-col items-center justify-center gap-5 overflow-hidden bg-primary text-xl text-white"
     >
       <img
         src={SchoolLogo}

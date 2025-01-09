@@ -4,7 +4,7 @@ import { Menu } from "lucide-react";
 import { lazy, Suspense, useState } from "react";
 import Link from "./Link";
 import { useUser } from "../../hooks/useUser";
-import { Fallback } from "../../main";
+import { AnimatePresence } from "framer-motion";
 
 const MobileNavbar = lazy(() => import("./MobileNavbar"));
 
@@ -48,16 +48,18 @@ const Navbar = () => {
       <div className="z-50 flex flex-col rounded-full text-white md:hidden">
         <Menu size={64} onClick={handleOpenMobileMenu} />
       </div>
-      {isOpen && (
-        <Suspense fallback={<Fallback />}>
-          <MobileNavbar
-            isOpen={isOpen}
-            handleOpenMobileMenu={handleOpenMobileMenu}
-            isAdmin={user ? user.isAdmin : false}
-            links={NavLinks}
-          />
-        </Suspense>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <Suspense fallback={<></>}>
+            <MobileNavbar
+              isOpen={isOpen}
+              handleOpenMobileMenu={handleOpenMobileMenu}
+              isAdmin={user ? user.isAdmin : false}
+              links={NavLinks}
+            />
+          </Suspense>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
