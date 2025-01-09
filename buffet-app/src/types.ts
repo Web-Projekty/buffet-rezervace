@@ -30,6 +30,7 @@ export type Order = {
   endTime: string;
   items: CartItem[];
   pickUpId: string;
+  paymentMethod: PaymentMethod["name"];
 };
 
 export type MenuItem = {
