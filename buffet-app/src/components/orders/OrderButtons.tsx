@@ -1,22 +1,18 @@
 import { X } from "lucide-react";
 import { OrderStatus } from "../../types";
 import Button from "../ui/Button";
-import { updateOrder } from "../utils/api";
 import { useUser } from "../../hooks/useUser";
+import { UseStatusOrderReturn } from "../../hooks/useOrder";
 
 type OrderButtonsProps = {
   status: OrderStatus;
   orderId: number | null;
+  handleStatus: UseStatusOrderReturn["handleStatus"];
 };
 
 type OrderButton = {
   name: string;
   icon: JSX.Element;
-  onClick: (
-    token: string | null,
-    orderId: number | null,
-    status: OrderStatus,
-  ) => void;
   disabledStatus: OrderStatus[];
 };
 
@@ -24,25 +20,21 @@ const Buttons: OrderButton[] = [
   {
     name: "Zrušit",
     icon: <X />,
-    onClick: (
-      token: string | null,
-      orderId: number | null,
-      status: OrderStatus,
-    ) => {
-      updateOrder(token, orderId, status);
-    },
     disabledStatus: ["storno", "cancelled"],
   },
 ];
 
-const OrderButtons = ({ orderId, status }: OrderButtonsProps) => {
+const OrderButtons = ({ status, handleStatus }: OrderButtonsProps) => {
   const { token } = useUser();
+  const cancelOrder = () => {
+    handleStatus("storno", token);
+  };
   return (
     <div>
-      {Buttons.map(({ name, icon, onClick, disabledStatus }) => {
+      {Buttons.map(({ name, icon, disabledStatus }) => {
         if (disabledStatus.includes(status)) {
           return (
-            <p className="text-left">
+            <p className="text-left" key={name}>
               Objednávka byla zrušena vámi či provozovatelem.
             </p>
           );
@@ -52,7 +44,7 @@ const OrderButtons = ({ orderId, status }: OrderButtonsProps) => {
           <Button
             key={name}
             className="flex w-full flex-row justify-center gap-2 border-red-400 bg-red-400 hover:border-red-500 hover:bg-red-500"
-            onClick={() => onClick(token, orderId, disabledStatus[0])}
+            onClick={cancelOrder}
           >
             {name}
             {icon}
