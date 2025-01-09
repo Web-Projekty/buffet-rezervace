@@ -213,8 +213,13 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+const container = document.getElementById("root");
+if (!container) {
+  throw new Error("Container not found");
+}
+const root = createRoot(container);
 
-createRoot(document.getElementById("root")!).render(
+root.render(
   <StrictMode>
     <AuthProvider store={store}>
       <RouterProvider router={router} />
