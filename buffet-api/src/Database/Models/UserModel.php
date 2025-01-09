@@ -19,7 +19,7 @@ class UserModel extends Model
     /**
      * @var array<string>
      */
-    protected $fillable = ['username', 'password', 'isAdmin', 'fullName', 'email', 'class'];
+    protected $fillable = ['username', 'password', 'isAdmin', 'fullName', 'email', 'class', "tel"];
 
     // Optionally, disable timestamps if the table doesn't have them
 

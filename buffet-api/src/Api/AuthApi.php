@@ -25,19 +25,35 @@ class AuthApi
     {
         $username = $response->getRequestByKey("username");
         $password = $response->getRequestByKey("password");
+        $passwordConfirm = $response->getRequestByKey("passwordConfirm");
         $fullName = $response->getRequestByKey("fullName");
         $tel = $response->getRequestByKey("tel");
         $email = $response->getRequestByKey("email");
 
-        $password = password_hash($password, PASSWORD_BCRYPT);
+        $passwordHashed = password_hash($password, PASSWORD_BCRYPT);
 
         if (UserModel::isDuplicate("username", $username)) {
 
             $response->setError(Error::UserInUse);
             return $response;
         }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-        if (UserModel::createUser(username: $username, password: $password, fullName: $fullName, tel: $tel, email: $email)) {
+            $response->setError(Error::InvalidEmail);
+            return $response;
+        }
+
+        if ($password !== $passwordConfirm) {
+            $response->setError(Error::PasswordMismatch);
+            return $response;
+        }
+
+        if (UserModel::isDuplicate("email", $email)) {
+            $response->setError(Error::EmailInUse);
+            return $response;
+        }
+
+        if (UserModel::createUser(username: $username, password: $passwordHashed, fullName: $fullName, tel: $tel, email: $email)) {
             return $response->setSuccess(Success::Registration);
         }
 
@@ -71,6 +87,8 @@ class AuthApi
             $fullName = $assoc['fullName'];
             $email = $assoc['email'];
             $class = $assoc['class'];
+            $tel = $assoc['tel'];
+            
         } else {
             return $response->setError(Error::NonexistentUser);
         }

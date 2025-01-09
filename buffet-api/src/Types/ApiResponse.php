@@ -62,8 +62,11 @@ class ApiResponse
      * @param  string $key
      * @return mixed  $payload
      */
-    public function getPayload(string $key)
+    public function getPayload(string $key = null)
     {
+        if(!$key) {
+            return $this->payload;
+        }
         return $this->payload[$key] ?? null;
     }
 
