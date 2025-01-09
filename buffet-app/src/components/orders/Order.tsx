@@ -2,8 +2,6 @@ import { motion } from "framer-motion";
 import { Order as OrderType } from "../../types";
 import { ChevronLeft } from "lucide-react";
 import { useOrder } from "../../hooks/useOrder";
-import OrderPrice from "./OrderPrice";
-import Button from "../ui/Button";
 import OrderDetails from "./OrderDetails";
 
 type OrderProps = {
@@ -28,10 +26,6 @@ const Order = ({ order }: OrderProps) => {
     toggleOpen();
   };
 
-  const handleCancel = () => {
-    handleStatus("storno");
-  };
-
   const showPickUpDate =
     status === "storno" || status === "cancelled" || status === "done"
       ? false
@@ -42,7 +36,7 @@ const Order = ({ order }: OrderProps) => {
       initial={{ x: 100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className={`relative flex w-auto flex-col rounded-lg bg-backgroundColor p-4 md:w-[45rem]`}
+      className={`relative flex w-full flex-col rounded-lg bg-backgroundColor p-4 md:w-[45rem]`}
     >
       <div className="flex flex-row items-center justify-between">
         <div
@@ -84,6 +78,8 @@ const Order = ({ order }: OrderProps) => {
           dateCreated={dateCreated}
           status={status}
           orderId={order.id}
+          paymentMethod={order.paymentMethod}
+          handleStatus={handleStatus}
         />
       </motion.ul>
     </motion.div>
