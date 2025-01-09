@@ -182,7 +182,7 @@ class BuffetApi
     }
 
 /**
- * API handler for user lgoin
+ * API handler for user login
  *
  *
  * @param  ApiResponse $response API request
@@ -553,11 +553,7 @@ class BuffetApi
      */
     public function handleGetOrderTimeTable(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(["token"]);
-
-        $jwt = new JWTApi;
-
-        $jwt->validateToken($response);
+        $response->setRequestKeys([]);
 
         if ($response->hasFailed()) {
             return $response;
