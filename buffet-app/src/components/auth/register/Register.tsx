@@ -58,6 +58,7 @@ const Register = () => {
           value={formData.fullName}
           onChange={handleInputChange}
           required
+          displayStar
         />
         <Input
           id="username"
@@ -68,6 +69,7 @@ const Register = () => {
           value={formData.username}
           onChange={handleInputChange}
           required
+          displayStar
         />
         <Input
           id="email"
@@ -78,6 +80,7 @@ const Register = () => {
           value={formData.email}
           onChange={handleInputChange}
           required
+          displayStar
         />
 
         <Input
@@ -99,6 +102,7 @@ const Register = () => {
           value={formData.password}
           onChange={handleInputChange}
           required
+          displayStar
         />
         <Input
           id="confirmPassword"
@@ -109,6 +113,7 @@ const Register = () => {
           value={formData.confirmPassword}
           onChange={handleInputChange}
           required
+          displayStar
         />
 
         <div className="text-center">
