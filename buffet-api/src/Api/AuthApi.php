@@ -25,6 +25,9 @@ class AuthApi
     {
         $username = $response->getRequestByKey("username");
         $password = $response->getRequestByKey("password");
+        $fullName = $response->getRequestByKey("fullName");
+        $tel = $response->getRequestByKey("tel");
+        $email = $response->getRequestByKey("email");
 
         $password = password_hash($password, PASSWORD_BCRYPT);
 
@@ -34,7 +37,7 @@ class AuthApi
             return $response;
         }
 
-        if (UserModel::createUser($username, $password)) {
+        if (UserModel::createUser(username: $username, password: $password, fullName: $fullName, tel: $tel, email: $email)) {
             return $response->setSuccess(Success::Registration);
         }
 
