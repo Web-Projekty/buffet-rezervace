@@ -37,7 +37,8 @@ export function usePaging<T>(
   );
 
   const setCurrentPage = (page: number): void => {
-    setSearchParams({ [paramsName ? paramsName : "page"]: page.toString() });
+    searchParams.set(paramsName ? paramsName : "page", page.toString());
+    setSearchParams(searchParams);
   };
 
   const handlePage = (page: number): void => {

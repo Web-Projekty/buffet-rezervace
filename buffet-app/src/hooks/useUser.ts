@@ -10,16 +10,21 @@ type UseUserReturn = {
   fullName: string | null;
   email: string | null;
   classTitle: string | null;
+  phone: string | null;
+  credits: string | null;
 };
 
 export const useUser = (): UseUserReturn => {
   const header: string | null = useAuthHeader();
   const user: User | null = useAuthUser();
-  const token: string = extractToken(header);
+  const token: string | null = extractToken(header);
+
   const isAdmin: boolean = user?.isAdmin || false;
   const fullName: string | null = user?.fullName || null;
   const email: string | null = user?.email || null;
   const classTitle: string | null = user?.class || null;
+  const phone: string | null = user?.phone || null;
+  const credits: string | null = user?.credits || null;
 
-  return { user, token, isAdmin, fullName, email, classTitle };
+  return { user, token, isAdmin, fullName, email, classTitle, phone, credits };
 };

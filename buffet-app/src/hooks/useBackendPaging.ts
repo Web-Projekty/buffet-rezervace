@@ -3,31 +3,38 @@ import { useSearchParams } from "react-router-dom";
 import { RequestData } from "../types";
 import { useFetch } from "./useFetch";
 import { FETCH_URL } from "../constants";
+import { useUser } from "./useUser";
 
 type BackendPagingReturn<T> = {
   isLoading: boolean;
   error: string | null;
   currentPage: number;
   totalPagesCount: number;
-  dataList: T[];
-  dataListLength: number | undefined;
+  dataList: T | null;
   arrayOfPages: number[];
   handlePage: (page: number) => void;
 };
 
 export const useBackendPaging = <T>(
-  requestData: RequestData["requestType"],
+  requestType: RequestData["requestType"],
   itemsPerPage: number,
+  useToken?: boolean,
   paramsName: string = "page",
 ): BackendPagingReturn<T> => {
   const [searchParams, setSearchParams] = useSearchParams("");
+  const { token } = useUser();
 
   const currentPage: number = parseInt(searchParams.get(paramsName) || "1", 10);
 
-  const { data, error, isLoading, itemsCount } = useFetch<T[]>(
+  const { data, error, isLoading, itemsCount } = useFetch<T>(
     FETCH_URL,
-    { requestType: requestData, page: currentPage, itemsCount: itemsPerPage },
-    [],
+    {
+      requestType,
+      token: useToken ? token : undefined,
+      page: currentPage,
+      itemsCount: itemsPerPage,
+    },
+    null,
     [currentPage],
   );
 
@@ -40,12 +47,12 @@ export const useBackendPaging = <T>(
     : 0;
 
   const handlePage = (page: number): void => {
-    setSearchParams({ [paramsName]: page.toString() });
+    searchParams.set(paramsName ? paramsName : "page", page.toString());
+    setSearchParams(searchParams);
   };
 
   return {
-    dataList: data || [],
-    dataListLength: data ? data.length : 0,
+    dataList: data,
     arrayOfPages: Array.from(
       { length: totalPagesCount },
       (_, index) => index + 1,

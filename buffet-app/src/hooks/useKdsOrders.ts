@@ -21,21 +21,24 @@ export const useKdsOrders = (): UseKdsOrdersReturn => {
   const { token } = useUser();
   const [orders, setOrders] = useState<Order[]>([]);
 
-  const { sendMessage, lastJsonMessage, readyState } = useWebSocket<{
-    payload: { data: Order[] };
-  }>(WEBSOCKET_URL("kds"), {
-    onOpen: () => {
-      if (token) {
-        sendMessage(JSON.stringify({ requestType: "subscribe", token }));
-      }
+  const { sendMessage, lastJsonMessage, readyState } = useWebSocket(
+    WEBSOCKET_URL("kds"),
+    {
+      onOpen: () => {
+        if (token) {
+          sendMessage(JSON.stringify({ requestType: "subscribe", token }));
+        }
+      },
+      shouldReconnect: () => true,
     },
-    shouldReconnect: () => true,
-  });
+  );
 
   useEffect(() => {
     if (lastJsonMessage) {
       setOrders(lastJsonMessage.payload.data);
     }
+
+    console.log(lastJsonMessage);
   }, [lastJsonMessage]);
 
   const { dataList: pendingOrders } = usePaging<Order>(

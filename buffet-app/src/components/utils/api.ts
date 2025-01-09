@@ -1,5 +1,5 @@
 import axios from "axios";
-import { MenuItem, Order, OrderStatus } from "../../types";
+import { MenuItem, Order, OrderStatus, PaymentMethod } from "../../types";
 import { FETCH_URL } from "../../constants";
 import { CartItem } from "../../store/CartStore";
 
@@ -13,16 +13,31 @@ type MenuItemApiReturn = {
   error: boolean;
 };
 
+type TimeSlotsApiReturn = {
+  timeslots: string[];
+  error: boolean;
+};
+
 export const createOrder = async (
-  token: string,
-  cartItems: CartItem,
+  token: string | null,
+  cartItems: CartItem[],
+  selectedTime: string | null,
+  paymentMethod: PaymentMethod[],
 ): Promise<OrderApiReturn> => {
+  if (!token) throw new Error("Chyba při vytváření objednávky.");
+
   try {
     const { data } = await axios.post(FETCH_URL, {
-      requestType: "makeOrderEvent",
+      requestType: "createOrder",
       token: token,
-      items: cartItems,
+      items: "[]",
+      startTime: selectedTime?.split("-")[0],
+      endTime: selectedTime?.split("-")[1],
+      pickUpDate: selectedTime,
+      paymentMethod: paymentMethod[0],
     });
+
+    console.log(data);
 
     return {
       order: data.payload.data as Order,
@@ -34,13 +49,14 @@ export const createOrder = async (
 };
 
 export const updateOrder = async (
-  token: string,
-  orderId: string,
+  token: string | null,
+  orderId: number | null,
   status: OrderStatus,
 ): Promise<OrderApiReturn> => {
+  if (!token || !orderId) throw new Error("Chyba při aktualizaci objednávky.");
   try {
     const { data } = await axios.post(FETCH_URL, {
-      requestType: "updateOrderEvent",
+      requestType: "updateOrder",
       token: token,
       orderId: orderId,
       status: status,
@@ -127,5 +143,19 @@ export const deleteMenuItem = async (
     };
   } catch {
     throw new Error("Chyba při mazání položky menu.");
+  }
+};
+
+export const getTimeslots = async (): Promise<TimeSlotsApiReturn> => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "getOrderTimeTable",
+    });
+    return {
+      timeslots: data.payload.data as string[],
+      error: data.status === "success" ? false : true,
+    };
+  } catch {
+    throw new Error("Chyba při načítání časových slotů.");
   }
 };

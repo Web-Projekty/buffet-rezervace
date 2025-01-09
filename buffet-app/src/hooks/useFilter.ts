@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { removeDiacritics } from "../components/utils/utils";
 
 type UseFilterReturn<T> = {
   handleFilter: (filter: string) => void;
@@ -15,7 +16,7 @@ export const useFilter = <T>(
   const [searchParams, setSearchParams] = useSearchParams("");
   const [data, setData] = useState<T[]>(dataList ? dataList : []);
 
-  const filterValue = searchParams.get(filterKey as string) || "";
+  const filterValue = searchParams.get(filterName) || "";
 
   const handleFilter = (filter: string | null): void => {
     if (!filter) {
@@ -23,12 +24,19 @@ export const useFilter = <T>(
       setData(dataList ? dataList : []);
       return;
     }
-    setSearchParams({ [filterName]: filter });
+
+    // Keep original filter text in URL
+    setSearchParams({ [filterName]: removeDiacritics(filter) });
+
+    // Normalize both filter and data values for comparison
+    const normalizedFilter = removeDiacritics(filter);
     const filteredData = dataList
-      ? dataList.filter((item) =>
-          String(item[filterKey]).toLowerCase().includes(filter.toLowerCase()),
-        )
+      ? dataList.filter((item) => {
+          const normalizedItem = removeDiacritics(String(item[filterKey]));
+          return normalizedItem.includes(normalizedFilter);
+        })
       : [];
+
     setData(filteredData);
   };
 
