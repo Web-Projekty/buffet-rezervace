@@ -25,6 +25,7 @@ class AuthApi
     {
         $username = $response->getRequestByKey("username");
         $password = $response->getRequestByKey("password");
+        $passwordConfirm = $response->getRequestByKey("passwordConfirm");
         $fullName = $response->getRequestByKey("fullName");
         $tel = $response->getRequestByKey("tel");
         $email = $response->getRequestByKey("email");
@@ -34,6 +35,21 @@ class AuthApi
         if (UserModel::isDuplicate("username", $username)) {
 
             $response->setError(Error::UserInUse);
+            return $response;
+        }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+            $response->setError(Error::InvalidEmail);
+            return $response;
+        }
+
+        if ($password !== $passwordConfirm) {
+            $response->setError(Error::PasswordMismatch);
+            return $response;
+        }
+
+        if (UserModel::isDuplicate("email", $email)) {
+            $response->setError(Error::EmailInUse);
             return $response;
         }
 
