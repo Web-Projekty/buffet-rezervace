@@ -24,6 +24,9 @@ enum Error: string {
     // registration
     case UserInUse = 'Username is in use';
     case RegistrationFailed = 'Could\'t register the user';
+    case InvalidEmail = 'Email is invalid';
+    case PasswordMismatch = 'Password and its confirmation don\'t match';
+    case EmailInUse = 'Email is in use';
 
     // login
     case NonexistentUser = 'User doesn\'t exist';
