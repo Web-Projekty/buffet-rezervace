@@ -54,12 +54,10 @@ class KDSChannel implements MessageInterface
                         $conn->send(Helper::getErrorResponse(Error::Unauthorized));
                         break;
                     }
-                    if (Helper::isClientInStorage($conn, $this->authenticatedClients)) {
-                        $conn->send(Helper::getErrorResponse(Error::AlreadySubscribed));
-                        break;
+                    if (!Helper::isClientInStorage($conn, $this->authenticatedClients)) {
+                        Helper::attachClient($conn, $this->authenticatedClients);
+                        //$conn->send(Helper::getErrorResponse(Error::AlreadySubscribed));
                     }
-
-                    Helper::attachClient($conn, $this->authenticatedClients);
                     $conn->send(Helper::getSuccessResponse(Success::Subscribed));
                     $conn->send(HttpClient::post('http://localhost/api', json_encode(['requestType' => 'getOrders', 'token' => $token])));
                     break;
