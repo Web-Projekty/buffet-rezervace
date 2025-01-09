@@ -1,5 +1,3 @@
-import { OrderStatus } from "../../types";
-
 export const formatCurrency = (number: number): string => {
   return new Intl.NumberFormat("cs-CZ", {
     style: "currency",
@@ -49,28 +47,4 @@ export const formatToUnixDate = (date: string): string => {
 
 export const matchValues = (text: string, text2: string): boolean => {
   return text === text2;
-};
-
-export const getColorByStatus = (status: OrderStatus): string => {
-  return status === "sent"
-    ? "bg-orange-400"
-    : status === "waiting"
-      ? "bg-[#14ce9c]"
-      : status === "done"
-        ? "bg-green-500"
-        : status === "storno"
-          ? "bg-red-400"
-          : "bg-red-400";
-};
-
-export const getTextByStatus = (status: OrderStatus): string => {
-  return status === "sent"
-    ? "Čeká na zpracování"
-    : status === "waiting"
-      ? "Čeká na vyzvednutí"
-      : status === "done"
-        ? "Dokončeno"
-        : status === "storno"
-          ? "Zrušeno uživatelem"
-          : "Zrušeno provozovatelem";
 };
