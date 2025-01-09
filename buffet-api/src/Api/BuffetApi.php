@@ -192,7 +192,7 @@ class BuffetApi
     function handleLogin(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["username", "password"]);
-        $response->setPayloadKeys(["token", "username", "isAdmin", "fullName", "email", "class"]);
+        $response->setPayloadKeys(["token", "username", "isAdmin", "fullName", "email", "tel"]);
 
         $auth = new AuthApi;
         if ($response->hasRequestKeys()) {
