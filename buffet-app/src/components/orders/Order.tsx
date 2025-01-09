@@ -15,8 +15,6 @@ const Order = ({ order }: OrderProps) => {
     toggleOpen,
     status,
     statusText,
-    handleStatus,
-    dateCreated,
     pickUpDate,
     startTime,
     endTime,
@@ -73,14 +71,7 @@ const Order = ({ order }: OrderProps) => {
         }}
         transition={{ duration: 0.3 }}
       >
-        <OrderDetails
-          items={order.items}
-          dateCreated={dateCreated}
-          status={status}
-          orderId={order.id}
-          paymentMethod={order.paymentMethod}
-          handleStatus={handleStatus}
-        />
+        <OrderDetails order={order} />
       </motion.ul>
     </motion.div>
   );

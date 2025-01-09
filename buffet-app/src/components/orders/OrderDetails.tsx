@@ -1,33 +1,21 @@
-import { UseStatusOrderReturn } from "../../hooks/useOrder";
-import { CartItem } from "../../store/CartStore";
-import { OrderStatus, PaymentMethod } from "../../types";
-import OrderButtons from "./OrderButtons";
+import { useOrder } from "../../hooks/useOrder";
+import { Order } from "../../types";
+import OrderButton from "./OrderButton";
 import OrderItems from "./OrderItems";
 
 type OrderDetailsProps = {
-  items: CartItem[];
-  dateCreated: string;
-  status: OrderStatus;
-  orderId: number;
-  paymentMethod: PaymentMethod["name"];
-  handleStatus: UseStatusOrderReturn["handleStatus"];
+  order: Order;
 };
 
-const OrderDetails = ({
-  items,
-  dateCreated,
-  status,
-  orderId,
-  paymentMethod,
-  handleStatus,
-}: OrderDetailsProps) => {
+const OrderDetails = ({ order }: OrderDetailsProps) => {
+  const { dateCreated } = useOrder(order);
   return (
     <div
       className={`mt-5 grid grid-cols-1 justify-center gap-5 overflow-hidden px-4 md:grid-cols-2 md:justify-between md:gap-0`}
     >
       <div>
         <p className="font-semibold">Objednané položky:</p>
-        <OrderItems items={items} />
+        <OrderItems items={order.items} />
       </div>
 
       <div className="flex flex-col justify-between gap-2">
@@ -37,16 +25,13 @@ const OrderDetails = ({
           </p>
           <div>
             <p>
-              <span className="font-semibold">Platba:</span> {paymentMethod}
+              <span className="font-semibold">Platba:</span>{" "}
+              {order.paymentMethod}
             </p>
           </div>
         </div>
 
-        <OrderButtons
-          status={status}
-          orderId={orderId}
-          handleStatus={handleStatus}
-        />
+        <OrderButton order={order} />
       </div>
     </div>
   );
