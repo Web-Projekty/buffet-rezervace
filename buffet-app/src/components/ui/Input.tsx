@@ -37,6 +37,7 @@ export type InputProps = {
   max?: number;
   accept?: string;
   autoComplete?: "on" | "off";
+  displayStar?: boolean;
 };
 
 const Input = ({
@@ -56,6 +57,7 @@ const Input = ({
   max = Infinity,
   accept,
   autoComplete = "off",
+  displayStar,
 }: InputProps) => {
   if (label) {
     return (
@@ -84,21 +86,28 @@ const Input = ({
   }
 
   return (
-    <input
-      type={type}
-      id={id}
-      name={name}
-      value={value}
-      required={required}
-      onChange={onChange}
-      className={inputClassName}
-      placeholder={placeholder}
-      autoComplete={autoComplete}
-      disabled={disabled}
-      min={min}
-      max={max}
-      accept={accept || (type === "file" ? "image/*" : undefined)}
-    />
+    <div className="relative w-full">
+      {required && displayStar ? (
+        <span className="absolute right-1 text-xl text-red-500" title="Povinné">
+          *
+        </span>
+      ) : undefined}
+      <input
+        type={type}
+        id={id}
+        name={name}
+        value={value}
+        required={required}
+        onChange={onChange}
+        className={inputClassName + " w-full"}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        disabled={disabled}
+        min={min}
+        max={max}
+        accept={accept || (type === "file" ? "image/*" : undefined)}
+      />
+    </div>
   );
 };
 
