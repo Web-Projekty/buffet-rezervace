@@ -13,6 +13,7 @@ type UseRegisterReturn = {
 };
 
 export type RegisterData = {
+  fullName: string;
   username: string;
   email: string;
   password: string;

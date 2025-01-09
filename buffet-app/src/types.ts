@@ -1,3 +1,5 @@
+import { CartItem } from "./store/CartStore";
+
 export type User = {
   id: number;
   username: string;
@@ -6,6 +8,8 @@ export type User = {
   class: string;
   isAdmin: boolean;
   orders: Order[];
+  phone: string;
+  credits: string;
 };
 
 export type OrderStatus =
@@ -20,10 +24,13 @@ export type Order = {
   id: number;
   userId: number;
   status: OrderStatus;
-  date: string;
+  dateCreated: string;
   pickupDate: string;
-  items: [];
+  startTime: string;
+  endTime: string;
+  items: CartItem[];
   pickUpId: string;
+  paymentMethod: PaymentMethod["name"];
 };
 
 export type MenuItem = {
@@ -67,4 +74,17 @@ export type MenuData = {
 export type RequestData = {
   requestType: "login" | "verify" | "getMenu" | "getOrders";
   [key: string]: string | number | boolean | object | undefined;
+};
+
+export type PaymentMethod = {
+  name: string;
+  input: "checkbox" | "radio";
+  image: PaymentMethodImage[];
+};
+
+type PaymentMethodImage = {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
 };

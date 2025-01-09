@@ -1,10 +1,12 @@
 import CartButton from "../cart/CartButton";
 import AccountButton from "../auth/AccountButton";
 import { Menu } from "lucide-react";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import Link from "./Link";
-import MobileNavbar from "./MobileNavbar";
 import { useUser } from "../../hooks/useUser";
+import { Fallback } from "../../main";
+
+const MobileNavbar = lazy(() => import("./MobileNavbar"));
 
 export type NavLinks = {
   id: number;
@@ -17,7 +19,6 @@ const NavLinks: NavLinks[] = [
   { id: 1, name: "Menu", path: "/" },
   { id: 2, name: "Alergeny", path: "/alergeny" },
   { id: 3, name: "KDS", path: "/kds", requireAdmin: true },
-  { id: 4, name: "Nastavení", path: "/settings", requireAdmin: true },
 ];
 
 const Navbar = () => {
@@ -47,13 +48,16 @@ const Navbar = () => {
       <div className="z-50 flex flex-col rounded-full text-white md:hidden">
         <Menu size={64} onClick={handleOpenMobileMenu} />
       </div>
-
-      <MobileNavbar
-        isOpen={isOpen}
-        handleOpenMobileMenu={handleOpenMobileMenu}
-        isAdmin={user ? user.isAdmin : false}
-        links={NavLinks}
-      />
+      {isOpen && (
+        <Suspense fallback={<Fallback />}>
+          <MobileNavbar
+            isOpen={isOpen}
+            handleOpenMobileMenu={handleOpenMobileMenu}
+            isAdmin={user ? user.isAdmin : false}
+            links={NavLinks}
+          />
+        </Suspense>
+      )}
     </nav>
   );
 };

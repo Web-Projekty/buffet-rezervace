@@ -4,9 +4,10 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 type LazyImageProps = {
   image: string;
   alt: string;
+  className?: string;
 };
 
-const LazyImage = ({ image, alt }: LazyImageProps) => {
+const LazyImage = ({ image, alt, className }: LazyImageProps) => {
   return (
     <LazyLoadImage
       alt={alt}
@@ -14,7 +15,7 @@ const LazyImage = ({ image, alt }: LazyImageProps) => {
       wrapperProps={{
         style: { transitionDelay: "0.5s" },
       }}
-      className={`h-[12rem] w-[16rem] rounded-lg object-cover`}
+      className={`h-[12rem] w-[16rem] rounded-lg object-cover ${className}`}
       src={image}
     />
   );

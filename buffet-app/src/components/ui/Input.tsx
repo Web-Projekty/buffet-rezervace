@@ -23,50 +23,91 @@ export type InputProps = {
     | "url"
     | "week";
   id: string;
-  name: string;
+  name?: string;
+  label?: string;
   value?: string | number;
   required?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  labelClassName?: string;
+  inputClassName?: string;
   placeholder?: string;
   disabled?: boolean;
   min?: number;
   max?: number;
   accept?: string;
   autoComplete?: "on" | "off";
+  displayStar?: boolean;
 };
 
 const Input = ({
   type,
   id,
+  label,
   name = "",
   value = "",
   required = false,
   onChange,
-  className,
+  className = "w-full rounded-lg p-1 text-black",
+  inputClassName = "flex w-full flex-col md:flex-row md:items-center",
+  labelClassName = "w-1/2 font-semibold text-white",
   placeholder,
   disabled,
   min = 0,
   max = Infinity,
   accept,
   autoComplete = "off",
+  displayStar,
 }: InputProps) => {
+  if (label) {
+    return (
+      <div className={className}>
+        <label htmlFor={id} className={labelClassName}>
+          {label}
+        </label>
+
+        <input
+          type={type}
+          id={id}
+          name={name}
+          value={value}
+          required={required}
+          onChange={onChange}
+          className={inputClassName}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          disabled={disabled}
+          min={min}
+          max={max}
+          accept={accept || (type === "file" ? "image/*" : undefined)}
+        />
+      </div>
+    );
+  }
+
   return (
-    <input
-      type={type}
-      id={id}
-      name={name}
-      value={value}
-      required={required}
-      onChange={onChange}
-      className={className}
-      placeholder={placeholder}
-      autoComplete={autoComplete}
-      disabled={disabled}
-      min={min}
-      max={max}
-      accept={accept || (type === "file" ? "image/*" : undefined)}
-    />
+    <div className="relative w-full">
+      {required && displayStar ? (
+        <span className="absolute right-1 text-xl text-red-500" title="Povinné">
+          *
+        </span>
+      ) : undefined}
+      <input
+        type={type}
+        id={id}
+        name={name}
+        value={value}
+        required={required}
+        onChange={onChange}
+        className={inputClassName + " w-full"}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        disabled={disabled}
+        min={min}
+        max={max}
+        accept={accept || (type === "file" ? "image/*" : undefined)}
+      />
+    </div>
   );
 };
 

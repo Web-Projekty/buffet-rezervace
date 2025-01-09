@@ -24,9 +24,9 @@ const CartModal = () => {
     >
       <motion.div
         {...scaleUpAnimation(0.3)}
-        className="relative flex h-[600px] w-[900px] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black"
+        className="relative m-auto flex h-[800px] w-[88%] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black md:h-[600px] md:w-[900px]"
       >
-        <h1 className="flex h-10 w-full items-center justify-center rounded-t-lg bg-primary text-center text-xl font-bold text-black">
+        <h1 className="flex h-32 w-full items-center justify-center rounded-t-lg bg-primary text-center text-xl font-bold text-black">
           Váš košík
         </h1>
 
