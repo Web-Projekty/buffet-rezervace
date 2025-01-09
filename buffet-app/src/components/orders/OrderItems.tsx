@@ -1,33 +1,32 @@
 import { CartItem } from "../../store/CartStore";
-import { MenuItem } from "../../types";
 import { formatCurrency } from "../utils/utils";
 
 type OrderItemsProps = {
-  items: CartItem[] | string;
+  items: CartItem[];
+};
+
+type OrderItemProps = {
+  item: CartItem;
+};
+
+const OrderItem = ({ item }: OrderItemProps) => {
+  return (
+    <li className="flex w-full flex-row items-center justify-center gap-2 md:w-[240px]">
+      <h3>{item.name ? item.name : "Item name"}</h3>
+      <div className="mt-3 flex-1 border-b-2 border-dotted border-white"></div>
+      <p>{item.price ? formatCurrency(item.price) : formatCurrency(-1)}</p>
+    </li>
+  );
 };
 
 const OrderItems = ({ items }: OrderItemsProps) => {
   return (
     <div className="flex flex-col gap-1">
       <ul className="flex flex-col gap-2">
-        <li className="flex w-[240px] flex-row items-center justify-center gap-2">
-          <h3>Polévka</h3>
-          <div className="mt-3 flex-1 border-b-2 border-dotted border-white"></div>
-          <p>20 Kč</p>
-        </li>
-        <li className="flex w-[240px] flex-row items-center justify-center gap-2">
-          <h3>Polévka</h3>
-          <div className="mt-3 flex-1 border-b-2 border-dotted border-white"></div>
-          <p>20 Kč</p>
-        </li>
-        <li className="flex w-[240px] flex-row items-center justify-center gap-2">
-          <h3>Polévka</h3>
-          <div className="mt-3 flex-1 border-b-2 border-dotted border-white"></div>
-          <p>20 Kč</p>
-        </li>
+        <OrderItem item={items[0]} />
       </ul>
-      <hr className="w-[240px]" />
-      <div className="flex w-[240px] flex-row items-center justify-between gap-2">
+      <hr className="w-full md:w-[240px]" />
+      <div className="flex w-full flex-row items-center justify-between gap-2 md:w-[240px]">
         <h3>Celkem</h3>
         <p>60 Kč</p>
       </div>

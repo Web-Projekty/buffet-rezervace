@@ -347,7 +347,7 @@ const CartReservationCalendar = ({
           {days.map((day) => (
             <button
               key={day.label}
-              className={`flex-shrink-0 rounded px-4 py-1 text-white ${day.available ? (selectedDate === day ? "bg-green-500" : "bg-sky-400") : "bg-gray-600"}`}
+              className={`flex-shrink-0 rounded px-4 py-2 text-white ${day.available ? (selectedDate === day ? "bg-green-500" : "bg-sky-400") : "bg-gray-600"}`}
               onClick={() => handleDateClick(day)}
               disabled={!day.available}
             >
@@ -358,7 +358,7 @@ const CartReservationCalendar = ({
       </div>
 
       {/* Hours */}
-      <div className="flex flex-row items-center justify-between gap-6">
+      <div className="flex flex-col items-center justify-between gap-10 md:flex-row md:gap-6">
         <div className="grid w-full grid-cols-2 gap-4">
           {selectedDate?.hours?.map((hour) => (
             <button
