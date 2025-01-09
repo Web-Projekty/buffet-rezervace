@@ -5,7 +5,6 @@ import { Day, Hour, Minute } from "./CartReservationCalendar";
 import { Fallback } from "../../../main";
 import { useUser } from "../../../hooks/useUser";
 import { PaymentMethod } from "../../../types";
-import { createOrder } from "../../utils/api";
 
 const PageNotFound = lazy(() => import("../../error/PageNotFound"));
 const CartReservationCalendar = lazy(() => import("./CartReservationCalendar"));
@@ -24,10 +23,15 @@ const CartPurchase = () => {
   >([]);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isDisabled) return;
 
-    createOrder(token, cartItems, selectedTime, selectedPaymentMethods);
+    const { order, error } = await createOrder(
+      token,
+      cartItems,
+      selectedTime,
+      selectedPaymentMethods,
+    );
   };
 
   const selectedPaymentMethodsLengthWithoutCredits = useMemo(
