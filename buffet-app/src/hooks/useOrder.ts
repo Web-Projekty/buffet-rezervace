@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Order, OrderStatus } from "../types";
-import { getColorByStatus, getTextByStatus } from "../components/utils/utils";
 import { updateOrder } from "../components/utils/api";
 
 export type UseStatusOrderReturn = {
@@ -9,11 +8,20 @@ export type UseStatusOrderReturn = {
   color: string;
   status: OrderStatus;
   statusText: string;
-  handleStatus: (status: OrderStatus, token: string | null) => void;
+  handleStatus: (
+    status: OrderStatus,
+    token: string | null,
+  ) => Promise<HandleStatusReturn>;
   dateCreated: string;
   pickUpDate: string;
   startTime: string;
   endTime: string;
+  loading: boolean;
+};
+
+type HandleStatusReturn = {
+  order: Order;
+  error: boolean;
 };
 
 export const useOrder = (order: Order): UseStatusOrderReturn => {
@@ -23,25 +31,40 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
   const [statusText, setStatusText] = useState<string>(
     getTextByStatus(order.status),
   );
+  const [loading, setLoading] = useState<boolean>(false);
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleStatus = async (status: OrderStatus, token: string | null) => {
-    if (token) {
+  const handleStatus = useCallback(
+    async (
+      status: OrderStatus,
+      token: string | null,
+    ): Promise<HandleStatusReturn> => {
+      setLoading(true);
       try {
-        const { order: newOrder, error } = await updateOrder(
+        const { order: updatedOrder, error } = await updateOrder(
           token,
           order.id,
           status,
         );
-        setStatus(newOrder.status);
-      } catch {
-        setStatus(order.status);
+
+        const data = {
+          order: updatedOrder,
+          error: error,
+        };
+        if (!error) setStatus(updatedOrder.status);
+        return data;
+      } catch (error) {
+        console.error(error);
+        return { order, error: true };
+      } finally {
+        setLoading(false);
       }
-    }
-  };
+    },
+    [order.id],
+  );
 
   const handleDelayed = () => {
     setColor("bg-red-400");
@@ -82,5 +105,40 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
     pickUpDate,
     startTime,
     endTime,
+    loading,
   };
+};
+
+const getColorByStatus = (status: OrderStatus): string => {
+  switch (status) {
+    case "sent":
+      return "bg-orange-400";
+    case "waiting":
+      return "bg-[#14ce9c]";
+    case "done":
+      return "bg-green-500";
+    case "storno":
+      return "bg-red-400";
+    case "cancelled":
+      return "bg-red-400";
+    default:
+      return "bg-gray-400";
+  }
+};
+
+const getTextByStatus = (status: OrderStatus): string => {
+  switch (status) {
+    case "sent":
+      return "Čeká na zpracování";
+    case "waiting":
+      return "Čeká na vyzvednutí";
+    case "done":
+      return "Dokončeno";
+    case "storno":
+      return "Zrušeno uživatelem";
+    case "cancelled":
+      return "Zrušeno provozovatelem";
+    default:
+      return "Neznámý stav";
+  }
 };
