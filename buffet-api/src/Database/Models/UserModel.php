@@ -69,16 +69,16 @@ class UserModel extends Model
      * @param string $password
      */
 
-    public static function createUser(string $username, string $password, string $fullName, string $tel, string $email): bool
+    public static function createUser(string $username, string $password): bool
     {
         try {
             UserModel::query()->create([
                 'username' => $username,
                 'password' => $password,
                 'isAdmin' => false,
-                'fullName' => $fullName,
-                'email' => $email,
-                'tel' => $tel
+                'fullName' => 'idk',
+                'email' => 'default@spseplzen.cz',
+                'class' => '5.H'
             ]);
         } catch (\Illuminate\Database\QueryException) {
             return false;
