@@ -4,6 +4,6 @@ declare (strict_types = 1);
 
 namespace Buffet\Types;
 
-enum Success: string {
+enum Currecties: string {
     case CZK = "CZK";
 }
