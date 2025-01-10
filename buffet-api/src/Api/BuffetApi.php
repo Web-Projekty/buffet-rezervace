@@ -192,7 +192,7 @@ class BuffetApi
     function handleLogin(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["username", "password"]);
-        $response->setPayloadKeys(["token", "username", "isAdmin", "fullName", "email", "tel"]);
+        $response->setPayloadKeys(["token", "username", "isAdmin", "fullName", "email"]);
 
         $auth = new AuthApi;
         if ($response->hasRequestKeys()) {
@@ -306,14 +306,27 @@ class BuffetApi
             if ($orders) {
                 $paginate = $orders->getQuery()->orderBy("dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
                 $response->setPayload("itemsCount", $paginate->total());
-                $response->setPayload("data", $paginate->items());
+                $ordersArray = $paginate->items();
+                $response->setPayload("data", $ordersArray);
             } else {
                 return $response->setError(Error::QueryFailed);
             }
         } else {
             $response->setPayload("itemsCount", OrderModel::query()->count());
-            $response->setPayload("data", $orders->get()->toArray());
+            $ordersArray = $orders->get()->toArray();
         }
+        foreach ($ordersArray as &$order) {
+            // cast to array $paginate->items() - returns array<stdObj>
+            if (is_object($order)) {
+                $order = (array) $order;
+            }
+            //var_dump($order);
+            $order["startTime"] = Carbon::createFromFormat("H:i:s", $order["startTime"])->format("H:i");
+            $order["endTime"] = Carbon::createFromFormat("H:i:s", $order["endTime"])->format("H:i");
+            //$order["dateCreated"] = Carbon::createFromFormat("o-m-d h:m:s");
+        }
+
+        $response->setPayload("data", $ordersArray);
 
         $response->setStatus(true);
         return $response;
