@@ -44,9 +44,6 @@ class BuffetApi
 
     function main(RequestInterface $request, ResponseInterface $html): ResponseInterface
     {
-        /**
-         * @var ApiResponse
-         */
         try {
             $response = $this->handleApiCall();
         } catch (SettingsException $e) {
