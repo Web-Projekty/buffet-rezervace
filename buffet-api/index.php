@@ -57,7 +57,7 @@ $response->getBody()->write($html);
 return $response;
 });*/
 
-// CORS Middleware (DO NOT!!!! LEAVE IN FINAL RELEASE)e
+// CORS Middleware (DO NOT!!!! LEAVE IN FINAL RELEASE)
 $corsMiddleware = function ($request, $handler) {
     $response = $handler->handle($request);
     return $response
