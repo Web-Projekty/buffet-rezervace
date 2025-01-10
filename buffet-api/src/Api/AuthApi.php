@@ -88,7 +88,7 @@ class AuthApi
             $email = $assoc['email'];
             $class = $assoc['class'];
             $tel = $assoc['tel'];
-            
+
         } else {
             return $response->setError(Error::NonexistentUser);
         }
