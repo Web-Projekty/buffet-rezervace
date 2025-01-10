@@ -140,7 +140,7 @@ class OrderModel extends Model
             'endTime' => $endTime,
             'pickUpId' => $pickupId,
             'paymentMethod' => $paymentMethod,
-            'useCredits' => false
+            'useCredits' => false,
         ]);
 
         $order->save();
