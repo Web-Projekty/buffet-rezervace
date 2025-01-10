@@ -55,7 +55,7 @@ class TempModel extends Model
         foreach ($tempTable as $key => $tempDate) {
             foreach ($tempDate as $id => $tempRow) {
                // var_dump($tempRow);
-                $startTime = Carbon::createFromFormat("H:m:s", $tempRow["startTime"]);
+                $startTime = Carbon::createFromFormat("H:i:s", $tempRow["startTime"]);
 
                 $currentOut = &$out[$key][$startTime->format("H") . ":00"];
 
