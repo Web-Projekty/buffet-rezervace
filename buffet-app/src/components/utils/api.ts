@@ -4,12 +4,12 @@ import { FETCH_URL } from "../../constants";
 import { CartItem } from "../../store/CartStore";
 
 type OrderApiReturn = {
-  order: Order;
+  order: Order | null;
   error: boolean;
 };
 
 type MenuItemApiReturn = {
-  menuItem: MenuItem;
+  menuItem: MenuItem | null;
   error: boolean;
 };
 
@@ -21,7 +21,9 @@ type TimeSlotsApiReturn = {
 export const createOrder = async (
   token: string | null,
   cartItems: CartItem[],
-  selectedTime: string | null,
+  startTime: string | null,
+  endTime: string | null,
+  date: string | null,
   paymentMethod: PaymentMethod[],
 ): Promise<OrderApiReturn> => {
   if (!token) throw new Error("Chyba při vytváření objednávky.");
@@ -31,10 +33,10 @@ export const createOrder = async (
       requestType: "createOrder",
       token: token,
       items: "[]",
-      startTime: selectedTime?.split("-")[0],
-      endTime: selectedTime?.split("-")[1],
-      pickUpDate: selectedTime,
-      paymentMethod: paymentMethod[0],
+      startTime: startTime,
+      endTime: endTime,
+      pickUpDate: date,
+      paymentMethod: "thePay",
     });
 
     console.log(data);
@@ -44,7 +46,10 @@ export const createOrder = async (
       error: data.status === "success" ? false : true,
     };
   } catch {
-    throw new Error("Chyba při vytváření objednávky.");
+    return {
+      order: null,
+      error: true,
+    };
   }
 };
 
