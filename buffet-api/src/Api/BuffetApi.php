@@ -22,6 +22,7 @@ use Buffet\Types\Success;
 use Buffet\Utils\WebsocketClient;
 use Carbon\Carbon;
 use DateException;
+use DateTimeZone;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
@@ -323,7 +324,8 @@ class BuffetApi
             //var_dump($order);
             $order["startTime"] = Carbon::createFromFormat("H:i:s", $order["startTime"])->format("H:i");
             $order["endTime"] = Carbon::createFromFormat("H:i:s", $order["endTime"])->format("H:i");
-            //$order["dateCreated"] = Carbon::createFromFormat("o-m-d h:m:s");
+            var_dump(new DateTimeZone());
+            $order["dateCreated"] = Carbon::createFromFormat("o-m-d h:m:s", $order["dateCreated"])->setTimezone(new DateTimeZone("Prague"));
         }
 
         $response->setPayload("data", $ordersArray);
