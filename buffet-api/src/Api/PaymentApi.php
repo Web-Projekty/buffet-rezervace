@@ -4,6 +4,9 @@ declare (strict_types = 1);
 
 namespace Buffet\Api;
 
+use Buffet\Types\Settings;
+use Buffet\Utils\EnvReader;
+use ThePay\ApiClient\Model\CreatePaymentParams;
 use ThePay\ApiClient\TheClient;
 
 class PaymentApi
@@ -15,8 +18,8 @@ class PaymentApi
     public function __construct()
     {
         $merchantId = '86a3eed0-95a4-11ea-ac9f-371f3488e0fa';
-        $projectId = 3;
-        $apiPassword = 'secret';
+        $projectId = 898;
+        $apiPassword = (string) EnvReader::getEnvProperty(Settings::ThePayApiPass);
         $apiUrl = 'https://demo.api.thepay.cz/';
         $gateUrl = 'https://demo.gate.thepay.cz/';
         $language = 'cs';
@@ -52,8 +55,17 @@ class PaymentApi
         $this->thePayClient = $thePayClient;
     }
 
-    public function createPayment(int $price){
+    /**
+     * @param int $price
+     */
+    public function createPayment(int $price): void
+    {
+        $currency = EnvReader::getEnvProperty(Settings::PaymentCurrency);
+        $uid = strval(6);
 
+        $params = new CreatePaymentParams($price, $currency, $uid);
+        $response = $this->thePayClient->createPayment($params);
+        var_dump($response->getPayUrl());
     }
 
 }
