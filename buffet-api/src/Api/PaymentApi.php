@@ -17,8 +17,8 @@ class PaymentApi
     private $thePayClient;
     public function __construct()
     {
-        $merchantId = '86a3eed0-95a4-11ea-ac9f-371f3488e0fa';
-        $projectId = 898;
+        $merchantId = (string) EnvReader::getEnvProperty(Settings::ThePayMerchantId);
+        $projectId = (int) EnvReader::getEnvProperty(Settings::ThePayProjectId);
         $apiPassword = (string) EnvReader::getEnvProperty(Settings::ThePayApiPass);
         $apiUrl = 'https://demo.api.thepay.cz/';
         $gateUrl = 'https://demo.gate.thepay.cz/';
