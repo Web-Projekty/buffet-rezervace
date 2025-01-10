@@ -2,6 +2,7 @@
 
 use Buffet\Api\BuffetApi;
 use Buffet\Api\ImageProvider;
+use Buffet\Api\PaymentApi;
 use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\Settings;
 use Buffet\Utils\EnvReader;
@@ -32,6 +33,19 @@ $app->get('/', function (Request $request, Response $response, $args) {
 
     $response->getBody()->write($html);
     return $response;
+});
+
+$pay = new PaymentApi();
+
+$app->get('/pay', $pay->createPayment(100));
+
+$app->get('/return', function (Request $request, Response $response, $args) {
+    error_log($request->getBody());
+    error_log(sprintf("Headers: %s", $request->getHeaders()));
+    error_log(sprintf("Query: %s", $request->getQueryParams()));
+    error_log(sprintf("POST: %s", $request->getParsedBody()));
+    error_log(sprintf("Args: %s", $args));
+
 });
 
 $app->get('/cred', function (Request $request, Response $response, $args) {
