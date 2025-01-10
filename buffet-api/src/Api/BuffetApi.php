@@ -17,12 +17,15 @@ use Buffet\Types\Error;
 use Buffet\Types\EventTypes;
 use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Exceptions\OutOfOrderIdsException;
+use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\OrderStatus;
+use Buffet\Types\Settings;
 use Buffet\Types\Success;
+use Buffet\Utils\EnvReader;
 use Buffet\Utils\WebsocketClient;
 use Carbon\Carbon;
+use Carbon\CarbonTimeZone;
 use DateException;
-use DateTimeZone;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 
@@ -44,7 +47,11 @@ class BuffetApi
         /**
          * @var ApiResponse
          */
-        $response = $this->handleApiCall();
+        try {
+            $response = $this->handleApiCall();
+        } catch (SettingsException $e) {
+            $response = (new ApiResponse())->setError(Error::SettingsError);
+        }
 
         if ($response == null || get_class($response) != "Buffet\Types\ApiResponse") {
             $response = new ApiResponse();
