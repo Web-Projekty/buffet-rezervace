@@ -22,6 +22,23 @@ export const formatDate = (date: string): string => {
   return dateObject.toLocaleDateString("cs-CZ");
 };
 
+export const parseSelectedTime = (selectedTime: string | null) => {
+  if (!selectedTime) return { startTime: "", endTime: "", formattedDate: "" };
+
+  const parts = selectedTime.split(" ");
+  const day = parts[1].split(".")[0].padStart(2, "0");
+  const month = parts[2].split(".")[0].padStart(2, "0");
+  const year = new Date().getFullYear();
+
+  const formattedDate = `${year}-${month}-${day}`;
+
+  const [startTime, endTime] = parts[3].split("-");
+
+  console.log(formattedDate);
+
+  return { startTime, endTime, formattedDate };
+};
+
 export const onImageChange = (
   e: React.ChangeEvent<HTMLInputElement>,
   setImage: (image: string) => void,
