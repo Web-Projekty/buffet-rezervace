@@ -17,10 +17,14 @@ use Buffet\Types\Error;
 use Buffet\Types\EventTypes;
 use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Exceptions\OutOfOrderIdsException;
+use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\OrderStatus;
+use Buffet\Types\Settings;
 use Buffet\Types\Success;
+use Buffet\Utils\EnvReader;
 use Buffet\Utils\WebsocketClient;
 use Carbon\Carbon;
+use Carbon\CarbonTimeZone;
 use DateException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
@@ -40,10 +44,11 @@ class BuffetApi
 
     function main(RequestInterface $request, ResponseInterface $html): ResponseInterface
     {
-        /**
-         * @var ApiResponse
-         */
-        $response = $this->handleApiCall();
+        try {
+            $response = $this->handleApiCall();
+        } catch (SettingsException $e) {
+            $response = (new ApiResponse())->setError(Error::SettingsError);
+        }
 
         if ($response == null || get_class($response) != "Buffet\Types\ApiResponse") {
             $response = new ApiResponse();
@@ -323,7 +328,8 @@ class BuffetApi
             //var_dump($order);
             $order["startTime"] = Carbon::createFromFormat("H:i:s", $order["startTime"])->format("H:i");
             $order["endTime"] = Carbon::createFromFormat("H:i:s", $order["endTime"])->format("H:i");
-            //$order["dateCreated"] = Carbon::createFromFormat("o-m-d h:m:s");
+            //var_dump(new DateTimeZone());
+            $order["dateCreated"] = Carbon::createFromFormat("Y-m-d H:i:s", $order["dateCreated"])->setTimezone(CarbonTimeZone::create(EnvReader::getEnvProperty(Settings::Timezone)))->format("Y-m-d H:i");
         }
 
         $response->setPayload("data", $ordersArray);

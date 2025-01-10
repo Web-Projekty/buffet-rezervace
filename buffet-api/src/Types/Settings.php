@@ -16,4 +16,5 @@ enum Settings: string {
     # API heslo k bráně ThePay
     case ThePayApiPass = 'THEPAY_API_PASS';
     case ThePayProjectId = 'THEPAY_PROJECT_ID';
+    case Timezone = 'TIMEZONE';
 }

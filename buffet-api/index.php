@@ -2,6 +2,7 @@
 
 use Buffet\Api\BuffetApi;
 use Buffet\Api\ImageProvider;
+use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\Settings;
 use Buffet\Utils\EnvReader;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -13,8 +14,12 @@ require __DIR__ . '/vendor/autoload.php';
 
 $app = AppFactory::create();
 $isProd = true;
-if (EnvReader::getEnvProperty(Settings::IsProd) !== null) {
-    $isProd = EnvReader::getEnvProperty(Settings::IsProd);
+try {
+    if (EnvReader::getEnvProperty(Settings::IsProd) !== null) {
+        $isProd = EnvReader::getEnvProperty(Settings::IsProd);
+    }
+} catch (SettingsException $e) {
+    $isProd = true;
 }
 $app->addErrorMiddleware(!$isProd, true, true);
 
