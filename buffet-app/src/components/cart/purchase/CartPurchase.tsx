@@ -5,6 +5,8 @@ import { Day, Hour, Minute } from "./CartReservationCalendar";
 import { Fallback } from "../../../main";
 import { useUser } from "../../../hooks/useUser";
 import { PaymentMethod } from "../../../types";
+import { createOrder } from "../../utils/api";
+import { parseSelectedTime } from "../../utils/utils";
 
 const PageNotFound = lazy(() => import("../../error/PageNotFound"));
 const CartReservationCalendar = lazy(() => import("./CartReservationCalendar"));
@@ -22,38 +24,15 @@ const CartPurchase = () => {
     PaymentMethod[]
   >([]);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
-
-  const handleSubmit = async () => {
-    if (isDisabled) return;
-
-    const { order, error } = await createOrder(
-      token,
-      cartItems,
-      selectedTime,
-      selectedPaymentMethods,
-    );
-  };
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<boolean>(false);
 
   const selectedPaymentMethodsLengthWithoutCredits = useMemo(
     () =>
       selectedPaymentMethods.filter((method) => method.input !== "checkbox")
         .length,
     [selectedPaymentMethods],
-  );
-
-  const handleSelectTime = useCallback(
-    (day: Day, hour: Hour, minute: Minute) => {
-      const selectedTime =
-        day.label +
-        " " +
-        hour.label.substring(0, 2) +
-        minute.label.substring(0, 3) +
-        "-" +
-        hour.label.substring(0, 2) +
-        minute.label.substring(6, 9);
-      setSelectedTime(selectedTime);
-    },
-    [],
   );
 
   const isDisabled: boolean = useMemo(
@@ -68,6 +47,55 @@ const CartPurchase = () => {
       isCartEmpty,
       token,
     ],
+  );
+
+  const handleSubmit = useCallback(async () => {
+    if (isDisabled) return;
+
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const { startTime, endTime, formattedDate } =
+        parseSelectedTime(selectedTime);
+
+      console.log(startTime, endTime, formattedDate);
+
+      const { order, error } = await createOrder(
+        token,
+        cartItems,
+        startTime,
+        endTime,
+        formattedDate,
+        selectedPaymentMethods,
+      );
+
+      if (error) {
+        setError("Chyba při vytváření objednávky.");
+      } else {
+        setSuccess(true);
+        // Navigace na úspěšně vytvořenou objednávku
+      }
+    } catch {
+      setError("Chyba při vytváření objednávky.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [isDisabled, selectedTime, token, cartItems, selectedPaymentMethods]);
+
+  const handleSelectTime = useCallback(
+    (day: Day, hour: Hour, minute: Minute) => {
+      const selectedTime =
+        day.label +
+        " " +
+        hour.label.substring(0, 2) +
+        minute.label.substring(0, 3) +
+        "-" +
+        hour.label.substring(0, 2) +
+        minute.label.substring(6, 9);
+      setSelectedTime(selectedTime);
+    },
+    [],
   );
 
   if (cartItems.length <= 0)
@@ -127,8 +155,12 @@ const CartPurchase = () => {
           </Suspense>
         </div>
         <div className="flex flex-col rounded-lg bg-slate-700 p-3">
-          <Button disabled={isDisabled} onClick={handleSubmit}>
-            Potvrdit objednávku
+          <Button
+            disabled={isDisabled || isSubmitting || success}
+            onClick={handleSubmit}
+            loading={isSubmitting}
+          >
+            {error ? error : "Potvrdit objednávku"}
           </Button>
           <p className="text-center text-xs text-descriptionColor">
             Potvrzením objednávky uživatel souhlasí se všeobecnými obchodními
