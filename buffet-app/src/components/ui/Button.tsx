@@ -1,9 +1,12 @@
+import Loading from "./Loading";
+
 export type ButtonProps = {
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
   className?: string;
   disabled?: boolean;
   children: React.ReactNode;
+  loading?: boolean;
 };
 
 const Button = ({
@@ -12,6 +15,7 @@ const Button = ({
   className,
   disabled,
   children,
+  loading,
 }: ButtonProps) => {
   return (
     <button
@@ -20,7 +24,7 @@ const Button = ({
       onClick={onClick}
       disabled={disabled}
     >
-      {children}
+      {loading ? <Loading size={20} /> : children}
     </button>
   );
 };
