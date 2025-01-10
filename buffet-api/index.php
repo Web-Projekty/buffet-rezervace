@@ -35,9 +35,10 @@ $app->get('/', function (Request $request, Response $response, $args) {
     return $response;
 });
 
-$pay = new PaymentApi();
-
-$app->get('/pay', $pay->createPayment(100));
+$app->get('/pay', function (Request $request, Response $response, $args) {
+    $pay = new PaymentApi();
+    $pay->createPayment(100);
+});
 
 $app->get('/return', function (Request $request, Response $response, $args) {
     error_log($request->getBody());
