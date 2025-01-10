@@ -52,4 +52,8 @@ class PaymentApi
         $this->thePayClient = $thePayClient;
     }
 
+    public function createPayment(int $price){
+
+    }
+
 }
