@@ -42,11 +42,32 @@ $app->get('/pay', function (Request $request, Response $response, $args) {
 
 $app->get('/return', function (Request $request, Response $response, $args) {
     error_log($request->getBody());
-    error_log(sprintf("Headers: %s", $request->getHeaders()));
+    /*error_log(sprintf("Headers: %s", $request->getHeaders()));
     error_log(sprintf("Query: %s", $request->getQueryParams()));
     error_log(sprintf("POST: %s", $request->getParsedBody()));
-    error_log(sprintf("Args: %s", $args));
+    error_log(sprintf("Args: %s", $args));*/
+    if ($request->getParsedBody()) {
 
+        foreach ($request->getParsedBody() as $key => $value) {
+            error_log(sprintf("POST %s: %s", $key, $value));
+        }
+    }
+
+    if ($request->getQueryParams()) {
+
+        foreach ($request->getQueryParams() as $key => $value) {
+            error_log(sprintf("QUERY %s: %s", $key, $value));
+        }
+    }
+
+    foreach ($request->getHeaders() as $key => $value) {
+        error_log(sprintf("HEADER %s: %s", $key, $value[0]));
+    }
+
+    foreach ($args as $key => $value) {
+        error_log(sprintf("ARG %s: %s", $key, $value));
+    }
+    return $response;
 });
 
 $app->get('/cred', function (Request $request, Response $response, $args) {
