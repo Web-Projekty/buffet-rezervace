@@ -2,7 +2,6 @@ import { X } from "lucide-react";
 import { Order, OrderStatus } from "../../types";
 import Button from "../ui/Button";
 import { useUser } from "../../hooks/useUser";
-import Loading from "../ui/Loading";
 import { ReactNode, useState } from "react";
 import { useOrder } from "../../hooks/useOrder";
 
@@ -48,10 +47,6 @@ const OrderButton = ({ order }: OrderButtonsProps) => {
       return "Zrušeno";
     }
 
-    if (loading) {
-      return <Loading />;
-    }
-
     if (error) {
       return error;
     }
@@ -86,6 +81,7 @@ const OrderButton = ({ order }: OrderButtonsProps) => {
             className={`flex w-full flex-row items-center justify-center gap-1 ${isDisabled ? "gray-400 border-gray-500 bg-gray-500 hover:border-gray-500 hover:bg-gray-500" : "border-red-400 bg-red-400 hover:border-red-500 hover:bg-red-500"}`}
             onClick={cancelOrder}
             disabled={isDisabled || loading}
+            loading={loading}
           >
             {renderButtonContent(name, isDisabled)}
             {renderIcon(icon, isDisabled)}
