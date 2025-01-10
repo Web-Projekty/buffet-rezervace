@@ -64,6 +64,8 @@ class PaymentApi
         $uid = strval(6);
 
         $params = new CreatePaymentParams($price, $currency, $uid);
+        $params->setReturnUrl('https://wlczak.vlastas.cc/return');
+
         $response = $this->thePayClient->createPayment($params);
         var_dump($response->getPayUrl());
     }
