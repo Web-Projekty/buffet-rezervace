@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Order, OrderStatus } from "../types";
 import { updateOrder } from "../components/utils/api";
 
@@ -24,7 +24,7 @@ type HandleStatusReturn = {
   error: boolean;
 };
 
-export const useOrder = (order: Order): UseStatusOrderReturn => {
+export const useOrder = (order: Order, kds?: boolean): UseStatusOrderReturn => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [color, setColor] = useState<string>(getColorByStatus(order.status));
   const [status, setStatus] = useState<OrderStatus>(order.status);
@@ -32,6 +32,7 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
     getTextByStatus(order.status),
   );
   const [loading, setLoading] = useState<boolean>(false);
+  const [delayed, setDelayed] = useState<boolean>(false);
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
@@ -51,10 +52,10 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
         );
 
         const data = {
-          order: updatedOrder,
+          order: updatedOrder || order,
           error: error,
         };
-        if (!error) setStatus(updatedOrder.status);
+        if (!error && updatedOrder) setStatus(updatedOrder.status);
         return data;
       } catch (error) {
         console.error(error);
@@ -67,30 +68,53 @@ export const useOrder = (order: Order): UseStatusOrderReturn => {
   );
 
   const handleDelayed = () => {
-    setColor("bg-red-400");
+    const checkDelayed = () => {
+      const now = new Date();
+      const pickupDateTime = new Date(`${order.pickupDate}T${order.startTime}`);
+      console.log(pickupDateTime);
+      return now > pickupDateTime;
+    };
+
+    if (checkDelayed()) {
+      setDelayed(true);
+      setColor("bg-red-400");
+    } else {
+      setColor(getColorByStatus(status));
+    }
   };
 
-  const dateCreated = new Date(order.dateCreated).toLocaleString();
-
-  const pickUpDate = new Date(order.pickupDate).toLocaleDateString();
-  const startTime = order.startTime.substring(0, 5);
-  const endTime = order.endTime.substring(0, 5);
-
-  const checkDelayed = () => {
-    const currentTime = new Date().getTime();
-    const pickupTime = new Date(order.pickupDate).getTime();
-    return currentTime > pickupTime;
-  };
+  const dateCreated = useMemo(
+    () => new Date(order.dateCreated).toLocaleString(),
+    [order.dateCreated],
+  );
+  const pickUpDate = useMemo(
+    () => new Date(order.pickupDate).toLocaleDateString(),
+    [order.pickupDate],
+  );
+  const startTime = useMemo(
+    () => order.startTime.substring(0, 5),
+    [order.startTime],
+  );
+  const endTime = useMemo(() => order.endTime.substring(0, 5), [order.endTime]);
 
   useEffect(() => {
-    setColor(checkDelayed() ? "bg-red-400" : getColorByStatus(status));
+    setColor(delayed ? "bg-red-400" : getColorByStatus(status));
     setStatusText(getTextByStatus(status));
+  }, [delayed, status, order.pickupDate]);
 
-    if (!checkDelayed()) {
-      const intervalId = setInterval(() => {
-        handleDelayed();
-      }, 1000);
-      return () => clearInterval(intervalId);
+  useEffect(() => {
+    if (kds) {
+      if (
+        !delayed &&
+        status !== "done" &&
+        status !== "cancelled" &&
+        status !== "storno"
+      ) {
+        const intervalId = setInterval(() => {
+          handleDelayed();
+        }, 1000);
+        return () => clearInterval(intervalId);
+      }
     }
   }, [status, order.pickupDate]);
 
@@ -115,10 +139,12 @@ const getColorByStatus = (status: OrderStatus): string => {
       return "bg-orange-400";
     case "waiting":
       return "bg-[#14ce9c]";
+    case "preparing":
+      return "bg-yellow-400";
     case "done":
       return "bg-green-500";
     case "storno":
-      return "bg-red-400";
+      return "bg-gray-400";
     case "cancelled":
       return "bg-red-400";
     default:
@@ -132,6 +158,8 @@ const getTextByStatus = (status: OrderStatus): string => {
       return "Čeká na zpracování";
     case "waiting":
       return "Čeká na vyzvednutí";
+    case "preparing":
+      return "Připravuje se";
     case "done":
       return "Dokončeno";
     case "storno":
