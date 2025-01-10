@@ -331,8 +331,8 @@ class BuffetApi
             //var_dump($order);
             $order["startTime"] = Carbon::createFromFormat("H:i:s", $order["startTime"])->format("H:i");
             $order["endTime"] = Carbon::createFromFormat("H:i:s", $order["endTime"])->format("H:i");
-            var_dump(new DateTimeZone());
-            $order["dateCreated"] = Carbon::createFromFormat("o-m-d h:m:s", $order["dateCreated"])->setTimezone(new DateTimeZone("Prague"));
+            //var_dump(new DateTimeZone());
+            $order["dateCreated"] = Carbon::createFromFormat("Y-m-d H:i:s", $order["dateCreated"])->setTimezone(CarbonTimeZone::create(EnvReader::getEnvProperty(Settings::Timezone)))->format("Y-m-d H:i");
         }
 
         $response->setPayload("data", $ordersArray);
