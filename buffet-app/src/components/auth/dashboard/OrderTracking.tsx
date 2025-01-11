@@ -36,7 +36,7 @@ const getCurrentStep = (order: Order | null): number => {
 };
 
 const OrderTracking = () => {
-  const { latestOrder, isLoading, error } = useOrders(1);
+  const { latestOrder, isLoading, error } = useOrders(1, 1);
 
   const currentStep: number = useMemo(
     () => (latestOrder ? getCurrentStep(latestOrder) : -1),
