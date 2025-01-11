@@ -7,6 +7,7 @@ namespace Buffet\Database\Models;
 use Buffet\Api\ItemApi;
 use Buffet\Api\OrderApi;
 use Buffet\Api\PaymentApi;
+use Buffet\Types\Exceptions\PaymentCreationException;
 use Buffet\Types\OrderStatus;
 use Buffet\Types\PaymentMethods;
 use Illuminate\Database\Eloquent\Model;
@@ -26,7 +27,7 @@ class OrderModel extends Model
     /**
      * @var array<string>
      */
-    public $fillable = ['userId', 'status', 'dateCreated', 'pickupDate', 'items', 'startTime', 'endTime', 'pickUpId', 'useCredits'];
+    public $fillable = ['userId', 'status', 'dateCreated', 'pickupDate', 'items', 'startTime', 'endTime', 'pickUpId', 'useCredits', 'paymentId'];
 
     /**
      * @var array<string>
@@ -51,7 +52,7 @@ class OrderModel extends Model
     /**
      * @var array<string>
      */
-    protected $visible = ['id', 'userId', 'status', 'pickupDate', 'dateCreated', 'items', 'startTime', 'endTime', 'pickUpId', 'useCredits'];
+    protected $visible = ['id', 'userId', 'status', 'pickupDate', 'dateCreated', 'items', 'startTime', 'endTime', 'pickUpId', 'useCredits', 'paymentId'];
 
     /**
      * @var array<string>
@@ -137,17 +138,21 @@ class OrderModel extends Model
         $itemApi = new ItemApi;
 
         $price = $itemApi->countItemPrice($items);
-        $paymentApi->createPayment($price, $userId, PaymentMethods::ThePay);
+
+        $paymentId = $paymentApi->createPayment($price, $userId, PaymentMethods::ThePay);
+        if ($paymentId == 0) {
+            throw new PaymentCreationException();
+        }
 
         $order = OrderModel::query()->create([
             'userId' => $userId,
             'status' => $status->value,
             'pickupDate' => $pickupDate,
             'items' => $items,
+            'paymentId' => $paymentId,
             'startTime' => $startTime,
             'endTime' => $endTime,
             'pickUpId' => $pickupId
-            //'paymentMethod' => $paymentMethod,
         ]);
 
         $order->save();

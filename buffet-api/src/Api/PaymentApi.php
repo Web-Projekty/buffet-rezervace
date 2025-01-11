@@ -67,14 +67,14 @@ class PaymentApi
 
             case PaymentMethods::ThePay:
                 $currency = EnvReader::getEnvProperty(Settings::PaymentCurrency);
-                $stringUid = strval($uid); // has to be unique for each transaction
+                $stringUid = strval(rand(0, 99999999999)); // has to be unique for each transaction
 
                 $params = new CreatePaymentParams($amount, $currency, $stringUid);
                 $params->setReturnUrl('https://wlczak.vlastas.cc/return');
 
                 $response = $this->thePayClient->createPayment($params);
                 $url = $response->getPayUrl();
-                PaymentModel::addPayment(type: $paymentMethod, useCredits: false, totalAmount: $amount, thePayUrl: $url);
+                return PaymentModel::addPayment(type: $paymentMethod, useCredits: false, totalAmount: $amount, thePayUrl: $url);
         }
         return 0;
     }

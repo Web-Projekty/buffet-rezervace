@@ -10,10 +10,12 @@ use ThePay\ApiClient\Model\PaymentMethod;
 
 class PaymentModel extends Model
 {
+    const CREATED_AT = 'dateCreated';
+    const UPDATED_AT = null;
     /**
      * @var string
      */
-    protected $table = 'payments';
+    protected $table = 'Payments';
 
     /**
      * @var array<string>
@@ -28,20 +30,23 @@ class PaymentModel extends Model
     ];
 
     /**
-     * @param PaymentMethods $type
-     * @param bool           $useCredits
-     * @param int            $totalAmount
-     * @param int            $creditsAmount
-     * @param string         $thePayUrl
+     * @param  PaymentMethods $type
+     * @param  bool           $useCredits
+     * @param  int            $totalAmount
+     * @param  int            $creditsAmount
+     * @param  string         $thePayUrl
+     * @return int
      */
-    public static function addPayment(PaymentMethods $type, int $totalAmount, string $thePayUrl, bool $useCredits = false, int $creditsAmount = 0): void
+    public static function addPayment(PaymentMethods $type, int $totalAmount, string $thePayUrl, bool $useCredits = false, int $creditsAmount = 0): int
     {
-        PaymentModel::query()->create([
+        $paymentQuery = PaymentModel::query()->create([
             'type' => $type->value,
             'useCredits' => $useCredits,
             'totalAmount' => $totalAmount,
             'creditsAmount' => $creditsAmount,
             'thePayUrl' => $thePayUrl
         ]);
+        $paymentQuery->save();
+        return $paymentQuery->toArray()["id"];
     }
 }

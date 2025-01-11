@@ -17,6 +17,7 @@ use Buffet\Types\Error;
 use Buffet\Types\EventTypes;
 use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Exceptions\OutOfOrderIdsException;
+use Buffet\Types\Exceptions\PaymentCreationException;
 use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\OrderStatus;
 use Buffet\Types\Settings;
@@ -418,9 +419,11 @@ class BuffetApi
                 $order = OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
             } catch (OutOfOrderIdsException $e) {
                 return $response->setError(Error::OutOfOrderIds);
-            }catch(RuntimeException $e){
+            } catch (RuntimeException $e) {
+                error_log($e->getMessage());
                 return $response->setError(Error::ThePayError);
-
+            } catch (PaymentCreationException $e) {
+                return $response->setError(Error::PaymentCreationError);
             }
         }
         try {
