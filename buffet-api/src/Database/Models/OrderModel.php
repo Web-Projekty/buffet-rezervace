@@ -23,7 +23,7 @@ class OrderModel extends Model
     /**
      * @var array<string>
      */
-    public $fillable = ['userId', 'status', 'dateCreated', 'pickupDate', 'items', 'startTime', 'endTime', 'pickUpId', 'paymentMethod', 'useCredits'];
+    public $fillable = ['userId', 'status', 'dateCreated', 'pickupDate', 'items', 'startTime', 'endTime', 'pickUpId', 'useCredits'];
 
     /**
      * @var array<string>
@@ -48,7 +48,7 @@ class OrderModel extends Model
     /**
      * @var array<string>
      */
-    protected $visible = ['id', 'userId', 'status', 'pickupDate', 'dateCreated', 'items', 'startTime', 'endTime', 'pickUpId', 'paymentMethod', 'useCredits'];
+    protected $visible = ['id', 'userId', 'status', 'pickupDate', 'dateCreated', 'items', 'startTime', 'endTime', 'pickUpId', 'useCredits'];
 
     /**
      * @var array<string>
@@ -61,8 +61,7 @@ class OrderModel extends Model
         'items' => 'fulltext',
         'startTime' => 'time',
         'endTime' => 'time',
-        'pickUpId' => 'string',
-        'paymentMethod' => 'string'
+        'pickUpId' => 'string'
     ];
 
     /**
@@ -139,8 +138,8 @@ class OrderModel extends Model
             'startTime' => $startTime,
             'endTime' => $endTime,
             'pickUpId' => $pickupId,
-            'paymentMethod' => $paymentMethod,
-            'useCredits' => false,
+            //'paymentMethod' => $paymentMethod,
+            'useCredits' => false
         ]);
 
         $order->save();
