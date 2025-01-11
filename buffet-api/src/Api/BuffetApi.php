@@ -28,6 +28,7 @@ use Carbon\CarbonTimeZone;
 use DateException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
+use RuntimeException;
 
 class BuffetApi
 {
@@ -417,6 +418,9 @@ class BuffetApi
                 $order = OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
             } catch (OutOfOrderIdsException $e) {
                 return $response->setError(Error::OutOfOrderIds);
+            }catch(RuntimeException $e){
+                return $response->setError(Error::ThePayError);
+
             }
         }
         try {

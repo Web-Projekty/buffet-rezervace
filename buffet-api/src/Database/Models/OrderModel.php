@@ -4,8 +4,11 @@ declare (strict_types = 1);
 
 namespace Buffet\Database\Models;
 
+use Buffet\Api\ItemApi;
 use Buffet\Api\OrderApi;
+use Buffet\Api\PaymentApi;
 use Buffet\Types\OrderStatus;
+use Buffet\Types\PaymentMethods;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 
@@ -130,6 +133,12 @@ class OrderModel extends Model
     {
         $pickupId = OrderApi::getOrderPickupId();
 
+        $paymentApi = new PaymentApi();
+        $itemApi = new ItemApi;
+
+        $price = $itemApi->countItemPrice($items);
+        $paymentApi->createPayment($price, $userId, PaymentMethods::ThePay);
+
         $order = OrderModel::query()->create([
             'userId' => $userId,
             'status' => $status->value,
@@ -137,9 +146,8 @@ class OrderModel extends Model
             'items' => $items,
             'startTime' => $startTime,
             'endTime' => $endTime,
-            'pickUpId' => $pickupId,
+            'pickUpId' => $pickupId
             //'paymentMethod' => $paymentMethod,
-            'useCredits' => false
         ]);
 
         $order->save();

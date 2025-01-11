@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace Buffet\Api;
 
+use Buffet\Database\Models\PaymentModel;
+use Buffet\Types\PaymentMethods;
 use Buffet\Types\Settings;
 use Buffet\Utils\EnvReader;
 use ThePay\ApiClient\Model\CreatePaymentParams;
@@ -56,18 +58,25 @@ class PaymentApi
     }
 
     /**
-     * @param int $price
+     * @param int $amount
      */
-    public function createPayment(int $price): void
+    public function createPayment(int $amount, int $uid, PaymentMethods $paymentMethod): int
     {
-        $currency = EnvReader::getEnvProperty(Settings::PaymentCurrency);
-        $uid = strval(6);
+        $url = null;
+        switch ($paymentMethod) {
 
-        $params = new CreatePaymentParams($price, $currency, $uid);
-        $params->setReturnUrl('https://wlczak.vlastas.cc/return');
+            case PaymentMethods::ThePay:
+                $currency = EnvReader::getEnvProperty(Settings::PaymentCurrency);
+                $stringUid = strval($uid); // has to be unique for each transaction
 
-        $response = $this->thePayClient->createPayment($params);
-        var_dump($response->getPayUrl());
+                $params = new CreatePaymentParams($amount, $currency, $stringUid);
+                $params->setReturnUrl('https://wlczak.vlastas.cc/return');
+
+                $response = $this->thePayClient->createPayment($params);
+                $url = $response->getPayUrl();
+                PaymentModel::addPayment(type: $paymentMethod, useCredits: false, totalAmount: $amount, thePayUrl: $url);
+        }
+        return 0;
     }
 
 }
