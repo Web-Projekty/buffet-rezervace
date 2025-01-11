@@ -142,7 +142,7 @@ const getColorByStatus = (status: OrderStatus): string => {
     case "preparing":
       return "bg-yellow-400";
     case "done":
-      return "bg-green-500";
+      return "bg-blue-400";
     case "storno":
       return "bg-gray-400";
     case "cancelled":
