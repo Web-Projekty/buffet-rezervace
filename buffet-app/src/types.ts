@@ -88,3 +88,18 @@ type PaymentMethodImage = {
   width?: number;
   height?: number;
 };
+
+export type Day = {
+  hours: Hour[];
+  available: boolean;
+};
+
+export type Hour = {
+  minutes: Minute[];
+};
+
+export type Minute = {
+  available: boolean;
+  start: string;
+  end: string;
+};
