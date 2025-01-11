@@ -1,5 +1,5 @@
 import axios from "axios";
-import { MenuItem, Order, OrderStatus, PaymentMethod } from "../../types";
+import { Day, MenuItem, Order, OrderStatus, PaymentMethod } from "../../types";
 import { FETCH_URL } from "../../constants";
 import { CartItem } from "../../store/CartStore";
 
@@ -14,7 +14,7 @@ type MenuItemApiReturn = {
 };
 
 type TimeSlotsApiReturn = {
-  timeslots: string[];
+  timeslots: Day[];
   error: boolean;
 };
 
@@ -39,11 +39,9 @@ export const createOrder = async (
       paymentMethod: "thePay",
     });
 
-    console.log(data);
-
     return {
       order: data.payload.data as Order,
-      error: data.status === "success" ? false : true,
+      error: data.status !== "success",
     };
   } catch {
     return {
@@ -68,7 +66,7 @@ export const updateOrder = async (
     });
     return {
       order: data.payload.data as Order,
-      error: data.status === "success" ? false : true,
+      error: data.status !== "success",
     };
   } catch {
     throw new Error("Chyba při aktualizaci objednávky.");
@@ -87,7 +85,7 @@ export const deleteOrder = async (
     });
     return {
       order: data.payload.data as Order,
-      error: data.status === "success" ? false : true,
+      error: data.status !== "success",
     };
   } catch {
     throw new Error("Chyba při mazání objednávky.");
@@ -106,7 +104,7 @@ export const createMenuItem = async (
     });
     return {
       menuItem: data.payload.data as MenuItem,
-      error: data.status === "success" ? false : true,
+      error: data.status !== "success",
     };
   } catch {
     throw new Error("Chyba při vytváření položky menu.");
@@ -125,7 +123,7 @@ export const updateMenuItem = async (
     });
     return {
       menuItem: data.payload.data as MenuItem,
-      error: data.status === "success" ? false : true,
+      error: data.status !== "success",
     };
   } catch {
     throw new Error("Chyba při aktualizaci položky menu.");
@@ -144,21 +142,26 @@ export const deleteMenuItem = async (
     });
     return {
       menuItem: data.payload.data as MenuItem,
-      error: data.status === "success" ? false : true,
+      error: data.status !== "success",
     };
   } catch {
     throw new Error("Chyba při mazání položky menu.");
   }
 };
 
-export const getTimeslots = async (): Promise<TimeSlotsApiReturn> => {
+export const getTimeSlots = async (): Promise<TimeSlotsApiReturn> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "getOrderTimeTable",
     });
+
+    console.log(data);
+
+    const { status, payload } = data;
+
     return {
-      timeslots: data.payload.data as string[],
-      error: data.status === "success" ? false : true,
+      timeslots: payload?.data || [],
+      error: status !== "success",
     };
   } catch {
     throw new Error("Chyba při načítání časových slotů.");
