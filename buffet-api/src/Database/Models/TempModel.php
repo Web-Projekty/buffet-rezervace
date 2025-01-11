@@ -113,7 +113,15 @@ class TempModel extends Model
                     $lastHour = $startTime->format("H");
                 }
             }
-            
+            // last pass - i just gave up trying to find the correct condition so thers some duplicate code
+            $currentHour = [
+                "label" => $lastHour . ":00",
+                "available" => $availableHour,
+                "minutes" => $minutes
+            ];
+
+            $hours[] = $currentHour;
+
             $dateArray["available"] = $availableDate;
             $dateArray["hours"] = $hours;
             $availableDate = false;
