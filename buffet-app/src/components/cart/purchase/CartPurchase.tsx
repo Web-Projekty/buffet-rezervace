@@ -7,6 +7,7 @@ import { useUser } from "../../../hooks/useUser";
 import { PaymentMethod } from "../../../types";
 import { createOrder } from "../../utils/api";
 import { parseSelectedTime } from "../../utils/utils";
+import { useNavigate } from "react-router-dom";
 
 const PageNotFound = lazy(() => import("../../error/PageNotFound"));
 const CartReservationCalendar = lazy(() => import("./CartReservationCalendar"));
@@ -27,6 +28,8 @@ const CartPurchase = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const selectedPaymentMethodsLengthWithoutCredits = useMemo(
     () =>
@@ -75,6 +78,7 @@ const CartPurchase = () => {
       } else {
         setSuccess(true);
         // Navigace na úspěšně vytvořenou objednávku
+        navigate(`/order/${order?.id}`, { replace: true, state: { order } });
       }
     } catch {
       setError("Chyba při vytváření objednávky.");
@@ -106,9 +110,9 @@ const CartPurchase = () => {
     );
 
   return (
-    <div className="m-auto grid w-full grid-cols-1 gap-10 text-white md:w-[75%] md:grid-cols-2 2xl:w-[60%]">
+    <div className="m-auto grid w-[95%] grid-cols-1 gap-10 text-white md:w-[75%] md:grid-cols-2 2xl:w-[60%]">
       <div className="flex w-full flex-col gap-5">
-        <div className="flex flex-col gap-2 rounded-lg bg-slate-700 p-6 font-sans">
+        <div className="flex flex-col rounded-lg bg-slate-700 p-6 font-sans">
           <h2 className="text-2xl font-bold">Čas vyzvednutí</h2>
           <Suspense fallback={<Fallback />}>
             <CartReservationCalendar onTimeSelect={handleSelectTime} />
@@ -144,9 +148,7 @@ const CartPurchase = () => {
           <p>{selectedTime ? selectedTime : "Není vybrán žádný čas"}</p>
         </div>
 
-        <div
-          className={`flex flex-row items-start justify-between rounded-lg bg-slate-700 p-3`}
-        >
+        <div className="flex flex-row items-start justify-between rounded-lg bg-slate-700 p-3">
           <h2 className="text-2xl font-bold">Platba</h2>
           <Suspense fallback={<Fallback />}>
             <CartPurchaseSelectedMethods
