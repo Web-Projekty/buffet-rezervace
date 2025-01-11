@@ -15,6 +15,6 @@ class ItemApi
      */
     public function countItemPrice(string $items): int
     {
-        return 1234;
+        return rand(100, 100000);
     }
 }

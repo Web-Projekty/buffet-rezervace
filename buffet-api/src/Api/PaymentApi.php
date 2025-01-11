@@ -74,7 +74,9 @@ class PaymentApi
 
                 $response = $this->thePayClient->createPayment($params);
                 $url = $response->getPayUrl();
-                return PaymentModel::addPayment(type: $paymentMethod, useCredits: false, totalAmount: $amount, thePayUrl: $url);
+                $detailsUrl = $response->getPaymentDetailUrl();
+                $response->getPaymentDetailUrl();
+                return PaymentModel::addPayment(type: $paymentMethod, useCredits: false, totalAmount: $amount, thePayUrl: $url, thePayDetailsUrl: $detailsUrl);
         }
         return 0;
     }

@@ -26,7 +26,8 @@ class PaymentModel extends Model
         'totalAmount',
         'creditsAmount',
         'paid',
-        'thePayUrl'
+        'thePayUrl',
+        'thePayDetailsUrl'
     ];
 
     /**
@@ -37,14 +38,15 @@ class PaymentModel extends Model
      * @param  string         $thePayUrl
      * @return int
      */
-    public static function addPayment(PaymentMethods $type, int $totalAmount, string $thePayUrl, bool $useCredits = false, int $creditsAmount = 0): int
+    public static function addPayment(PaymentMethods $type, int $totalAmount, string $thePayUrl, string $thePayDetailsUrl, bool $useCredits = false, int $creditsAmount = 0): int
     {
         $paymentQuery = PaymentModel::query()->create([
             'type' => $type->value,
             'useCredits' => $useCredits,
             'totalAmount' => $totalAmount,
             'creditsAmount' => $creditsAmount,
-            'thePayUrl' => $thePayUrl
+            'thePayUrl' => $thePayUrl,
+            'thePayDetailsUrl' => $thePayDetailsUrl
         ]);
         $paymentQuery->save();
         return $paymentQuery->toArray()["id"];
