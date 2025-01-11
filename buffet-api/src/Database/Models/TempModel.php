@@ -56,46 +56,67 @@ class TempModel extends Model
             $dateArray = &$out[count($out)];
             $dateArray["date"] = $date;
             $hours = [];
-            $availableDate = false;
-            $availableHour = false;
+            $minutes = [];
             $lastHour = null;
             $hourIndex = 0;
-            //var_dump($out);
+            $availableDate = false;
+            $availableHour = false;
             foreach ($tempDate as $id => $tempRow) {
 
                 // var_dump($tempRow);
                 $startTime = Carbon::createFromFormat("H:i:s", $tempRow["startTime"]);
+                $endTime = Carbon::createFromFormat("H:i:s", $tempRow["endTime"]);
+
+                if ($lastHour != $startTime->format("H") && $lastHour != null) {
+
+                    /*$currentHour = &$hours[$hourIndex];
+                    $currentHour["label"] = $lastHour . ":00";
+                    $hourIndex++;*/
+                    $currentHour = [
+                        "label" => $lastHour . ":00",
+                        "available" => $availableHour,
+                        "minutes" => $minutes
+                    ];
+                    $minutes = [];
+
+                    $hours[] = $currentHour;
+                    $availableHour = false;
+                    $lastHour = $startTime->format("H");
+                }
 
                 //$current = &$hours[$lastHour . ":00"];
 
-                $minutes = [
+                $labelStart = $startTime->format(":i");
+                $labelEnd = $endTime->format(":i");
+
+                $timeslot = [
                     "id" => $tempRow["id"],
-                    "start" => $tempRow["startTime"],
-                    "end" => $tempRow["endTime"],
+                    "label" => $labelStart . " - " . $labelEnd,
                     "available" => ($tempRow["orderCount"] < $tempRow["orderLimit"])
                 ];
+
+                if ($timeslot["available"]) {
+                    $availableDate = true;
+                    $availableHour = true;
+                }
 
                 //$hours[$startTime->format("H") . ":00"][] = $minutes;
                 /*
                 //$currentOut[]*/
 
-                if ($lastHour != $startTime->format("H") || $lastHour == null) {
+                $minutes[] = $timeslot;
+                //echo $lastHour;
+
+                //var_dump($minutes);
+
+                if ($lastHour == null) {
                     $lastHour = $startTime->format("H");
-                    /*$currentHour = &$hours[$hourIndex];
-                    $currentHour["label"] = $lastHour . ":00";
-
-                    $hourIndex++;*/
-                    $currentHour = [
-                        "label" => $lastHour . ":00",
-                        "available" => false,
-                        "minutes" => []
-                    ];
-
-                    $hours[] = $currentHour;
                 }
             }
-            $dateArray["available"] = false;
+            
+            $dateArray["available"] = $availableDate;
             $dateArray["hours"] = $hours;
+            $availableDate = false;
 
         }
 
