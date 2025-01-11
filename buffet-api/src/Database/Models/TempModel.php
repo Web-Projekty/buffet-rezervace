@@ -52,24 +52,80 @@ class TempModel extends Model
          * @var array<mixed>
          */
         $out = [];
-        foreach ($tempTable as $key => $tempDate) {
+        foreach ($tempTable as $date => $tempDate) {
+            $dateArray = &$out[count($out)];
+            $dateArray["date"] = $date;
+            $hours = [];
+            $minutes = [];
+            $lastHour = null;
+            $hourIndex = 0;
+            $availableDate = false;
+            $availableHour = false;
             foreach ($tempDate as $id => $tempRow) {
-               // var_dump($tempRow);
+
+                // var_dump($tempRow);
                 $startTime = Carbon::createFromFormat("H:i:s", $tempRow["startTime"]);
+                $endTime = Carbon::createFromFormat("H:i:s", $tempRow["endTime"]);
 
-                $currentOut = &$out[$key][$startTime->format("H") . ":00"];
+                if ($lastHour != $startTime->format("H") && $lastHour != null) {
 
-                $array = [
+                    /*$currentHour = &$hours[$hourIndex];
+                    $currentHour["label"] = $lastHour . ":00";
+                    $hourIndex++;*/
+                    $currentHour = [
+                        "label" => $lastHour . ":00",
+                        "available" => $availableHour,
+                        "minutes" => $minutes
+                    ];
+                    $minutes = [];
+
+                    $hours[] = $currentHour;
+                    $availableHour = false;
+                    $lastHour = $startTime->format("H");
+                }
+
+                //$current = &$hours[$lastHour . ":00"];
+
+                $labelStart = $startTime->format(":i");
+                $labelEnd = $endTime->format(":i");
+
+                $timeslot = [
                     "id" => $tempRow["id"],
-                    "start" => $tempRow["startTime"],
-                    "end"=> $tempRow["endTime"],
-                    "available"=> ($tempRow["orderCount"] < $tempRow["orderLimit"])
+                    "label" => $labelStart . " - " . $labelEnd,
+                    "available" => ($tempRow["orderCount"] < $tempRow["orderLimit"])
                 ];
 
-                $currentOut[] = $array;
+                if ($timeslot["available"]) {
+                    $availableDate = true;
+                    $availableHour = true;
+                }
 
-                //$currentOut[]
+                //$hours[$startTime->format("H") . ":00"][] = $minutes;
+                /*
+                //$currentOut[]*/
+
+                $minutes[] = $timeslot;
+                //echo $lastHour;
+
+                //var_dump($minutes);
+
+                if ($lastHour == null) {
+                    $lastHour = $startTime->format("H");
+                }
             }
+            // last pass - i just gave up trying to find the correct condition so thers some duplicate code
+            $currentHour = [
+                "label" => $lastHour . ":00",
+                "available" => $availableHour,
+                "minutes" => $minutes
+            ];
+
+            $hours[] = $currentHour;
+
+            $dateArray["available"] = $availableDate;
+            $dateArray["hours"] = $hours;
+            $availableDate = false;
+
         }
 
         //var_dump($out);
