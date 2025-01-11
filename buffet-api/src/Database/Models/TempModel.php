@@ -52,24 +52,51 @@ class TempModel extends Model
          * @var array<mixed>
          */
         $out = [];
-        foreach ($tempTable as $key => $tempDate) {
+        foreach ($tempTable as $date => $tempDate) {
+            $dateArray = &$out[count($out)];
+            $dateArray["date"] = $date;
+            $hours = [];
+            $availableDate = false;
+            $availableHour = false;
+            $lastHour = null;
+            $hourIndex = 0;
+            //var_dump($out);
             foreach ($tempDate as $id => $tempRow) {
-               // var_dump($tempRow);
+
+                // var_dump($tempRow);
                 $startTime = Carbon::createFromFormat("H:i:s", $tempRow["startTime"]);
 
-                $currentOut = &$out[$key][$startTime->format("H") . ":00"];
+                //$current = &$hours[$lastHour . ":00"];
 
-                $array = [
+                $minutes = [
                     "id" => $tempRow["id"],
                     "start" => $tempRow["startTime"],
-                    "end"=> $tempRow["endTime"],
-                    "available"=> ($tempRow["orderCount"] < $tempRow["orderLimit"])
+                    "end" => $tempRow["endTime"],
+                    "available" => ($tempRow["orderCount"] < $tempRow["orderLimit"])
                 ];
 
-                $currentOut[] = $array;
+                //$hours[$startTime->format("H") . ":00"][] = $minutes;
+                /*
+                //$currentOut[]*/
 
-                //$currentOut[]
+                if ($lastHour != $startTime->format("H") || $lastHour == null) {
+                    $lastHour = $startTime->format("H");
+                    /*$currentHour = &$hours[$hourIndex];
+                    $currentHour["label"] = $lastHour . ":00";
+
+                    $hourIndex++;*/
+                    $currentHour = [
+                        "label" => $lastHour . ":00",
+                        "available" => false,
+                        "minutes" => []
+                    ];
+
+                    $hours[] = $currentHour;
+                }
             }
+            $dateArray["available"] = false;
+            $dateArray["hours"] = $hours;
+
         }
 
         //var_dump($out);
