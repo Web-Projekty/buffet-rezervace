@@ -9,6 +9,7 @@ use Buffet\Database\DatabaseManager;
 use Buffet\Database\Models\CategoryModel;
 use Buffet\Database\Models\ItemModel;
 use Buffet\Database\Models\OrderModel;
+use Buffet\Database\Models\PaymentModel;
 use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\TimeslotModel;
 use Buffet\Database\Models\UserModel;
@@ -552,6 +553,33 @@ class BuffetApi
      */
     public function handleUpdatePayment(ApiResponse $response): ApiResponse
     {
+        $response->setRequestKeys(["token", "type", "paymentId"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $isAdmin = UserModel::isAdmin($uid);
+
+        if (!$isAdmin) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        $paymentId = (int) $response->getRequestByKey("paymentId");
+        $type = $response->getRequestByKey("type");
+
+        if ($type !== "state_changed") {
+            return $response->setError(Error::InvalidType);
+        }
+        
+        PaymentModel::setPaid($paymentId);
+
         return $response;
     }
 

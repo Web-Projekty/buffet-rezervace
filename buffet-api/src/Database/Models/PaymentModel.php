@@ -53,4 +53,14 @@ class PaymentModel extends Model
         $paymentQuery->save();
         return $paymentQuery->toArray()["id"];
     }
+
+    /**
+     * @param int $paymentId
+     */
+    public static function setPaid(int $paymentId): void
+    {
+        $paymentQuery = PaymentModel::query()->find($paymentId);
+        $paymentQuery->update(['paid' => true]);
+        $paymentQuery->save();
+    }
 }
