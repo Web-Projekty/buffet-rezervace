@@ -594,7 +594,7 @@ class BuffetApi
             return $response->setError(Error::InvalidPaymentId);
         }
 
-        return $response;
+        return $response->setSuccess(Success::PaymentUpdated);
     }
 
     /**
