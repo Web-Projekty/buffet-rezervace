@@ -1,10 +1,20 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace Buffet\Api;
 
+use Buffet\Database\Models\OrderModel;
+use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\TimeslotModel;
+use Buffet\Database\Models\UserModel;
 use Buffet\Types\Exceptions\NegativeValueException;
+use Buffet\Types\Exceptions\OutOfOrderIdsException;
+use Buffet\Types\OrderStatus;
+use Buffet\Types\Settings;
 use Buffet\Types\Time;
+use Buffet\Utils\EnvReader;
+use Carbon\Carbon;
 use DateException;
 
 class OrderApi
@@ -34,16 +44,179 @@ class OrderApi
         if ($clear) {
             TimeslotModel::query()->delete();
         }
+        $timeslots = [];
 
         while ($end->diff($start, "m") >= $limit) {
             $startString = $start->format("m");
             $start->addTime(new Time(0, $intervalTime));
             $endString = $start->format("m");
 
-            TimeslotModel::generateTimeslots($startString, $endString, $intervalTime, $limit);
+            $timeslots[] = [
+                'startTime' => $startString,
+                'endTime' => $endString,
+                'orderLimit' => $limit
+            ];
 
             $index++;
         }
+        TimeslotModel::generateTimeslots($timeslots);
+    }
 
+    /**
+     * @throws NegativeValueException
+     */
+
+    public function generateTemp(): void
+    {
+        $timeslots = TimeslotModel::all()->toArray();
+        $days = [];
+        $orderDateLimitMax = (int) EnvReader::getEnvProperty(Settings::OrderDateLimitMax);
+
+        if ($orderDateLimitMax <= 1) {
+            throw new NegativeValueException("Order date limit must be greater than 1");
+        }
+        for ($i = 0; $i < $orderDateLimitMax; $i++) {
+            $days[] = date('Y-m-d', strtotime('+' . $i . ' days'));
+        }
+
+        //  var_dump($days);
+
+        $firstDay = $days[0];
+        $lastDay = $days[sizeof($days) - 1];
+
+        $orders = OrderModel::selectByDateRange($firstDay, $lastDay);
+
+        $tempTimeslots = [];
+
+        //$countedOrderIds = [];
+
+        foreach ($days as $day) {
+            $todaysOrders = $orders->where('pickupDate', '=', $day);
+
+            foreach ($timeslots as $timeslot) {
+                $startTime = Carbon::createFromFormat('H:i:s', $timeslot["startTime"]);
+                $endTime = Carbon::createFromFormat('H:i:s', $timeslot["endTime"]);
+
+                $currentOrders = $todaysOrders->where('startTime', '<', $endTime->format('H:i:s'))->where('endTime', '>', $startTime->format('H:i:s')); //->whereNotIn('id', $countedOrderIds);
+
+                //$countedOrderIds = array_unique(array_merge($countedOrderIds, $currentOrders->pluck('id')->toArray())); // i don't know why I wrote this. Its working but completely useless
+
+                $count = $currentOrders->count();
+
+                ### Debug output ###
+
+                /*$message = $day . " from " . $startTime->format('H:i:s') . " to " . $endTime->format('H:i:s') . " has " . $count . " orders";
+                if ($count > 0) {
+                echo "<span style='color:red'>" . $message . "</span><br>";
+                } else {
+                echo $message . "<br>";
+                }*/
+
+                $tempTimeslots[] = [
+                    'date' => $day,
+                    'startTime' => $timeslot['startTime'],
+                    'endTime' => $timeslot['endTime'],
+                    'orderLimit' => $timeslot['orderLimit'],
+                    'orderCount' => $count];
+            }
+        }
+
+        TempModel::regenerate($tempTimeslots);
+    }
+
+    /**
+     * @param string $startTime
+     * @param string $endTime
+     * @param string $date
+     */
+    public function isFree(string $startTime, string $endTime, string $date, int $limit): bool
+    {
+        $startTime = Carbon::createFromFormat('H:i', $startTime);
+        $endTime = Carbon::createFromFormat('H:i', $endTime);
+        $currentOrders = OrderModel::query()->where('pickupDate', '=', $date);
+
+        $currentOrders = $currentOrders->where('startTime', '<', $endTime->format('H:i:s'))->where('endTime', '>', $startTime->format('H:i:s'));
+
+        $count = $currentOrders->count();
+
+        return $count < $limit;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getOrderPickupId(): string
+    {
+
+        $orders = OrderModel::query()->where("status", "=", OrderStatus::Sent)->orWhere("status", "=", OrderStatus::Preparing)->orWhere("status", "=", OrderStatus::Waiting)->orWhere("status", "=", OrderStatus::Waiting)->get();
+        $counter = 0;
+
+        if ($orders->count() > 1000) {
+            throw new OutOfOrderIdsException();
+        }
+
+        do {
+            $counter++;
+            $randomId = random_int(0, 999);
+
+            $randomId = str_pad(strval($randomId), 3, '0', STR_PAD_LEFT);
+
+            $count = $orders->where("pickUpId", "=", $randomId)->count();
+
+        } while ($count > 0);
+
+        return $randomId;
+    }
+
+    /**
+     * @param int          $orderId
+     * @param array<mixed> $parameters
+     */
+    public function updateOrder(int $orderId, array $parameters): void
+    {
+        $order = OrderModel::query()->find($orderId);
+
+        if ($order === null) {
+            throw new \Exception("Order not found", 1);
+        }
+
+        foreach ($parameters as $key => $value) {
+            // check if key is valid by type
+            switch ($key) {
+                case "status":
+                    $stausOptions = OrderStatus::cases();
+
+                    foreach ($stausOptions as $option) {
+                        if ($value === $option->value) {
+                            break;
+                        }
+                    }
+                    break;
+
+                case "userId":
+                    if (!UserModel::query()->find($value)->exists()) {
+                        throw new \Exception("User not found", 3);
+                    }
+                    break;
+
+                case "dateCreated":
+                    break;
+
+                case "pickUpId":
+                    $pickupIdLenght = strlen(strval($value));
+                    if ($pickupIdLenght > 4) {
+                        throw new \Exception("Invalid pickupId", 4);
+                    }
+                    if ($pickupIdLenght < 3) {
+                        $value = str_pad(strval($value), 3, '0', STR_PAD_LEFT);
+                    }
+                    break;
+
+            }
+
+            $order->$key = $value;
+        }
+
+        $order->save();
     }
 }

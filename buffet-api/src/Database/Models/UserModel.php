@@ -19,7 +19,7 @@ class UserModel extends Model
     /**
      * @var array<string>
      */
-    protected $fillable = ['username', 'password', 'isAdmin', 'fullName', 'email', 'class'];
+    protected $fillable = ['username', 'password', 'isAdmin', 'fullName', 'email', 'class', "tel"];
 
     // Optionally, disable timestamps if the table doesn't have them
 
@@ -69,16 +69,16 @@ class UserModel extends Model
      * @param string $password
      */
 
-    public static function createUser(string $username, string $password): bool
+    public static function createUser(string $username, string $password, string $fullName, string $tel, string $email): bool
     {
         try {
             UserModel::query()->create([
                 'username' => $username,
                 'password' => $password,
                 'isAdmin' => false,
-                'fullName' => 'idk',
-                'email' => 'default@spseplzen.cz',
-                'class' => '5.H'
+                'fullName' => $fullName,
+                'email' => $email,
+                'tel' => $tel
             ]);
         } catch (\Illuminate\Database\QueryException) {
             return false;
@@ -96,4 +96,14 @@ class UserModel extends Model
         } catch (QueryException) {}
         return false;
     }
+
+    /**
+     * @return array<string>
+     */
+    public static function getColums(): array
+    {
+        $model = new UserModel();
+        return $model->fillable;
+    }
+
 }

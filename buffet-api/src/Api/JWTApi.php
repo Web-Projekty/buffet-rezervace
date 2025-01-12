@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace Buffet\Api;
 
+use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use DomainException;
@@ -18,11 +19,8 @@ use UnexpectedValueException;
 class JWTApi
 {
 
-    /**
-     * @param bool $ignoreHost
-     */
-    public function __construct(
-        private bool $ignoreHost = false) {}
+    public function __construct()
+    {}
 
     /**
      * Generates and returns a signed JWT token
@@ -49,6 +47,19 @@ class JWTApi
     }
 
     /**
+     * @return string
+     */
+    public static function getAdminToken(): string
+    {
+        $admin = UserModel::query()->where('isAdmin', 1)->first()->toArray();
+
+        $jwt = new JWTApi();
+        $token = $jwt->getToken($admin['id'], $admin['username']);
+
+        return $token;
+    }
+
+    /**
      * Decodes JWT token and returns an object with details (should be array (WIP))
      *
      * @param  ApiResponse          $response JWT token to decode
@@ -57,8 +68,11 @@ class JWTApi
 
     function decodeToken(ApiResponse $response): ApiResponse | stdClass
     {
-        $token = $response->getRequestByKey('token');
+        $token = (string) $response->getRequestByKey('token');
         $key = 'example_key';
+        if ($token == "") {
+            return $response->setError(Error::MissingToken);
+        }
         try {
             $dec = JWT::decode($token, new Key($key, 'HS384'));
         } catch (SignatureInvalidException) {
@@ -89,7 +103,7 @@ class JWTApi
 
         if (!$jwt instanceof ApiResponse) {
 
-            if (!$this->ignoreHost && $_SERVER['HTTP_HOST'] != 'localhost') {
+            if ($_SERVER['HTTP_HOST'] != 'localhost') {
                 if ($jwt->iss != $_SERVER['HTTP_HOST']) {
                     $response->setError(Error::BadDomain);
                 }
