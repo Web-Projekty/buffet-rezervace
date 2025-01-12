@@ -60,7 +60,10 @@ class PaymentModel extends Model
     public static function setPaid(int $paymentId): void
     {
         $paymentQuery = PaymentModel::query()->find($paymentId);
-        $paymentQuery->update(['paid' => true]);
+        if (!$paymentQuery) {
+            throw new \Exception("Payment not found", 1);
+        }
+        $paymentQuery->update(['paid' => 1]);
         $paymentQuery->save();
     }
 }

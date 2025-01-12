@@ -78,7 +78,7 @@ class BuffetApi
         $query = $request->getQueryParams();
 
         $type = $query["type"];
-        $paymentUid = $query["paymen_uid"];
+        $paymentUid = $query["payment_uid"];
         $projectId = $query["project_id"];
 
         $token = JWTApi::getAdminToken();
@@ -89,12 +89,13 @@ class BuffetApi
             "type" => $type,
             "paymentId" => $paymentUid
         ];
+        //$msg = [];
 
         error_log(HttpClient::post("http://localhost/api", json_encode($msg)));
 
-        foreach ($request->getQueryParams() as $key => $param) {
-            error_log("Key: " . $key . "Param: " . $param);
-        }
+        /*foreach ($request->getQueryParams() as $key => $param) {
+        error_log("Key: " . $key . "Param: " . $param);
+        }*/
         return $html;
     }
 
@@ -577,8 +578,19 @@ class BuffetApi
         if ($type !== "state_changed") {
             return $response->setError(Error::InvalidType);
         }
-        
-        PaymentModel::setPaid($paymentId);
+
+        if ($paymentId !== 0) {
+            try {
+                PaymentModel::setPaid($paymentId);
+            } catch (\Exception $e) {
+                if ($e->getCode() === 1) {
+                    return $response->setError(Error::PaymentNotFound);
+                }
+            }
+
+        } else {
+            return $response->setError(Error::InvalidPaymentId);
+        }
 
         return $response;
     }

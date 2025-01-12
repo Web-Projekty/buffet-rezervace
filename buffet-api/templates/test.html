@@ -10,6 +10,7 @@
 <body>
   <form id="myForm">
     <select name="requestType">
+      <option value="updatePayment">updatePayment</option>
       <option value="updateOrder">updateOrder</option>
       <option value="getOrderTimeTable">getOrderTimeTable</option>
       <option value="generateTemp">generateTemp</option>
@@ -42,6 +43,8 @@
     <input type="tel" name="tel" placeholder="tel">
     <input type="email" name="email" placeholder="email">
     <input type="text" name="fullName" placeholder="fullName">
+    <input type="text" name="type" placeholder="type" value="state_changed">
+    <input type="text" name="paymentId" placeholder="paymentId">
     <label for="clear">clear</label>
     <input type="checkbox" name="clear">
     <input type="button" value="Submit" onclick="submitForm()" />
