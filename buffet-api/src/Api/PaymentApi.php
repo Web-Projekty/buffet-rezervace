@@ -90,4 +90,14 @@ class PaymentApi
         var_dump($result->getState());
         var_dump($result);
     }
+
+    /**
+     * @param  int    $paymentId
+     * @return bool
+     */
+    public function isPaid(int $paymentId): bool
+    {
+        $result = $this->thePayClient->getPayment(strval($paymentId));
+        return $result->getState() === "paid";
+    }
 }

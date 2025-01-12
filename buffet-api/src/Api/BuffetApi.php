@@ -578,8 +578,10 @@ class BuffetApi
         if ($type !== "state_changed") {
             return $response->setError(Error::InvalidType);
         }
+        $paymentApi = new PaymentApi;
 
-        if ($paymentId !== 0) {
+        if ($paymentId !== 0 && $paymentApi->isPaid($paymentId)) {
+
             try {
                 PaymentModel::setPaid($paymentId);
             } catch (\Exception $e) {
