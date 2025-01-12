@@ -23,6 +23,7 @@ use Buffet\Types\OrderStatus;
 use Buffet\Types\Settings;
 use Buffet\Types\Success;
 use Buffet\Utils\EnvReader;
+use Buffet\Utils\HttpClient;
 use Buffet\Utils\WebsocketClient;
 use Carbon\Carbon;
 use Carbon\CarbonTimeZone;
@@ -65,6 +66,38 @@ class BuffetApi
     }
 
     /**
+     * @param RequestInterface  $request
+     * @param ResponseInterface $html
+     */
+    function handleThePayNotification(RequestInterface $request, ResponseInterface $html): ResponseInterface
+    {
+        $response = new ApiResponse();
+        $dbMan = new DatabaseManager($response);
+        $dbMan->setupConnection();
+        $query = $request->getQueryParams();
+
+        $type = $query["type"];
+        $paymentUid = $query["paymen_uid"];
+        $projectId = $query["project_id"];
+
+        $token = JWTApi::getAdminToken();
+
+        $msg = [
+            "requestType" => "updatePayment",
+            "token" => $token,
+            "type" => $type,
+            "paymentId" => $paymentUid
+        ];
+
+        error_log(HttpClient::post("http://localhost/api", json_encode($msg)));
+
+        foreach ($request->getQueryParams() as $key => $param) {
+            error_log("Key: " . $key . "Param: " . $param);
+        }
+        return $html;
+    }
+
+    /**
      * Main API handler.
      *
      * Calls specified requestType methods
@@ -72,7 +105,6 @@ class BuffetApi
      * @param  string      $request
      * @return ApiResponse API response
      */
-
     function handleApiCall(string $request = null): ApiResponse
     {
         if (!$request) {

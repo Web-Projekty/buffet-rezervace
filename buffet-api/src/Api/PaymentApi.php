@@ -70,7 +70,7 @@ class PaymentApi
                 $stringUid = strval(rand(0, 2147483640)); // has to be unique for each transaction
                 $params = new CreatePaymentParams($amount, $currency, $stringUid);
                 $params->setReturnUrl('https://wlczak.vlastas.cc/return');
-                $params->setNotifUrl('https://wlczak.vlastas.cc/backend/return');
+                $params->setNotifUrl('https://wlczak.vlastas.cc/backend/api/notification');
 
                 $response = $this->thePayClient->createPayment($params);
                 $url = $response->getPayUrl();
