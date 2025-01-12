@@ -3,18 +3,20 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { fadeInAnimation } from "../../animations";
 
-type HorizontalScrollBarProps = {
+type HorizontalPagingProps = {
   children: React.ReactNode;
   className?: string;
+  backgroundType?: number;
 };
 
-const HorizontalScrollBar = ({
+const HorizontalPaging = ({
   children,
   className,
-}: HorizontalScrollBarProps) => {
+  backgroundType = 1,
+}: HorizontalPagingProps) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState<boolean>(false);
-  const [canScrollRight, setCanScrollRight] = useState<boolean>(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   const updateScrollButtons = () => {
     if (scrollContainerRef.current) {
@@ -27,34 +29,51 @@ const HorizontalScrollBar = ({
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -400, behavior: "smooth" });
+      scrollContainerRef.current.scrollBy({ left: -300, behavior: "smooth" });
     }
   };
 
   const scrollRight = () => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 400, behavior: "smooth" });
+      scrollContainerRef.current.scrollBy({ left: 300, behavior: "smooth" });
+    }
+  };
+
+  const getBackgroundColor = (side: "left" | "right") => {
+    if (backgroundType === 1) {
+      if (side === "right") {
+        return "bg-gradient-to-l from-backgroundColor via-backgroundColor to-transparent";
+      } else {
+        return "bg-gradient-to-r from-backgroundColor via-backgroundColor to-transparent";
+      }
+    } else {
+      if (side === "right") {
+        return "bg-gradient-to-l from-slate-900 via-slate-900 to-transparent";
+      } else {
+        return "bg-gradient-to-r from-slate-900 via-slate-900 to-transparent";
+      }
     }
   };
 
   useEffect(() => {
-    updateScrollButtons();
-    const scrollContainer = scrollContainerRef.current;
-    if (scrollContainer) {
-      scrollContainer.addEventListener("scroll", updateScrollButtons);
-      window.addEventListener("resize", updateScrollButtons);
-    }
-    return () => {
-      if (scrollContainer) {
-        scrollContainer.removeEventListener("scroll", updateScrollButtons);
-      }
-      window.removeEventListener("resize", updateScrollButtons);
-    };
+    const handleResize = () => updateScrollButtons();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
     updateScrollButtons();
   }, [children]);
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      const scrollContainer = scrollContainerRef.current;
+      scrollContainer.addEventListener("scroll", updateScrollButtons);
+      return () => {
+        scrollContainer.removeEventListener("scroll", updateScrollButtons);
+      };
+    }
+  }, []);
 
   return (
     <div className="relative flex flex-row">
@@ -62,33 +81,34 @@ const HorizontalScrollBar = ({
         {canScrollLeft && (
           <motion.div
             {...fadeInAnimation(0.2)}
-            className="absolute -left-2 z-10 flex h-full items-center rounded-lg bg-gradient-to-r from-backgroundColor via-backgroundColor to-transparent px-2 pr-10"
+            className={`absolute -left-2 z-10 flex h-full items-center rounded-lg ${getBackgroundColor("left")} px-2 pr-10`}
           >
             <ChevronLeft
               size={30}
               onClick={scrollLeft}
-              className="invisible hidden cursor-pointer text-white md:visible md:block"
+              className="cursor-pointer text-white"
             />
           </motion.div>
         )}
       </AnimatePresence>
 
       <div
-        className={`flex gap-5 overflow-x-auto ${className} overflow-y-hidden`}
+        className={`flex overflow-x-auto ${className} items-center gap-3 overflow-y-hidden`}
         ref={scrollContainerRef}
       >
         {children}
       </div>
+
       <AnimatePresence>
         {canScrollRight && (
           <motion.div
             {...fadeInAnimation(0.2)}
-            className="absolute -right-2 z-10 flex h-full items-center rounded-lg bg-gradient-to-l from-backgroundColor via-backgroundColor to-transparent px-2 pl-10"
+            className={`absolute -right-2 z-10 flex h-full items-center rounded-lg ${getBackgroundColor("right")} px-2 pl-10`}
           >
             <ChevronRight
               size={30}
               onClick={scrollRight}
-              className="invisible hidden cursor-pointer text-white md:visible md:block"
+              className="cursor-pointer text-white"
             />
           </motion.div>
         )}
@@ -97,4 +117,4 @@ const HorizontalScrollBar = ({
   );
 };
 
-export default HorizontalScrollBar;
+export default HorizontalPaging;
