@@ -71,6 +71,10 @@ enum Error: string {
 
     ############################ General ############################
     case GeneralError = 'Oops something has gone wrong';
+
+    ############################ ThePay ############################
+    case ThePayError = 'ThePay error';
+    case PaymentCreationError = 'Payment creation error';
     /**
      * @return string
      */

@@ -44,7 +44,7 @@ class EnvReader
                 return $value;
             }
         }
-        throw new SettingsException();
+        throw new SettingsException("The key " . $needle->value . " does not exist in the env file");
     }
 
     public static function createEnv(): void

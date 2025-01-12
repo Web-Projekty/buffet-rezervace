@@ -4,8 +4,12 @@ declare (strict_types = 1);
 
 namespace Buffet\Database\Models;
 
+use Buffet\Api\ItemApi;
 use Buffet\Api\OrderApi;
+use Buffet\Api\PaymentApi;
+use Buffet\Types\Exceptions\PaymentCreationException;
 use Buffet\Types\OrderStatus;
+use Buffet\Types\PaymentMethods;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 
@@ -23,7 +27,7 @@ class OrderModel extends Model
     /**
      * @var array<string>
      */
-    public $fillable = ['userId', 'status', 'dateCreated', 'pickupDate', 'items', 'startTime', 'endTime', 'pickUpId', 'paymentMethod', 'useCredits'];
+    public $fillable = ['userId', 'status', 'dateCreated', 'pickupDate', 'items', 'startTime', 'endTime', 'pickUpId', 'useCredits', 'paymentId'];
 
     /**
      * @var array<string>
@@ -48,7 +52,7 @@ class OrderModel extends Model
     /**
      * @var array<string>
      */
-    protected $visible = ['id', 'userId', 'status', 'pickupDate', 'dateCreated', 'items', 'startTime', 'endTime', 'pickUpId', 'paymentMethod', 'useCredits'];
+    protected $visible = ['id', 'userId', 'status', 'pickupDate', 'dateCreated', 'items', 'startTime', 'endTime', 'pickUpId', 'useCredits', 'paymentId'];
 
     /**
      * @var array<string>
@@ -61,8 +65,7 @@ class OrderModel extends Model
         'items' => 'fulltext',
         'startTime' => 'time',
         'endTime' => 'time',
-        'pickUpId' => 'string',
-        'paymentMethod' => 'string'
+        'pickUpId' => 'string'
     ];
 
     /**
@@ -118,29 +121,38 @@ class OrderModel extends Model
     }
 
     /**
-     * @param  int                                                                                                                                $userId
-     * @param  OrderStatus                                                                                                                        $status
-     * @param  string                                                                                                                             $pickupDate
-     * @param  string                                                                                                                             $items
-     * @param  string                                                                                                                             $paymentMethod
-     * @param  string                                                                                                                             $startTime
-     * @param  string                                                                                                                             $endTime
-     * @return array{userId:int,status:int,pickupDate:string,items:string,startTime:string,endTime:string,pickUpId:string,paymentMethod:string}
+     * @param  int                                                                                                                                           $userId
+     * @param  OrderStatus                                                                                                                                   $status
+     * @param  string                                                                                                                                        $pickupDate
+     * @param  string                                                                                                                                        $items
+     * @param  string                                                                                                                                        $paymentMethod
+     * @param  string                                                                                                                                        $startTime
+     * @param  string                                                                                                                                        $endTime
+     * @return array{userId:int,status:int,pickupDate:string,items:string,startTime:string,endTime:string,pickUpId:string,paymentMethod:string,url:string}
      */
     public static function createOrder(int $userId, OrderStatus $status, string $pickupDate, string $items, string $paymentMethod, string $startTime, string $endTime): array
     {
         $pickupId = OrderApi::getOrderPickupId();
+
+        $paymentApi = new PaymentApi();
+        $itemApi = new ItemApi;
+
+        $price = $itemApi->countItemPrice($items);
+
+        $paymentId = $paymentApi->createPayment($price, PaymentMethods::ThePay);
+        if ($paymentId == 0) {
+            throw new PaymentCreationException();
+        }
 
         $order = OrderModel::query()->create([
             'userId' => $userId,
             'status' => $status->value,
             'pickupDate' => $pickupDate,
             'items' => $items,
+            'paymentId' => $paymentId,
             'startTime' => $startTime,
             'endTime' => $endTime,
-            'pickUpId' => $pickupId,
-            'paymentMethod' => $paymentMethod,
-            'useCredits' => false,
+            'pickUpId' => $pickupId
         ]);
 
         $order->save();
@@ -148,6 +160,8 @@ class OrderModel extends Model
         $orderArray = $order->toArray();
 
         $orderArray['id'] = $order->getAttribute("id");
+
+        $orderArray['url'] = PaymentModel::query()->find($paymentId)->toArray()['thePayUrl'];
         return $orderArray;
 
     }

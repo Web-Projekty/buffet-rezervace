@@ -2,6 +2,10 @@
 
 use Buffet\Api\BuffetApi;
 use Buffet\Api\ImageProvider;
+use Buffet\Api\PaymentApi;
+use Buffet\Database\DatabaseManager;
+use Buffet\Database\Models\PaymentModel;
+use Buffet\Types\ApiResponse;
 use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\Settings;
 use Buffet\Utils\EnvReader;
@@ -34,6 +38,47 @@ $app->get('/', function (Request $request, Response $response, $args) {
     return $response;
 });
 
+$app->get('/pay', function (Request $request, Response $response, $args) {
+    $response = new ApiResponse();
+    $dbMan = new DatabaseManager($response);
+    $dbMan->setupConnection();
+    $paymetns = PaymentModel::query()->where('paid', 0)->get()->toArray();
+    foreach ($paymetns as $payment) {
+        $paymentApi = new PaymentApi();
+        $paymentApi->getPaymentInfo($payment['thePayId']);
+    }
+});
+
+$app->get('/return', function (Request $request, Response $response, $args) {
+    error_log($request->getBody());
+    /*error_log(sprintf("Headers: %s", $request->getHeaders()));
+    error_log(sprintf("Query: %s", $request->getQueryParams()));
+    error_log(sprintf("POST: %s", $request->getParsedBody()));
+    error_log(sprintf("Args: %s", $args));*/
+    if ($request->getParsedBody()) {
+
+        foreach ($request->getParsedBody() as $key => $value) {
+            error_log(sprintf("POST %s: %s", $key, $value));
+        }
+    }
+
+    if ($request->getQueryParams()) {
+
+        foreach ($request->getQueryParams() as $key => $value) {
+            error_log(sprintf("QUERY %s: %s", $key, $value));
+        }
+    }
+
+    foreach ($request->getHeaders() as $key => $value) {
+        error_log(sprintf("HEADER %s: %s", $key, $value[0]));
+    }
+
+    foreach ($args as $key => $value) {
+        error_log(sprintf("ARG %s: %s", $key, $value));
+    }
+    return $response;
+});
+
 $app->get('/cred', function (Request $request, Response $response, $args) {
 
     ob_start();
@@ -57,7 +102,7 @@ $response->getBody()->write($html);
 return $response;
 });*/
 
-// CORS Middleware (DO NOT!!!! LEAVE IN FINAL RELEASE)e
+// CORS Middleware (DO NOT!!!! LEAVE IN FINAL RELEASE)
 $corsMiddleware = function ($request, $handler) {
     $response = $handler->handle($request);
     return $response

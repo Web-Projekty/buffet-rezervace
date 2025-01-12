@@ -17,6 +17,7 @@ use Buffet\Types\Error;
 use Buffet\Types\EventTypes;
 use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Exceptions\OutOfOrderIdsException;
+use Buffet\Types\Exceptions\PaymentCreationException;
 use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\OrderStatus;
 use Buffet\Types\Settings;
@@ -28,6 +29,7 @@ use Carbon\CarbonTimeZone;
 use DateException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
+use RuntimeException;
 
 class BuffetApi
 {
@@ -370,6 +372,7 @@ class BuffetApi
     function handleCreateOrder(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "items", "startTime", "endTime", "pickUpDate", "paymentMethod"]);
+        $response->setPayloadKeys(["msg", "url"]);
 
         // object declaration
         $jwt = new JWTApi;
@@ -417,6 +420,11 @@ class BuffetApi
                 $order = OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
             } catch (OutOfOrderIdsException $e) {
                 return $response->setError(Error::OutOfOrderIds);
+            } catch (RuntimeException $e) {
+                error_log($e->getMessage());
+                return $response->setError(Error::ThePayError);
+            } catch (PaymentCreationException $e) {
+                return $response->setError(Error::PaymentCreationError);
             }
         }
         try {
@@ -426,6 +434,8 @@ class BuffetApi
              * @todo handle exception
              */
         }
+
+        $response->setPayload("url", $order["url"]);
 
         WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
 
