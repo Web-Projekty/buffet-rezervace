@@ -4,7 +4,6 @@ declare (strict_types = 1);
 
 namespace Buffet\WebSockets\Channels;
 
-use Buffet\Api\BuffetApi;
 use Buffet\Types\Error;
 use Buffet\Types\Success;
 use Buffet\Utils\Helper;
@@ -45,32 +44,40 @@ class KDSChannel implements MessageInterface
 
             $requestType = $decoded->requestType ?? "";
 
+            $token = $decoded->token ?? "";
+
+            $isAdmin = Helper::isAdmin($token);
+
             switch ($requestType) {
                 case "subscribe":
-                    if (Helper::isClientInStorage($conn, $this->authenticatedClients)) {
-                        $conn->send(Helper::getErrorResponse(Error::AlreadySubscribed));
+                    if (!$isAdmin) {
+                        $conn->send(Helper::getErrorResponse(Error::Unauthorized));
                         break;
                     }
-
-                    $token = $decoded->token ?? "";
-
-                    if (Helper::isAdmin($token)) {
+                    if (!Helper::isClientInStorage($conn, $this->authenticatedClients)) {
                         Helper::attachClient($conn, $this->authenticatedClients);
-                        $conn->send(Helper::getSuccessResponse(Success::Subscribed));
-                        $conn->send(HttpClient::post('http://localhost/api', json_encode(['requestType' => 'getOrders', 'token' => $token])));
-                    } else {
-                        $conn->send(Helper::getErrorResponse(Error::Unauthorized));
+                        //$conn->send(Helper::getErrorResponse(Error::AlreadySubscribed));
                     }
+                    $conn->send(Helper::getSuccessResponse(Success::Subscribed));
+                    $conn->send(HttpClient::post('http://localhost/api', json_encode(['requestType' => 'getOrders', 'token' => $token])));
                     break;
                 case "publish":
+                    if (!$isAdmin) {
+                        $conn->send(Helper::getErrorResponse(Error::Unauthorized));
+                        break;
+                    }
                     foreach ($this->authenticatedClients as $client) {
-                        $client->send($msg);
+                        $decoded = json_decode($msg);
+
+                        $newMsg["eventType"] = $decoded->eventType ?? "";
+                        $newMsg["payload"] = $decoded->payload ?? "";
+
+                        $client->send(json_encode($newMsg));
                     }
                     break;
-                default:
-                    $api = new BuffetApi();
 
-                    $response = $api->handleApiCall($msg);
+                default:
+                    $response = HttpClient::post('http://localhost/api', $msg);
 
                     $conn->send((string) $response);
             }

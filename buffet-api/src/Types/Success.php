@@ -8,6 +8,8 @@ enum Success: string {
     ############################ Api ############################
     // api methods
     case GenerateTimeslots = 'Timeslots generated successfully';
+
+    case GenerateTemp = 'Temp generated successfully';
     ############################ Auth ############################
     // registration
     case Registration = 'Registered successfully';
@@ -17,6 +19,10 @@ enum Success: string {
 
     // JWT
     case Verification = 'Token verified succesfully';
+
+    ############################ Orders ############################
+    case OrderCreated = 'Order created successfully';
+    case OrderUpdated = 'Order updated successfully';
 
     ############################ Channels ############################
     case ChannelConnected = 'Channel connected successfully';

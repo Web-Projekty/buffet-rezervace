@@ -10,7 +10,8 @@
         "laravel/database": "^8.83",
         "cboden/ratchet": "^0.4.4",
         "ratchet/pawl": "^0.4.1",
-        "guzzlehttp/guzzle": "^7.9"
+        "guzzlehttp/guzzle": "^7.9",
+        "thepay/api-client": "^2.1"
     },
     "license": "none",
     "autoload": {

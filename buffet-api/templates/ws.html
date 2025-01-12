@@ -10,6 +10,7 @@
 <body>
     <form id="myForm">
         <select name="requestType">
+            <option value="updateOrder">updateOrder</option>
             <option value="subscribe">subscribe</option>
             <option value="getOrders">getOrders</option>
             <option value="getMenu">getMenu</option>
@@ -20,11 +21,22 @@
             <option value="test">test</option>
             <option value="random_stuff_here">non-existent-call</option>
         </select>
+
         <input type="text" name="username" placeholder="username" />
         <input type="text" name="password" placeholder="password" />
         <input type="text" name="token" placeholder="token" />
         <input type="text" name="page" placeholder="page" value="1" />
         <input type="text" name="itemsCount" placeholder="itemsCount" value="1" />
+        <input type="text" name="items" placeholder="items" value="[2,5,10]" />
+        <input type="time" name="startTime" value="09:00">
+        <input type="time" name="endTime" value="09:05">
+        <input type="date" name="pickUpDate" value="2024-12-14">
+        <input type="text" name="paymentMethod" placeholder="paymentMethod" value="thePay">
+        <input type="number" name="limit" placeholder="limit" value="5">
+        <input type="number" name="interval" placeholder="interval" value="5">
+        <input type="number" name="orderId" placeholder="orderId">
+        <label for="clear">clear</label>
+        <input type="checkbox" name="clear">
         <input type="button" value="Submit" onclick="submitForm()" />
     </form>
 
@@ -71,9 +83,9 @@
             protocol = window.location.protocol
             //console.log(window.location.protocol)
             if (protocol == 'http:') {
-                address = 'ws://' + window.location.host + '/kds/'
+                address = 'ws://' + window.location.host + window.location.pathname.slice(0, -4) + '/kds/'
             } else {
-                address = 'wss://' + window.location.host + '/kds/'
+                address = 'wss://' + window.location.host + window.location.pathname.slice(0, -4) + '/kds/'
             }
             const ws = new WebSocket(address);
             ws.onmessage = (event) => {

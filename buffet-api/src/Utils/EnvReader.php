@@ -1,7 +1,10 @@
 <?php
 
+declare (strict_types = 1);
+
 namespace Buffet\Utils;
 
+use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\Settings;
 
 require __DIR__ . '/../../vendor/autoload.php';
@@ -17,7 +20,6 @@ class EnvReader
     public static function getEnvProperty(Settings $needle): string | bool | null
     {
         if (!file_exists(self::$envPath)) {
-            echo "create";
             self::createEnv();
         }
         if (!$envContent = file_get_contents(self::$envPath)) {
@@ -42,7 +44,7 @@ class EnvReader
                 return $value;
             }
         }
-        return null;
+        throw new SettingsException("The key " . $needle->value . " does not exist in the env file");
     }
 
     public static function createEnv(): void
