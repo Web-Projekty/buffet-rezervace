@@ -1,10 +1,9 @@
 import { lazy, Suspense, useCallback, useMemo, useState } from "react";
 import useCart from "../../../store/CartStore";
 import Button from "../../ui/Button";
-import { Day, Hour, Minute } from "./CartReservationCalendar";
 import { Fallback } from "../../../main";
 import { useUser } from "../../../hooks/useUser";
-import { PaymentMethod } from "../../../types";
+import { Date as DateType, Hour, Minute, PaymentMethod } from "../../../types";
 import { createOrder } from "../../utils/api";
 import { parseSelectedTime } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";
@@ -60,6 +59,7 @@ const CartPurchase = () => {
     setError(null);
 
     try {
+      console.log(selectedTime);
       const { startTime, endTime, formattedDate } =
         parseSelectedTime(selectedTime);
 
@@ -91,9 +91,9 @@ const CartPurchase = () => {
   }, [isDisabled, selectedTime, token, cartItems, selectedPaymentMethods]);
 
   const handleSelectTime = useCallback(
-    (day: Day, hour: Hour, minute: Minute) => {
+    (day: DateType, hour: Hour, minute: Minute) => {
       const selectedTime =
-        day.label +
+        day.date +
         " " +
         hour.label.substring(0, 2) +
         minute.label.substring(0, 3) +
