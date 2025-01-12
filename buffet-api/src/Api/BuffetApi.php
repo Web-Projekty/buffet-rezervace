@@ -372,6 +372,7 @@ class BuffetApi
     function handleCreateOrder(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "items", "startTime", "endTime", "pickUpDate", "paymentMethod"]);
+        $response->setPayloadKeys(["msg", "url"]);
 
         // object declaration
         $jwt = new JWTApi;
@@ -433,6 +434,8 @@ class BuffetApi
              * @todo handle exception
              */
         }
+
+        $response->setPayload("url", $order["url"]);
 
         WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
 

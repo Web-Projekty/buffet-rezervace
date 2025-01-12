@@ -160,6 +160,8 @@ class OrderModel extends Model
         $orderArray = $order->toArray();
 
         $orderArray['id'] = $order->getAttribute("id");
+
+        $orderArray['url'] = PaymentModel::query()->find($paymentId)->toArray()['thePayUrl'];
         return $orderArray;
 
     }
