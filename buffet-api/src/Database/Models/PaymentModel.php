@@ -21,6 +21,7 @@ class PaymentModel extends Model
      * @var array<string>
      */
     protected $fillable = [
+        'thePayId',
         'type',
         'useCredits',
         'totalAmount',
@@ -38,9 +39,10 @@ class PaymentModel extends Model
      * @param  string         $thePayUrl
      * @return int
      */
-    public static function addPayment(PaymentMethods $type, int $totalAmount, string $thePayUrl, string $thePayDetailsUrl, bool $useCredits = false, int $creditsAmount = 0): int
+    public static function addPayment(int $paymentId, PaymentMethods $type, int $totalAmount, string $thePayUrl, string $thePayDetailsUrl, bool $useCredits = false, int $creditsAmount = 0): int
     {
         $paymentQuery = PaymentModel::query()->create([
+            'thePayId' => $paymentId,
             'type' => $type->value,
             'useCredits' => $useCredits,
             'totalAmount' => $totalAmount,

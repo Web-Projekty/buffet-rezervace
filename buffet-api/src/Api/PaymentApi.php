@@ -16,7 +16,7 @@ class PaymentApi
     /**
      * @var TheClient
      */
-    private $thePayClient;
+    private TheClient $thePayClient;
     public function __construct()
     {
         $merchantId = (string) EnvReader::getEnvProperty(Settings::ThePayMerchantId);
@@ -60,15 +60,14 @@ class PaymentApi
     /**
      * @param int $amount
      */
-    public function createPayment(int $amount, int $uid, PaymentMethods $paymentMethod): int
+    public function createPayment(int $amount, PaymentMethods $paymentMethod): int
     {
         $url = null;
         switch ($paymentMethod) {
 
             case PaymentMethods::ThePay:
                 $currency = EnvReader::getEnvProperty(Settings::PaymentCurrency);
-                $stringUid = strval(rand(0, 99999999999)); // has to be unique for each transaction
-
+                $stringUid = strval(rand(0, 2147483640)); // has to be unique for each transaction
                 $params = new CreatePaymentParams($amount, $currency, $stringUid);
                 $params->setReturnUrl('https://wlczak.vlastas.cc/return');
 
@@ -76,9 +75,18 @@ class PaymentApi
                 $url = $response->getPayUrl();
                 $detailsUrl = $response->getPaymentDetailUrl();
                 $response->getPaymentDetailUrl();
-                return PaymentModel::addPayment(type: $paymentMethod, useCredits: false, totalAmount: $amount, thePayUrl: $url, thePayDetailsUrl: $detailsUrl);
+                return PaymentModel::addPayment(paymentId: (int) $stringUid, type: $paymentMethod, useCredits: false, totalAmount: $amount, thePayUrl: $url, thePayDetailsUrl: $detailsUrl);
         }
         return 0;
     }
 
+    /**
+     * @param int $paymentId
+     */
+    public function getPaymentInfo(int $paymentId): void
+    {
+        $result = $this->thePayClient->getPayment(strval($paymentId));
+        var_dump($result->getState());
+        var_dump($result);
+    }
 }

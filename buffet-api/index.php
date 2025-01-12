@@ -3,6 +3,9 @@
 use Buffet\Api\BuffetApi;
 use Buffet\Api\ImageProvider;
 use Buffet\Api\PaymentApi;
+use Buffet\Database\DatabaseManager;
+use Buffet\Database\Models\PaymentModel;
+use Buffet\Types\ApiResponse;
 use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\Settings;
 use Buffet\Utils\EnvReader;
@@ -36,8 +39,14 @@ $app->get('/', function (Request $request, Response $response, $args) {
 });
 
 $app->get('/pay', function (Request $request, Response $response, $args) {
-    $pay = new PaymentApi();
-    $pay->createPayment(100);
+    $response = new ApiResponse();
+    $dbMan = new DatabaseManager($response);
+    $dbMan->setupConnection();
+    $paymetns = PaymentModel::query()->where('paid', 0)->get()->toArray();
+    foreach ($paymetns as $payment) {
+        $paymentApi = new PaymentApi();
+        $paymentApi->getPaymentInfo($payment['thePayId']);
+    }
 });
 
 $app->get('/return', function (Request $request, Response $response, $args) {
