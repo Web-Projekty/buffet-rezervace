@@ -482,10 +482,6 @@ class BuffetApi
      * @param  ApiResponse   $response
      * @return ApiResponse
      */
-    /**
-     * @param ApiResponse $response
-     * @return mixed
-     */
     public function handleUpdateOrder(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "orderId"]);
@@ -550,7 +546,11 @@ class BuffetApi
         return $response->setSuccess(Success::OrderUpdated);
     }
 
-    function handleUpdatePayment(ApiResponse $response): ApiResponse
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    public function handleUpdatePayment(ApiResponse $response): ApiResponse
     {
         return $response;
     }
@@ -558,7 +558,6 @@ class BuffetApi
     /**
      * @param ApiResponse $response
      */
-
     function handleGenerateTimeslots(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "startTime", "endTime", "interval", "limit"]);
