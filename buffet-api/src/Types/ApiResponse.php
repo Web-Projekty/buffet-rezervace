@@ -62,8 +62,11 @@ class ApiResponse
      * @param  string $key
      * @return mixed  $payload
      */
-    public function getPayload(string $key)
+    public function getPayload(string $key = null)
     {
+        if(!$key) {
+            return $this->payload;
+        }
         return $this->payload[$key] ?? null;
     }
 
@@ -90,6 +93,11 @@ class ApiResponse
     public function getRequestByKey(string $key): mixed
     {
         return $this->request[$key] ?? null;
+    }
+
+    public function hasRequestByKey(string $key): bool
+    {
+        return isset($this->request[$key]);
     }
 
     /**

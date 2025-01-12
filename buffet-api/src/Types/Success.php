@@ -22,6 +22,7 @@ enum Success: string {
 
     ############################ Orders ############################
     case OrderCreated = 'Order created successfully';
+    case OrderUpdated = 'Order updated successfully';
 
     ############################ Channels ############################
     case ChannelConnected = 'Channel connected successfully';

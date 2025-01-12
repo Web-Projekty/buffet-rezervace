@@ -14,16 +14,22 @@ use Buffet\Database\Models\TimeslotModel;
 use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\Types\EventTypes;
 use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Exceptions\OutOfOrderIdsException;
-use Buffet\Types\Exceptions\OutOfTimeslotsException;
+use Buffet\Types\Exceptions\PaymentCreationException;
+use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\OrderStatus;
+use Buffet\Types\Settings;
 use Buffet\Types\Success;
+use Buffet\Utils\EnvReader;
 use Buffet\Utils\WebsocketClient;
 use Carbon\Carbon;
+use Carbon\CarbonTimeZone;
 use DateException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
+use RuntimeException;
 
 class BuffetApi
 {
@@ -40,10 +46,11 @@ class BuffetApi
 
     function main(RequestInterface $request, ResponseInterface $html): ResponseInterface
     {
-        /**
-         * @var ApiResponse
-         */
-        $response = $this->handleApiCall();
+        try {
+            $response = $this->handleApiCall();
+        } catch (SettingsException $e) {
+            $response = (new ApiResponse())->setError(Error::SettingsError);
+        }
 
         if ($response == null || get_class($response) != "Buffet\Types\ApiResponse") {
             $response = new ApiResponse();
@@ -123,6 +130,8 @@ class BuffetApi
             case "makeOrderEvent":
                 return $this->handleMakeOrderEvent($response); // for testing
 
+            case "updateOrder":
+                return $this->handleUpdateOrder($response);
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -169,7 +178,7 @@ class BuffetApi
 
     function handleRegister(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(["username", "password"]);
+        $response->setRequestKeys(["username", "password", "passwordConfirm", "fullName", "email", "tel"]);
         $response->setPayloadKeys(["msg"]);
 
         $auth = new AuthApi;
@@ -180,7 +189,7 @@ class BuffetApi
     }
 
 /**
- * API handler for user lgoin
+ * API handler for user login
  *
  *
  * @param  ApiResponse $response API request
@@ -190,7 +199,7 @@ class BuffetApi
     function handleLogin(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["username", "password"]);
-        $response->setPayloadKeys(["token", "username", "isAdmin", "fullName", "email", "class"]);
+        $response->setPayloadKeys(["token", "username", "isAdmin", "fullName", "email"]);
 
         $auth = new AuthApi;
         if ($response->hasRequestKeys()) {
@@ -210,6 +219,11 @@ class BuffetApi
 
         $queryResult = null;
         $categories = CategoryModel::getAll()->toArray();
+
+        foreach ($categories as &$category) {
+            $category["image"] = "https://wlczak.vlastas.cc/backend/image/categories/" . $category["id"];
+            //var_dump($category);
+        }
 
         //var_dump($categories);
 
@@ -272,10 +286,13 @@ class BuffetApi
      */
     function handleGetOrders(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(["token"]);
+        $response->setRequestKeys(["token"]); // optional - "page", "itemsCount"
         $response->setPayloadKeys(["data"]);
 
         $jwt = new JWTApi;
+
+        $page = (int) $response->getRequestByKey("page");
+        $itemsCount = (int) $response->getRequestByKey("itemsCount");
 
         $jwt->validateToken($response);
 
@@ -287,10 +304,37 @@ class BuffetApi
         $isAdmin = UserModel::isAdmin($uid);
 
         if ($isAdmin) {
-            $response->setPayload("data", OrderModel::getAll());
+            $orders = OrderModel::getAll();
         } else {
-            $response->setPayload("data", OrderModel::getByUser((int) $uid));
+            $orders = OrderModel::getByUser((int) $uid);
         }
+
+        if ($page > 0 && $itemsCount > 0) {
+            if ($orders) {
+                $paginate = $orders->getQuery()->orderBy("dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
+                $response->setPayload("itemsCount", $paginate->total());
+                $ordersArray = $paginate->items();
+                $response->setPayload("data", $ordersArray);
+            } else {
+                return $response->setError(Error::QueryFailed);
+            }
+        } else {
+            $response->setPayload("itemsCount", OrderModel::query()->count());
+            $ordersArray = $orders->get()->toArray();
+        }
+        foreach ($ordersArray as &$order) {
+            // cast to array $paginate->items() - returns array<stdObj>
+            if (is_object($order)) {
+                $order = (array) $order;
+            }
+            //var_dump($order);
+            $order["startTime"] = Carbon::createFromFormat("H:i:s", $order["startTime"])->format("H:i");
+            $order["endTime"] = Carbon::createFromFormat("H:i:s", $order["endTime"])->format("H:i");
+            //var_dump(new DateTimeZone());
+            $order["dateCreated"] = Carbon::createFromFormat("Y-m-d H:i:s", $order["dateCreated"])->setTimezone(CarbonTimeZone::create(EnvReader::getEnvProperty(Settings::Timezone)))->format("Y-m-d H:i");
+        }
+
+        $response->setPayload("data", $ordersArray);
 
         $response->setStatus(true);
         return $response;
@@ -328,6 +372,7 @@ class BuffetApi
     function handleCreateOrder(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "items", "startTime", "endTime", "pickUpDate", "paymentMethod"]);
+        $response->setPayloadKeys(["msg", "url"]);
 
         // object declaration
         $jwt = new JWTApi;
@@ -366,15 +411,20 @@ class BuffetApi
 
         // order creation logic
         if ($isAdmin) {
-
+            return $response->setError(Error::CannotOrderAsAdmin);
         } else {
             if (!$orderApi->isFree($startTime, $endTime, $pickUpDate, $limit)) {
-                //return $response->setError(Error::OrderTimeslotsFull);
+                return $response->setError(Error::OrderTimeslotsFull);
             }
             try {
-                OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
+                $order = OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
             } catch (OutOfOrderIdsException $e) {
                 return $response->setError(Error::OutOfOrderIds);
+            } catch (RuntimeException $e) {
+                error_log($e->getMessage());
+                return $response->setError(Error::ThePayError);
+            } catch (PaymentCreationException $e) {
+                return $response->setError(Error::PaymentCreationError);
             }
         }
         try {
@@ -385,7 +435,75 @@ class BuffetApi
              */
         }
 
+        $response->setPayload("url", $order["url"]);
+
+        WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
+
         return $response->setStatus(true)->setSuccess(Success::OrderCreated);
+    }
+
+    public function handleUpdateOrder(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "orderId"]);
+
+        $jwt = new JWTApi;
+        $orderApi = new OrderApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $isAdmin = UserModel::isAdmin($uid);
+
+        if (!$isAdmin) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        $orderId = (int) $response->getRequestByKey("orderId");
+        if ($orderId === 0) {
+            return $response->setError(Error::OrderIdNotFound);
+        }
+
+        $orderParameters = [];
+        foreach (OrderModel::getCollumns() as $column) {
+            if ($response->hasRequestByKey($column)) {
+                $orderParameters["$column"] = $response->getRequestByKey($column);
+            }
+        }
+        try {
+            $orderApi->updateOrder($orderId, $orderParameters);
+        } catch (\Exception $e) {
+            switch ($e->getCode()) {
+                case 1:
+                    return $response->setError(Error::OrderIdNotFound);
+                case 2:
+                    return $response->setError(Error::InvalidStatus);
+                case 3:
+                    return $response->setError(Error::UserNotFound);
+                case 4:
+                    return $response->setError(Error::InvalidPickupId);
+
+            }
+            return $response->setError(Error::GeneralError);
+        }
+
+        $updatedOrder = OrderModel::getById($orderId);
+        $updatedOrder["id"] = $orderId;
+
+        $ws = [
+            "requestType" => "publish",
+            "token" => JWTApi::getAdminToken(),
+            "eventType" => EventTypes::UpdateOrder,
+            "orderId" => $orderId,
+            "payload" => $updatedOrder
+        ];
+
+        WebsocketClient::send("kds", json_encode($ws));
+        return $response->setSuccess(Success::OrderUpdated);
     }
 
     /**
@@ -477,11 +595,7 @@ class BuffetApi
      */
     public function handleGetOrderTimeTable(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(["token"]);
-
-        $jwt = new JWTApi;
-
-        $jwt->validateToken($response);
+        $response->setRequestKeys([]);
 
         if ($response->hasFailed()) {
             return $response;
@@ -497,7 +611,7 @@ class BuffetApi
      */
     function handleMakeOrderEvent(ApiResponse $reponse): ApiResponse
     {
-        WebsocketClient::send("kds", json_encode(["requestType" => "publish"]));
+        WebsocketClient::send("kds", json_encode(["requestType" => "publish", "eventType" => "updateOrder", "payload" => "{order here}"]));
         return $reponse->setStatus(true);
     }
 

@@ -24,6 +24,9 @@ enum Error: string {
     // registration
     case UserInUse = 'Username is in use';
     case RegistrationFailed = 'Could\'t register the user';
+    case InvalidEmail = 'Email is invalid';
+    case PasswordMismatch = 'Password and its confirmation don\'t match';
+    case EmailInUse = 'Email is in use';
 
     // login
     case NonexistentUser = 'User doesn\'t exist';
@@ -38,12 +41,15 @@ enum Error: string {
     case Corrupted = "Token's data have been corrupted";
     case CorruptedOrNull = "Token's data have been corrupted or are null";
     case UnexpectedValue = "Token value is unexpected";
+    case MissingToken = "Token is missing";
 
     // Admin status
     case Unauthorized = "User does not have appropriate permissions";
+    case CannotOrderAsAdmin = "Admins cannot order";
 
     ############################ Database ############################
     case QueryFailed = 'Query from database has failed';
+    case OrderIdNotFound = 'Order id not found';
 
     ############################ Ws Channels ############################
     case NonexistentChannel = 'Channel doesn\'t exist';
@@ -52,12 +58,23 @@ enum Error: string {
     case NonexistentTimeslot = 'Timeslot doesn\'t exist';
     case OutOfOrderIds = 'There are no more order ids available';
 
-    ############################ Other ############################
+    ############################ Orders ############################
     case DateTimeInvalid = 'Date or time is invalid';
     case InvalidLimitOrInterval = 'Limit or interval is invalid';
+    case InvalidStatus = 'Status is invalid';
+    case UserNotFound = 'User not found';
+    case InvalidPickupId = 'Pickup id is invalid';
 
     ############################ Settings ############################
     case InvalidOrderDateLimitMax = 'Order date limit max is invalid';
+    case SettingsError = 'Settings error';
+
+    ############################ General ############################
+    case GeneralError = 'Oops something has gone wrong';
+
+    ############################ ThePay ############################
+    case ThePayError = 'ThePay error';
+    case PaymentCreationError = 'Payment creation error';
     /**
      * @return string
      */

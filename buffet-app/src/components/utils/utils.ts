@@ -7,6 +7,14 @@ export const formatCurrency = (number: number): string => {
   }).format(number);
 };
 
+export const removeDiacritics = (text: string): string => {
+  return text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+};
+
 export const extractToken = (header: string | null): string => {
   return header ? header.split(" ")[1] : "";
 };

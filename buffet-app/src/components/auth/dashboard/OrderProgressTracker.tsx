@@ -1,5 +1,6 @@
 type ProgressTrackerProps = {
   currentStep: number;
+  isCancelled: boolean;
 };
 
 type Step = {
@@ -15,7 +16,10 @@ const steps: Step[] = [
   { label: "Vyzvednuto", icon: "✔️", step: 3 },
 ];
 
-const ProgressTracker = ({ currentStep }: ProgressTrackerProps) => {
+const ProgressTracker = ({
+  currentStep,
+  isCancelled,
+}: ProgressTrackerProps) => {
   return (
     <div className="flex w-full items-center justify-center">
       <div className="flex items-center gap-14 md:gap-28">
@@ -25,7 +29,6 @@ const ProgressTracker = ({ currentStep }: ProgressTrackerProps) => {
               ? step.step < currentStep
               : step.step <= currentStep;
           const isActive = step.step === currentStep;
-          const isCancelled = currentStep === -1;
 
           return (
             <div
@@ -42,7 +45,7 @@ const ProgressTracker = ({ currentStep }: ProgressTrackerProps) => {
                         : "bg-gray-300 text-gray-500"
                   }`}
                 >
-                  {isCompleted ? "✔️" : step.icon}
+                  {isCompleted ? (isCancelled ? "❌" : "✔️") : step.icon}
                 </div>
 
                 <div

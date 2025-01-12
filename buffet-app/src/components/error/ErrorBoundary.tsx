@@ -1,9 +1,10 @@
-import { Component, ErrorInfo, ReactNode } from "react";
+import { Component, ReactNode } from "react";
 
 import ErrorComponent from "./ErrorComponent";
 
 type ErrorBoundaryProps = {
   children: ReactNode;
+  fallback?: ReactNode;
 };
 
 type ErrorBoundaryState = {
@@ -11,28 +12,26 @@ type ErrorBoundaryState = {
 };
 
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false };
-  }
+  state = { hasError: false };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static getDerivedStateFromError(_: Error): ErrorBoundaryState {
+  static getDerivedStateFromError() {
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error("Uncaught error:", error, errorInfo);
-  }
+  // componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+  //   console.error("Uncaught error:", error, errorInfo);
+  // }
 
   render() {
     if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
       return (
         <ErrorComponent
           title="Omlouváme se, něco se pokazilo."
           subtitle="🛠️👷"
           onBack={() => setTimeout(() => window.location.reload(), 0)}
-          className="h-screen"
         />
       );
     }
