@@ -9,7 +9,6 @@ import { createOrder } from "../../utils/api";
 import { parseSelectedTime } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";
 
-const PageNotFound = lazy(() => import("../../error/PageNotFound"));
 const CartReservationCalendar = lazy(() => import("./CartReservationCalendar"));
 const CartPurchaseMethods = lazy(() => import("./CartPurchaseMethods"));
 const CartPurchaseItems = lazy(() => import("./CartPurchaseItems"));
@@ -54,6 +53,8 @@ const CartPurchase = () => {
 
   const handleSubmit = useCallback(async () => {
     if (isDisabled) return;
+    if (isSubmitting) return;
+    if (success) return;
 
     setIsSubmitting(true);
     setError(null);
@@ -77,8 +78,10 @@ const CartPurchase = () => {
         setError("Chyba při vytváření objednávky.");
       } else {
         setSuccess(true);
-        // Navigace na úspěšně vytvořenou objednávku
-        navigate(`/order/${order?.id}`, { replace: true, state: { order } });
+        navigate(`/success-order/${order?.id}`, {
+          replace: true,
+          state: { order },
+        });
       }
     } catch {
       setError("Chyba při vytváření objednávky.");
@@ -102,12 +105,12 @@ const CartPurchase = () => {
     [],
   );
 
-  if (cartItems.length <= 0)
-    return (
-      <Suspense fallback={<Fallback />}>
-        <PageNotFound />
-      </Suspense>
-    );
+  // if (cartItems.length <= 0)
+  //   return (
+  //     <Suspense fallback={<Fallback />}>
+  //       <PageNotFound />
+  //     </Suspense>
+  //   );
 
   return (
     <div className="m-auto grid w-[95%] grid-cols-1 gap-10 text-white md:w-[75%] md:grid-cols-2 2xl:w-[60%]">
