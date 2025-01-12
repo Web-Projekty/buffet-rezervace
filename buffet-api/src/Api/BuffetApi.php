@@ -164,6 +164,10 @@ class BuffetApi
 
             case "updateOrder":
                 return $this->handleUpdateOrder($response);
+
+            case "updatePayment":
+                return $this->handleUpdatePayment($response);
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -474,6 +478,14 @@ class BuffetApi
         return $response->setStatus(true)->setSuccess(Success::OrderCreated);
     }
 
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    /**
+     * @param ApiResponse $response
+     * @return mixed
+     */
     public function handleUpdateOrder(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "orderId"]);
@@ -536,6 +548,11 @@ class BuffetApi
 
         WebsocketClient::send("kds", json_encode($ws));
         return $response->setSuccess(Success::OrderUpdated);
+    }
+
+    function handleUpdatePayment(ApiResponse $response): ApiResponse
+    {
+        return $response;
     }
 
     /**
