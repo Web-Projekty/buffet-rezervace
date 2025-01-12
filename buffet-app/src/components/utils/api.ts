@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Day, MenuItem, Order, OrderStatus, PaymentMethod } from "../../types";
+import { Date, MenuItem, Order, OrderStatus, PaymentMethod } from "../../types";
 import { FETCH_URL } from "../../constants";
 import { CartItem } from "../../store/CartStore";
 
@@ -14,7 +14,7 @@ type MenuItemApiReturn = {
 };
 
 type TimeSlotsApiReturn = {
-  timeslots: Day[];
+  timeslots: Date[];
   error: boolean;
 };
 
@@ -164,6 +164,9 @@ export const getTimeSlots = async (): Promise<TimeSlotsApiReturn> => {
       error: status !== "success",
     };
   } catch {
-    throw new Error("Chyba při načítání časových slotů.");
+    return {
+      timeslots: [],
+      error: true,
+    };
   }
 };
