@@ -16,20 +16,13 @@ type OrderHistoryData = {
 };
 
 const OrderHistory = () => {
-  const {
-    currentPage,
-    totalPagesCount,
-    dataList,
-    arrayOfPages,
-    handlePage,
-    isLoading,
-    error,
-  } = useBackendPaging<OrderHistoryData>(
-    "getOrders",
-    ORDERS_PER_PAGE,
-    true,
-    "orderPage",
-  );
+  const { currentPage, dataList, arrayOfPages, handlePage, isLoading, error } =
+    useBackendPaging<OrderHistoryData>(
+      "getOrders",
+      ORDERS_PER_PAGE,
+      true,
+      "orderPage",
+    );
 
   const renderPagingButtons = useCallback(() => {
     return (
@@ -37,14 +30,13 @@ const OrderHistory = () => {
         <HorizontalPaging backgroundType={2}>
           <PagingButtons
             currentPage={currentPage}
-            totalPagesCount={totalPagesCount}
             listOfPages={arrayOfPages}
             handlePage={handlePage}
           />
         </HorizontalPaging>
       </Suspense>
     );
-  }, [currentPage, totalPagesCount, arrayOfPages, handlePage]);
+  }, [currentPage, arrayOfPages, handlePage]);
 
   if (error) {
     return <div className="text-white">{error}</div>;

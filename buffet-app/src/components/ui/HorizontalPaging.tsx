@@ -23,7 +23,7 @@ const HorizontalPaging = ({
       const { scrollLeft, scrollWidth, clientWidth } =
         scrollContainerRef.current;
       setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft + clientWidth < scrollWidth);
+      setCanScrollRight(scrollWidth > clientWidth + scrollLeft + 1);
     }
   };
 

@@ -1,6 +1,5 @@
 type PagingButtonsProps = {
   currentPage: number;
-  totalPagesCount: number;
   listOfPages: number[];
   handlePage: (page: number) => void;
 };
@@ -12,7 +11,7 @@ const PagingButtons = ({
 }: PagingButtonsProps) => {
   return (
     listOfPages.length > 1 && (
-      <div className="mx-2 flex gap-2 2xl:mx-5">
+      <div className="mx-5 flex gap-2">
         {listOfPages.map((index: number) => (
           <button
             key={index}
