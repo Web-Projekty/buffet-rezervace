@@ -59,15 +59,15 @@ const CartPurchase = () => {
     setError(null);
 
     try {
-      console.log(selectedTime);
+      //console.log(selectedTime);
       const { startTime, endTime, formattedDate } =
         parseSelectedTime(selectedTime);
 
-      console.log(startTime, endTime, formattedDate);
+      //console.log(startTime, endTime, formattedDate);
 
       const { order, error } = await createOrder(
         token,
-        cartItems,
+        cartItems.map((item) => item.id),
         startTime,
         endTime,
         formattedDate,

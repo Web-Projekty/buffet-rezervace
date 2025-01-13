@@ -1,7 +1,6 @@
 import axios from "axios";
 import { Date, MenuItem, Order, OrderStatus, PaymentMethod } from "../../types";
 import { FETCH_URL } from "../../constants";
-import { CartItem } from "../../store/CartStore";
 
 type OrderApiReturn = {
   order: Order | null;
@@ -20,7 +19,7 @@ type TimeSlotsApiReturn = {
 
 export const createOrder = async (
   token: string | null,
-  cartItems: CartItem[],
+  cartItems: number[],
   startTime: string | null,
   endTime: string | null,
   date: string | null,
@@ -32,7 +31,7 @@ export const createOrder = async (
     const { data } = await axios.post(FETCH_URL, {
       requestType: "createOrder",
       token: token,
-      items: "[]",
+      items: cartItems,
       startTime: startTime,
       endTime: endTime,
       pickUpDate: date,
