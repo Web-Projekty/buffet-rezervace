@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace Buffet\Database\Models;
 
+use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 
@@ -55,5 +57,30 @@ class ItemModel extends Model
         } catch (QueryException $e) {
             return false;
         }
+    }
+
+    /**
+     * @param array<int|int> $itemIds
+     */
+    public static function getByIdArray(array $itemIds): Collection
+    {
+        $query = ItemModel::query();
+        foreach ($itemIds as $item) {
+            $query->orWhere('id', '=', $item);
+        }
+
+        $items = $query->get();
+
+        foreach ($itemIds as $itemId) {
+            if (!$items->contains("id", "=", $itemId)) {
+                throw new Exception("Missing items", 1);
+            }
+        }
+
+        if ($items->count() != count($itemIds)) {
+            throw new Exception("Missing items", 1);
+        }
+
+        return $query->get();
     }
 }
