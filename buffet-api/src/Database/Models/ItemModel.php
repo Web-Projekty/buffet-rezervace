@@ -71,6 +71,12 @@ class ItemModel extends Model
 
         $items = $query->get();
 
+        foreach ($itemIds as $itemId) {
+            if (!$items->contains("id", "=", $itemId)) {
+                throw new Exception("Missing items", 1);
+            }
+        }
+
         if ($items->count() != count($itemIds)) {
             throw new Exception("Missing items", 1);
         }
