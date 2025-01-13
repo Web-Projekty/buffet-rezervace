@@ -49,7 +49,7 @@ export const parseSelectedTime = (selectedTime: string | null) => {
 
   const [startTime, endTime] = parts[3].split("-");
 
-  console.log(formattedDate);
+  //console.log(formattedDate);
 
   return { startTime, endTime, formattedDate };
 };
