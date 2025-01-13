@@ -18,10 +18,6 @@ const UserMenu = () => {
     categories,
   );
 
-  if (isLoading) {
-    return <Loading size={30} />;
-  }
-
   if (error) {
     return (
       <ErrorComponent title="Načítání položek se nezdařilo." subtitle="🛠️👷" />
@@ -82,8 +78,14 @@ const UserMenu = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-5">
       <h1 className="text-3xl font-bold text-white">Naše menu</h1>
-      {renderCategories()}
-      {renderItems()}
+      {!isLoading ? (
+        <>
+          {renderCategories()}
+          {renderItems()}
+        </>
+      ) : (
+        <Loading size={30} />
+      )}
     </div>
   );
 };
