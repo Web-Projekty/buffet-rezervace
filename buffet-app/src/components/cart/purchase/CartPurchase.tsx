@@ -65,7 +65,7 @@ const CartPurchase = () => {
 
       //console.log(startTime, endTime, formattedDate);
 
-      const { order, error } = await createOrder(
+      const { order, error, paywallUrl } = await createOrder(
         token,
         cartItems.map((item) => item.id),
         startTime,
@@ -78,10 +78,14 @@ const CartPurchase = () => {
         setError("Chyba při vytváření objednávky.");
       } else {
         setSuccess(true);
-        navigate(`/success-order/${order?.id}`, {
-          replace: true,
-          state: { order },
-        });
+        if (paywallUrl) {
+          window.location.href = paywallUrl;
+        } else {
+          navigate(`/success-order/${order?.id}`, {
+            replace: true,
+            state: { order },
+          });
+        }
       }
     } catch {
       setError("Chyba při vytváření objednávky.");

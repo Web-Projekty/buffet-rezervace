@@ -5,6 +5,7 @@ import { FETCH_URL } from "../../constants";
 type OrderApiReturn = {
   order: Order | null;
   error: boolean;
+  paywallUrl: string;
 };
 
 type MenuItemApiReturn = {
@@ -38,14 +39,18 @@ export const createOrder = async (
       paymentMethod: "thePay",
     });
 
+    console.log(data);
+
     return {
       order: data.payload.data as Order,
       error: data.status !== "success",
+      paywallUrl: data.payload.url,
     };
   } catch {
     return {
       order: null,
       error: true,
+      paywallUrl: "",
     };
   }
 };
