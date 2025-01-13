@@ -162,4 +162,24 @@ class TempModel extends Model
     }
      */
     }
+
+    public static function isOutdated(): bool
+    {
+        $firstDate = TempModel::query()->first(["date"]);
+        if ($firstDate == null) {
+            return true;
+        } else {
+            $firstDate = $firstDate->toArray()["date"];
+            if (!isset($firstDate["date"])) {
+                return true;
+            } else {
+                $now = Carbon::now()->format("Y-m-d");
+                if ($firstDate["date"] != $now) {
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
 }
