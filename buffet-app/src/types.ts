@@ -8,7 +8,7 @@ export type User = {
   class: string;
   isAdmin: boolean;
   orders: Order[];
-  phone: string;
+  tel: string;
   credits: string;
 };
 
