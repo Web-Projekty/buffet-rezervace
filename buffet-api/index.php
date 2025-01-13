@@ -116,6 +116,7 @@ $corsMiddleware = function ($request, $handler) {
 $app->add($corsMiddleware);
 
 $app->post('/api', [BuffetApi::class, 'main']);
+$app->get('/api/notification', [BuffetApi::class, 'handleThePayNotification']);
 
 $app->any('/image/{path:.*}', [ImageProvider::class, 'main']);
 

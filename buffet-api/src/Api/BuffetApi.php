@@ -9,6 +9,7 @@ use Buffet\Database\DatabaseManager;
 use Buffet\Database\Models\CategoryModel;
 use Buffet\Database\Models\ItemModel;
 use Buffet\Database\Models\OrderModel;
+use Buffet\Database\Models\PaymentModel;
 use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\TimeslotModel;
 use Buffet\Database\Models\UserModel;
@@ -23,6 +24,7 @@ use Buffet\Types\OrderStatus;
 use Buffet\Types\Settings;
 use Buffet\Types\Success;
 use Buffet\Utils\EnvReader;
+use Buffet\Utils\HttpClient;
 use Buffet\Utils\WebsocketClient;
 use Carbon\Carbon;
 use Carbon\CarbonTimeZone;
@@ -65,6 +67,39 @@ class BuffetApi
     }
 
     /**
+     * @param RequestInterface  $request
+     * @param ResponseInterface $html
+     */
+    function handleThePayNotification(RequestInterface $request, ResponseInterface $html): ResponseInterface
+    {
+        $response = new ApiResponse();
+        $dbMan = new DatabaseManager($response);
+        $dbMan->setupConnection();
+        $query = $request->getQueryParams();
+
+        $type = $query["type"];
+        $paymentUid = $query["payment_uid"];
+        $projectId = $query["project_id"];
+
+        $token = JWTApi::getAdminToken();
+
+        $msg = [
+            "requestType" => "updatePayment",
+            "token" => $token,
+            "type" => $type,
+            "paymentId" => $paymentUid
+        ];
+        //$msg = [];
+
+        error_log(HttpClient::post("http://localhost/api", json_encode($msg)));
+
+        /*foreach ($request->getQueryParams() as $key => $param) {
+        error_log("Key: " . $key . "Param: " . $param);
+        }*/
+        return $html;
+    }
+
+    /**
      * Main API handler.
      *
      * Calls specified requestType methods
@@ -72,7 +107,6 @@ class BuffetApi
      * @param  string      $request
      * @return ApiResponse API response
      */
-
     function handleApiCall(string $request = null): ApiResponse
     {
         if (!$request) {
@@ -132,6 +166,10 @@ class BuffetApi
 
             case "updateOrder":
                 return $this->handleUpdateOrder($response);
+
+            case "updatePayment":
+                return $this->handleUpdatePayment($response);
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -442,6 +480,10 @@ class BuffetApi
         return $response->setStatus(true)->setSuccess(Success::OrderCreated);
     }
 
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
     public function handleUpdateOrder(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "orderId"]);
@@ -507,9 +549,57 @@ class BuffetApi
     }
 
     /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    public function handleUpdatePayment(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "type", "paymentId"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $isAdmin = UserModel::isAdmin($uid);
+
+        if (!$isAdmin) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        $paymentId = (int) $response->getRequestByKey("paymentId");
+        $type = $response->getRequestByKey("type");
+
+        if ($type !== "state_changed") {
+            return $response->setError(Error::InvalidType);
+        }
+        $paymentApi = new PaymentApi;
+
+        if ($paymentId !== 0 && $paymentApi->isPaid($paymentId)) {
+
+            try {
+                PaymentModel::setPaid($paymentId);
+            } catch (\Exception $e) {
+                if ($e->getCode() === 1) {
+                    return $response->setError(Error::PaymentNotFound);
+                }
+            }
+
+        } else {
+            return $response->setError(Error::InvalidPaymentId);
+        }
+
+        return $response->setSuccess(Success::PaymentUpdated);
+    }
+
+    /**
      * @param ApiResponse $response
      */
-
     function handleGenerateTimeslots(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "startTime", "endTime", "interval", "limit"]);
