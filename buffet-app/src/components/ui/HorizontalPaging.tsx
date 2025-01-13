@@ -15,15 +15,18 @@ const HorizontalPaging = ({
   backgroundType = 1,
 }: HorizontalPagingProps) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
+  const [canScrollLeft, setCanScrollLeft] = useState<boolean>(false);
+  const [canScrollRight, setCanScrollRight] = useState<boolean>(false);
 
   const updateScrollButtons = () => {
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } =
         scrollContainerRef.current;
       setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollWidth > clientWidth + scrollLeft + 1);
+      const isMobile = window.innerWidth <= 1420;
+      setCanScrollRight(
+        scrollWidth > clientWidth + scrollLeft + (isMobile ? 1 : 0),
+      );
     }
   };
 
