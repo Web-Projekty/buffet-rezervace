@@ -46,26 +46,29 @@ const OrderHistory = () => {
     );
   }, [currentPage, totalPagesCount, arrayOfPages, handlePage]);
 
-  if (isLoading) {
-    return <Loading size={30} />;
-  }
-
   if (error) {
     return <div className="text-white">{error}</div>;
   }
 
   return (
     <div className="flex flex-col gap-2">
-      <h1 className="text-2xl font-bold">
-        Tvá historie objednávek ({dataList?.itemsCount})
+      <h1 className="flex items-center gap-2 text-2xl font-bold">
+        Tvá historie objednávek
+        <span className="flex items-center gap-2">
+          ({dataList ? dataList.itemsCount : <Loading size={20} />})
+        </span>
       </h1>
-      <div className="flex min-h-[25rem] flex-col justify-between gap-4">
+      <div className="flex min-h-[26rem] flex-col justify-between gap-4">
         <AnimatePresence>
-          <ul className="flex flex-col items-center gap-2">
-            {dataList?.data?.map((order) => (
-              <Order key={order.pickUpId + "" + order.userId} order={order} />
-            ))}
-          </ul>
+          {!isLoading ? (
+            <ul className="flex flex-col items-center gap-2">
+              {dataList?.data?.map((order) => (
+                <Order key={order.pickUpId + "" + order.userId} order={order} />
+              ))}
+            </ul>
+          ) : (
+            <Loading size={30} />
+          )}
         </AnimatePresence>
         {renderPagingButtons()}
       </div>
