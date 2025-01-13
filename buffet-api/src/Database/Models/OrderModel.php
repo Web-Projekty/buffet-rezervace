@@ -174,4 +174,9 @@ class OrderModel extends Model
         $model = new OrderModel();
         return $model->fillable;
     }
+
+    public static function getTableName(): string
+    {
+        return (new self())->getTable();
+    }
 }

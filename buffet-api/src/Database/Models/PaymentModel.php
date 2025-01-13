@@ -65,4 +65,9 @@ class PaymentModel extends Model
         }
         $paymentQuery->update(['paid' => 1]);
     }
+
+    public static function getTableName(): string
+    {
+        return (new self())->getTable();
+    }
 }
