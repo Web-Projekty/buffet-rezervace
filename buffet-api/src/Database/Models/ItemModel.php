@@ -83,4 +83,10 @@ class ItemModel extends Model
 
         return $query->get();
     }
+
+    public static function getTableName(): string
+    {
+
+        return (new self())->getTable();
+    }
 }
