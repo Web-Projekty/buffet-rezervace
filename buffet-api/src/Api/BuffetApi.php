@@ -29,6 +29,7 @@ use Buffet\Utils\WebsocketClient;
 use Carbon\Carbon;
 use Carbon\CarbonTimeZone;
 use DateException;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use RuntimeException;
@@ -420,12 +421,19 @@ class BuffetApi
         $startTime = $response->getRequestByKey("startTime");
         $endTime = $response->getRequestByKey("endTime");
         $pickUpDate = $response->getRequestByKey("pickUpDate");
+
         /**
-         * @var array<int|int>
+         * @var string
          */
         $items = $response->getRequestByKey("items");
         $paymentMethod = $response->getRequestByKey("paymentMethod");
 
+        if (json_validate($items)) {
+            /**
+             * @var array<int|int>
+             */
+            $items = json_decode($items);
+        }
         // token validation
         $jwt->validateToken($response);
 
@@ -458,7 +466,7 @@ class BuffetApi
                 return $response->setError(Error::OrderTimeslotsFull);
             }
             try {
-                $order = OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, json_encode($items), $paymentMethod, $startTime, $endTime);
+                $order = OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
             } catch (OutOfOrderIdsException $e) {
                 return $response->setError(Error::OutOfOrderIds);
             } catch (RuntimeException $e) {
@@ -466,6 +474,13 @@ class BuffetApi
                 return $response->setError(Error::ThePayError);
             } catch (PaymentCreationException $e) {
                 return $response->setError(Error::PaymentCreationError);
+            } catch (Exception $e) {
+                switch ($e->getCode()) {
+                    case 1:
+                        return $response->setError(Error::MissingItems);
+                    default:
+                        return $response->setError(Error::OrderCreationError);
+                }
             }
         }
         try {

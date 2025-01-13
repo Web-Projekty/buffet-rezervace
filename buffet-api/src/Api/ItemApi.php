@@ -4,17 +4,27 @@ declare (strict_types = 1);
 
 namespace Buffet\Api;
 
+use Buffet\Database\Models\ItemModel;
+
 class ItemApi
 {
-    public function __construct()
-    {
-    }
-
     /**
-     * @param string $items
+     * @param array<int|int> $itemIds
      */
-    public function countItemPrice(string $items): int
+    public static function countItemPrice(array $itemIds): int
     {
-        return rand(100, 100000);
+
+        $items = ItemModel::getByIdArray($itemIds);
+        /**
+         * @var int $total
+         */
+        $total = 0;
+        /**
+         * @var ItemModel $item
+         */
+        foreach ($items as $item) {
+            $total += $item->getAttribute("price");
+        }
+        return $total;
     }
 }
