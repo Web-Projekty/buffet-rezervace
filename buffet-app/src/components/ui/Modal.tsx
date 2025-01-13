@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 
 type ModalProps = {
@@ -36,23 +36,19 @@ const Modal = ({
   }, [isOpen]);
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          {...modalShowAnimation}
-          className={`fixed left-[50%] top-[50%] z-[60] h-screen w-screen -translate-x-1/2 -translate-y-1/2 transform ${darkBackground ? "bg-transparentBlack" : "bg-transparent"}`}
-          onClick={() => (handleContainerClick ? handleContainerClick() : null)}
-          ref={modalRef}
-        >
-          <div
-            className="fixed left-[50%] top-[50%] z-[65] -translate-x-1/2 -translate-y-1/2 transform"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {children}
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <motion.div
+      {...modalShowAnimation}
+      className={`fixed left-[50%] top-[50%] z-[60] h-screen w-screen -translate-x-1/2 -translate-y-1/2 transform ${darkBackground ? "bg-transparentBlack" : "bg-transparent"}`}
+      onClick={() => (handleContainerClick ? handleContainerClick() : null)}
+      ref={modalRef}
+    >
+      <div
+        className="fixed left-[50%] top-[50%] z-[65] -translate-x-1/2 -translate-y-1/2 transform"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {children}
+      </div>
+    </motion.div>
   );
 };
 
