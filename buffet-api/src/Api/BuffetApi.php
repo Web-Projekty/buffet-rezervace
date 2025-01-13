@@ -326,7 +326,7 @@ class BuffetApi
     function handleGetOrders(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token"]); // optional - "page", "itemsCount"
-        $response->setPayloadKeys(["data"]);
+        $response->setPayloadKeys(["data", "items"]);
 
         $jwt = new JWTApi;
 
@@ -366,6 +366,9 @@ class BuffetApi
             $response->setPayload("itemsCount", OrderModel::query()->count());
             $ordersArray = $orders->get()->toArray();
         }
+
+        $itemIds = [];
+
         foreach ($ordersArray as &$order) {
             // cast to array $paginate->items() - returns array<stdObj>
             if (is_object($order)) {
@@ -383,10 +386,21 @@ class BuffetApi
             unset($order["thePayUrl"]);
 
             $order["items"] = json_decode($order["items"]);
+
+            array_push($itemIds, ...$order["items"]);
         }
 
         $response->setPayload("data", $ordersArray);
 
+        $itemIds = array_unique($itemIds);
+
+        $items = ItemModel::getByIdArray($itemIds)->toArray();
+
+        if (!empty($items)) {
+            $response->setPayload("items", $items);
+        } else {
+            $response->setPayload("items", []);
+        }
         $response->setStatus(true);
         return $response;
     }
