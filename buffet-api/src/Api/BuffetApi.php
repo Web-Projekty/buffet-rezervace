@@ -350,7 +350,12 @@ class BuffetApi
 
         if ($page > 0 && $itemsCount > 0) {
             if ($orders) {
-                $paginate = $orders->getQuery()->orderBy("dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
+                $paymentTableName = PaymentModel::getTableName();
+                $orderTableName = OrderModel::getTableName();
+
+                $orders = $orders->getQuery()->join($paymentTableName, $paymentTableName . '.id', '=', $orderTableName . '.paymentId');
+
+                $paginate = $orders->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
                 $response->setPayload("itemsCount", $paginate->total());
                 $ordersArray = $paginate->items();
                 $response->setPayload("data", $ordersArray);
@@ -366,11 +371,18 @@ class BuffetApi
             if (is_object($order)) {
                 $order = (array) $order;
             }
-            //var_dump($order);
+
             $order["startTime"] = Carbon::createFromFormat("H:i:s", $order["startTime"])->format("H:i");
             $order["endTime"] = Carbon::createFromFormat("H:i:s", $order["endTime"])->format("H:i");
-            //var_dump(new DateTimeZone());
+
             $order["dateCreated"] = Carbon::createFromFormat("Y-m-d H:i:s", $order["dateCreated"])->setTimezone(CarbonTimeZone::create(EnvReader::getEnvProperty(Settings::Timezone)))->format("Y-m-d H:i");
+
+            unset($order["paymentId"]);
+            unset($order["userId"]);
+            unset($order["thePayId"]);
+            unset($order["thePayUrl"]);
+
+            $order["items"] = json_decode($order["items"]);
         }
 
         $response->setPayload("data", $ordersArray);
