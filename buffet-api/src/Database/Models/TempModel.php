@@ -170,11 +170,11 @@ class TempModel extends Model
             return true;
         } else {
             $firstDate = $firstDate->toArray()["date"];
-            if (!isset($firstDate["date"])) {
+            if (!isset($firstDate)) {
                 return true;
             } else {
                 $now = Carbon::now()->format("Y-m-d");
-                if ($firstDate["date"] != $now) {
+                if ($firstDate != $now) {
                     return true;
                 }
             }

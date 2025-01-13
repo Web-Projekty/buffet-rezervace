@@ -736,7 +736,7 @@ class BuffetApi
         }
 
         if (TempModel::isOutdated()) {
-            var_dump("outdated");
+            (new OrderApi)->generateTemp();
         }
 
         $data = TempModel::getFormatedArray();
