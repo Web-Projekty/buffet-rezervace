@@ -420,6 +420,9 @@ class BuffetApi
         $startTime = $response->getRequestByKey("startTime");
         $endTime = $response->getRequestByKey("endTime");
         $pickUpDate = $response->getRequestByKey("pickUpDate");
+        /**
+         * @var array<int|int>
+         */
         $items = $response->getRequestByKey("items");
         $paymentMethod = $response->getRequestByKey("paymentMethod");
 
@@ -455,7 +458,7 @@ class BuffetApi
                 return $response->setError(Error::OrderTimeslotsFull);
             }
             try {
-                $order = OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, $items, $paymentMethod, $startTime, $endTime);
+                $order = OrderModel::createOrder($uid, OrderStatus::Sent, $pickUpDate, json_encode($items), $paymentMethod, $startTime, $endTime);
             } catch (OutOfOrderIdsException $e) {
                 return $response->setError(Error::OutOfOrderIds);
             } catch (RuntimeException $e) {
