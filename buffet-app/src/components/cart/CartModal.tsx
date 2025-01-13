@@ -38,9 +38,15 @@ const CartModal = () => {
             return <CartItem key={item.id} item={item} />;
           })}
         </div>
-        <div className="my-2 grid h-10 grid-cols-2 grid-rows-1 justify-between gap-10 text-white">
-          <Button onClick={handleCloseCart}>Zavřít</Button>
-          <Button onClick={handleContinue} disabled={isCartEmpty()}>
+        <div className="flex h-16 w-full items-center justify-center gap-10 bg-slate-900 text-white">
+          <Button className="w-28" onClick={handleCloseCart}>
+            Zavřít
+          </Button>
+          <Button
+            className="w-28"
+            onClick={handleContinue}
+            disabled={isCartEmpty()}
+          >
             K pokladně
           </Button>
         </div>
