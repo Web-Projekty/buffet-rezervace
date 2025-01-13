@@ -734,6 +734,11 @@ class BuffetApi
         if ($response->hasFailed()) {
             return $response;
         }
+
+        if (TempModel::isOutdated()) {
+            (new OrderApi)->generateTemp();
+        }
+
         $data = TempModel::getFormatedArray();
         $response->setPayload("data", $data);
         return $response->setStatus(true);
