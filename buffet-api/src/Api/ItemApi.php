@@ -9,12 +9,18 @@ use Buffet\Database\Models\ItemModel;
 class ItemApi
 {
     /**
-     * @param array<int|int> $itemIds
+     * @param array<array{id:int,count:int,variants:array<int>}> $items
      */
-    public static function countItemPrice(array $itemIds): int
+    public static function countItemPrice(array $items): int
     {
+        $itemIds = [];
+        foreach ($items as $item) {
+            $itemIds[] = $item["id"];
+        }
+        $itemIds = array_unique($itemIds);
 
         $items = ItemModel::getByIdArray($itemIds);
+
         /**
          * @var int $total
          */

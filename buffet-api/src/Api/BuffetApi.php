@@ -449,17 +449,11 @@ class BuffetApi
         $pickUpDate = $response->getRequestByKey("pickUpDate");
 
         /**
-         * @var string
+         * @var array<array{id:int,count:int,variants:array<int>}>
          */
         $items = $response->getRequestByKey("items");
         $paymentMethod = $response->getRequestByKey("paymentMethod");
 
-        if (json_validate($items)) {
-            /**
-             * @var array<int|int>
-             */
-            $items = json_decode($items);
-        }
         // token validation
         $jwt->validateToken($response);
 
