@@ -23,7 +23,7 @@ const HorizontalPaging = ({
       const { scrollLeft, scrollWidth, clientWidth } =
         scrollContainerRef.current;
       setCanScrollLeft(scrollLeft > 0);
-      const isMobile = window.innerWidth <= 1420;
+      const isMobile = window.innerWidth <= 1500;
       setCanScrollRight(
         scrollWidth > clientWidth + scrollLeft + (isMobile ? 1 : 0),
       );
