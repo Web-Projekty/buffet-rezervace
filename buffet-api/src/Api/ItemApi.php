@@ -5,6 +5,7 @@ declare (strict_types = 1);
 namespace Buffet\Api;
 
 use Buffet\Database\Models\ItemModel;
+use Illuminate\Support\Collection;
 
 class ItemApi
 {
@@ -19,7 +20,7 @@ class ItemApi
         }
         $itemIds = array_unique($itemIds);
 
-        $items = ItemModel::getByIdArray($itemIds);
+        $itemQuery = ItemModel::getByIdArray($itemIds);
 
         /**
          * @var int $total
@@ -28,8 +29,10 @@ class ItemApi
         /**
          * @var ItemModel $item
          */
-        foreach ($items as $item) {
-            $total += $item->getAttribute("price");
+        foreach ($itemQuery as $item) {
+            $itemId = $item->getAttribute("id");
+            $count = Collection::make($items)->where("id", "=", $itemId)->first()["count"];
+            $total += $item->getAttribute("price") * $count;
         }
         return $total;
     }
