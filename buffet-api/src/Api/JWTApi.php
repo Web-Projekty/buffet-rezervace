@@ -31,6 +31,8 @@ class JWTApi
 
     function getToken(int $uid, string $username): string
     {
+        $isAdmin = UserModel::isAdmin($uid);
+
         $key = 'example_key';
         $payload = [
             'iss' => $_SERVER['HTTP_HOST'],
@@ -38,7 +40,7 @@ class JWTApi
             'exp' => time() + (60 * 60),
             'sub' => $uid,
             'name' => $username,
-            'admin' => false
+            'admin' => $isAdmin
         ];
 
         $jwt = JWT::encode($payload, $key, 'HS384');
