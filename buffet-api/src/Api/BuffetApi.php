@@ -30,6 +30,7 @@ use Carbon\Carbon;
 use Carbon\CarbonTimeZone;
 use DateException;
 use Exception;
+use Illuminate\Support\Collection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use RuntimeException;
@@ -386,16 +387,22 @@ class BuffetApi
             unset($order["thePayUrl"]);
 
             $order["items"] = json_decode($order["items"]);
+            $itemIds = Collection::make($order["items"])->pluck("id")->toArray();
 
-            array_push($itemIds, ...$order["items"]);
+            array_push($itemIds, ...$itemIds);
         }
 
         $response->setPayload("data", $ordersArray);
 
         $itemIds = array_unique($itemIds);
 
-        $items = ItemModel::getByIdArray($itemIds)->toArray();
-
+        try {
+            $items = ItemModel::getByIdArray($itemIds)->toArray();
+        } catch (Exception $e) {
+            if ($e->getCode() == 1) {
+                return $response->setError(Error::MissingItems);
+            }
+        }
         if (!empty($items)) {
             $response->setPayload("items", $items);
         } else {
