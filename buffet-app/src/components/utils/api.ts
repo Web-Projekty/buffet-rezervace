@@ -71,6 +71,7 @@ export const updateOrder = async (
     return {
       order: data.payload.data as Order,
       error: data.status !== "success",
+      paywallUrl: "",
     };
   } catch {
     throw new Error("Chyba při aktualizaci objednávky.");
@@ -90,6 +91,7 @@ export const deleteOrder = async (
     return {
       order: data.payload.data as Order,
       error: data.status !== "success",
+      paywallUrl: "",
     };
   } catch {
     throw new Error("Chyba při mazání objednávky.");
