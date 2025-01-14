@@ -59,39 +59,39 @@ const OrderTracking = () => {
     return `${startTime} - ${endTime} ${date.toLocaleDateString()}`;
   }, [latestOrder]);
 
-  if (error) {
-    return <div className="text-white">{error}</div>;
-  }
-
   return (
     <div className="flex h-full w-full flex-col gap-4 rounded-lg text-white">
       <h1 className="text-2xl font-bold">Aktuální objednávka</h1>
       <div className="flex h-full w-full flex-col items-center justify-center gap-16 rounded-lg bg-backgroundColor p-6">
         {!isLoading ? (
-          <>
-            <Suspense fallback={<Fallback />}>
-              <ProgressTracker
-                currentStep={currentStep}
-                isCancelled={isCancelled}
-              />
-            </Suspense>
-            <div className="flex flex-col items-center gap-3">
-              <p className="text-center">{getTextBySteps(currentStep)}</p>
+          error ? (
+            <div className="text-white">{error}</div>
+          ) : (
+            <>
+              <Suspense fallback={<Fallback />}>
+                <ProgressTracker
+                  currentStep={currentStep}
+                  isCancelled={isCancelled}
+                />
+              </Suspense>
+              <div className="flex flex-col items-center gap-3">
+                <p className="text-center">{getTextBySteps(currentStep)}</p>
 
-              {latestOrder && !isCancelled ? (
-                <div className="flex flex-col gap-5">
-                  <div className="flex flex-col items-center gap-2">
-                    <p>Vaše objednávka bude k vyzvednutí pod číslem</p>
-                    <h3 className="text-2xl font-bold">
-                      {latestOrder.pickUpId}
-                    </h3>
-                    <p>{dateText}</p>
+                {latestOrder && !isCancelled ? (
+                  <div className="flex flex-col gap-5">
+                    <div className="flex flex-col items-center gap-2">
+                      <p>Vaše objednávka bude k vyzvednutí pod číslem</p>
+                      <h3 className="text-2xl font-bold">
+                        {latestOrder.pickUpId}
+                      </h3>
+                      <p>{dateText}</p>
+                    </div>
+                    <h2>Obsah</h2>
                   </div>
-                  <h2>Obsah</h2>
-                </div>
-              ) : null}
-            </div>
-          </>
+                ) : null}
+              </div>
+            </>
+          )
         ) : (
           <Loading size={30} />
         )}
