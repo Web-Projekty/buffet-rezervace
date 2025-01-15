@@ -349,23 +349,22 @@ class BuffetApi
             $orders = OrderModel::getByUser((int) $uid);
         }
 
+        $paymentTableName = PaymentModel::getTableName();
+        $orderTableName = OrderModel::getTableName();
+
         if ($page > 0 && $itemsCount > 0) {
             if ($orders) {
-                $paymentTableName = PaymentModel::getTableName();
-                $orderTableName = OrderModel::getTableName();
-
                 $orders = $orders->getQuery()->join($paymentTableName, $paymentTableName . '.id', '=', $orderTableName . '.paymentId');
 
                 $paginate = $orders->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
                 $response->setPayload("itemsCount", $paginate->total());
                 $ordersArray = $paginate->items();
-                $response->setPayload("data", $ordersArray);
             } else {
                 return $response->setError(Error::QueryFailed);
             }
         } else {
             $response->setPayload("itemsCount", OrderModel::query()->count());
-            $ordersArray = $orders->get()->toArray();
+            $ordersArray = $orders->getQuery()->join($paymentTableName, $paymentTableName . '.id', '=', $orderTableName . '.paymentId')->get()->toArray();
         }
 
         $itemIds = [];
