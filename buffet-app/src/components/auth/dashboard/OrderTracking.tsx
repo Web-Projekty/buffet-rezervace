@@ -60,13 +60,13 @@ const OrderTracking = () => {
   }, [latestOrder]);
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 rounded-lg text-white">
+    <div className="flex h-full w-full flex-col gap-2 rounded-lg text-white">
       <h1 className="text-2xl font-bold">Aktuální objednávka</h1>
-      <div className="flex h-full w-full flex-col items-center justify-center gap-16 rounded-lg bg-backgroundColor p-6">
-        {!isLoading ? (
-          error ? (
-            <div className="text-white">{error}</div>
-          ) : (
+      {!isLoading ? (
+        error ? (
+          <div className="text-white">{error}</div>
+        ) : (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-16 rounded-lg bg-backgroundColor p-6">
             <>
               <Suspense fallback={<Fallback />}>
                 <ProgressTracker
@@ -91,11 +91,11 @@ const OrderTracking = () => {
                 ) : null}
               </div>
             </>
-          )
-        ) : (
-          <Loading size={30} />
-        )}
-      </div>
+          </div>
+        )
+      ) : (
+        <Loading size={30} />
+      )}
     </div>
   );
 };
