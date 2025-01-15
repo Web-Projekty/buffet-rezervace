@@ -1,12 +1,13 @@
-import { CartItem } from "../../store/CartStore";
+import { Order, OrderItems as OrderItemsType } from "../../types";
 import { formatCurrency } from "../utils/utils";
 
 type OrderItemsProps = {
-  items: CartItem[];
+  items: [];
+  orderItems: Order["items"];
 };
 
 type OrderItemProps = {
-  item: CartItem;
+  item: OrderItemsType;
 };
 
 const OrderItem = ({ item }: OrderItemProps) => {
@@ -19,13 +20,15 @@ const OrderItem = ({ item }: OrderItemProps) => {
   );
 };
 
-const OrderItems = ({ items }: OrderItemsProps) => {
+const OrderItems = ({ orderItems, items }: OrderItemsProps) => {
   return (
     <div className="flex flex-col gap-1">
       <ul className="flex flex-col gap-2">
-        {items.map((item) => (
-          <OrderItem key={item.id} item={item} />
-        ))}
+        {items
+          .filter((item) => orderItems.map((item) => item.id).includes(item.id))
+          .map((item, index) => {
+            return <OrderItem key={index} item={item} />;
+          })}
       </ul>
       <hr className="w-full md:w-[240px]" />
       <div className="flex w-full flex-row items-center justify-between gap-2 md:w-[240px]">
