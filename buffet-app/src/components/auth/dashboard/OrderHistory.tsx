@@ -2,7 +2,7 @@ import Order from "../../orders/Order";
 import { AnimatePresence } from "framer-motion";
 import { ORDERS_PER_PAGE } from "../../../constants";
 import Loading from "../../ui/Loading";
-import { Order as OrderType } from "../../../types";
+import { OrdersData } from "../../../types";
 import PagingButtons from "../../ui/PagingButtons";
 import { useBackendPaging } from "../../../hooks/useBackendPaging";
 import { lazy, Suspense, useCallback } from "react";
@@ -10,14 +10,9 @@ import { Fallback } from "../../../main";
 
 const HorizontalPaging = lazy(() => import("../../ui/HorizontalPaging"));
 
-type OrderHistoryData = {
-  data: OrderType[];
-  itemsCount: number;
-};
-
 const OrderHistory = () => {
   const { currentPage, dataList, arrayOfPages, handlePage, isLoading, error } =
-    useBackendPaging<OrderHistoryData>(
+    useBackendPaging<OrdersData>(
       "getOrders",
       ORDERS_PER_PAGE,
       true,
@@ -55,7 +50,11 @@ const OrderHistory = () => {
           {!isLoading ? (
             <ul className="flex flex-col items-center gap-2">
               {dataList?.data?.map((order) => (
-                <Order key={order.pickUpId + "" + order.userId} order={order} />
+                <Order
+                  key={order.pickUpId + "" + order.userId}
+                  order={order}
+                  items={dataList?.items}
+                />
               ))}
             </ul>
           ) : (
