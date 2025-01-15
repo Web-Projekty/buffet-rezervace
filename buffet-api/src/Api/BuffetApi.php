@@ -454,10 +454,19 @@ class BuffetApi
         $endTime = $response->getRequestByKey("endTime");
         $pickUpDate = $response->getRequestByKey("pickUpDate");
 
+        $items = $response->getRequestByKey("items");
+
+        // items checking
+        foreach ($items as $item) {
+            if (!isset($item["id"]) || !isset($item["count"]) || !isset($item["variants"])) {
+                return $response->setError(Error::MissingItems);
+            }
+        }
         /**
          * @var array<array{id:int,count:int,variants:array<int>}>
          */
-        $items = $response->getRequestByKey("items");
+        $items = $items;
+        
         $paymentMethod = $response->getRequestByKey("paymentMethod");
 
         // token validation
