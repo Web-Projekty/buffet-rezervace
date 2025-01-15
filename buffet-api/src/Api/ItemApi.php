@@ -5,16 +5,23 @@ declare (strict_types = 1);
 namespace Buffet\Api;
 
 use Buffet\Database\Models\ItemModel;
+use Illuminate\Support\Collection;
 
 class ItemApi
 {
     /**
-     * @param array<int|int> $itemIds
+     * @param array<array{id:int,count:int,variants:array<int>}> $items
      */
-    public static function countItemPrice(array $itemIds): int
+    public static function countItemPrice(array $items): int
     {
+        $itemIds = [];
+        foreach ($items as $item) {
+            $itemIds[] = $item["id"];
+        }
+        $itemIds = array_unique($itemIds);
 
-        $items = ItemModel::getByIdArray($itemIds);
+        $itemQuery = ItemModel::getByIdArray($itemIds);
+
         /**
          * @var int $total
          */
@@ -22,8 +29,10 @@ class ItemApi
         /**
          * @var ItemModel $item
          */
-        foreach ($items as $item) {
-            $total += $item->getAttribute("price");
+        foreach ($itemQuery as $item) {
+            $itemId = $item->getAttribute("id");
+            $count = Collection::make($items)->where("id", "=", $itemId)->first()["count"];
+            $total += $item->getAttribute("price") * $count;
         }
         return $total;
     }
