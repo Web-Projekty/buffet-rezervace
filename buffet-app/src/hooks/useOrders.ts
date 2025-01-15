@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import { useFetch } from "./useFetch";
 import { useUser } from "./useUser";
-import { Order } from "../types";
+import { Order, OrdersData } from "../types";
 import { FETCH_URL } from "../constants";
-
-type OrderData = {
-  data: Order[];
-};
 
 const useOrders = (itemsCount: "all" | number, page?: number) => {
   const { token } = useUser();
@@ -19,7 +15,7 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
     data: fetchedOrders,
     isLoading: fetchLoading,
     error: fetchError,
-  } = useFetch<OrderData>(
+  } = useFetch<OrdersData>(
     FETCH_URL,
     {
       requestType: "getOrders",
@@ -27,7 +23,7 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
       page: page ? page : undefined,
       itemsCount: itemsCount === "all" ? undefined : itemsCount,
     },
-    { data: [] },
+    { data: [], itemsCount: 0, items: [] },
     [token],
   );
 
@@ -38,6 +34,13 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
           new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
         );
       });
+
+      /*const mappedOrdersWithItems = sortedOrders.map((order) => {
+        const items = order.items.map((item) => {
+          return fetchedOrders.items.find((item) => item.id === order.id);
+        });
+        return { ...order, items };
+      }*/
 
       if (!orders || JSON.stringify(orders) !== JSON.stringify(sortedOrders)) {
         setOrders(sortedOrders);

@@ -1,14 +1,15 @@
 import { motion } from "framer-motion";
-import { Order as OrderType } from "../../types";
+import { OrderItems, Order as OrderType } from "../../types";
 import { ChevronLeft } from "lucide-react";
 import { useOrder } from "../../hooks/useOrder";
 import OrderDetails from "./OrderDetails";
 
 type OrderProps = {
   order: OrderType;
+  items: OrderItems[];
 };
 
-const Order = ({ order }: OrderProps) => {
+const Order = ({ order, items }: OrderProps) => {
   const {
     color,
     isOpen,
@@ -71,7 +72,7 @@ const Order = ({ order }: OrderProps) => {
         }}
         transition={{ duration: 0.3 }}
       >
-        <OrderDetails order={order} />
+        <OrderDetails order={order} items={items} />
       </motion.ul>
     </motion.div>
   );

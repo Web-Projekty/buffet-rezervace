@@ -20,6 +20,12 @@ export type OrderStatus =
   | "cancelled"
   | "preparing";
 
+export type OrderItems = {
+  id: number;
+  count: number;
+  variants: number[];
+};
+
 export type Order = {
   id: number;
   userId: number;
@@ -28,9 +34,19 @@ export type Order = {
   pickupDate: string;
   startTime: string;
   endTime: string;
-  items: CartItem[];
+  items: OrderItems[];
   pickUpId: string;
-  paymentMethod: PaymentMethod["name"];
+  type: "thePay" | "cash";
+  thePayDetailsUrl: string;
+  totalAmount: number;
+  useCredits: boolean;
+  creditsAmount: number;
+};
+
+export type OrdersData = {
+  data: Order[];
+  itemsCount: number;
+  items: OrderItems[];
 };
 
 export type MenuItem = {

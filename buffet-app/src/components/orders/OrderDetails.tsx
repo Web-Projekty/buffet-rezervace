@@ -2,12 +2,14 @@ import { useOrder } from "../../hooks/useOrder";
 import { Order } from "../../types";
 import OrderButton from "./OrderButton";
 import OrderItems from "./OrderItems";
+import { OrderItems as OrderItemsType } from "../../types";
 
 type OrderDetailsProps = {
   order: Order;
+  items: OrderItemsType[];
 };
 
-const OrderDetails = ({ order }: OrderDetailsProps) => {
+const OrderDetails = ({ order, items }: OrderDetailsProps) => {
   const { dateCreated } = useOrder(order);
   return (
     <div
@@ -15,7 +17,7 @@ const OrderDetails = ({ order }: OrderDetailsProps) => {
     >
       <div>
         <p className="font-semibold">Objednané položky:</p>
-        <OrderItems items={order.items} />
+        <OrderItems orderItems={order.items} items={items} />
       </div>
 
       <div className="flex flex-col justify-between gap-2">
@@ -25,8 +27,7 @@ const OrderDetails = ({ order }: OrderDetailsProps) => {
           </p>
           <div>
             <p>
-              <span className="font-semibold">Platba:</span>{" "}
-              {order.paymentMethod}
+              <span className="font-semibold">Platba:</span> {}
             </p>
           </div>
         </div>
