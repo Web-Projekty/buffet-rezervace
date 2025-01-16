@@ -592,6 +592,7 @@ class BuffetApi
 
         $updatedOrder = OrderModel::getById($orderId);
         $updatedOrder["id"] = $orderId;
+        $updatedOrder["items"] = json_decode($updatedOrder["items"]);
 
         $ws = [
             "requestType" => "publish",
