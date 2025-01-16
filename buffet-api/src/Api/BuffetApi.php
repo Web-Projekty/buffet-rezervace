@@ -386,9 +386,8 @@ class BuffetApi
             unset($order["thePayUrl"]);
 
             $order["items"] = json_decode($order["items"]);
-            $itemIds = Collection::make($order["items"])->pluck("id")->toArray();
-
-            array_push($itemIds, ...$itemIds);
+            $orderitemIds = Collection::make($order["items"])->pluck("id")->toArray();
+            array_push($itemIds, ...$orderitemIds);
         }
 
         $response->setPayload("data", $ordersArray);
@@ -466,7 +465,7 @@ class BuffetApi
          * @var array<array{id:int,count:int,variants:array<int>}>
          */
         $items = $items;
-        
+
         $paymentMethod = $response->getRequestByKey("paymentMethod");
 
         // token validation
