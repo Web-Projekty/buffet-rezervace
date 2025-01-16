@@ -11,12 +11,13 @@ const KdsOrders = () => {
     waitingOrders,
     handleStatusChange,
     isLoading,
-    error,
     items,
+    nextOrdersCount,
   } = useKdsOrders();
 
   const renderPendingOrders = () => {
-    return pendingOrders && pendingOrders.length > 0 ? (
+    return (
+      pendingOrders &&
       pendingOrders.map((order) => (
         <KdsOrder
           key={order.id}
@@ -25,8 +26,6 @@ const KdsOrders = () => {
           items={items}
         />
       ))
-    ) : (
-      <p className="text-4xl text-white">Žádné objevnávky nejsou dostupné</p>
     );
   };
 
@@ -43,17 +42,19 @@ const KdsOrders = () => {
             (order) => new Date(order.pickupDate).getTime() > Date.now(),
           ).length
         }
-        current={0}
+        current={nextOrdersCount}
         waiting={waitingOrders?.length}
       />
 
       {isLoading ? (
         <Loading size={30} />
-      ) : error ? (
-        <p className="text-center text-4xl text-white">{error}</p>
       ) : (
+        // ) : error ? (
+        //   <p className="text-center text-4xl text-white">{error}</p>
         <div className="flex flex-row items-start justify-between">
-          <div className="flex flex-wrap gap-2">{renderPendingOrders()}</div>
+          <div className="grid grid-cols-2 grid-rows-2 gap-2 md:grid-cols-3 2xl:grid-cols-4">
+            {renderPendingOrders()}
+          </div>
           <div className="flex flex-col gap-2">
             {waitingOrders && waitingOrders.length > 0
               ? waitingOrders.map((order) => (
