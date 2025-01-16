@@ -1,3 +1,5 @@
+import { MappedOrderItem, OrderItem, OrderItems } from "../../types";
+
 export const formatCurrency = (number: number): string => {
   return new Intl.NumberFormat("cs-CZ", {
     style: "currency",
@@ -52,6 +54,28 @@ export const parseSelectedTime = (selectedTime: string | null) => {
   //console.log(formattedDate);
 
   return { startTime, endTime, formattedDate };
+};
+
+export const mapItemsWithOrders = (
+  orderItems: OrderItems[] | undefined,
+  items: OrderItem[] | undefined,
+): MappedOrderItem[] => {
+  if (!orderItems || !items) return [];
+  return orderItems.map((orderItem) => {
+    const item = items.find((i) => i.id === orderItem.id);
+
+    return {
+      ...orderItem,
+      name: item?.name ?? "Unknown Item",
+      price: item?.price,
+      description: item?.description,
+      image: item?.image,
+      allergens: item?.allergens ?? [],
+      category: item?.category ?? 0,
+      variants: orderItem.variants ?? [],
+      count: orderItem.count ?? 0,
+    };
+  });
 };
 
 export const onImageChange = (

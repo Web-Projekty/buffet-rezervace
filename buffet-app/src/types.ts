@@ -1,5 +1,3 @@
-import { CartItem } from "./store/CartStore";
-
 export type User = {
   id: number;
   username: string;
@@ -26,6 +24,28 @@ export type OrderItems = {
   variants: number[];
 };
 
+export type MappedOrderItem = {
+  id: number;
+  name: string | undefined;
+  price: number | undefined;
+  description: string | undefined;
+  image: string | undefined;
+  allergens: Allergen[];
+  category: number;
+  variants: number[];
+  count: number;
+};
+
+export type OrderItem = {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  image: string;
+  allergens: Allergen[];
+  category: number;
+};
+
 export type Order = {
   id: number;
   userId: number;
@@ -46,7 +66,7 @@ export type Order = {
 export type OrdersData = {
   data: Order[];
   itemsCount: number;
-  items: OrderItems[];
+  items: OrderItem[];
 };
 
 export type MenuItem = {

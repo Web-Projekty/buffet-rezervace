@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useFetch } from "./useFetch";
 import { useUser } from "./useUser";
-import { Order, OrdersData } from "../types";
+import { Order, OrderItem, OrdersData } from "../types";
 import { FETCH_URL } from "../constants";
 
 const useOrders = (itemsCount: "all" | number, page?: number) => {
@@ -35,13 +35,6 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
         );
       });
 
-      /*const mappedOrdersWithItems = sortedOrders.map((order) => {
-        const items = order.items.map((item) => {
-          return fetchedOrders.items.find((item) => item.id === order.id);
-        });
-        return { ...order, items };
-      }*/
-
       if (!orders || JSON.stringify(orders) !== JSON.stringify(sortedOrders)) {
         setOrders(sortedOrders);
         setLatestOrder(sortedOrders[0]);
@@ -51,7 +44,13 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
     setError(fetchError);
   }, [fetchedOrders, fetchLoading, fetchError]);
 
-  return { orders, latestOrder, error, isLoading };
+  return {
+    orders,
+    latestOrder,
+    error,
+    isLoading,
+    fetchedItems: fetchedOrders?.items,
+  };
 };
 
 export default useOrders;

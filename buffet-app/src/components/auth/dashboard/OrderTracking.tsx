@@ -3,6 +3,8 @@ import { Order } from "../../../types";
 import useOrders from "../../../hooks/useOrders";
 import Loading from "../../ui/Loading";
 import { Fallback } from "../../../main";
+import OrderItems from "../../orders/OrderItems";
+import { mapItemsWithOrders } from "../../utils/utils";
 
 const ProgressTracker = lazy(() => import("./OrderProgressTracker"));
 
@@ -36,7 +38,7 @@ const getCurrentStep = (order: Order | null): number => {
 };
 
 const OrderTracking = () => {
-  const { latestOrder, isLoading, error } = useOrders(1, 1);
+  const { latestOrder, isLoading, error, fetchedItems } = useOrders(1, 1);
 
   const currentStep: number = useMemo(
     () => (latestOrder ? getCurrentStep(latestOrder) : -1),
@@ -58,6 +60,8 @@ const OrderTracking = () => {
 
     return `${startTime} - ${endTime} ${date.toLocaleDateString()}`;
   }, [latestOrder]);
+
+  const mappedItems = mapItemsWithOrders(latestOrder?.items, fetchedItems);
 
   return (
     <div className="flex h-full w-full flex-col gap-2 rounded-lg text-white">
@@ -86,7 +90,7 @@ const OrderTracking = () => {
                       </h3>
                       <p>{dateText}</p>
                     </div>
-                    <h2>Obsah</h2>
+                    <OrderItems mappedItems={mappedItems} />
                   </div>
                 ) : null}
               </div>

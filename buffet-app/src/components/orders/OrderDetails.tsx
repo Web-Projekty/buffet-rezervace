@@ -1,23 +1,28 @@
 import { useOrder } from "../../hooks/useOrder";
-import { Order } from "../../types";
+import { Order, OrderItem } from "../../types";
 import OrderButton from "./OrderButton";
 import OrderItems from "./OrderItems";
-import { OrderItems as OrderItemsType } from "../../types";
+import { mapItemsWithOrders } from "../utils/utils";
+import { useMemo } from "react";
 
 type OrderDetailsProps = {
   order: Order;
-  items: OrderItemsType[];
+  items: OrderItem[];
 };
 
 const OrderDetails = ({ order, items }: OrderDetailsProps) => {
   const { dateCreated } = useOrder(order);
+  const mappedItems = useMemo(
+    () => mapItemsWithOrders(order.items, items),
+    [order.items, items],
+  );
   return (
     <div
       className={`mt-5 grid grid-cols-1 justify-center gap-5 overflow-hidden px-4 md:grid-cols-2 md:justify-between md:gap-0`}
     >
-      <div>
+      <div className="flex max-w-[300px] flex-col gap-2">
         <p className="font-semibold">Objednané položky:</p>
-        <OrderItems orderItems={order.items} items={items} />
+        <OrderItems mappedItems={mappedItems} />
       </div>
 
       <div className="flex flex-col justify-between gap-2">
