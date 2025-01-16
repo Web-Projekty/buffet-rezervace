@@ -188,11 +188,10 @@ class OrderApi
                     foreach ($stausOptions as $option) {
                         if ($value === $option->value) {
                             $order->$key = $value;
-                            break;
+                            continue 3;
                         }
-                        throw new \Exception("Invalid status", 2);
                     }
-                    continue 2;
+                    throw new \Exception("Invalid status", 2);
 
                 case "userId":
                     if (!UserModel::query()->find($value)->exists()) {
