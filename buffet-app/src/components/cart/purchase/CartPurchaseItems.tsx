@@ -12,7 +12,7 @@ const CartPurchaseItems = ({ cartItems }: CartPurchaseItemsProps) => {
     <div className="flex flex-col rounded-lg p-5">
       {cartItems &&
         cartItems.map((item) => {
-          return <CartPurchaseItem cartItem={item} />;
+          return <CartPurchaseItem key={item.id} cartItem={item} />;
         })}
       <hr />
       <OrderPrice items={cartItems} />
