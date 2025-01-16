@@ -457,12 +457,12 @@ class BuffetApi
 
         // items checking
         foreach ($items as $item) {
-            if (!isset($item["id"]) || !isset($item["count"]) || !isset($item["variants"])) {
+            if (!isset($item["id"]) || !isset($item["quantity"]) || !isset($item["variants"])) {
                 return $response->setError(Error::MissingItems);
             }
         }
         /**
-         * @var array<array{id:int,count:int,variants:array<int>}>
+         * @var array<array{id:int,quantity:int,variants:array<int>}>
          */
         $items = $items;
 
