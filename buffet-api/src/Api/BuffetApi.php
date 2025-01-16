@@ -527,6 +527,8 @@ class BuffetApi
 
         $response->setPayload("url", $order["url"]);
 
+        $order["items"] = json_decode($order["items"]);
+
         WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
 
         return $response->setStatus(true)->setSuccess(Success::OrderCreated);
