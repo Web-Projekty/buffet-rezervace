@@ -9,7 +9,7 @@ type KdsDeliveryOrderProps = {
 };
 
 const KdsDeliveryOrder = ({ order, onStatusChange }: KdsDeliveryOrderProps) => {
-  const { isOpen, toggleOpen, color, handleStatus } = useOrder(order);
+  const { isOpen, toggleOpen, color, handleStatus } = useOrder(order, true);
 
   const items = JSON.parse(order.items);
 

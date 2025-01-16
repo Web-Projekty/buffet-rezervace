@@ -5,6 +5,7 @@ import RouteScrollToTop from "./components/ui/RouteScrollToTop";
 import { lazy, Suspense } from "react";
 import { Fallback } from "./main";
 import useCart from "./store/CartStore";
+import { AnimatePresence } from "framer-motion";
 
 const CartModal = lazy(() => import("./components/cart/CartModal"));
 
@@ -14,11 +15,13 @@ const App = () => {
     <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-slate-800 font-FiraSans">
       <Header />
       <RouteScrollToTop />
-      {isOpen && (
-        <Suspense fallback={<Fallback />}>
-          <CartModal />
-        </Suspense>
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <Suspense fallback={<Fallback />}>
+            <CartModal />
+          </Suspense>
+        )}
+      </AnimatePresence>
       <div className="mb-[3rem] mt-[10rem] flex-1">
         <Outlet />
       </div>

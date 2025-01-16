@@ -1,6 +1,7 @@
 import { Order } from "../../types";
 import Button from "../ui/Button";
 import { useOrder } from "../../hooks/useOrder";
+import { CartItem } from "../../store/CartStore";
 
 type KdsOrderProps = {
   order: Order;
@@ -11,12 +12,12 @@ const KdsOrder = ({ order, onStatusChange }: KdsOrderProps) => {
   const { color, status, handleStatus } = useOrder(order);
 
   const handlePrepareOrder = () => {
-    handleStatus("preparing");
+    //handleStatus("preparing");
   };
 
   const handleDoneOrder = () => {
     const updatedOrder: Order = { ...order, status: "waiting" };
-    handleStatus("waiting");
+    //handleStatus("waiting");
     onStatusChange(updatedOrder);
   };
 
@@ -26,7 +27,11 @@ const KdsOrder = ({ order, onStatusChange }: KdsOrderProps) => {
         {order && `#${order.pickUpId}`}
       </div>
       <div className="w-full px-4 py-2">
-        <div className="m-2 flex-grow">{order.items}</div>
+        <ul className="m-2 flex-grow">
+          {order.items.map((item) => (
+            <li key={(item as CartItem).name}>{item.id}</li>
+          ))}
+        </ul>
         {status === "preparing" ? (
           <div>
             <Button

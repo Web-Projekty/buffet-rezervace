@@ -1,27 +1,29 @@
 import axios from "axios";
-import { MenuItem, Order, OrderStatus, PaymentMethod } from "../../types";
+import { Date, MenuItem, Order, OrderStatus, PaymentMethod } from "../../types";
 import { FETCH_URL } from "../../constants";
-import { CartItem } from "../../store/CartStore";
 
 type OrderApiReturn = {
-  order: Order;
+  order: Order | null;
   error: boolean;
+  paywallUrl: string;
 };
 
 type MenuItemApiReturn = {
-  menuItem: MenuItem;
+  menuItem: MenuItem | null;
   error: boolean;
 };
 
 type TimeSlotsApiReturn = {
-  timeslots: string[];
+  timeslots: Date[];
   error: boolean;
 };
 
 export const createOrder = async (
   token: string | null,
-  cartItems: CartItem[],
-  selectedTime: string | null,
+  cartItems: number[],
+  startTime: string | null,
+  endTime: string | null,
+  date: string | null,
   paymentMethod: PaymentMethod[],
 ): Promise<OrderApiReturn> => {
   if (!token) throw new Error("Chyba při vytváření objednávky.");
@@ -30,21 +32,26 @@ export const createOrder = async (
     const { data } = await axios.post(FETCH_URL, {
       requestType: "createOrder",
       token: token,
-      items: "[]",
-      startTime: selectedTime?.split("-")[0],
-      endTime: selectedTime?.split("-")[1],
-      pickUpDate: selectedTime,
-      paymentMethod: paymentMethod[0],
+      items: cartItems,
+      startTime: startTime,
+      endTime: endTime,
+      pickUpDate: date,
+      paymentMethod: "thePay",
     });
 
     console.log(data);
 
     return {
       order: data.payload.data as Order,
-      error: data.status === "success" ? false : true,
+      error: data.status !== "success",
+      paywallUrl: data.payload.url,
     };
   } catch {
-    throw new Error("Chyba při vytváření objednávky.");
+    return {
+      order: null,
+      error: true,
+      paywallUrl: "",
+    };
   }
 };
 
@@ -63,7 +70,8 @@ export const updateOrder = async (
     });
     return {
       order: data.payload.data as Order,
-      error: data.status === "success" ? false : true,
+      error: data.status !== "success",
+      paywallUrl: "",
     };
   } catch {
     throw new Error("Chyba při aktualizaci objednávky.");
@@ -82,7 +90,8 @@ export const deleteOrder = async (
     });
     return {
       order: data.payload.data as Order,
-      error: data.status === "success" ? false : true,
+      error: data.status !== "success",
+      paywallUrl: "",
     };
   } catch {
     throw new Error("Chyba při mazání objednávky.");
@@ -101,7 +110,7 @@ export const createMenuItem = async (
     });
     return {
       menuItem: data.payload.data as MenuItem,
-      error: data.status === "success" ? false : true,
+      error: data.status !== "success",
     };
   } catch {
     throw new Error("Chyba při vytváření položky menu.");
@@ -120,7 +129,7 @@ export const updateMenuItem = async (
     });
     return {
       menuItem: data.payload.data as MenuItem,
-      error: data.status === "success" ? false : true,
+      error: data.status !== "success",
     };
   } catch {
     throw new Error("Chyba při aktualizaci položky menu.");
@@ -139,23 +148,31 @@ export const deleteMenuItem = async (
     });
     return {
       menuItem: data.payload.data as MenuItem,
-      error: data.status === "success" ? false : true,
+      error: data.status !== "success",
     };
   } catch {
     throw new Error("Chyba při mazání položky menu.");
   }
 };
 
-export const getTimeslots = async (): Promise<TimeSlotsApiReturn> => {
+export const getTimeSlots = async (): Promise<TimeSlotsApiReturn> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "getOrderTimeTable",
     });
+
+    console.log(data);
+
+    const { status, payload } = data;
+
     return {
-      timeslots: data.payload.data as string[],
-      error: data.status === "success" ? false : true,
+      timeslots: payload?.data || [],
+      error: status !== "success",
     };
   } catch {
-    throw new Error("Chyba při načítání časových slotů.");
+    return {
+      timeslots: [],
+      error: true,
+    };
   }
 };

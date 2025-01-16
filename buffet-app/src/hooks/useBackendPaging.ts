@@ -13,6 +13,7 @@ type BackendPagingReturn<T> = {
   dataList: T | null;
   arrayOfPages: number[];
   handlePage: (page: number) => void;
+  fetchedData: T | null;
 };
 
 export const useBackendPaging = <T>(
@@ -62,5 +63,6 @@ export const useBackendPaging = <T>(
     currentPage,
     totalPagesCount,
     handlePage,
+    fetchedData: data,
   };
 };
