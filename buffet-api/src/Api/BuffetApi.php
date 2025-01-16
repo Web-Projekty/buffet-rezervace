@@ -354,7 +354,7 @@ class BuffetApi
 
         if ($page > 0 && $itemsCount > 0) {
             if ($orders) {
-                $orders = $orders->getQuery()->join($paymentTableName, $paymentTableName . '.id', '=', $orderTableName . '.paymentId');
+                $orders = $orders->getQuery()->join($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id')->select("$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl");
 
                 $paginate = $orders->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
                 $response->setPayload("itemsCount", $paginate->total());
