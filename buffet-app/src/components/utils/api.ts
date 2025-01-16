@@ -20,13 +20,15 @@ type TimeSlotsApiReturn = {
 
 export const createOrder = async (
   token: string | null,
-  cartItems: number[],
+  cartItems: { id: number; count: number; variants: number[] }[],
   startTime: string | null,
   endTime: string | null,
   date: string | null,
   paymentMethod: PaymentMethod[],
 ): Promise<OrderApiReturn> => {
   if (!token) throw new Error("Chyba při vytváření objednávky.");
+
+  // console.log(cartItems);
 
   try {
     const { data } = await axios.post(FETCH_URL, {
