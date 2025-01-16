@@ -38,6 +38,7 @@ class KDSChannel implements MessageInterface
      */
     public function onMessage(StaticConnectionInterface $conn, string $msg): void
     {
+        $conn->send("help");
         if (json_validate($msg)) {
 
             $decoded = json_decode($msg);
@@ -49,6 +50,7 @@ class KDSChannel implements MessageInterface
             $isAdmin = Helper::isAdmin($token);
 
             switch ($requestType) {
+
                 case "subscribe":
                     if (!$isAdmin) {
                         $conn->send(Helper::getErrorResponse(Error::Unauthorized));
