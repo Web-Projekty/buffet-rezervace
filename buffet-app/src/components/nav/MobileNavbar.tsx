@@ -3,6 +3,8 @@ import SchoolLogo from "../../assets/images/logo-white_alfa.png";
 import { X } from "lucide-react";
 import Link from "./Link";
 import { NavLinks } from "./Navbar";
+import AccountButton from "../auth/AccountButton";
+import CartButton from "../cart/CartButton";
 
 type MobileNavbarProps = {
   isOpen: boolean;
@@ -34,7 +36,7 @@ const MobileNavbar = ({
         alt="School Logo"
         className={`absolute right-1/2 translate-x-1/2 scale-150`}
       />
-      <li className="absolute right-5 top-5">
+      <li className="absolute right-5 top-5 cursor-pointer">
         <X size={64} onClick={handleOpenMobileMenu} />
       </li>
       <div className="z-[45] flex flex-col gap-10">
@@ -44,6 +46,10 @@ const MobileNavbar = ({
           }
           return <Link key={id} path={path} name={name} />;
         })}
+        <div className="flex flex-row gap-5 text-black">
+          {!isAdmin && <CartButton />}
+          <AccountButton />
+        </div>
       </div>
     </motion.ul>
   );
