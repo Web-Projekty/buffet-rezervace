@@ -69,7 +69,7 @@ class UserModel extends Model
      * @param string $password
      */
 
-    public static function createUser(string $username, string $password, string $fullName, string $tel, string $email): bool
+    public static function createUser(string $username, string $password, string $fullName, string|null $tel, string $email): bool
     {
         try {
             UserModel::query()->create([
