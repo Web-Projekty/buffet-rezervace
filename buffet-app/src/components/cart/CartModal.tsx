@@ -26,7 +26,7 @@ const CartModal = () => {
         {...scaleUpAnimation(0.3)}
         className="relative m-auto flex h-[800px] w-[88%] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black md:h-[600px] md:w-[900px]"
       >
-        <h1 className="flex h-32 w-full items-center justify-center rounded-t-lg bg-primary text-center text-xl font-bold text-black">
+        <h1 className="flex h-16 w-full items-center justify-center rounded-t-lg bg-primary text-center text-xl font-bold text-black">
           Váš košík
         </h1>
 
@@ -38,9 +38,15 @@ const CartModal = () => {
             return <CartItem key={item.id} item={item} />;
           })}
         </div>
-        <div className="my-2 grid h-10 grid-cols-2 grid-rows-1 justify-between gap-10 text-white">
-          <Button onClick={handleCloseCart}>Zavřít</Button>
-          <Button onClick={handleContinue} disabled={isCartEmpty()}>
+        <div className="flex h-16 w-full items-center justify-center gap-10 bg-slate-900 text-white">
+          <Button className="w-28" onClick={handleCloseCart}>
+            Zavřít
+          </Button>
+          <Button
+            className="w-28"
+            onClick={handleContinue}
+            disabled={isCartEmpty()}
+          >
             K pokladně
           </Button>
         </div>

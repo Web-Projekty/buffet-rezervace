@@ -9,14 +9,13 @@ type MenuItemsProps = {
 };
 
 const MenuItems = ({ menuItems, categories, categoryId }: MenuItemsProps) => {
+  const filteredItems = menuItems?.filter(
+    (item) => categories.length > 0 && item.category === categoryId,
+  );
   return (
     <HorizontalPaging className="w-[25rem] md:w-[80rem] 2xl:w-[100rem]">
-      {menuItems &&
-        menuItems
-          .filter(
-            (item) => categories.length > 0 && item.category === categoryId,
-          )
-          .map((item) => <MenuItem key={item.id} item={item} />)}
+      {filteredItems &&
+        filteredItems.map((item) => <MenuItem key={item.id} item={item} />)}
     </HorizontalPaging>
   );
 };

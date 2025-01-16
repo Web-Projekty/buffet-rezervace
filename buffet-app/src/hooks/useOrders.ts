@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import { useFetch } from "./useFetch";
 import { useUser } from "./useUser";
-import { Order } from "../types";
+import { Order, OrderItem, OrdersData } from "../types";
 import { FETCH_URL } from "../constants";
-
-type OrderData = {
-  data: Order[];
-};
 
 const useOrders = (itemsCount: "all" | number, page?: number) => {
   const { token } = useUser();
@@ -19,7 +15,7 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
     data: fetchedOrders,
     isLoading: fetchLoading,
     error: fetchError,
-  } = useFetch<OrderData>(
+  } = useFetch<OrdersData>(
     FETCH_URL,
     {
       requestType: "getOrders",
@@ -27,7 +23,7 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
       page: page ? page : undefined,
       itemsCount: itemsCount === "all" ? undefined : itemsCount,
     },
-    { data: [] },
+    { data: [], itemsCount: 0, items: [] },
     [token],
   );
 
@@ -48,7 +44,13 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
     setError(fetchError);
   }, [fetchedOrders, fetchLoading, fetchError]);
 
-  return { orders, latestOrder, error, isLoading };
+  return {
+    orders,
+    latestOrder,
+    error,
+    isLoading,
+    fetchedItems: fetchedOrders?.items,
+  };
 };
 
 export default useOrders;
