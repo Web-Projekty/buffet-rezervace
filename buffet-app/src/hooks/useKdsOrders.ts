@@ -2,8 +2,7 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 import { Order, OrderItem, OrderStatus } from "../types";
 import { useUser } from "./useUser";
 import { WEBSOCKET_URL } from "../constants";
-import { useEffect, useState, useCallback } from "react";
-import { usePaging } from "./usePaging";
+import { useEffect, useState, useCallback, useMemo } from "react";
 
 export const useKdsOrders = () => {
   const { token } = useUser();
@@ -34,27 +33,41 @@ export const useKdsOrders = () => {
         setOrders(data as Order[]);
         setItems(items as OrderItem[]);
         console.log("Orders:", data);
-      } catch (e) {
-        console.error("Chyba v komunikaci se serverem:", e);
+      } catch {
         setError("Chyba v komunikaci se serverem.");
       }
     }
   }, [lastJsonMessage]);
 
-  const { dataList: pendingOrders } = usePaging<Order>(
-    orders
-      ?.filter(
-        (order) => order.status === "preparing" || order.status === "sent",
-      )
-      .sort((a, b) => a.pickupDate.localeCompare(b.pickupDate)),
-    8,
+  const pendingOrders = useMemo(
+    () =>
+      orders
+        ? orders
+            .filter(
+              (order) =>
+                order.status === "preparing" || order.status === "sent",
+            )
+            .sort((a, b) => a.pickupDate.localeCompare(b.pickupDate))
+            .slice(0, 6)
+        : [],
+    [orders],
   );
 
-  const { dataList: waitingOrders } = usePaging<Order>(
-    orders
-      ?.filter((order) => order.status === "waiting")
-      .sort((b, a) => a.pickupDate.localeCompare(b.pickupDate)),
-    8,
+  const waitingOrders = useMemo(
+    () =>
+      orders
+        ? orders
+            .filter((order) => order.status === "waiting")
+            .sort((b, a) => a.pickupDate.localeCompare(b.pickupDate))
+            .slice(0, 5)
+        : [],
+    [orders],
+  );
+
+  const nextOrdersCount: number = useMemo(
+    () =>
+      orders ? orders.length - pendingOrders.length - waitingOrders.length : 0,
+    [orders, pendingOrders, waitingOrders],
   );
 
   const handleStatusChange = useCallback(
@@ -66,12 +79,14 @@ export const useKdsOrders = () => {
       // sendMessage(JSON.stringify({ requestType: "subscribe", token }));
       sendMessage(
         JSON.stringify({
-          requestType: "createOrder",
+          requestType: "updateOrder",
           token,
           orderId: id,
           status: newStatus,
         }),
       );
+
+      console.log(lastJsonMessage);
     },
     [token, sendMessage],
   );
@@ -87,6 +102,7 @@ export const useKdsOrders = () => {
   return {
     pendingOrders,
     waitingOrders,
+    nextOrdersCount,
     items,
     handleStatusChange,
     isLoading,
