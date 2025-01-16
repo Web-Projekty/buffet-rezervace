@@ -26,19 +26,6 @@ export const useKdsOrders = () => {
     },
   );
 
-  useEffect(() => {
-    if (lastJsonMessage?.payload) {
-      try {
-        const { data, items } = lastJsonMessage.payload;
-        setOrders(data as Order[]);
-        setItems(items as OrderItem[]);
-        console.log("Orders:", data);
-      } catch {
-        setError("Chyba v komunikaci se serverem.");
-      }
-    }
-  }, [lastJsonMessage]);
-
   const pendingOrders = useMemo(
     () =>
       orders
@@ -85,10 +72,10 @@ export const useKdsOrders = () => {
           status: newStatus,
         }),
       );
-
-      console.log(lastJsonMessage);
+      console.log(lastJsonMessage?.payload);
+      console.log(id);
     },
-    [token, sendMessage],
+    [token],
   );
 
   const isLoading: boolean = readyState === ReadyState.CONNECTING;
@@ -98,6 +85,19 @@ export const useKdsOrders = () => {
       setError("Připojení uzavřeno.");
     }
   }, [readyState]);
+
+  useEffect(() => {
+    if (lastJsonMessage?.payload.data && lastJsonMessage?.payload.items) {
+      try {
+        const { data, items } = lastJsonMessage.payload;
+        setOrders(data as Order[]);
+        setItems(items as OrderItem[]);
+        console.log(data);
+      } catch {
+        setError("Chyba v komunikaci se serverem.");
+      }
+    }
+  }, [lastJsonMessage]);
 
   return {
     pendingOrders,
