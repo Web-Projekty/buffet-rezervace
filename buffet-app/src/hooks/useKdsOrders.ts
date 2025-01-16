@@ -20,6 +20,7 @@ export const useKdsOrders = () => {
         }
       },
       shouldReconnect: () => true,
+      reconnectInterval: 5000,
       onError: () => {
         setError("Chyba v komunikaci se serverem.");
       },
@@ -34,8 +35,8 @@ export const useKdsOrders = () => {
         setItems(items as OrderItem[]);
         console.log("Orders:", data);
       } catch (e) {
-        console.error("Error parsing WebSocket message:", e);
-        setError("Failed to parse WebSocket message.");
+        console.error("Chyba v komunikaci se serverem:", e);
+        setError("Chyba v komunikaci se serverem.");
       }
     }
   }, [lastJsonMessage]);
@@ -59,18 +60,18 @@ export const useKdsOrders = () => {
   const handleStatusChange = useCallback(
     (id: number, newStatus: OrderStatus) => {
       if (!token) {
-        setError("User token is missing.");
+        setError("Přihlaste se prosím.");
         return;
       }
-      sendMessage(JSON.stringify({ requestType: "subscribe", token }));
-      // sendMessage(
-      //   JSON.stringify({
-      //     requestType: "createOrder",
-      //     token,
-      //     orderId: id,
-      //     status: newStatus,
-      //   }),
-      // );
+      // sendMessage(JSON.stringify({ requestType: "subscribe", token }));
+      sendMessage(
+        JSON.stringify({
+          requestType: "createOrder",
+          token,
+          orderId: id,
+          status: newStatus,
+        }),
+      );
     },
     [token, sendMessage],
   );
@@ -79,7 +80,7 @@ export const useKdsOrders = () => {
 
   useEffect(() => {
     if (readyState === ReadyState.CLOSED) {
-      setError("WebSocket connection closed.");
+      setError("Připojení uzavřeno.");
     }
   }, [readyState]);
 
