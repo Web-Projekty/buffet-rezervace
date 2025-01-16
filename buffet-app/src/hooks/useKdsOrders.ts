@@ -20,7 +20,7 @@ export const useKdsOrders = () => {
         }
       },
       shouldReconnect: () => true,
-      reconnectInterval: 5000,
+      // reconnectInterval: 5000,
       onError: () => {
         setError("Chyba v komunikaci se serverem.");
       },
