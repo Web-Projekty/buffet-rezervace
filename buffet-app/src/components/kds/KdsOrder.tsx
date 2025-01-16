@@ -1,24 +1,44 @@
-import { Order } from "../../types";
+import { Order, OrderItem, OrderStatus } from "../../types";
 import Button from "../ui/Button";
 import { useOrder } from "../../hooks/useOrder";
-import { CartItem } from "../../store/CartStore";
 
 type KdsOrderProps = {
   order: Order;
-  onStatusChange: (order: Order) => void;
+  onStatusChange: (id: number, newStatus: OrderStatus) => void;
+  items: OrderItem[];
 };
 
-const KdsOrder = ({ order, onStatusChange }: KdsOrderProps) => {
-  const { color, status, handleStatus } = useOrder(order);
-
-  const handlePrepareOrder = () => {
-    //handleStatus("preparing");
-  };
+const KdsOrder = ({ order, onStatusChange, items }: KdsOrderProps) => {
+  const { color, status, mappedItems } = useOrder(order, true, items);
 
   const handleDoneOrder = () => {
-    const updatedOrder: Order = { ...order, status: "waiting" };
-    //handleStatus("waiting");
-    onStatusChange(updatedOrder);
+    onStatusChange(order.id, "waiting");
+  };
+
+  const handlePrepareOrder = () => {
+    onStatusChange(order.id, "preparing");
+  };
+
+  const renderButtons = () => {
+    if (status === "preparing") {
+      return (
+        <Button
+          onClick={handleDoneOrder}
+          className="w-full rounded-none border-0 bg-primary"
+        >
+          Připraveno
+        </Button>
+      );
+    }
+
+    return (
+      <Button
+        onClick={handlePrepareOrder}
+        className="w-full rounded-none border-0 bg-primary"
+      >
+        Začít přípravu
+      </Button>
+    );
   };
 
   return (
@@ -28,27 +48,13 @@ const KdsOrder = ({ order, onStatusChange }: KdsOrderProps) => {
       </div>
       <div className="w-full px-4 py-2">
         <ul className="m-2 flex-grow">
-          {order.items.map((item) => (
-            <li key={(item as CartItem).name}>{item.id}</li>
-          ))}
-        </ul>
-        {status === "preparing" ? (
-          <div>
-            <Button
-              onClick={handleDoneOrder}
-              className="w-full rounded-none border-0 bg-primary"
-            >
-              Připraveno
-            </Button>
+          <div className="flex flex-row gap-1 text-base font-normal">
+            {mappedItems.map((item) => (
+              <p key={item.id}>{item.name}</p>
+            ))}
           </div>
-        ) : (
-          <Button
-            onClick={handlePrepareOrder}
-            className="mt-auto w-full rounded-none border-0 bg-primary"
-          >
-            Hotovo
-          </Button>
-        )}
+        </ul>
+        {renderButtons()}
       </div>
     </div>
   );

@@ -6,8 +6,14 @@ import KdsDeliveryOrder from "./KdsDeliveryOrder";
 import { useKdsOrders } from "../../hooks/useKdsOrders";
 
 const KdsOrders = () => {
-  const { pendingOrders, waitingOrders, handleStatusChange, isLoading, error } =
-    useKdsOrders();
+  const {
+    pendingOrders,
+    waitingOrders,
+    handleStatusChange,
+    isLoading,
+    error,
+    items,
+  } = useKdsOrders();
 
   const renderPendingOrders = () => {
     return pendingOrders && pendingOrders.length > 0 ? (
@@ -16,6 +22,7 @@ const KdsOrders = () => {
           key={order.id}
           order={order}
           onStatusChange={handleStatusChange}
+          items={items}
         />
       ))
     ) : (
@@ -54,6 +61,7 @@ const KdsOrders = () => {
                     key={order.id}
                     order={order}
                     onStatusChange={handleStatusChange}
+                    items={items}
                   />
                 ))
               : null}

@@ -1,28 +1,31 @@
 import { useOrder } from "../../hooks/useOrder";
-import { Order } from "../../types";
+import { Order, OrderItem, OrderStatus } from "../../types";
 import Button from "../ui/Button";
 import { ChevronLeft } from "lucide-react";
 
 type KdsDeliveryOrderProps = {
   order: Order;
-  onStatusChange: (order: Order) => void;
+  onStatusChange: (id: number, newStatus: OrderStatus) => void;
+  items: OrderItem[];
 };
 
-const KdsDeliveryOrder = ({ order, onStatusChange }: KdsDeliveryOrderProps) => {
-  const { isOpen, toggleOpen, color, handleStatus } = useOrder(order, true);
-
-  const items = JSON.parse(order.items);
+const KdsDeliveryOrder = ({
+  order,
+  onStatusChange,
+  items,
+}: KdsDeliveryOrderProps) => {
+  const { isOpen, toggleOpen, color, mappedItems } = useOrder(
+    order,
+    true,
+    items,
+  );
 
   const handleDoneOrder = () => {
-    const updatedOrder: Order = { ...order, status: "done" };
-    handleStatus("done");
-    onStatusChange(updatedOrder);
+    onStatusChange(order.id, "done");
   };
 
   const handleCancelOrder = () => {
-    const updatedOrder: Order = { ...order, status: "cancelled" };
-    handleStatus("cancelled");
-    onStatusChange(updatedOrder);
+    onStatusChange(order.id, "cancelled");
   };
 
   return (
@@ -33,8 +36,8 @@ const KdsDeliveryOrder = ({ order, onStatusChange }: KdsDeliveryOrderProps) => {
           {order && `#${order.pickUpId}`}
           {!isOpen && (
             <div className="flex flex-row gap-1 text-base font-normal">
-              {items.map((item: number, index: number) => (
-                <p key={index}>{item}</p>
+              {mappedItems.map((item) => (
+                <p key={item.id}>{item.id}</p>
               ))}
             </div>
           )}
@@ -47,8 +50,8 @@ const KdsDeliveryOrder = ({ order, onStatusChange }: KdsDeliveryOrderProps) => {
       {isOpen && (
         <div className="px-4 py-2">
           <div className="m-2 flex-grow">
-            {items.map((item: number, index: number) => (
-              <p key={index}>{item}</p>
+            {mappedItems.map((item, index) => (
+              <p key={index}>{item.name}</p>
             ))}
           </div>
           <div className="flex w-full justify-center gap-2">

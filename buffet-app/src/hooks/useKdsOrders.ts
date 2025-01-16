@@ -1,25 +1,15 @@
 import useWebSocket, { ReadyState } from "react-use-websocket";
-import { Order } from "../types";
+import { Order, OrderItem, OrderStatus } from "../types";
 import { useUser } from "./useUser";
 import { WEBSOCKET_URL } from "../constants";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { usePaging } from "./usePaging";
 
-type UseKdsOrdersReturn = {
-  pendingOrders: Order[];
-  waitingOrders: Order[];
-  handlePrepare: (order: Order) => void;
-  handlePrepared: (order: Order) => void;
-  handlePickedUp: (order: Order) => void;
-  handleCancell: (order: Order) => void;
-  handleStatusChange: (updatedOrder: Order) => void;
-  isLoading: boolean;
-  error: string | null;
-};
-
-export const useKdsOrders = (): UseKdsOrdersReturn => {
+export const useKdsOrders = () => {
   const { token } = useUser();
   const [orders, setOrders] = useState<Order[]>([]);
+  const [items, setItems] = useState<OrderItem[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   const { sendMessage, lastJsonMessage, readyState } = useWebSocket(
     WEBSOCKET_URL("kds"),
@@ -30,15 +20,24 @@ export const useKdsOrders = (): UseKdsOrdersReturn => {
         }
       },
       shouldReconnect: () => true,
+      onError: () => {
+        setError("Chyba v komunikaci se serverem.");
+      },
     },
   );
 
   useEffect(() => {
-    if (lastJsonMessage) {
-      setOrders(lastJsonMessage.payload.data);
+    if (lastJsonMessage?.payload) {
+      try {
+        const { data, items } = lastJsonMessage.payload;
+        setOrders(data as Order[]);
+        setItems(items as OrderItem[]);
+        console.log("Orders:", data);
+      } catch (e) {
+        console.error("Error parsing WebSocket message:", e);
+        setError("Failed to parse WebSocket message.");
+      }
     }
-
-    console.log(lastJsonMessage);
   }, [lastJsonMessage]);
 
   const { dataList: pendingOrders } = usePaging<Order>(
@@ -57,73 +56,37 @@ export const useKdsOrders = (): UseKdsOrdersReturn => {
     8,
   );
 
-  const handleStatusChange = (updatedOrder: Order) => {
-    setOrders((prevOrders) =>
-      prevOrders.map((order) =>
-        order.id === updatedOrder.id ? updatedOrder : order,
-      ),
-    );
-  };
-
-  const handlePrepare = (order: Order) => {
-    handleStatusChange({ ...order, status: "preparing" });
-    sendMessage(
-      JSON.stringify({
-        requestType: "update",
-        token,
-        data: { ...order, status: "preparing" },
-      }),
-    );
-  };
-
-  const handlePrepared = (order: Order) => {
-    const newOrder: Order = { ...order, status: "sent" };
-    handleStatusChange(newOrder);
-    sendMessage(
-      JSON.stringify({
-        requestType: "update",
-        token,
-        data: newOrder,
-      }),
-    );
-  };
-
-  const handlePickedUp = (order: Order) => {
-    const newOrder: Order = { ...order, status: "done" };
-    handleStatusChange(newOrder);
-    sendMessage(
-      JSON.stringify({
-        requestType: "update",
-        token,
-        data: newOrder,
-      }),
-    );
-  };
-
-  const handleCancell = (order: Order) => {
-    const newOrder: Order = { ...order, status: "cancelled" };
-    handleStatusChange(newOrder);
-    sendMessage(
-      JSON.stringify({
-        requestType: "update",
-        token,
-        data: newOrder,
-      }),
-    );
-  };
+  const handleStatusChange = useCallback(
+    (id: number, newStatus: OrderStatus) => {
+      if (!token) {
+        setError("User token is missing.");
+        return;
+      }
+      sendMessage(JSON.stringify({ requestType: "subscribe", token }));
+      // sendMessage(
+      //   JSON.stringify({
+      //     requestType: "createOrder",
+      //     token,
+      //     orderId: id,
+      //     status: newStatus,
+      //   }),
+      // );
+    },
+    [token, sendMessage],
+  );
 
   const isLoading: boolean = readyState === ReadyState.CONNECTING;
 
-  const error: string | null =
-    readyState === ReadyState.CLOSED ? "Kanál uzavřen" : null;
+  useEffect(() => {
+    if (readyState === ReadyState.CLOSED) {
+      setError("WebSocket connection closed.");
+    }
+  }, [readyState]);
 
   return {
     pendingOrders,
     waitingOrders,
-    handlePrepare,
-    handlePrepared,
-    handlePickedUp,
-    handleCancell,
+    items,
     handleStatusChange,
     isLoading,
     error,
