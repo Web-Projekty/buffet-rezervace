@@ -69,7 +69,7 @@ const CartPurchase = () => {
         token,
         cartItems.map(({ id, quantity, variants }) => ({
           id,
-          count: quantity,
+          quantity,
           variants: [],
         })),
         startTime,
