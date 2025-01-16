@@ -38,7 +38,6 @@ class KDSChannel implements MessageInterface
      */
     public function onMessage(StaticConnectionInterface $conn, string $msg): void
     {
-        $conn->send("help");
         if (json_validate($msg)) {
 
             $decoded = json_decode($msg);
@@ -79,6 +78,10 @@ class KDSChannel implements MessageInterface
                     break;
 
                 default:
+                    echo "help plz: ";
+                    echo $msg;
+                    echo "\n";
+
                     $response = HttpClient::post('http://localhost/api', $msg);
 
                     $conn->send((string) $response);
