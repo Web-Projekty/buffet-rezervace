@@ -5,6 +5,7 @@ import { Coins, History, LucideIcon, Menu, User } from "lucide-react";
 import Button from "../../ui/Button";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { removeTokenExpiration } from "../login/login";
+import { removeDiacritics } from "../../utils/utils";
 
 const AccountInformation = lazy(() => import("./AccountInformation"));
 const Profile = lazy(() => import("./Profile"));
@@ -61,13 +62,25 @@ const Dashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams("Přehled");
 
   const handlePageChange = (page: Page) => {
-    setSearchParams({ page });
+    setSearchParams({ page: removeDiacritics(page) });
   };
 
-  const page = useMemo(
-    () => (searchParams.get("page") as Page) || "Přehled",
-    [searchParams],
-  );
+  const page = useMemo(() => {
+    const pageParam = searchParams.get("page");
+    const normalizedPage = pageParam ? pageParam.toLowerCase() : "prehled";
+    switch (normalizedPage) {
+      case "prehled":
+        return "Přehled";
+      case "historie":
+        return "Historie";
+      case "profil":
+        return "Profil";
+      case "kredity":
+        return "Kredity";
+      default:
+        return "Přehled";
+    }
+  }, [searchParams]);
 
   const handleLogout = () => {
     logout();

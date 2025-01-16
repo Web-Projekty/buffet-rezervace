@@ -4,16 +4,35 @@ import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 
 const Profile = () => {
-  const { fullName, email } = useUser();
+  const { fullName, email, tel } = useUser();
   const canEditProfile = true;
+  const [formData, setFormData] = useState({
+    name: fullName || "",
+    email: email || "",
+    tel: tel || "",
+    password: "",
+    newPassword: "",
+    newPasswordConfirmation: "",
+  });
 
-  const [name, setName] = useState<string>(fullName ? fullName : "");
-  const [mail, setMail] = useState<string>(email ? email : "");
-  const [tel, setTel] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [newPassword, setNewPassword] = useState<string>("");
-  const [newPasswordConfirmation, setNewPasswordConfirmation] =
-    useState<string>("");
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSaveInfo = () => {
+    const { name, email, tel } = formData;
+    // save data
+    console.log(name, email, tel);
+  };
+
+  const handleSavePassword = () => {
+    const { password, newPassword, newPasswordConfirmation } = formData;
+
+    if (newPassword !== newPasswordConfirmation) {
+      return;
+    }
+    // send check to backend
+  };
 
   return (
     <div className="flex w-full flex-col gap-4">
@@ -29,8 +48,8 @@ const Profile = () => {
               placeholder="Jméno"
               className="flex w-full flex-col md:flex-row md:items-center md:justify-between"
               inputClassName={`rounded-lg p-1 text-black ${canEditProfile ? "" : "bg-gray-500"}`}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={formData.name}
+              onChange={handleInputChange}
             />
             <Input
               id="email"
@@ -39,21 +58,21 @@ const Profile = () => {
               placeholder="Email"
               className="flex w-full flex-col md:flex-row md:items-center md:justify-between"
               inputClassName={`rounded-lg p-1 text-black ${canEditProfile ? "" : "bg-gray-500"}`}
-              value={mail}
-              onChange={(e) => setMail(e.target.value)}
+              value={formData.email}
+              onChange={handleInputChange}
             />
             <Input
-              id="phone"
+              id="tel"
               type="tel"
               label="Telefon"
               placeholder="Telefon"
               className="flex w-full flex-col md:flex-row md:items-center md:justify-between"
               inputClassName="rounded-lg p-1 text-black"
-              value={tel}
-              onChange={(e) => setTel(e.target.value)}
+              value={formData.tel}
+              onChange={handleInputChange}
             />
           </div>
-          <Button>Uložit změny</Button>
+          <Button onClick={handleSaveInfo}>Uložit změny</Button>
         </div>
         <div className="flex w-full flex-col justify-between gap-3 rounded-lg bg-backgroundColor p-2">
           <h2 className="text-xl">Změna hesla</h2>
@@ -65,8 +84,8 @@ const Profile = () => {
               placeholder="Heslo"
               className="flex w-full flex-col md:flex-row md:items-center md:justify-between"
               inputClassName="rounded-lg p-1 text-black"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={handleInputChange}
             />
 
             <Input
@@ -76,8 +95,8 @@ const Profile = () => {
               placeholder="Nové heslo"
               className="flex w-full flex-col md:flex-row md:items-center md:justify-between"
               inputClassName="rounded-lg p-1 text-black"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              value={formData.newPassword}
+              onChange={handleInputChange}
             />
             <Input
               id="new-password-confirmation"
@@ -86,11 +105,11 @@ const Profile = () => {
               placeholder="Potvrzení nového hesla"
               className="flex w-full flex-col md:flex-row md:items-center md:justify-between"
               inputClassName="rounded-lg p-1 text-black"
-              value={newPasswordConfirmation}
-              onChange={(e) => setNewPasswordConfirmation(e.target.value)}
+              value={formData.newPasswordConfirmation}
+              onChange={handleInputChange}
             />
           </div>
-          <Button>Uložit změny</Button>
+          <Button onClick={handleSavePassword}>Uložit změny</Button>
         </div>
       </div>
     </div>
