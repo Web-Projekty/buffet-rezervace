@@ -66,14 +66,14 @@ export const mapItemsWithOrders = (
 
     return {
       ...orderItem,
-      name: item?.name ?? "Unknown Item",
+      name: item?.name ?? "Neznámá položka",
       price: item?.price,
       description: item?.description,
       image: item?.image,
       allergens: item?.allergens ?? [],
       category: item?.category ?? 0,
       variants: orderItem.variants ?? [],
-      count: orderItem.count ?? 0,
+      quantity: orderItem.quantity ?? 0,
     };
   });
 };
