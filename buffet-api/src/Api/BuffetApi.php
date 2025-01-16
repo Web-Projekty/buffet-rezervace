@@ -218,7 +218,7 @@ class BuffetApi
 
     function handleRegister(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(["username", "password", "passwordConfirm", "fullName", "email"]);
+        $response->setRequestKeys(["username", "password", "confirmPassword", "fullName", "email"]);
         $response->setPayloadKeys(["msg"]);
 
         $auth = new AuthApi;
