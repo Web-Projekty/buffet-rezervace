@@ -555,6 +555,9 @@ class BuffetApi
 
         if (!$isAdmin) {
             return $response->setError(Error::Unauthorized);
+            /**
+             * @todo insert user logic here!!!
+             */
         }
 
         $orderId = (int) $response->getRequestByKey("orderId");

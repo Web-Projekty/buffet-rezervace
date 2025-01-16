@@ -185,13 +185,14 @@ class OrderApi
             switch ($key) {
                 case "status":
                     $stausOptions = OrderStatus::cases();
-
                     foreach ($stausOptions as $option) {
                         if ($value === $option->value) {
+                            $order->$key = $value;
                             break;
                         }
+                        throw new \Exception("Invalid status", 2);
                     }
-                    break;
+                    continue 2;
 
                 case "userId":
                     if (!UserModel::query()->find($value)->exists()) {
@@ -213,10 +214,7 @@ class OrderApi
                     break;
 
             }
-
-            $order->$key = $value;
         }
-
         $order->save();
     }
 }
