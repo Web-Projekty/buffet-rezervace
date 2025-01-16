@@ -20,7 +20,7 @@ export type OrderStatus =
 
 export type OrderItems = {
   id: number;
-  count: number;
+  quantity: number;
   variants: number[];
 };
 
@@ -33,7 +33,7 @@ export type MappedOrderItem = {
   allergens: Allergen[];
   category: number;
   variants: number[];
-  count: number;
+  quantity: number;
 };
 
 export type OrderItem = {
@@ -78,7 +78,7 @@ export type MenuItem = {
   allergens: Allergen[];
   category: number;
   categoryName: string;
-  variants: Variant[];
+  variants: number[];
 };
 
 export type Variant = {
