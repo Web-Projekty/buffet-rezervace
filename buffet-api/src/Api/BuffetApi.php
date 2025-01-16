@@ -364,7 +364,7 @@ class BuffetApi
             }
         } else {
             $response->setPayload("itemsCount", OrderModel::query()->count());
-            $ordersArray = $orders->getQuery()->join($paymentTableName, $paymentTableName . '.id', '=', $orderTableName . '.paymentId')->get()->toArray();
+            $ordersArray = $orders->getQuery()->join($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id')->select("$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl")->get()->toArray();
         }
 
         $itemIds = [];
