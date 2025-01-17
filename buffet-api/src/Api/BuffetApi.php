@@ -218,7 +218,7 @@ class BuffetApi
 
     function handleRegister(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(["username", "password", "passwordConfirm", "fullName", "email", "tel"]);
+        $response->setRequestKeys(["username", "password", "confirmPassword", "fullName", "email"]);
         $response->setPayloadKeys(["msg"]);
 
         $auth = new AuthApi;
@@ -239,7 +239,7 @@ class BuffetApi
     function handleLogin(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["username", "password"]);
-        $response->setPayloadKeys(["token", "username", "isAdmin", "fullName", "email", "tel"]);
+        $response->setPayloadKeys(["token", "username", "isAdmin", "fullName", "email"]);
 
         $auth = new AuthApi;
         if ($response->hasRequestKeys()) {
@@ -349,23 +349,22 @@ class BuffetApi
             $orders = OrderModel::getByUser((int) $uid);
         }
 
+        $paymentTableName = PaymentModel::getTableName();
+        $orderTableName = OrderModel::getTableName();
+
         if ($page > 0 && $itemsCount > 0) {
             if ($orders) {
-                $paymentTableName = PaymentModel::getTableName();
-                $orderTableName = OrderModel::getTableName();
-
-                $orders = $orders->getQuery()->join($paymentTableName, $paymentTableName . '.id', '=', $orderTableName . '.paymentId');
+                $orders = $orders->getQuery()->join($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id')->select("$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl");
 
                 $paginate = $orders->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
                 $response->setPayload("itemsCount", $paginate->total());
                 $ordersArray = $paginate->items();
-                $response->setPayload("data", $ordersArray);
             } else {
                 return $response->setError(Error::QueryFailed);
             }
         } else {
             $response->setPayload("itemsCount", OrderModel::query()->count());
-            $ordersArray = $orders->get()->toArray();
+            $ordersArray = $orders->getQuery()->join($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id')->select("$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl")->get()->toArray();
         }
 
         $itemIds = [];
@@ -387,9 +386,8 @@ class BuffetApi
             unset($order["thePayUrl"]);
 
             $order["items"] = json_decode($order["items"]);
-            $itemIds = Collection::make($order["items"])->pluck("id")->toArray();
-
-            array_push($itemIds, ...$itemIds);
+            $orderitemIds = Collection::make($order["items"])->pluck("id")->toArray();
+            array_push($itemIds, ...$orderitemIds);
         }
 
         $response->setPayload("data", $ordersArray);
@@ -455,10 +453,19 @@ class BuffetApi
         $endTime = $response->getRequestByKey("endTime");
         $pickUpDate = $response->getRequestByKey("pickUpDate");
 
-        /**
-         * @var array<array{id:int,count:int,variants:array<int>}>
-         */
         $items = $response->getRequestByKey("items");
+
+        // items checking
+        foreach ($items as $item) {
+            if (!isset($item["id"]) || !isset($item["quantity"]) || !isset($item["variants"])) {
+                return $response->setError(Error::MissingItems);
+            }
+        }
+        /**
+         * @var array<array{id:int,quantity:int,variants:array<int>}>
+         */
+        $items = $items;
+
         $paymentMethod = $response->getRequestByKey("paymentMethod");
 
         // token validation
@@ -520,6 +527,8 @@ class BuffetApi
 
         $response->setPayload("url", $order["url"]);
 
+        $order["items"] = json_decode($order["items"]);
+
         WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
 
         return $response->setStatus(true)->setSuccess(Success::OrderCreated);
@@ -548,6 +557,9 @@ class BuffetApi
 
         if (!$isAdmin) {
             return $response->setError(Error::Unauthorized);
+            /**
+             * @todo insert user logic here!!!
+             */
         }
 
         $orderId = (int) $response->getRequestByKey("orderId");
@@ -580,6 +592,7 @@ class BuffetApi
 
         $updatedOrder = OrderModel::getById($orderId);
         $updatedOrder["id"] = $orderId;
+        $updatedOrder["items"] = json_decode($updatedOrder["items"]);
 
         $ws = [
             "requestType" => "publish",
