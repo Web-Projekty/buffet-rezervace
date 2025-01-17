@@ -65,7 +65,7 @@ export const updateOrder = async (
   if (!token || !orderId) throw new Error("Chyba při aktualizaci objednávky.");
   try {
     const { data } = await axios.post(FETCH_URL, {
-      requestType: "createOrder",
+      requestType: "updateOrder",
       token: token,
       orderId: orderId,
       status: status,
