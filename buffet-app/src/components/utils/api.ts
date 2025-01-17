@@ -8,6 +8,12 @@ type OrderApiReturn = {
   paywallUrl: string;
 };
 
+type UpdateOrderApiReturn = {
+  eventType: string;
+  payload: Order;
+  error: boolean;
+};
+
 type MenuItemApiReturn = {
   menuItem: MenuItem | null;
   error: boolean;
@@ -61,7 +67,7 @@ export const updateOrder = async (
   token: string | null,
   orderId: number | null,
   status: OrderStatus,
-): Promise<OrderApiReturn> => {
+): Promise<UpdateOrderApiReturn> => {
   if (!token || !orderId) throw new Error("Chyba při aktualizaci objednávky.");
   try {
     const { data } = await axios.post(FETCH_URL, {
@@ -72,9 +78,9 @@ export const updateOrder = async (
     });
 
     return {
-      order: data.payload.data as Order,
+      eventType: data.eventType,
+      payload: data.payload as Order,
       error: data.status !== "success",
-      paywallUrl: "",
     };
   } catch {
     throw new Error("Chyba při aktualizaci objednávky.");
