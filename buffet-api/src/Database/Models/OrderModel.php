@@ -124,13 +124,13 @@ class OrderModel extends Model
      * @param  int                                                                                                                                           $userId
      * @param  OrderStatus                                                                                                                                   $status
      * @param  string                                                                                                                                        $pickupDate
-     * @param  string                                                                                                                                        $items
+     * @param  array<array{id:int,count:int,variants:array<int>}>                                                                                            $items
      * @param  string                                                                                                                                        $paymentMethod
      * @param  string                                                                                                                                        $startTime
      * @param  string                                                                                                                                        $endTime
      * @return array{userId:int,status:int,pickupDate:string,items:string,startTime:string,endTime:string,pickUpId:string,paymentMethod:string,url:string}
      */
-    public static function createOrder(int $userId, OrderStatus $status, string $pickupDate, string $items, string $paymentMethod, string $startTime, string $endTime): array
+    public static function createOrder(int $userId, OrderStatus $status, string $pickupDate, array $items, string $paymentMethod, string $startTime, string $endTime): array
     {
         $pickupId = OrderApi::getOrderPickupId();
 
@@ -148,7 +148,7 @@ class OrderModel extends Model
             'userId' => $userId,
             'status' => $status->value,
             'pickupDate' => $pickupDate,
-            'items' => $items,
+            'items' => json_encode($items),
             'paymentId' => $paymentId,
             'startTime' => $startTime,
             'endTime' => $endTime,
@@ -173,5 +173,10 @@ class OrderModel extends Model
     {
         $model = new OrderModel();
         return $model->fillable;
+    }
+
+    public static function getTableName(): string
+    {
+        return (new self())->getTable();
     }
 }

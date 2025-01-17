@@ -53,4 +53,21 @@ class PaymentModel extends Model
         $paymentQuery->save();
         return $paymentQuery->toArray()["id"];
     }
+
+    /**
+     * @param int $paymentId
+     */
+    public static function setPaid(int $paymentId): void
+    {
+        $paymentQuery = PaymentModel::query()->where('thePayId', $paymentId);
+        if ($paymentQuery->get()->count() === 0) {
+            throw new \Exception("Payment not found", 1);
+        }
+        $paymentQuery->update(['paid' => 1]);
+    }
+
+    public static function getTableName(): string
+    {
+        return (new self())->getTable();
+    }
 }

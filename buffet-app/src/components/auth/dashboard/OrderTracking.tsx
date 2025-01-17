@@ -3,6 +3,8 @@ import { Order } from "../../../types";
 import useOrders from "../../../hooks/useOrders";
 import Loading from "../../ui/Loading";
 import { Fallback } from "../../../main";
+import OrderItems from "../../orders/OrderItems";
+import { mapItemsWithOrders } from "../../utils/utils";
 
 const ProgressTracker = lazy(() => import("./OrderProgressTracker"));
 
@@ -36,7 +38,7 @@ const getCurrentStep = (order: Order | null): number => {
 };
 
 const OrderTracking = () => {
-  const { latestOrder, isLoading, error } = useOrders(1);
+  const { latestOrder, isLoading, error, fetchedItems } = useOrders(1, 1);
 
   const currentStep: number = useMemo(
     () => (latestOrder ? getCurrentStep(latestOrder) : -1),
@@ -59,39 +61,45 @@ const OrderTracking = () => {
     return `${startTime} - ${endTime} ${date.toLocaleDateString()}`;
   }, [latestOrder]);
 
-  if (isLoading) {
-    return <Loading size={30} />;
-  }
-
-  if (error) {
-    return <div className="text-white">{error}</div>;
-  }
+  const mappedItems = mapItemsWithOrders(latestOrder?.items, fetchedItems);
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 rounded-lg text-white">
+    <div className="flex h-full w-full flex-col gap-2 rounded-lg text-white">
       <h1 className="text-2xl font-bold">Aktuální objednávka</h1>
-      <div className="flex h-full w-full flex-col items-center justify-center gap-16 rounded-lg bg-backgroundColor p-6">
-        <Suspense fallback={<Fallback />}>
-          <ProgressTracker
-            currentStep={currentStep}
-            isCancelled={isCancelled}
-          />
-        </Suspense>
-        <div className="flex flex-col items-center gap-3">
-          <p className="text-center">{getTextBySteps(currentStep)}</p>
+      {!isLoading ? (
+        error ? (
+          <div className="text-white">{error}</div>
+        ) : (
+          <div className="flex h-full w-full flex-col items-center justify-center gap-16 rounded-lg bg-backgroundColor p-6">
+            <>
+              <Suspense fallback={<Fallback />}>
+                <ProgressTracker
+                  currentStep={currentStep}
+                  isCancelled={isCancelled}
+                />
+              </Suspense>
+              <div className="flex flex-col items-center gap-3">
+                <p className="text-center">{getTextBySteps(currentStep)}</p>
 
-          {latestOrder && !isCancelled ? (
-            <div className="flex flex-col gap-5">
-              <div className="flex flex-col items-center gap-2">
-                <p>Vaše objednávka bude k vyzvednutí pod číslem</p>
-                <h3 className="text-2xl font-bold">{latestOrder.pickUpId}</h3>
-                <p>{dateText}</p>
+                {latestOrder && !isCancelled ? (
+                  <div className="flex flex-col gap-5">
+                    <div className="flex flex-col items-center gap-2">
+                      <p>Vaše objednávka bude k vyzvednutí pod číslem</p>
+                      <h3 className="text-2xl font-bold">
+                        {latestOrder.pickUpId}
+                      </h3>
+                      <p>{dateText}</p>
+                    </div>
+                    <OrderItems mappedItems={mappedItems} />
+                  </div>
+                ) : null}
               </div>
-              <h2>Obsah</h2>
-            </div>
-          ) : null}
-        </div>
-      </div>
+            </>
+          </div>
+        )
+      ) : (
+        <Loading size={30} />
+      )}
     </div>
   );
 };

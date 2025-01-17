@@ -9,6 +9,7 @@ use Buffet\Database\DatabaseManager;
 use Buffet\Database\Models\CategoryModel;
 use Buffet\Database\Models\ItemModel;
 use Buffet\Database\Models\OrderModel;
+use Buffet\Database\Models\PaymentModel;
 use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\TimeslotModel;
 use Buffet\Database\Models\UserModel;
@@ -23,10 +24,13 @@ use Buffet\Types\OrderStatus;
 use Buffet\Types\Settings;
 use Buffet\Types\Success;
 use Buffet\Utils\EnvReader;
+use Buffet\Utils\HttpClient;
 use Buffet\Utils\WebsocketClient;
 use Carbon\Carbon;
 use Carbon\CarbonTimeZone;
 use DateException;
+use Exception;
+use Illuminate\Support\Collection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use RuntimeException;
@@ -65,6 +69,39 @@ class BuffetApi
     }
 
     /**
+     * @param RequestInterface  $request
+     * @param ResponseInterface $html
+     */
+    function handleThePayNotification(RequestInterface $request, ResponseInterface $html): ResponseInterface
+    {
+        $response = new ApiResponse();
+        $dbMan = new DatabaseManager($response);
+        $dbMan->setupConnection();
+        $query = $request->getQueryParams();
+
+        $type = $query["type"];
+        $paymentUid = $query["payment_uid"];
+        $projectId = $query["project_id"];
+
+        $token = JWTApi::getAdminToken();
+
+        $msg = [
+            "requestType" => "updatePayment",
+            "token" => $token,
+            "type" => $type,
+            "paymentId" => $paymentUid
+        ];
+        //$msg = [];
+
+        error_log(HttpClient::post("http://localhost/api", json_encode($msg)));
+
+        /*foreach ($request->getQueryParams() as $key => $param) {
+        error_log("Key: " . $key . "Param: " . $param);
+        }*/
+        return $html;
+    }
+
+    /**
      * Main API handler.
      *
      * Calls specified requestType methods
@@ -72,7 +109,6 @@ class BuffetApi
      * @param  string      $request
      * @return ApiResponse API response
      */
-
     function handleApiCall(string $request = null): ApiResponse
     {
         if (!$request) {
@@ -132,6 +168,10 @@ class BuffetApi
 
             case "updateOrder":
                 return $this->handleUpdateOrder($response);
+
+            case "updatePayment":
+                return $this->handleUpdatePayment($response);
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -199,7 +239,7 @@ class BuffetApi
     function handleLogin(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["username", "password"]);
-        $response->setPayloadKeys(["token", "username", "isAdmin", "fullName", "email"]);
+        $response->setPayloadKeys(["token", "username", "isAdmin", "fullName", "email", "tel"]);
 
         $auth = new AuthApi;
         if ($response->hasRequestKeys()) {
@@ -287,7 +327,7 @@ class BuffetApi
     function handleGetOrders(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token"]); // optional - "page", "itemsCount"
-        $response->setPayloadKeys(["data"]);
+        $response->setPayloadKeys(["data", "items"]);
 
         $jwt = new JWTApi;
 
@@ -311,7 +351,12 @@ class BuffetApi
 
         if ($page > 0 && $itemsCount > 0) {
             if ($orders) {
-                $paginate = $orders->getQuery()->orderBy("dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
+                $paymentTableName = PaymentModel::getTableName();
+                $orderTableName = OrderModel::getTableName();
+
+                $orders = $orders->getQuery()->join($paymentTableName, $paymentTableName . '.id', '=', $orderTableName . '.paymentId');
+
+                $paginate = $orders->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
                 $response->setPayload("itemsCount", $paginate->total());
                 $ordersArray = $paginate->items();
                 $response->setPayload("data", $ordersArray);
@@ -322,20 +367,47 @@ class BuffetApi
             $response->setPayload("itemsCount", OrderModel::query()->count());
             $ordersArray = $orders->get()->toArray();
         }
+
+        $itemIds = [];
+
         foreach ($ordersArray as &$order) {
             // cast to array $paginate->items() - returns array<stdObj>
             if (is_object($order)) {
                 $order = (array) $order;
             }
-            //var_dump($order);
+
             $order["startTime"] = Carbon::createFromFormat("H:i:s", $order["startTime"])->format("H:i");
             $order["endTime"] = Carbon::createFromFormat("H:i:s", $order["endTime"])->format("H:i");
-            //var_dump(new DateTimeZone());
+
             $order["dateCreated"] = Carbon::createFromFormat("Y-m-d H:i:s", $order["dateCreated"])->setTimezone(CarbonTimeZone::create(EnvReader::getEnvProperty(Settings::Timezone)))->format("Y-m-d H:i");
+
+            unset($order["paymentId"]);
+            unset($order["userId"]);
+            unset($order["thePayId"]);
+            unset($order["thePayUrl"]);
+
+            $order["items"] = json_decode($order["items"]);
+            $itemIds = Collection::make($order["items"])->pluck("id")->toArray();
+
+            array_push($itemIds, ...$itemIds);
         }
 
         $response->setPayload("data", $ordersArray);
 
+        $itemIds = array_unique($itemIds);
+
+        try {
+            $items = ItemModel::getByIdArray($itemIds)->toArray();
+        } catch (Exception $e) {
+            if ($e->getCode() == 1) {
+                return $response->setError(Error::MissingItems);
+            }
+        }
+        if (!empty($items)) {
+            $response->setPayload("items", $items);
+        } else {
+            $response->setPayload("items", []);
+        }
         $response->setStatus(true);
         return $response;
     }
@@ -382,6 +454,10 @@ class BuffetApi
         $startTime = $response->getRequestByKey("startTime");
         $endTime = $response->getRequestByKey("endTime");
         $pickUpDate = $response->getRequestByKey("pickUpDate");
+
+        /**
+         * @var array<array{id:int,count:int,variants:array<int>}>
+         */
         $items = $response->getRequestByKey("items");
         $paymentMethod = $response->getRequestByKey("paymentMethod");
 
@@ -425,6 +501,13 @@ class BuffetApi
                 return $response->setError(Error::ThePayError);
             } catch (PaymentCreationException $e) {
                 return $response->setError(Error::PaymentCreationError);
+            } catch (Exception $e) {
+                switch ($e->getCode()) {
+                    case 1:
+                        return $response->setError(Error::MissingItems);
+                    default:
+                        return $response->setError(Error::OrderCreationError);
+                }
             }
         }
         try {
@@ -442,6 +525,10 @@ class BuffetApi
         return $response->setStatus(true)->setSuccess(Success::OrderCreated);
     }
 
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
     public function handleUpdateOrder(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "orderId"]);
@@ -507,9 +594,57 @@ class BuffetApi
     }
 
     /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    public function handleUpdatePayment(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "type", "paymentId"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $isAdmin = UserModel::isAdmin($uid);
+
+        if (!$isAdmin) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        $paymentId = (int) $response->getRequestByKey("paymentId");
+        $type = $response->getRequestByKey("type");
+
+        if ($type !== "state_changed") {
+            return $response->setError(Error::InvalidType);
+        }
+        $paymentApi = new PaymentApi;
+
+        if ($paymentId !== 0 && $paymentApi->isPaid($paymentId)) {
+
+            try {
+                PaymentModel::setPaid($paymentId);
+            } catch (\Exception $e) {
+                if ($e->getCode() === 1) {
+                    return $response->setError(Error::PaymentNotFound);
+                }
+            }
+
+        } else {
+            return $response->setError(Error::InvalidPaymentId);
+        }
+
+        return $response->setSuccess(Success::PaymentUpdated);
+    }
+
+    /**
      * @param ApiResponse $response
      */
-
     function handleGenerateTimeslots(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "startTime", "endTime", "interval", "limit"]);
@@ -600,6 +735,11 @@ class BuffetApi
         if ($response->hasFailed()) {
             return $response;
         }
+
+        if (TempModel::isOutdated()) {
+            (new OrderApi)->generateTemp();
+        }
+
         $data = TempModel::getFormatedArray();
         $response->setPayload("data", $data);
         return $response->setStatus(true);

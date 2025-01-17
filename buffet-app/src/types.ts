@@ -1,5 +1,3 @@
-import { CartItem } from "./store/CartStore";
-
 export type User = {
   id: number;
   username: string;
@@ -8,7 +6,7 @@ export type User = {
   class: string;
   isAdmin: boolean;
   orders: Order[];
-  phone: string;
+  tel: string;
   credits: string;
 };
 
@@ -20,6 +18,34 @@ export type OrderStatus =
   | "cancelled"
   | "preparing";
 
+export type OrderItems = {
+  id: number;
+  count: number;
+  variants: number[];
+};
+
+export type MappedOrderItem = {
+  id: number;
+  name: string | undefined;
+  price: number | undefined;
+  description: string | undefined;
+  image: string | undefined;
+  allergens: Allergen[];
+  category: number;
+  variants: number[];
+  count: number;
+};
+
+export type OrderItem = {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  image: string;
+  allergens: Allergen[];
+  category: number;
+};
+
 export type Order = {
   id: number;
   userId: number;
@@ -28,9 +54,19 @@ export type Order = {
   pickupDate: string;
   startTime: string;
   endTime: string;
-  items: CartItem[];
+  items: OrderItems[];
   pickUpId: string;
-  paymentMethod: PaymentMethod["name"];
+  type: "thePay" | "cash";
+  thePayDetailsUrl: string;
+  totalAmount: number;
+  useCredits: boolean;
+  creditsAmount: number;
+};
+
+export type OrdersData = {
+  data: Order[];
+  itemsCount: number;
+  items: OrderItem[];
 };
 
 export type MenuItem = {
@@ -87,4 +123,22 @@ type PaymentMethodImage = {
   alt: string;
   width?: number;
   height?: number;
+};
+
+export type Date = {
+  date: string;
+  available: boolean;
+  hours: Hour[];
+};
+
+export type Hour = {
+  label: string;
+  available: boolean;
+  minutes: Minute[];
+};
+
+export type Minute = {
+  id: number;
+  label: string;
+  available: boolean;
 };
