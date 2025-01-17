@@ -1,11 +1,12 @@
 import { useOrder } from "../../hooks/useOrder";
-import { Order, OrderItem, OrderStatus } from "../../types";
+import { useUser } from "../../hooks/useUser";
+import { Order, OrderItem } from "../../types";
 import Button from "../ui/Button";
 import { ChevronLeft } from "lucide-react";
 
 type KdsDeliveryOrderProps = {
   order: Order;
-  onStatusChange: (id: number, newStatus: OrderStatus) => void;
+  onStatusChange: (order: Order) => void;
   items: OrderItem[];
 };
 
@@ -14,18 +15,21 @@ const KdsDeliveryOrder = ({
   onStatusChange,
   items,
 }: KdsDeliveryOrderProps) => {
-  const { isOpen, toggleOpen, color, mappedItems } = useOrder(
+  const { token } = useUser();
+  const { isOpen, toggleOpen, color, mappedItems, handleStatus } = useOrder(
     order,
     true,
     items,
   );
 
   const handleDoneOrder = () => {
-    onStatusChange(order.id, "done");
+    handleStatus("done", token);
+    onStatusChange({ ...order, status: "done" });
   };
 
   const handleCancelOrder = () => {
-    onStatusChange(order.id, "cancelled");
+    handleStatus("cancelled", token);
+    onStatusChange({ ...order, status: "cancelled" });
   };
 
   return (

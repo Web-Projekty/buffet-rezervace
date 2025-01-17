@@ -1,24 +1,35 @@
-import { Order, OrderItem, OrderStatus } from "../../types";
+import { Order, OrderItem } from "../../types";
 import Button from "../ui/Button";
 import { useOrder } from "../../hooks/useOrder";
 import OrderItems from "../orders/OrderItems";
+import { useUser } from "../../hooks/useUser";
 
 type KdsOrderProps = {
   order: Order;
-  onStatusChange: (id: number, newStatus: OrderStatus) => void;
+  onStatusChange: (order: Order) => void;
   items: OrderItem[];
 };
 
 const KdsOrder = ({ order, onStatusChange, items }: KdsOrderProps) => {
-  const { color, status, mappedItems, pickUpDate, startTime, endTime } =
-    useOrder(order, true, items);
+  const { token } = useUser();
+  const {
+    color,
+    status,
+    mappedItems,
+    pickUpDate,
+    startTime,
+    endTime,
+    handleStatus,
+  } = useOrder(order, true, items);
 
   const handleDoneOrder = () => {
-    onStatusChange(order.id, "waiting");
+    handleStatus("waiting", token);
+    onStatusChange({ ...order, status: "waiting" });
   };
 
   const handlePrepareOrder = () => {
-    onStatusChange(order.id, "preparing");
+    handleStatus("preparing", token);
+    onStatusChange({ ...order, status: "preparing" });
   };
 
   const renderButtons = () => {

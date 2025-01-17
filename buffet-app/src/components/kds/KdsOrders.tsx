@@ -9,7 +9,7 @@ const KdsOrders = () => {
   const {
     pendingOrders,
     waitingOrders,
-    handleStatusChange,
+    onStatusChange,
     isLoading,
     items,
     nextOrdersCount,
@@ -22,7 +22,7 @@ const KdsOrders = () => {
         <KdsOrder
           key={order.id}
           order={order}
-          onStatusChange={handleStatusChange}
+          onStatusChange={onStatusChange}
           items={items}
         />
       ))
@@ -61,7 +61,7 @@ const KdsOrders = () => {
                   <KdsDeliveryOrder
                     key={order.id}
                     order={order}
-                    onStatusChange={handleStatusChange}
+                    onStatusChange={onStatusChange}
                     items={items}
                   />
                 ))

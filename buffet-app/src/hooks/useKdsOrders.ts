@@ -1,8 +1,8 @@
 import useWebSocket, { ReadyState } from "react-use-websocket";
-import { Order, OrderItem, OrderStatus } from "../types";
+import { Order, OrderItem } from "../types";
 import { useUser } from "./useUser";
 import { WEBSOCKET_URL } from "../constants";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 export const useKdsOrders = () => {
   const { token } = useUser();
@@ -57,26 +57,13 @@ export const useKdsOrders = () => {
     [orders, pendingOrders, waitingOrders],
   );
 
-  const handleStatusChange = useCallback(
-    (id: number, newStatus: OrderStatus) => {
-      if (!token) {
-        setError("Přihlaste se prosím.");
-        return;
-      }
-      // sendMessage(JSON.stringify({ requestType: "subscribe", token }));
-      sendMessage(
-        JSON.stringify({
-          requestType: "updateOrder",
-          token,
-          orderId: id,
-          status: newStatus,
-        }),
-      );
-      console.log(lastJsonMessage?.payload);
-      console.log(id);
-    },
-    [token],
-  );
+  const onStatusChange = (updatedOrder: Order) => {
+    setOrders((prevOrders) =>
+      prevOrders.map((order) =>
+        order.id === updatedOrder.id ? updatedOrder : order,
+      ),
+    );
+  };
 
   const isLoading: boolean = readyState === ReadyState.CONNECTING;
 
@@ -104,7 +91,7 @@ export const useKdsOrders = () => {
     waitingOrders,
     nextOrdersCount,
     items,
-    handleStatusChange,
+    onStatusChange,
     isLoading,
     error,
   };
