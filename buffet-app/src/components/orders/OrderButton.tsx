@@ -1,12 +1,17 @@
 import { X } from "lucide-react";
-import { Order, OrderStatus } from "../../types";
+import { OrderStatus } from "../../types";
 import Button from "../ui/Button";
 import { useUser } from "../../hooks/useUser";
 import { ReactNode, useState } from "react";
-import { useOrder } from "../../hooks/useOrder";
+import { HandleStatusReturn } from "../../hooks/useOrder";
 
 type OrderButtonsProps = {
-  order: Order;
+  handleStatus: (
+    status: OrderStatus,
+    token: string | null,
+  ) => Promise<HandleStatusReturn>;
+  status: OrderStatus;
+  loading: boolean;
 };
 
 type OrderButton = {
@@ -23,9 +28,8 @@ const Buttons: OrderButton[] = [
   },
 ];
 
-const OrderButton = ({ order }: OrderButtonsProps) => {
+const OrderButton = ({ handleStatus, status, loading }: OrderButtonsProps) => {
   const { token } = useUser();
-  const { handleStatus, status, loading } = useOrder(order);
   const [error, setError] = useState<string>("");
 
   const cancelOrder = async () => {

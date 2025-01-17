@@ -1,5 +1,6 @@
 import { MappedOrderItem } from "../../types";
 import { formatCurrency } from "../utils/utils";
+import OrderPrice from "./OrderPrice";
 
 type OrderItemsProps = {
   mappedItems: MappedOrderItem[];
@@ -13,7 +14,7 @@ const OrderItem = ({ item }: OrderItemProps) => {
   return (
     <li className="flex w-full flex-row justify-between gap-2">
       <div className="flex flex-row items-center gap-2">
-        <p className="text-descriptionColor">{item.count}x</p>
+        <p className="text-descriptionColor">{item.quantity}x</p>
         <h3>{item.name ? item.name : "Item name"}</h3>
       </div>
       <p className="italic">
@@ -32,17 +33,7 @@ const OrderItems = ({ mappedItems }: OrderItemsProps) => {
         })}
       </ul>
       <hr className="w-full" />
-      <div className="flex w-full flex-row items-center justify-between gap-2">
-        <h3>Celkem</h3>
-        <p className="italic">
-          {formatCurrency(
-            mappedItems.reduce(
-              (acc, item) => acc + item.price! * item.count,
-              0,
-            ),
-          )}
-        </p>
-      </div>
+      <OrderPrice items={mappedItems} />
     </div>
   );
 };

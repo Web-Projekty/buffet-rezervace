@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useFetch } from "./useFetch";
 import { useUser } from "./useUser";
-import { Order, OrderItem, OrdersData } from "../types";
+import { Order, OrdersData } from "../types";
 import { FETCH_URL } from "../constants";
 
 const useOrders = (itemsCount: "all" | number, page?: number) => {
@@ -29,15 +29,18 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
 
   useEffect(() => {
     if (fetchedOrders && fetchedOrders.data) {
-      const sortedOrders = [...fetchedOrders.data].sort((a, b) => {
-        return (
-          new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
-        );
-      });
+      // const sortedOrders = [...fetchedOrders.data].sort((a, b) => {
+      //   return (
+      //     new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
+      //   );
+      // });
 
-      if (!orders || JSON.stringify(orders) !== JSON.stringify(sortedOrders)) {
-        setOrders(sortedOrders);
-        setLatestOrder(sortedOrders[0]);
+      if (
+        !orders ||
+        JSON.stringify(orders) !== JSON.stringify(fetchedOrders.data)
+      ) {
+        setOrders(fetchedOrders.data);
+        setLatestOrder(fetchedOrders.data[0]);
       }
     }
     setIsLoading(fetchLoading);

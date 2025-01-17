@@ -1,21 +1,26 @@
-import { useOrder } from "../../hooks/useOrder";
-import { Order, OrderItem } from "../../types";
+import { HandleStatusReturn } from "../../hooks/useOrder";
+import { MappedOrderItem, OrderStatus } from "../../types";
 import OrderButton from "./OrderButton";
 import OrderItems from "./OrderItems";
-import { mapItemsWithOrders } from "../utils/utils";
-import { useMemo } from "react";
 
 type OrderDetailsProps = {
-  order: Order;
-  items: OrderItem[];
+  dateCreated: string;
+  mappedItems: MappedOrderItem[];
+  status: OrderStatus;
+  handleStatus: (
+    status: OrderStatus,
+    token: string | null,
+  ) => Promise<HandleStatusReturn>;
+  loading: boolean;
 };
 
-const OrderDetails = ({ order, items }: OrderDetailsProps) => {
-  const { dateCreated } = useOrder(order);
-  const mappedItems = useMemo(
-    () => mapItemsWithOrders(order.items, items),
-    [order.items, items],
-  );
+const OrderDetails = ({
+  dateCreated,
+  mappedItems,
+  status,
+  handleStatus,
+  loading,
+}: OrderDetailsProps) => {
   return (
     <div
       className={`mt-5 grid grid-cols-1 justify-center gap-5 overflow-hidden px-4 md:grid-cols-2 md:justify-between md:gap-0`}
@@ -37,7 +42,11 @@ const OrderDetails = ({ order, items }: OrderDetailsProps) => {
           </div>
         </div>
 
-        <OrderButton order={order} />
+        <OrderButton
+          status={status}
+          handleStatus={handleStatus}
+          loading={loading}
+        />
       </div>
     </div>
   );

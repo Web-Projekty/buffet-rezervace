@@ -1,30 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Order, OrderStatus } from "../types";
+import { Order, OrderItem, OrderStatus } from "../types";
 import { updateOrder } from "../components/utils/api";
+import { mapItemsWithOrders } from "../components/utils/utils";
 
-export type UseStatusOrderReturn = {
-  isOpen: boolean;
-  toggleOpen: () => void;
-  color: string;
-  status: OrderStatus;
-  statusText: string;
-  handleStatus: (
-    status: OrderStatus,
-    token: string | null,
-  ) => Promise<HandleStatusReturn>;
-  dateCreated: string;
-  pickUpDate: string;
-  startTime: string;
-  endTime: string;
-  loading: boolean;
-};
-
-type HandleStatusReturn = {
+export type HandleStatusReturn = {
   order: Order;
   error: boolean;
 };
 
-export const useOrder = (order: Order, kds?: boolean): UseStatusOrderReturn => {
+export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [color, setColor] = useState<string>(getColorByStatus(order.status));
   const [status, setStatus] = useState<OrderStatus>(order.status);
@@ -37,6 +21,11 @@ export const useOrder = (order: Order, kds?: boolean): UseStatusOrderReturn => {
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
+
+  const mappedItems = useMemo(
+    () => (items ? mapItemsWithOrders(order.items, items) : []),
+    [items, order.items],
+  );
 
   const handleStatus = useCallback(
     async (
@@ -55,7 +44,7 @@ export const useOrder = (order: Order, kds?: boolean): UseStatusOrderReturn => {
           order: updatedOrder || order,
           error: error,
         };
-        if (!error && updatedOrder) setStatus(updatedOrder.status);
+        if (!error) setStatus(status);
         return data;
       } catch (error) {
         console.error(error);
@@ -64,14 +53,13 @@ export const useOrder = (order: Order, kds?: boolean): UseStatusOrderReturn => {
         setLoading(false);
       }
     },
-    [order.id],
+    [order],
   );
 
   const handleDelayed = () => {
     const checkDelayed = () => {
       const now = new Date();
       const pickupDateTime = new Date(`${order.pickupDate}T${order.startTime}`);
-      console.log(pickupDateTime);
       return now > pickupDateTime;
     };
 
@@ -130,6 +118,7 @@ export const useOrder = (order: Order, kds?: boolean): UseStatusOrderReturn => {
     startTime,
     endTime,
     loading,
+    mappedItems,
   };
 };
 
