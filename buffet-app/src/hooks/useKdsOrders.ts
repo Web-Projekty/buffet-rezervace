@@ -20,9 +20,9 @@ export const useKdsOrders = () => {
       },
       shouldReconnect: () => true,
       // reconnectInterval: 5000,
-      onError: () => {
+      /*onError: () => {
         setError("Chyba v komunikaci se serverem.");
-      },
+      },*/
     },
   );
 
@@ -37,7 +37,7 @@ export const useKdsOrders = () => {
             .sort((a, b) => a.pickupDate.localeCompare(b.pickupDate))
             .slice(0, 6)
         : [],
-    [orders],
+    [orders, orders.filter((order) => order.status === "sent").length],
   );
 
   const waitingOrders = useMemo(
@@ -46,23 +46,35 @@ export const useKdsOrders = () => {
         ? orders
             .filter((order) => order.status === "waiting")
             .sort((b, a) => a.pickupDate.localeCompare(b.pickupDate))
-            .slice(0, 5)
+            .slice(0, 10)
         : [],
     [orders],
   );
 
   const nextOrdersCount: number = useMemo(
     () =>
-      orders ? orders.length - pendingOrders.length - waitingOrders.length : 0,
+      orders && orders.length > 0
+        ? orders.filter(
+            (order) =>
+              order.status !== "cancelled" &&
+              order.status !== "storno" &&
+              order.status !== "done",
+          ).length -
+          orders.filter(
+            (order) => order.status === "preparing" || order.status === "sent",
+          ).length -
+          orders.filter((order) => order.status === "waiting").length
+        : 0,
     [orders, pendingOrders, waitingOrders],
   );
 
   const onStatusChange = (updatedOrder: Order) => {
-    setOrders((prevOrders) =>
-      prevOrders.map((order) =>
+    setOrders((prevOrders) => {
+      const newOrders = prevOrders.map((order) =>
         order.id === updatedOrder.id ? updatedOrder : order,
-      ),
-    );
+      );
+      return [...newOrders];
+    });
   };
 
   const isLoading: boolean = readyState === ReadyState.CONNECTING;

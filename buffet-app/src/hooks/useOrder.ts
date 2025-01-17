@@ -44,7 +44,7 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
           order: updatedOrder || order,
           error: error,
         };
-        if (!error && updatedOrder) setStatus(updatedOrder.status);
+        if (!error) setStatus(status);
         return data;
       } catch (error) {
         console.error(error);

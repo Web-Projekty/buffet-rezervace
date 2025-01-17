@@ -23,13 +23,15 @@ const KdsDeliveryOrder = ({
   );
 
   const handleDoneOrder = () => {
-    handleStatus("done", token);
-    onStatusChange({ ...order, status: "done" });
+    handleStatus("done", token).then(() =>
+      onStatusChange({ ...order, status: "done" }),
+    );
   };
 
   const handleCancelOrder = () => {
-    handleStatus("cancelled", token);
-    onStatusChange({ ...order, status: "cancelled" });
+    handleStatus("cancelled", token).then(() =>
+      onStatusChange({ ...order, status: "cancelled" }),
+    );
   };
 
   return (

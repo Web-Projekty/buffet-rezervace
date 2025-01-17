@@ -23,13 +23,15 @@ const KdsOrder = ({ order, onStatusChange, items }: KdsOrderProps) => {
   } = useOrder(order, true, items);
 
   const handleDoneOrder = () => {
-    handleStatus("waiting", token);
-    onStatusChange({ ...order, status: "waiting" });
+    handleStatus("waiting", token).then(() =>
+      onStatusChange({ ...order, status: "waiting" }),
+    );
   };
 
   const handlePrepareOrder = () => {
-    handleStatus("preparing", token);
-    onStatusChange({ ...order, status: "preparing" });
+    handleStatus("preparing", token).then(() =>
+      onStatusChange({ ...order, status: "preparing" }),
+    );
   };
 
   const renderButtons = () => {
