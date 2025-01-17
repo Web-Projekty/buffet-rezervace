@@ -80,18 +80,12 @@ export const useKdsOrders = () => {
   const isLoading: boolean = readyState === ReadyState.CONNECTING;
 
   useEffect(() => {
-    if (readyState === ReadyState.CLOSED) {
-      setError("Připojení uzavřeno.");
-    }
-  }, [readyState]);
-
-  useEffect(() => {
     if (lastJsonMessage?.payload.data && lastJsonMessage?.payload.items) {
       try {
         const { data, items } = lastJsonMessage.payload;
-        setOrders(data as Order[]);
+        setOrders((prev) => (prev === data ? prev : (data as Order[])));
         setItems(items as OrderItem[]);
-        console.log(data);
+        console.log(lastJsonMessage.payload);
       } catch {
         setError("Chyba v komunikaci se serverem.");
       }

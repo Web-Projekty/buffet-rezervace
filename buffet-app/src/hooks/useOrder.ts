@@ -34,14 +34,12 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
     ): Promise<HandleStatusReturn> => {
       setLoading(true);
       try {
-        const { order: updatedOrder, error } = await updateOrder(
-          token,
-          order.id,
-          status,
-        );
+        const { payload, error } = await updateOrder(token, order.id, status);
+
+        console.log(payload);
 
         const data = {
-          order: updatedOrder || order,
+          order: payload || order,
           error: error,
         };
         if (!error) setStatus(status);
