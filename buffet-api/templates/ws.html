@@ -88,6 +88,9 @@
                 address = 'wss://' + window.location.host + window.location.pathname.slice(0, -4) + '/kds/'
             }
             const ws = new WebSocket(address);
+
+            
+
             ws.onmessage = (event) => {
                 console.log(event.data)
                 /*if (isJson(event.data)) {
@@ -106,6 +109,17 @@
                     seconds = time % 60;
                     document.getElementById('time').innerText = minutes + 'm ' + seconds + 's'
                 }, 1000);
+
+                intervalId = setInterval(() => {
+
+                if (ws.readyState === WebSocket.OPEN) {
+                const message = "hi";
+                ws.send(message);
+                console.log("Message sent:", message);
+                } else {
+                console.warn("WebSocket not open. Message not sent.");
+                }
+                }, 55000);
 
             };
             function send(msg = '') {

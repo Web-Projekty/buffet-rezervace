@@ -25,7 +25,7 @@ class AuthApi
     {
         $username = $response->getRequestByKey("username");
         $password = $response->getRequestByKey("password");
-        $passwordConfirm = $response->getRequestByKey("passwordConfirm");
+        $confirmPassword = $response->getRequestByKey("confirmPassword");
         $fullName = $response->getRequestByKey("fullName");
         $tel = $response->getRequestByKey("tel");
         $email = $response->getRequestByKey("email");
@@ -43,7 +43,7 @@ class AuthApi
             return $response;
         }
 
-        if ($password !== $passwordConfirm) {
+        if ($password !== $confirmPassword) {
             $response->setError(Error::PasswordMismatch);
             return $response;
         }

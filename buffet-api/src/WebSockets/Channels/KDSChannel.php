@@ -49,6 +49,7 @@ class KDSChannel implements MessageInterface
             $isAdmin = Helper::isAdmin($token);
 
             switch ($requestType) {
+
                 case "subscribe":
                     if (!$isAdmin) {
                         $conn->send(Helper::getErrorResponse(Error::Unauthorized));
@@ -77,6 +78,10 @@ class KDSChannel implements MessageInterface
                     break;
 
                 default:
+                    echo "help plz: ";
+                    echo $msg;
+                    echo "\n";
+
                     $response = HttpClient::post('http://localhost/api', $msg);
 
                     $conn->send((string) $response);

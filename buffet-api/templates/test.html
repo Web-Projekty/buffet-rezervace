@@ -28,11 +28,11 @@
     </select>
     <input type="text" name="username" placeholder="username" />
     <input type="text" name="password" placeholder="password" />
-    <input type="text" name="passwordConfirm" placeholder="passwordConfirm" />
+    <input type="text" name="confirmPassword" placeholder="confirmPassword" />
     <input type="text" name="token" placeholder="token" />
     <input type="text" name="page" placeholder="page" value="1" />
     <input type="text" name="itemsCount" placeholder="itemsCount" value="1" />
-    <input type="text" name="items" placeholder="items" value="[2,5,10]" />
+    <input type="text" name="items" placeholder="items" value='[{"id":1,"quantity":1,"variants":[]}]' />
     <input type="time" name="startTime" value="09:00">
     <input type="time" name="endTime" value="09:05">
     <input type="date" name="pickUpDate" value="2024-12-14">
@@ -45,6 +45,7 @@
     <input type="text" name="fullName" placeholder="fullName">
     <input type="text" name="type" placeholder="type" value="state_changed">
     <input type="text" name="paymentId" placeholder="paymentId">
+    <input type="text" name="status" placeholder="status">
     <label for="clear">clear</label>
     <input type="checkbox" name="clear">
     <input type="button" value="Submit" onclick="submitForm()" />

@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 class ItemApi
 {
     /**
-     * @param array<array{id:int,count:int,variants:array<int>}> $items
+     * @param array<array{id:int,quantity:int,variants:array<int>}> $items
      */
     public static function countItemPrice(array $items): int
     {
@@ -31,7 +31,7 @@ class ItemApi
          */
         foreach ($itemQuery as $item) {
             $itemId = $item->getAttribute("id");
-            $count = Collection::make($items)->where("id", "=", $itemId)->first()["count"];
+            $count = Collection::make($items)->where("id", "=", $itemId)->first()["quantity"];
             $total += $item->getAttribute("price") * $count;
         }
         return $total;

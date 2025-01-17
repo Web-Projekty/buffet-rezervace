@@ -124,7 +124,7 @@ class OrderModel extends Model
      * @param  int                                                                                                                                           $userId
      * @param  OrderStatus                                                                                                                                   $status
      * @param  string                                                                                                                                        $pickupDate
-     * @param  array<array{id:int,count:int,variants:array<int>}>                                                                                            $items
+     * @param  array<array{id:int,quantity:int,variants:array<int>}>                                                                                            $items
      * @param  string                                                                                                                                        $paymentMethod
      * @param  string                                                                                                                                        $startTime
      * @param  string                                                                                                                                        $endTime
