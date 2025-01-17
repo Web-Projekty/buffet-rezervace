@@ -1,19 +1,19 @@
-import { MenuItem } from "../../types";
+import { CartItem } from "../../store/CartStore";
+import { MappedOrderItem } from "../../types";
 import { formatCurrency } from "../utils/utils";
 
 type OrderPriceProps = {
-  items: MenuItem[] | string;
+  items: CartItem[] | MappedOrderItem[];
 };
 
 const OrderPrice = ({ items }: OrderPriceProps) => {
   return (
-    <div className="flex w-[240px] flex-row items-center justify-center gap-2 font-bold">
+    <div className="flex w-full flex-row items-center justify-between gap-2 font-bold">
       <span>Celkem</span>
-      <div className="mt-3 flex-1 border-b-2 border-dotted border-white"></div>
       <p>
-        {/* {formatCurrency(
-          items.reduce((acc: number, item: MenuItem) => acc + item.price, 0),
-        )} */}
+        {formatCurrency(
+          items.reduce((acc, item) => acc + item.price! * item.quantity, 0),
+        )}
       </p>
     </div>
   );

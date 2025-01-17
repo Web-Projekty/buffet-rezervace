@@ -1,5 +1,7 @@
 import { CartItem } from "../../../store/CartStore";
-import { formatCurrency } from "../../utils/utils";
+import OrderPrice from "../../orders/OrderPrice";
+
+import CartPurchaseItem from "./CartPurchaseItem";
 
 type CartPurchaseItemsProps = {
   cartItems: CartItem[];
@@ -7,44 +9,13 @@ type CartPurchaseItemsProps = {
 
 const CartPurchaseItems = ({ cartItems }: CartPurchaseItemsProps) => {
   return (
-    <div className="flex flex-col gap-2 rounded-lg p-5">
+    <div className="flex flex-col rounded-lg p-5">
       {cartItems &&
-        cartItems.map(({ name, variants, price, quantity }) => {
-          return (
-            <div key={name} className="flex flex-col gap-1">
-              <div className="flex flex-row items-center justify-between">
-                <h3>
-                  {name} <span>x {quantity}</span>
-                </h3>
-                <p className="italic">{formatCurrency(quantity * price)}</p>
-              </div>
-
-              <div>
-                {variants &&
-                  variants.map((variant) => {
-                    return (
-                      <div className="flex flex-row items-center justify-between">
-                        <p>{variant.name}</p>
-                        <p className="italic">+{variant.price}</p>
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-          );
+        cartItems.map((item) => {
+          return <CartPurchaseItem key={item.id} cartItem={item} />;
         })}
       <hr />
-      <div className="flex flex-row items-center justify-between font-bold">
-        <h3>Celkem</h3>
-        <p className="italic">
-          {formatCurrency(
-            cartItems.reduce(
-              (acc, { price, quantity }) => acc + price * quantity,
-              0,
-            ),
-          )}
-        </p>
-      </div>
+      <OrderPrice items={cartItems} />
     </div>
   );
 };

@@ -1,25 +1,14 @@
 import useWebSocket, { ReadyState } from "react-use-websocket";
-import { Order } from "../types";
+import { Order, OrderItem } from "../types";
 import { useUser } from "./useUser";
 import { WEBSOCKET_URL } from "../constants";
-import { useEffect, useState } from "react";
-import { usePaging } from "./usePaging";
+import { useEffect, useState, useMemo } from "react";
 
-type UseKdsOrdersReturn = {
-  pendingOrders: Order[];
-  waitingOrders: Order[];
-  handlePrepare: (order: Order) => void;
-  handlePrepared: (order: Order) => void;
-  handlePickedUp: (order: Order) => void;
-  handleCancell: (order: Order) => void;
-  handleStatusChange: (updatedOrder: Order) => void;
-  isLoading: boolean;
-  error: string | null;
-};
-
-export const useKdsOrders = (): UseKdsOrdersReturn => {
+export const useKdsOrders = () => {
   const { token } = useUser();
   const [orders, setOrders] = useState<Order[]>([]);
+  const [items, setItems] = useState<OrderItem[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   const { sendMessage, lastJsonMessage, readyState } = useWebSocket(
     WEBSOCKET_URL("kds"),
@@ -30,101 +19,91 @@ export const useKdsOrders = (): UseKdsOrdersReturn => {
         }
       },
       shouldReconnect: () => true,
+      // reconnectInterval: 5000,
+      /*onError: () => {
+        setError("Chyba v komunikaci se serverem.");
+      },*/
     },
   );
 
-  useEffect(() => {
-    if (lastJsonMessage) {
-      setOrders(lastJsonMessage.payload.data);
-    }
-
-    console.log(lastJsonMessage);
-  }, [lastJsonMessage]);
-
-  const { dataList: pendingOrders } = usePaging<Order>(
-    orders
-      ?.filter(
-        (order) => order.status === "preparing" || order.status === "sent",
-      )
-      .sort((a, b) => a.pickupDate.localeCompare(b.pickupDate)),
-    8,
+  const pendingOrders = useMemo(
+    () =>
+      orders
+        ? orders
+            .filter(
+              (order) =>
+                order.status === "preparing" || order.status === "sent",
+            )
+            .sort((a, b) => a.pickupDate.localeCompare(b.pickupDate))
+            .slice(0, 6)
+        : [],
+    [orders, orders.filter((order) => order.status === "sent").length],
   );
 
-  const { dataList: waitingOrders } = usePaging<Order>(
-    orders
-      ?.filter((order) => order.status === "waiting")
-      .sort((b, a) => a.pickupDate.localeCompare(b.pickupDate)),
-    8,
+  const waitingOrders = useMemo(
+    () =>
+      orders
+        ? orders
+            .filter((order) => order.status === "waiting")
+            .sort((b, a) => a.pickupDate.localeCompare(b.pickupDate))
+            .slice(0, 10)
+        : [],
+    [orders],
   );
 
-  const handleStatusChange = (updatedOrder: Order) => {
-    setOrders((prevOrders) =>
-      prevOrders.map((order) =>
+  const nextOrdersCount: number = useMemo(
+    () =>
+      orders && orders.length > 0
+        ? orders.filter(
+            (order) =>
+              order.status !== "cancelled" &&
+              order.status !== "storno" &&
+              order.status !== "done",
+          ).length -
+          orders.filter(
+            (order) => order.status === "preparing" || order.status === "sent",
+          ).length -
+          orders.filter((order) => order.status === "waiting").length
+        : 0,
+    [orders, pendingOrders, waitingOrders],
+  );
+
+  const onStatusChange = (updatedOrder: Order) => {
+    setOrders((prevOrders) => {
+      const newOrders = prevOrders.map((order) =>
         order.id === updatedOrder.id ? updatedOrder : order,
-      ),
-    );
-  };
-
-  const handlePrepare = (order: Order) => {
-    handleStatusChange({ ...order, status: "preparing" });
-    sendMessage(
-      JSON.stringify({
-        requestType: "update",
-        token,
-        data: { ...order, status: "preparing" },
-      }),
-    );
-  };
-
-  const handlePrepared = (order: Order) => {
-    const newOrder: Order = { ...order, status: "sent" };
-    handleStatusChange(newOrder);
-    sendMessage(
-      JSON.stringify({
-        requestType: "update",
-        token,
-        data: newOrder,
-      }),
-    );
-  };
-
-  const handlePickedUp = (order: Order) => {
-    const newOrder: Order = { ...order, status: "done" };
-    handleStatusChange(newOrder);
-    sendMessage(
-      JSON.stringify({
-        requestType: "update",
-        token,
-        data: newOrder,
-      }),
-    );
-  };
-
-  const handleCancell = (order: Order) => {
-    const newOrder: Order = { ...order, status: "cancelled" };
-    handleStatusChange(newOrder);
-    sendMessage(
-      JSON.stringify({
-        requestType: "update",
-        token,
-        data: newOrder,
-      }),
-    );
+      );
+      return [...newOrders];
+    });
   };
 
   const isLoading: boolean = readyState === ReadyState.CONNECTING;
 
-  const error: string | null =
-    readyState === ReadyState.CLOSED ? "Kanál uzavřen" : null;
+  useEffect(() => {
+    if (readyState === ReadyState.CLOSED) {
+      setError("Připojení uzavřeno.");
+    }
+  }, [readyState]);
+
+  useEffect(() => {
+    if (lastJsonMessage?.payload.data && lastJsonMessage?.payload.items) {
+      try {
+        const { data, items } = lastJsonMessage.payload;
+        setOrders(data as Order[]);
+        setItems(items as OrderItem[]);
+        console.log(data);
+      } catch {
+        setError("Chyba v komunikaci se serverem.");
+      }
+    }
+  }, [lastJsonMessage]);
 
   return {
     pendingOrders,
     waitingOrders,
-    handlePrepare,
-    handlePrepared,
-    handlePickedUp,
-    handleCancell,
-    handleStatusChange,
+    nextOrdersCount,
+    items,
+    onStatusChange,
     isLoading,
     error,
   };

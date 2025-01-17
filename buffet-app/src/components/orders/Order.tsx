@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
-import { OrderItems, Order as OrderType } from "../../types";
+import { OrderItem, Order as OrderType } from "../../types";
 import { ChevronLeft } from "lucide-react";
 import { useOrder } from "../../hooks/useOrder";
 import OrderDetails from "./OrderDetails";
 
 type OrderProps = {
   order: OrderType;
-  items: OrderItems[];
+  items: OrderItem[];
 };
 
 const Order = ({ order, items }: OrderProps) => {
@@ -19,7 +19,11 @@ const Order = ({ order, items }: OrderProps) => {
     pickUpDate,
     startTime,
     endTime,
-  } = useOrder(order);
+    mappedItems,
+    loading,
+    dateCreated,
+    handleStatus,
+  } = useOrder(order, false, items);
 
   const handleOpen = () => {
     toggleOpen();
@@ -72,7 +76,13 @@ const Order = ({ order, items }: OrderProps) => {
         }}
         transition={{ duration: 0.3 }}
       >
-        <OrderDetails order={order} items={items} />
+        <OrderDetails
+          dateCreated={dateCreated}
+          mappedItems={mappedItems}
+          status={status}
+          handleStatus={handleStatus}
+          loading={loading}
+        />
       </motion.ul>
     </motion.div>
   );
