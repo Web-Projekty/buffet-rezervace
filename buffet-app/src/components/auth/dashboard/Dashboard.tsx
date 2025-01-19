@@ -1,64 +1,31 @@
 import { lazy, Suspense, useMemo } from "react";
 import { Fallback } from "../../../main";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Coins, History, LucideIcon, Menu, User } from "lucide-react";
 import Button from "../../ui/Button";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { removeTokenExpiration } from "../login/login";
 import { removeDiacritics } from "../../utils/utils";
+import { useUser } from "../../../hooks/useUser";
+import DashboardContent from "./DashboardContent";
 
 const AccountInformation = lazy(() => import("./AccountInformation"));
-const Profile = lazy(() => import("./Profile"));
-const OrderTracking = lazy(() => import("./OrderTracking"));
-const OrderHistory = lazy(() => import("./OrderHistory"));
-const Credits = lazy(() => import("./Credits"));
+const DashboardButtons = lazy(() => import("./DashboardButtons"));
 
-type DashboardButton = {
-  icon?: LucideIcon;
-  name: Page;
-};
-
-const Buttons: DashboardButton[] = [
-  { icon: Menu, name: "Přehled" },
-  { icon: History, name: "Historie" },
-  { icon: User, name: "Profil" },
-  { icon: Coins, name: "Kredity" },
-];
-
-type Page = "Přehled" | "Historie" | "Profil" | "Kredity";
-
-const DashboardContent = ({ page }: { page: Page }) => {
-  switch (page) {
-    case "Přehled":
-      return (
-        <Suspense fallback={<Fallback />}>
-          <OrderTracking />
-        </Suspense>
-      );
-    case "Historie":
-      return (
-        <Suspense fallback={<Fallback />}>
-          <OrderHistory />
-        </Suspense>
-      );
-    case "Profil":
-      return (
-        <Suspense fallback={<Fallback />}>
-          <Profile />
-        </Suspense>
-      );
-    case "Kredity":
-      return (
-        <Suspense fallback={<Fallback />}>
-          <Credits />
-        </Suspense>
-      );
-  }
-};
+export type Page =
+  | "Přehled"
+  | "Historie"
+  | "Profil"
+  | "Kredity"
+  | "Systém"
+  | "Databáze"
+  | "Provoz"
+  | "Platby"
+  | "Účetnictví";
 
 const Dashboard = () => {
   const logout = useSignOut();
   const navigate = useNavigate();
+  const { isAdmin } = useUser();
   const [searchParams, setSearchParams] = useSearchParams("Přehled");
 
   const handlePageChange = (page: Page) => {
@@ -77,6 +44,16 @@ const Dashboard = () => {
         return "Profil";
       case "kredity":
         return "Kredity";
+      case "system":
+        return "Systém";
+      case "databaze":
+        return "Databáze";
+      case "provoz":
+        return "Provoz";
+      case "platby":
+        return "Platby";
+      case "ucetnictvi":
+        return "Účetnictví";
       default:
         return "Přehled";
     }
@@ -85,7 +62,7 @@ const Dashboard = () => {
   const handleLogout = () => {
     logout();
     removeTokenExpiration();
-    navigate("/login");
+    navigate("/login", { replace: true });
     window.location.reload();
   };
 
@@ -95,29 +72,18 @@ const Dashboard = () => {
         <Suspense fallback={<Fallback />}>
           <AccountInformation />
         </Suspense>
-        <div className="flex flex-col gap-2">
-          {Buttons.map(({ name, icon }) => {
-            const Icon = icon;
-            return (
-              <button
-                key={name + "button"}
-                className={
-                  "flex flex-row items-center justify-between rounded-lg border-2 border-white p-2 text-white" +
-                  (page === name ? " bg-backgroundColor" : "")
-                }
-                onClick={() => handlePageChange(name as Page)}
-              >
-                {Icon && <Icon size={24} />}
-                {name}
-              </button>
-            );
-          })}
-        </div>
+        <Suspense fallback={<Fallback />}>
+          <DashboardButtons
+            page={page}
+            handlePageChange={handlePageChange}
+            isAdmin={isAdmin}
+          />
+        </Suspense>
         <Button onClick={handleLogout}>Odhlásit se</Button>
       </div>
 
       <div className="flex min-h-[30rem] flex-col rounded-lg bg-slate-900 p-4 text-white md:col-span-2">
-        <DashboardContent page={page} />
+        <DashboardContent page={page} isAdmin={isAdmin} />
       </div>
     </div>
   );
