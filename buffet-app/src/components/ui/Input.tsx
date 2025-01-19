@@ -86,7 +86,7 @@ const Input = ({
   }
 
   return (
-    <div className="relative w-full">
+    <div className={"relative w-full " + className}>
       {required && displayStar ? (
         <span className="absolute right-1 text-xl text-red-500" title="Povinné">
           *
@@ -99,7 +99,7 @@ const Input = ({
         value={value}
         required={required}
         onChange={onChange}
-        className={inputClassName + " w-full"}
+        className={"rounded-lg p-1 text-black " + inputClassName}
         placeholder={placeholder}
         autoComplete={autoComplete}
         disabled={disabled}
