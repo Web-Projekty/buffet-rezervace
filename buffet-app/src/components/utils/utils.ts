@@ -104,3 +104,13 @@ export const formatToUnixDate = (date: string): string => {
 export const matchValues = (text: string, text2: string): boolean => {
   return text === text2;
 };
+
+export const checkPassword = (password: string): boolean => {
+  const isValid =
+    password.length >= 8 &&
+    !!password.match(/[a-z]/) &&
+    !!password.match(/[A-Z]/) &&
+    !!password.match(/[0-9]/);
+
+  return isValid;
+};
