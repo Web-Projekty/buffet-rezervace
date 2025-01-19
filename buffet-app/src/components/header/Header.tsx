@@ -2,27 +2,34 @@ import { Link } from "react-router-dom";
 import Logo from "../../assets/images/logo.svg";
 import SchoolLogo from "../../assets/images/logo-white_alfa.png";
 import Navbar from "../nav/Navbar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 
 const Header = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const controls = useAnimation();
 
+  const toggleMobileMenu = (): void => {
+    setIsOpen((prev) => !prev);
+  };
+
   useEffect(() => {
-    const handleScroll = (): void => {
-      if (window.scrollY > 10) {
-        controls.start({ height: "5rem" });
-      } else {
-        controls.start({ height: "7rem" });
-      }
-    };
+    if (!isOpen) {
+      const handleScroll = (): void => {
+        if (window.scrollY > 10) {
+          controls.start({ height: "5rem" });
+        } else {
+          controls.start({ height: "7rem" });
+        }
+      };
 
-    window.addEventListener("scroll", handleScroll);
+      window.addEventListener("scroll", handleScroll);
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [controls]);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, [controls, isOpen]);
 
   return (
     <motion.header
@@ -42,7 +49,7 @@ const Header = () => {
         className={`absolute right-1/2 translate-x-1/2`}
       />
 
-      <Navbar />
+      <Navbar isOpen={isOpen} toggleMobileMenu={toggleMobileMenu} />
     </motion.header>
   );
 };
