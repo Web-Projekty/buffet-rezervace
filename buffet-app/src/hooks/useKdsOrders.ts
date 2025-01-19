@@ -37,7 +37,7 @@ export const useKdsOrders = () => {
             .sort((a, b) => a.pickupDate.localeCompare(b.pickupDate))
             .slice(0, 6)
         : [],
-    [orders, orders.filter((order) => order.status === "sent").length],
+    [orders],
   );
 
   const waitingOrders = useMemo(
@@ -65,7 +65,7 @@ export const useKdsOrders = () => {
           ).length -
           orders.filter((order) => order.status === "waiting").length
         : 0,
-    [orders, pendingOrders, waitingOrders],
+    [orders],
   );
 
   const onStatusChange = (updatedOrder: Order) => {
