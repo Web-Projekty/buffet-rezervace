@@ -39,7 +39,7 @@ const Profile = () => {
       <h1 className="text-2xl font-bold">Nastavení profilu</h1>
       <div className="flex w-full flex-col gap-4 md:flex-row">
         <div className="flex w-full flex-col justify-between gap-3 rounded-lg bg-backgroundColor p-2">
-          <h2 className="text-xl">Kontaktní údaje</h2>
+          <h2 className="text-xl font-bold">Kontaktní údaje</h2>
           <div className="flex w-full flex-col gap-2">
             <Input
               id="name"
@@ -75,7 +75,7 @@ const Profile = () => {
           <Button onClick={handleSaveInfo}>Uložit změny</Button>
         </div>
         <div className="flex w-full flex-col justify-between gap-3 rounded-lg bg-backgroundColor p-2">
-          <h2 className="text-xl">Změna hesla</h2>
+          <h2 className="text-xl font-bold">Změna hesla</h2>
           <div className="flex w-full flex-wrap gap-2">
             <Input
               id="password"
