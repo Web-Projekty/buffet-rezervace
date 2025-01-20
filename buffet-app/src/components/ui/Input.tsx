@@ -38,6 +38,7 @@ export type InputProps = {
   accept?: string;
   autoComplete?: "on" | "off";
   displayStar?: boolean;
+  basic?: boolean;
 };
 
 const Input = ({
@@ -58,7 +59,27 @@ const Input = ({
   accept,
   autoComplete = "off",
   displayStar,
+  basic,
 }: InputProps) => {
+  if (basic) {
+    return (
+      <input
+        type={type}
+        id={id}
+        name={name}
+        value={value}
+        required={required}
+        onChange={onChange}
+        className={"rounded-lg p-1 text-black " + className}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        disabled={disabled}
+        min={min}
+        max={max}
+        accept={accept || (type === "file" ? "image/*" : undefined)}
+      />
+    );
+  }
   if (label) {
     return (
       <div className={className}>
