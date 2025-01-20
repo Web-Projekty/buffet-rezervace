@@ -7,7 +7,8 @@ export const formatCurrency = (number: number): string => {
   }).format(number / 100);
 };
 
-export const removeDiacritics = (text: string): string => {
+export const removeDiacritics = (text: string | undefined): string => {
+  if (!text) return "";
   return text
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
