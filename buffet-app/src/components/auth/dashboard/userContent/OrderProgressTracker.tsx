@@ -22,7 +22,7 @@ const ProgressTracker = ({
 }: ProgressTrackerProps) => {
   return (
     <div className="flex w-full items-center justify-center">
-      <div className="flex items-center gap-14 md:gap-28">
+      <div className="flex items-center gap-8 md:gap-28">
         {steps.map((step, index) => {
           const isCompleted: boolean =
             currentStep < 3
@@ -49,7 +49,7 @@ const ProgressTracker = ({
                 </div>
 
                 <div
-                  className={`absolute top-16 text-nowrap text-base ${
+                  className={`absolute top-16 text-nowrap text-sm md:text-base ${
                     isCompleted || isActive ? "text-white" : "text-gray-400"
                   }`}
                 >
