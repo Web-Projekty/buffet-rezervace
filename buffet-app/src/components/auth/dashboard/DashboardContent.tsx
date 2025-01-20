@@ -12,6 +12,7 @@ const AdminDatabase = lazy(() => import("./adminContent/AdminDatabase"));
 const AdminService = lazy(() => import("./adminContent/AdminService"));
 const AdminPayments = lazy(() => import("./adminContent/AdminPayments"));
 const AdminAccounting = lazy(() => import("./adminContent/AdminAccounting"));
+const PageNotFound = lazy(() => import("../../error/PageNotFound"));
 
 type DashboardContentProps = {
   page: Page;
@@ -30,7 +31,7 @@ const DashboardContent = ({ page, isAdmin }: DashboardContentProps) => {
       case "Historie":
         return (
           <Suspense fallback={<Fallback />}>
-            <OrderHistory />
+            {isAdmin ? <PageNotFound /> : <OrderHistory />}
           </Suspense>
         );
       case "Profil":
@@ -42,39 +43,41 @@ const DashboardContent = ({ page, isAdmin }: DashboardContentProps) => {
       case "Kredity":
         return (
           <Suspense fallback={<Fallback />}>
-            <Credits />
+            {isAdmin ? <PageNotFound /> : <Credits />}
           </Suspense>
         );
       case "Systém":
         return (
           <Suspense fallback={<Fallback />}>
-            <AdminSystem />
+            {isAdmin ? <AdminSystem /> : <PageNotFound />}
           </Suspense>
         );
       case "Databáze":
         return (
           <Suspense fallback={<Fallback />}>
-            <AdminDatabase />
+            {isAdmin ? <AdminDatabase /> : <PageNotFound />}
           </Suspense>
         );
       case "Provoz":
         return (
           <Suspense fallback={<Fallback />}>
-            <AdminService />
+            {isAdmin ? <AdminService /> : <PageNotFound />}
           </Suspense>
         );
       case "Platby":
         return (
           <Suspense fallback={<Fallback />}>
-            <AdminPayments />
+            {isAdmin ? <AdminPayments /> : <PageNotFound />}
           </Suspense>
         );
       case "Účetnictví":
         return (
           <Suspense fallback={<Fallback />}>
-            <AdminAccounting />
+            {isAdmin ? <AdminAccounting /> : <PageNotFound />}
           </Suspense>
         );
+      default:
+        return <PageNotFound />;
     }
   };
   return renderContent();

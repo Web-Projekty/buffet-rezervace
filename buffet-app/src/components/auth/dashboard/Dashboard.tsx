@@ -20,7 +20,8 @@ export type Page =
   | "Databáze"
   | "Provoz"
   | "Platby"
-  | "Účetnictví";
+  | "Účetnictví"
+  | undefined;
 
 const Dashboard = () => {
   const logout = useSignOut();
@@ -54,8 +55,6 @@ const Dashboard = () => {
         return "Platby";
       case "ucetnictvi":
         return "Účetnictví";
-      default:
-        return "Přehled";
     }
   }, [searchParams]);
 
