@@ -43,6 +43,7 @@ const Profile = () => {
           <div className="flex w-full flex-col gap-2">
             <Input
               id="name"
+              name="name"
               type="text"
               label="Jméno"
               placeholder="Jméno"
@@ -53,6 +54,7 @@ const Profile = () => {
             />
             <Input
               id="email"
+              name="email"
               type="email"
               label="Email"
               placeholder="Email"
@@ -63,6 +65,7 @@ const Profile = () => {
             />
             <Input
               id="tel"
+              name="tel"
               type="tel"
               label="Telefon"
               placeholder="Telefon"
@@ -79,6 +82,7 @@ const Profile = () => {
           <div className="flex w-full flex-wrap gap-2">
             <Input
               id="password"
+              name="password"
               label="Staré heslo"
               type="password"
               placeholder="Heslo"
@@ -90,6 +94,7 @@ const Profile = () => {
 
             <Input
               id="new-password"
+              name="newPassword"
               label="Nové heslo"
               type="password"
               placeholder="Nové heslo"
@@ -100,6 +105,7 @@ const Profile = () => {
             />
             <Input
               id="new-password-confirmation"
+              name="newPasswordConfirmation"
               label="Potvrzení hesla"
               type="password"
               placeholder="Potvrzení nového hesla"
