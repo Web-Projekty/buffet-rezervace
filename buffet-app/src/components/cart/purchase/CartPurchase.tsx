@@ -15,9 +15,10 @@ const CartUserInformation = lazy(() => import("./CartUserInformation"));
 const CartPurchaseSelectedMethods = lazy(
   () => import("./CartPurchaseSelectedMethods"),
 );
+const PageNotFound = lazy(() => import("../../error/PageNotFound"));
 
 const CartPurchase = () => {
-  const { token } = useUser();
+  const { token, isAdmin } = useUser();
   const { cartItems, isCartEmpty } = useCart();
   const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<
     PaymentMethod[]
@@ -119,6 +120,14 @@ const CartPurchase = () => {
   //       <PageNotFound />
   //     </Suspense>
   //   );
+
+  if (isAdmin) {
+    return (
+      <Suspense fallback={<Fallback />}>
+        <PageNotFound />
+      </Suspense>
+    );
+  }
 
   return (
     <div className="m-auto grid w-[95%] grid-cols-1 gap-10 text-white md:w-[75%] md:grid-cols-2 2xl:w-[60%]">

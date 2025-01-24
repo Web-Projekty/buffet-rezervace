@@ -38,6 +38,7 @@ export type InputProps = {
   accept?: string;
   autoComplete?: "on" | "off";
   displayStar?: boolean;
+  basic?: boolean;
 };
 
 const Input = ({
@@ -58,7 +59,27 @@ const Input = ({
   accept,
   autoComplete = "off",
   displayStar,
+  basic,
 }: InputProps) => {
+  if (basic) {
+    return (
+      <input
+        type={type}
+        id={id}
+        name={name}
+        value={value}
+        required={required}
+        onChange={onChange}
+        className={"rounded-lg p-1 text-black " + className}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        disabled={disabled}
+        min={min}
+        max={max}
+        accept={accept || (type === "file" ? "image/*" : undefined)}
+      />
+    );
+  }
   if (label) {
     return (
       <div className={className}>
@@ -86,7 +107,7 @@ const Input = ({
   }
 
   return (
-    <div className="relative w-full">
+    <div className={"relative w-full " + className}>
       {required && displayStar ? (
         <span className="absolute right-1 text-xl text-red-500" title="Povinné">
           *
@@ -99,7 +120,7 @@ const Input = ({
         value={value}
         required={required}
         onChange={onChange}
-        className={inputClassName + " w-full"}
+        className={"rounded-lg p-1 text-black " + inputClassName}
         placeholder={placeholder}
         autoComplete={autoComplete}
         disabled={disabled}

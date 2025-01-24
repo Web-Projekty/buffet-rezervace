@@ -52,7 +52,7 @@ const Register = () => {
         <Input
           id="fullName"
           name="fullName"
-          inputClassName="rounded-md border p-2 text-black"
+          inputClassName="rounded-md border p-2 text-black w-full"
           type="text"
           placeholder="Jméno a příjmení"
           value={formData.fullName}
@@ -63,7 +63,7 @@ const Register = () => {
         <Input
           id="username"
           name="username"
-          inputClassName="rounded-md border p-2 text-black"
+          inputClassName="rounded-md border p-2 text-black w-full"
           type="text"
           placeholder="Uživatelské jméno"
           value={formData.username}
@@ -74,7 +74,7 @@ const Register = () => {
         <Input
           id="email"
           name="email"
-          inputClassName="rounded-md border p-2 text-black"
+          inputClassName="rounded-md border p-2 text-black w-full"
           type="email"
           placeholder="Zadejte email"
           value={formData.email}
@@ -86,7 +86,7 @@ const Register = () => {
         <Input
           id="phone"
           name="phone"
-          inputClassName="rounded-md border p-2 text-black"
+          inputClassName="rounded-md border p-2 text-black w-full"
           type="tel"
           placeholder="Zadejte telefonní číslo"
           value={formData.phone}
@@ -96,7 +96,7 @@ const Register = () => {
         <Input
           id="password"
           name="password"
-          inputClassName="rounded-md border p-2 text-black"
+          inputClassName="rounded-md border p-2 text-black w-full"
           type="password"
           placeholder="Zadejte heslo"
           value={formData.password}
@@ -107,7 +107,7 @@ const Register = () => {
         <Input
           id="confirmPassword"
           name="confirmPassword"
-          inputClassName="rounded-md border p-2 text-black"
+          inputClassName="rounded-md border p-2 text-black w-full"
           type="password"
           placeholder="Potrvďte heslo"
           value={formData.confirmPassword}
@@ -134,7 +134,7 @@ const Register = () => {
         ) : loading ? (
           <Loading />
         ) : (
-          <Button type="submit">Přihlásit se</Button>
+          <Button type="submit">Registrovat se</Button>
         )}
       </form>
     </motion.div>

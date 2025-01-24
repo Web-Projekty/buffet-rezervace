@@ -1,14 +1,14 @@
-import Order from "../../orders/Order";
 import { AnimatePresence } from "framer-motion";
-import { ORDERS_PER_PAGE } from "../../../constants";
-import Loading from "../../ui/Loading";
-import { OrdersData } from "../../../types";
-import PagingButtons from "../../ui/PagingButtons";
-import { useBackendPaging } from "../../../hooks/useBackendPaging";
 import { lazy, Suspense, useCallback } from "react";
-import { Fallback } from "../../../main";
+import { ORDERS_PER_PAGE } from "../../../../constants";
+import { useBackendPaging } from "../../../../hooks/useBackendPaging";
+import { Fallback } from "../../../../main";
+import { OrdersData } from "../../../../types";
+import Order from "../../../orders/Order";
+import Loading from "../../../ui/Loading";
+import PagingButtons from "../../../ui/PagingButtons";
 
-const HorizontalPaging = lazy(() => import("../../ui/HorizontalPaging"));
+const HorizontalPaging = lazy(() => import("../../../ui/HorizontalPaging"));
 
 const OrderHistory = () => {
   const { currentPage, dataList, arrayOfPages, handlePage, isLoading, error } =

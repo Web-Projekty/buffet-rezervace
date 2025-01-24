@@ -37,7 +37,7 @@ export const useKdsOrders = () => {
             .sort((a, b) => a.pickupDate.localeCompare(b.pickupDate))
             .slice(0, 6)
         : [],
-    [orders, orders.filter((order) => order.status === "sent").length],
+    [orders],
   );
 
   const waitingOrders = useMemo(
@@ -65,7 +65,7 @@ export const useKdsOrders = () => {
           ).length -
           orders.filter((order) => order.status === "waiting").length
         : 0,
-    [orders, pendingOrders, waitingOrders],
+    [orders],
   );
 
   const onStatusChange = (updatedOrder: Order) => {
@@ -80,18 +80,12 @@ export const useKdsOrders = () => {
   const isLoading: boolean = readyState === ReadyState.CONNECTING;
 
   useEffect(() => {
-    if (readyState === ReadyState.CLOSED) {
-      setError("Připojení uzavřeno.");
-    }
-  }, [readyState]);
-
-  useEffect(() => {
     if (lastJsonMessage?.payload.data && lastJsonMessage?.payload.items) {
       try {
         const { data, items } = lastJsonMessage.payload;
-        setOrders(data as Order[]);
+        setOrders((prev) => (prev === data ? prev : (data as Order[])));
         setItems(items as OrderItem[]);
-        console.log(data);
+        console.log(lastJsonMessage.payload);
       } catch {
         setError("Chyba v komunikaci se serverem.");
       }

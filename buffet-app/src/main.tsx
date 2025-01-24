@@ -22,9 +22,6 @@ const CartPurchase = lazy(
   () => import("./components/cart/purchase/CartPurchase.tsx"),
 );
 const SuccessOrder = lazy(() => import("./components/orders/SuccessOrder.tsx"));
-const AdminSettings = lazy(
-  () => import("./components/auth/admin/AdminSettings.tsx"),
-);
 const PageNotFound = lazy(() => import("./components/error/PageNotFound.tsx"));
 const Kds = lazy(() => import("./components/kds/Kds.tsx"));
 
@@ -103,16 +100,6 @@ const router = createBrowserRouter([
               </Suspense>
             </ErrorBoundary>
           </RequireAuth>
-        ),
-      },
-      {
-        path: "/settings",
-        element: (
-          <ErrorBoundary>
-            <Suspense fallback={<Fallback />}>
-              <AdminSettings />
-            </Suspense>
-          </ErrorBoundary>
         ),
       },
       {

@@ -10,11 +10,7 @@ export type HandleStatusReturn = {
 
 export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [color, setColor] = useState<string>(getColorByStatus(order.status));
   const [status, setStatus] = useState<OrderStatus>(order.status);
-  const [statusText, setStatusText] = useState<string>(
-    getTextByStatus(order.status),
-  );
   const [loading, setLoading] = useState<boolean>(false);
   const [delayed, setDelayed] = useState<boolean>(false);
 
@@ -34,14 +30,12 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
     ): Promise<HandleStatusReturn> => {
       setLoading(true);
       try {
-        const { order: updatedOrder, error } = await updateOrder(
-          token,
-          order.id,
-          status,
-        );
+        const { payload, error } = await updateOrder(token, order.id, status);
+
+        console.log(payload);
 
         const data = {
-          order: updatedOrder || order,
+          order: payload || order,
           error: error,
         };
         if (!error) setStatus(status);
@@ -56,55 +50,31 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
     [order],
   );
 
-  const handleDelayed = () => {
-    const checkDelayed = () => {
-      const now = new Date();
-      const pickupDateTime = new Date(`${order.pickupDate}T${order.startTime}`);
-      return now > pickupDateTime;
-    };
+  const handleDelayed = useCallback(() => {
+    const now = new Date();
+    const pickupDateTime = new Date(`${order.pickupDate}T${order.startTime}`);
+    setDelayed(now > pickupDateTime);
+  }, [order.pickupDate, order.startTime]);
 
-    if (checkDelayed()) {
-      setDelayed(true);
-      setColor("bg-red-400");
-    } else {
-      setColor(getColorByStatus(status));
-    }
-  };
-
-  const dateCreated = useMemo(
-    () => new Date(order.dateCreated).toLocaleString(),
-    [order.dateCreated],
-  );
-  const pickUpDate = useMemo(
-    () => new Date(order.pickupDate).toLocaleDateString(),
-    [order.pickupDate],
-  );
-  const startTime = useMemo(
-    () => order.startTime.substring(0, 5),
-    [order.startTime],
-  );
-  const endTime = useMemo(() => order.endTime.substring(0, 5), [order.endTime]);
+  const color = delayed ? "bg-red-400" : getColorByStatus(status);
+  const statusText = getTextByStatus(status);
+  const dateCreated = new Date(order.dateCreated).toLocaleString();
+  const pickUpDate = new Date(order.pickupDate).toLocaleDateString();
+  const startTime = order.startTime.substring(0, 5);
+  const endTime = order.endTime.substring(0, 5);
 
   useEffect(() => {
-    setColor(delayed ? "bg-red-400" : getColorByStatus(status));
-    setStatusText(getTextByStatus(status));
-  }, [delayed, status, order.pickupDate]);
-
-  useEffect(() => {
-    if (kds) {
-      if (
-        !delayed &&
-        status !== "done" &&
-        status !== "cancelled" &&
-        status !== "storno"
-      ) {
-        const intervalId = setInterval(() => {
-          handleDelayed();
-        }, 1000);
-        return () => clearInterval(intervalId);
-      }
+    if (
+      kds &&
+      !delayed &&
+      status !== "done" &&
+      status !== "cancelled" &&
+      status !== "storno"
+    ) {
+      const intervalId = setInterval(handleDelayed, 1000);
+      return () => clearInterval(intervalId);
     }
-  }, [status, order.pickupDate]);
+  }, [status, delayed, kds, handleDelayed]);
 
   return {
     isOpen,
