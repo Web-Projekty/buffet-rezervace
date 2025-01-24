@@ -146,8 +146,36 @@ $app->get('/wstest', function (Request $request, Response $response, $args) {
     return $response;
 });
 
-$app->map(["GET"], "/*", function () {
-    echo "hi";
+$app->map(["GET"], "/{path:.*}", function (Request $request, Response $response, $args) {
+
+    if (isset(explode(".", $request->getUri())[1])) {
+        $path = __DIR__ . "/dist/" . $request->getUri()->getPath();
+
+        if (explode(".", $request->getUri())[1] == "js") {
+            $contentType = 'application/javascript';
+        } elseif (explode(".", $request->getUri())[1] == "css") {
+            $contentType = 'text/css';
+        } else {
+            $contentType = mime_content_type($path);
+        }
+
+        $response->getBody()->write(file_get_contents($path));
+        return $response->withHeader('Content-Type', $contentType);
+        /*->withHeader('Content-Length', (string) filesize($path))
+
+    ->withHeader('Content-Disposition', 'inline; filename="' . basename($path) . '"')
+
+    ->withHeader('Access-Control-Allow-Headers', '*')
+    ->withHeader('Access-Control-Allow-Methods', '*');*/
+    } else {
+        ob_start();
+        include __DIR__ . "/dist/index.html";
+        $html = ob_get_clean();
+
+        $response->getBody()->write($html);
+    }
+
+    return $response;
 });
 
 $app->run();
