@@ -76,7 +76,6 @@ const CartPurchase = () => {
         startTime,
         endTime,
         formattedDate,
-        selectedPaymentMethods,
       );
 
       if (error) {
