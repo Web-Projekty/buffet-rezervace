@@ -106,29 +106,47 @@ const Input = ({
     );
   }
 
-  return (
-    <div className={"relative w-full " + className}>
-      {required && displayStar ? (
+  if (required && displayStar) {
+    return (
+      <div className={"relative w-full " + className}>
         <span className="absolute right-1 text-xl text-red-500" title="Povinné">
           *
         </span>
-      ) : undefined}
-      <input
-        type={type}
-        id={id}
-        name={name}
-        value={value}
-        required={required}
-        onChange={onChange}
-        className={"rounded-lg p-1 text-black " + inputClassName}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        disabled={disabled}
-        min={min}
-        max={max}
-        accept={accept || (type === "file" ? "image/*" : undefined)}
-      />
-    </div>
+        <input
+          type={type}
+          id={id}
+          name={name}
+          value={value}
+          required={required}
+          onChange={onChange}
+          className={"rounded-lg p-1 text-black" + inputClassName}
+          placeholder={placeholder}
+          autoComplete={autoComplete}
+          disabled={disabled}
+          min={min}
+          max={max}
+          accept={accept || (type === "file" ? "image/*" : undefined)}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <input
+      type={type}
+      id={id}
+      name={name}
+      value={value}
+      required={required}
+      onChange={onChange}
+      className={"rounded-lg p-1 text-black " + className}
+      placeholder={placeholder}
+      autoComplete={autoComplete}
+      disabled={disabled}
+      min={min}
+      max={max}
+      accept={accept || (type === "file" ? "image/*" : undefined)}
+    />
   );
 };
 
