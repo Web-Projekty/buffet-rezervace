@@ -84,7 +84,7 @@ const HorizontalPaging = ({
         {canScrollLeft && (
           <motion.div
             {...fadeInAnimation(0.2)}
-            className={`absolute -left-2 z-10 flex h-full items-center rounded-lg ${getBackgroundColor("left")} px-2 pr-10`}
+            className={`absolute -left-2 z-20 flex h-full items-center rounded-lg ${getBackgroundColor("left")} px-2 pr-10`}
           >
             <ChevronLeft
               size={30}
@@ -106,7 +106,7 @@ const HorizontalPaging = ({
         {canScrollRight && (
           <motion.div
             {...fadeInAnimation(0.2)}
-            className={`absolute -right-2 z-10 flex h-full items-center rounded-lg ${getBackgroundColor("right")} px-2 pl-10`}
+            className={`absolute -right-2 z-20 flex h-full items-center rounded-lg ${getBackgroundColor("right")} px-2 pl-10`}
           >
             <ChevronRight
               size={30}
