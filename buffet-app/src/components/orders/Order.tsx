@@ -47,12 +47,9 @@ const Order = ({ order, items }: OrderProps) => {
         ></div>
         <div className="flex w-full flex-row items-center gap-16">
           <h2 className="text-xl font-bold">#{order.pickUpId}</h2>
+          <p className="text-base">{statusText}</p>
           {showPickUpDate && (
             <>
-              <p className="text-base font-semibold">
-                Stav: <span className="font-normal">{statusText}</span>
-              </p>
-
               <p className="text-base text-descriptionColor">
                 {pickUpDate + " " + startTime + " - " + endTime}
               </p>
