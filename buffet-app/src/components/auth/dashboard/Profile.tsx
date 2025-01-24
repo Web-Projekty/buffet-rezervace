@@ -39,10 +39,11 @@ const Profile = () => {
       <h1 className="text-2xl font-bold">Nastavení profilu</h1>
       <div className="flex w-full flex-col gap-4 md:flex-row">
         <div className="flex w-full flex-col justify-between gap-3 rounded-lg bg-backgroundColor p-2">
-          <h2 className="text-xl">Kontaktní údaje</h2>
+          <h2 className="text-xl font-bold">Kontaktní údaje</h2>
           <div className="flex w-full flex-col gap-2">
             <Input
               id="name"
+              name="name"
               type="text"
               label="Jméno"
               placeholder="Jméno"
@@ -53,6 +54,7 @@ const Profile = () => {
             />
             <Input
               id="email"
+              name="email"
               type="email"
               label="Email"
               placeholder="Email"
@@ -63,6 +65,7 @@ const Profile = () => {
             />
             <Input
               id="tel"
+              name="tel"
               type="tel"
               label="Telefon"
               placeholder="Telefon"
@@ -75,10 +78,11 @@ const Profile = () => {
           <Button onClick={handleSaveInfo}>Uložit změny</Button>
         </div>
         <div className="flex w-full flex-col justify-between gap-3 rounded-lg bg-backgroundColor p-2">
-          <h2 className="text-xl">Změna hesla</h2>
+          <h2 className="text-xl font-bold">Změna hesla</h2>
           <div className="flex w-full flex-wrap gap-2">
             <Input
               id="password"
+              name="password"
               label="Staré heslo"
               type="password"
               placeholder="Heslo"
@@ -90,6 +94,7 @@ const Profile = () => {
 
             <Input
               id="new-password"
+              name="newPassword"
               label="Nové heslo"
               type="password"
               placeholder="Nové heslo"
@@ -100,6 +105,7 @@ const Profile = () => {
             />
             <Input
               id="new-password-confirmation"
+              name="newPasswordConfirmation"
               label="Potvrzení hesla"
               type="password"
               placeholder="Potvrzení nového hesla"

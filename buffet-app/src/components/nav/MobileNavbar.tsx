@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import Link from "./Link";
 import { NavLinks } from "./Navbar";
 import AccountButton from "../auth/AccountButton";
-import CartButton from "../cart/CartButton";
+import Cart from "../cart/Cart";
 
 type MobileNavbarProps = {
   isOpen: boolean;
@@ -39,17 +39,22 @@ const MobileNavbar = ({
       <li className="absolute right-5 top-5 cursor-pointer">
         <X size={64} onClick={handleOpenMobileMenu} />
       </li>
-      <div className="z-[45] flex flex-col gap-10">
+      <div className="z-[45] mt-16 flex flex-col items-center gap-4 text-2xl">
         {links.map(({ id, path, name, requireAdmin }) => {
           if (requireAdmin && !isAdmin) {
             return null;
           }
-          return <Link key={id} path={path} name={name} />;
+          return (
+            <Link
+              key={id}
+              path={path}
+              name={name}
+              onClick={handleOpenMobileMenu}
+            />
+          );
         })}
-        <div className="flex flex-row gap-5 text-black">
-          {!isAdmin && <CartButton />}
-          <AccountButton />
-        </div>
+        {!isAdmin && <Cart type="menu" onClick={handleOpenMobileMenu} />}
+        <AccountButton type="menu" onClick={handleOpenMobileMenu} />
       </div>
     </motion.ul>
   );

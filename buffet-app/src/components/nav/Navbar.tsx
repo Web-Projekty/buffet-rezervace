@@ -1,12 +1,17 @@
 import CartButton from "../cart/CartButton";
 import AccountButton from "../auth/AccountButton";
 import { Menu } from "lucide-react";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense } from "react";
 import Link from "./Link";
 import { useUser } from "../../hooks/useUser";
 import { AnimatePresence } from "framer-motion";
 
 const MobileNavbar = lazy(() => import("./MobileNavbar"));
+
+type NavbarProps = {
+  isOpen: boolean;
+  toggleMobileMenu: () => void;
+};
 
 export type NavLinks = {
   id: number;
@@ -21,13 +26,8 @@ const NavLinks: NavLinks[] = [
   { id: 3, name: "KDS", path: "/kds", requireAdmin: true },
 ];
 
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+const Navbar = ({ isOpen, toggleMobileMenu }: NavbarProps) => {
   const { user, isAdmin } = useUser();
-
-  const handleOpenMobileMenu = (): void => {
-    setIsOpen(!isOpen);
-  };
 
   return (
     <nav className="relative">
@@ -46,14 +46,14 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="z-50 flex flex-col rounded-full text-white md:hidden">
-        <Menu size={64} onClick={handleOpenMobileMenu} />
+        <Menu size={64} onClick={toggleMobileMenu} />
       </div>
       <AnimatePresence>
         {isOpen && (
           <Suspense fallback={<></>}>
             <MobileNavbar
               isOpen={isOpen}
-              handleOpenMobileMenu={handleOpenMobileMenu}
+              handleOpenMobileMenu={toggleMobileMenu}
               isAdmin={user ? user.isAdmin : false}
               links={NavLinks}
             />

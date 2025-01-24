@@ -7,7 +7,8 @@ export const formatCurrency = (number: number): string => {
   }).format(number / 100);
 };
 
-export const removeDiacritics = (text: string): string => {
+export const removeDiacritics = (text: string | undefined): string => {
+  if (!text) return "";
   return text
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -103,4 +104,14 @@ export const formatToUnixDate = (date: string): string => {
 
 export const matchValues = (text: string, text2: string): boolean => {
   return text === text2;
+};
+
+export const checkPassword = (password: string): boolean => {
+  const isValid =
+    password.length >= 8 &&
+    !!password.match(/[a-z]/) &&
+    !!password.match(/[A-Z]/) &&
+    !!password.match(/[0-9]/);
+
+  return isValid;
 };
