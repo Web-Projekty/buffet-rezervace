@@ -50,7 +50,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <ErrorBoundary>
+      <ErrorBoundary fullPage>
         <Suspense fallback={<Fallback />}>
           <App />
         </Suspense>

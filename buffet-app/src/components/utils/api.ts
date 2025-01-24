@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Date, MenuItem, Order, OrderStatus, PaymentMethod } from "../../types";
+import { Date, MenuItem, Order, OrderStatus } from "../../types";
 import { FETCH_URL } from "../../constants";
 
 type OrderApiReturn = {
@@ -30,7 +30,7 @@ export const createOrder = async (
   startTime: string | null,
   endTime: string | null,
   date: string | null,
-  paymentMethod: PaymentMethod[],
+  // paymentMethod: PaymentMethod[],
 ): Promise<OrderApiReturn> => {
   if (!token) throw new Error("Chyba při vytváření objednávky.");
 

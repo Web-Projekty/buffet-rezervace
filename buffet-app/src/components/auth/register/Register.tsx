@@ -84,16 +84,6 @@ const Register = () => {
         />
 
         <Input
-          id="phone"
-          name="phone"
-          inputClassName="rounded-md border p-2 text-black w-full"
-          type="tel"
-          placeholder="Zadejte telefonní číslo"
-          value={formData.phone}
-          onChange={handleInputChange}
-        />
-
-        <Input
           id="password"
           name="password"
           inputClassName="rounded-md border p-2 text-black w-full"

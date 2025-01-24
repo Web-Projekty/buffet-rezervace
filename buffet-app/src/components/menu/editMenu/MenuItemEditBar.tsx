@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Category, MenuItem, Variant } from "../../../types";
+import { Category, MenuItem } from "../../../types";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import MenuItemEditInput from "./MenuItemEditInput";
@@ -7,6 +7,8 @@ import { allergens } from "../../../allergens";
 import ToggleSwitch from "../../ui/ToggleSwitch";
 import { onImageChange } from "../../utils/utils";
 import LazyImage from "../../ui/LazyImage";
+import { motion } from "framer-motion";
+import { slideInAnimation } from "../../../animations";
 
 type MenuItemEditBarProps = {
   handleBarOpen: () => void;
@@ -31,7 +33,7 @@ const MenuItemEditBar = ({
   const [itemCategory, setItemCategory] = useState<Category["id"]>(
     menuItem?.category || 0,
   );
-  const [itemVariants, setItemVariants] = useState<Variant[]>(
+  const [itemVariants, setItemVariants] = useState<number[]>(
     menuItem?.variants || [],
   );
   const [cashPayment, setCashPayment] = useState<boolean>(false);
@@ -46,18 +48,18 @@ const MenuItemEditBar = ({
     handleBarOpen();
   };
 
-  const handleVariantChange = (
-    index: number,
-    field: keyof Variant,
-    value: string,
-  ) => {
-    const newVariants = [...itemVariants];
-    newVariants[index] = { ...newVariants[index], [field]: value };
-    setItemVariants(newVariants);
-  };
+  // const handleVariantChange = (
+  //   index: number,
+  //   field: keyof Variant,
+  //   value: string,
+  // ) => {
+  // const newVariants = [...itemVariants];
+  // newVariants[index] = { ...newVariants[index], [field]: value };
+  // setItemVariants(newVariants);
+  // };
 
   const handleAddVariant = () => {
-    setItemVariants([...itemVariants, { name: "", quantity: 0, price: 0 }]);
+    // setItemVariants([...itemVariants, { name: "", quantity: 0, price: 0 }]);
   };
 
   const handleRemoveVariant = (index: number) => {
@@ -78,7 +80,10 @@ const MenuItemEditBar = ({
   };
 
   return (
-    <div className="sticky top-0 h-screen flex-shrink-0">
+    <motion.div
+      {...slideInAnimation(0.2)}
+      className="sticky top-0 h-screen flex-shrink-0"
+    >
       <div className="sticky right-3 top-0 z-10 flex w-[28rem] flex-col gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black">
         <h1 className="text-center">Úprava itemu</h1>
         <div className="flex w-full flex-col gap-4">
@@ -172,17 +177,17 @@ const MenuItemEditBar = ({
 
           <div className="flex flex-col gap-2">
             <h2>Varianty</h2>
-            {itemVariants.map((variant, index) => (
+            {itemVariants.map((index) => (
               <div key={index} className="flex items-center gap-2">
                 <Input
                   id={`variantName-${index}`}
                   name={`variantName-${index}`}
                   type="text"
                   inputClassName="rounded-md p-1 text-black"
-                  value={variant.name}
-                  onChange={(e) =>
-                    handleVariantChange(index, "name", e.target.value)
-                  }
+                  // value={variant.name}
+                  // onChange={(e) =>
+                  // handleVariantChange(index, "name", e.target.value)
+                  // }
                   placeholder="Název varianty"
                 />
                 <Input
@@ -190,10 +195,10 @@ const MenuItemEditBar = ({
                   name={`variantPrice-${index}`}
                   type="number"
                   inputClassName="rounded-md p-1 text-black w-40"
-                  value={variant.price}
-                  onChange={(e) =>
-                    handleVariantChange(index, "price", e.target.value)
-                  }
+                  // value={variant.price}
+                  // onChange={(e) =>
+                  //   handleVariantChange(index, "price", e.target.value)
+                  // }
                   placeholder="Cena varianty"
                   min={0}
                 />
@@ -222,7 +227,7 @@ const MenuItemEditBar = ({
           </Button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
