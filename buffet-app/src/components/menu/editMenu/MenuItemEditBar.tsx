@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Category, MenuItem, Variant } from "../../../types";
+import { Category, MenuItem } from "../../../types";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import MenuItemEditInput from "./MenuItemEditInput";
@@ -33,7 +33,7 @@ const MenuItemEditBar = ({
   const [itemCategory, setItemCategory] = useState<Category["id"]>(
     menuItem?.category || 0,
   );
-  const [itemVariants, setItemVariants] = useState<Variant[]>(
+  const [itemVariants, setItemVariants] = useState<number[]>(
     menuItem?.variants || [],
   );
   const [cashPayment, setCashPayment] = useState<boolean>(false);
@@ -48,18 +48,18 @@ const MenuItemEditBar = ({
     handleBarOpen();
   };
 
-  const handleVariantChange = (
-    index: number,
-    field: keyof Variant,
-    value: string,
-  ) => {
-    const newVariants = [...itemVariants];
-    newVariants[index] = { ...newVariants[index], [field]: value };
-    setItemVariants(newVariants);
-  };
+  // const handleVariantChange = (
+  //   index: number,
+  //   field: keyof Variant,
+  //   value: string,
+  // ) => {
+  // const newVariants = [...itemVariants];
+  // newVariants[index] = { ...newVariants[index], [field]: value };
+  // setItemVariants(newVariants);
+  // };
 
   const handleAddVariant = () => {
-    setItemVariants([...itemVariants, { name: "", quantity: 0, price: 0 }]);
+    // setItemVariants([...itemVariants, { name: "", quantity: 0, price: 0 }]);
   };
 
   const handleRemoveVariant = (index: number) => {
@@ -177,17 +177,17 @@ const MenuItemEditBar = ({
 
           <div className="flex flex-col gap-2">
             <h2>Varianty</h2>
-            {itemVariants.map((variant, index) => (
+            {itemVariants.map((index) => (
               <div key={index} className="flex items-center gap-2">
                 <Input
                   id={`variantName-${index}`}
                   name={`variantName-${index}`}
                   type="text"
                   inputClassName="rounded-md p-1 text-black"
-                  value={variant.name}
-                  onChange={(e) =>
-                    handleVariantChange(index, "name", e.target.value)
-                  }
+                  // value={variant.name}
+                  // onChange={(e) =>
+                  // handleVariantChange(index, "name", e.target.value)
+                  // }
                   placeholder="Název varianty"
                 />
                 <Input
@@ -195,10 +195,10 @@ const MenuItemEditBar = ({
                   name={`variantPrice-${index}`}
                   type="number"
                   inputClassName="rounded-md p-1 text-black w-40"
-                  value={variant.price}
-                  onChange={(e) =>
-                    handleVariantChange(index, "price", e.target.value)
-                  }
+                  // value={variant.price}
+                  // onChange={(e) =>
+                  //   handleVariantChange(index, "price", e.target.value)
+                  // }
                   placeholder="Cena varianty"
                   min={0}
                 />

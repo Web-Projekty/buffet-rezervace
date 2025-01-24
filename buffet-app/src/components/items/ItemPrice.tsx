@@ -11,7 +11,7 @@ const ItemPrice = ({ id, price, variants }: ItemPrice) => {
   const { getItemQuantity } = useCart();
 
   const variantsPrice = variants
-    ? variants.reduce((acc, variant) => acc + variant.price, 0)
+    ? variants.reduce((acc, variant) => acc + variant, 0)
     : 0;
   const finalPrice = getItemQuantity(id) * (price + variantsPrice);
 

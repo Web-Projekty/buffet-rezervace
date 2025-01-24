@@ -1,6 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
 import { Order } from "../../types";
-import PageNotFound from "../error/PageNotFound";
 import { ReactNode } from "react";
 
 const SuccessOrder = () => {

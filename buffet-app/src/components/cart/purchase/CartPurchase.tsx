@@ -68,7 +68,7 @@ const CartPurchase = () => {
 
       const { order, error, paywallUrl } = await createOrder(
         token,
-        cartItems.map(({ id, quantity, variants }) => ({
+        cartItems.map(({ id, quantity }) => ({
           id,
           quantity,
           variants: [],

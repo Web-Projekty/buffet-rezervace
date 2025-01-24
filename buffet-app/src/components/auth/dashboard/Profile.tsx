@@ -26,7 +26,7 @@ const Profile = () => {
   };
 
   const handleSavePassword = () => {
-    const { password, newPassword, newPasswordConfirmation } = formData;
+    const { newPassword, newPasswordConfirmation } = formData;
 
     if (newPassword !== newPasswordConfirmation) {
       return;
