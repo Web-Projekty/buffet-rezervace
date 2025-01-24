@@ -66,7 +66,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="grid w-full grid-cols-1 items-start gap-2 md:m-auto md:w-[75rem] md:grid-cols-3">
+    <section className="grid w-full grid-cols-1 items-start gap-2 md:m-auto md:w-[75rem] md:grid-cols-3">
       <div className="flex min-h-[30rem] flex-col justify-between gap-2 rounded-lg bg-slate-900 p-2 text-white md:col-span-1">
         <Suspense fallback={<Fallback />}>
           <AccountInformation />
@@ -84,7 +84,7 @@ const Dashboard = () => {
       <div className="flex min-h-[30rem] flex-col rounded-lg bg-slate-900 p-4 text-white md:col-span-2">
         <DashboardContent page={page} isAdmin={isAdmin} />
       </div>
-    </div>
+    </section>
   );
 };
 

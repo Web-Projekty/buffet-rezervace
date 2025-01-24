@@ -43,7 +43,7 @@ const AdminSystem = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <section className="flex flex-col gap-2">
       <h1 className="text-2xl font-bold">Systémové nastavení</h1>
       <div className="flex w-full flex-col justify-between gap-5">
         <div className="flex w-full flex-col items-start gap-2 rounded-lg bg-backgroundColor p-2">
@@ -100,7 +100,7 @@ const AdminSystem = () => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
