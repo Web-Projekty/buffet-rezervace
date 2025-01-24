@@ -27,7 +27,7 @@ try {
 }
 $app->addErrorMiddleware(!$isProd, true, true);
 
-$app->get('/', function (Request $request, Response $response, $args) {
+$app->get('', function (Request $request, Response $response, $args) {
 
     ob_start();
     //phpinfo();
@@ -144,6 +144,10 @@ $app->get('/wstest', function (Request $request, Response $response, $args) {
             echo "Could not connect: {$e->getMessage()}\n";
         });
     return $response;
+});
+
+$app->map(["GET"], "/*", function () {
+    echo "hi";
 });
 
 $app->run();
