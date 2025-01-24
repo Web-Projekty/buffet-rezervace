@@ -7,6 +7,8 @@ import { allergens } from "../../../allergens";
 import ToggleSwitch from "../../ui/ToggleSwitch";
 import { onImageChange } from "../../utils/utils";
 import LazyImage from "../../ui/LazyImage";
+import { motion } from "framer-motion";
+import { slideInAnimation } from "../../../animations";
 
 type MenuItemEditBarProps = {
   handleBarOpen: () => void;
@@ -78,7 +80,10 @@ const MenuItemEditBar = ({
   };
 
   return (
-    <div className="sticky top-0 h-screen flex-shrink-0">
+    <motion.div
+      {...slideInAnimation(0.2)}
+      className="sticky top-0 h-screen flex-shrink-0"
+    >
       <div className="sticky right-3 top-0 z-10 flex w-[28rem] flex-col gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black">
         <h1 className="text-center">Úprava itemu</h1>
         <div className="flex w-full flex-col gap-4">
@@ -222,7 +227,7 @@ const MenuItemEditBar = ({
           </Button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
