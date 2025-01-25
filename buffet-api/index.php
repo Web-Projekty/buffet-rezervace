@@ -51,19 +51,13 @@ $app->get('/pay', function (Request $request, Response $response, $args) {
 
 $app->get('/return', function (Request $request, Response $response, $args) {
     error_log($request->getBody());
-    /*error_log(sprintf("Headers: %s", $request->getHeaders()));
-    error_log(sprintf("Query: %s", $request->getQueryParams()));
-    error_log(sprintf("POST: %s", $request->getParsedBody()));
-    error_log(sprintf("Args: %s", $args));*/
     if ($request->getParsedBody()) {
 
         foreach ($request->getParsedBody() as $key => $value) {
             error_log(sprintf("POST %s: %s", $key, $value));
         }
     }
-
     if ($request->getQueryParams()) {
-
         foreach ($request->getQueryParams() as $key => $value) {
             error_log(sprintf("QUERY %s: %s", $key, $value));
         }
@@ -89,18 +83,6 @@ $app->get('/cred', function (Request $request, Response $response, $args) {
     return $response;
 });
 
-### Deprecated ###
-
-/*$app->post('/credGen', function (Request $request, Response $response, $args) {
-
-ob_start();
-$cred = new CredentialsManager;
-$cred->createCredentials($_POST['username'], $_POST['password']);
-$html = ob_get_clean();
-
-$response->getBody()->write($html);
-return $response;
-});*/
 /**
  * @todo remove
  */
@@ -113,9 +95,9 @@ $corsMiddleware = function ($request, $handler) {
         ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
         ->withHeader('Access-Control-Allow-Credentials', 'true'); // If needed
 };
-$app->add($corsMiddleware);
 
 // Add middleware to your Slim app
+$app->add($corsMiddleware);
 
 $app->post('/api', [BuffetApi::class, 'main']);
 $app->get('/api/notification', [BuffetApi::class, 'handleThePayNotification']);
@@ -148,12 +130,6 @@ $app->get('/wstest', function (Request $request, Response $response, $args) {
     return $response;
 });
 
-// $app->any('/{routes:.+}', function (Request $request, Response $response, $args) {
-//     // Handle undefined routes here
-//     $response->getBody()->write('Route not found');
-//     return $response->withStatus(404);
-// });
-
 $app->map(["GET"], "{routes:.+}", function (Request $request, Response $response, $args) {
 
     if (isset(explode(".", $request->getUri())[1])) {
@@ -169,12 +145,6 @@ $app->map(["GET"], "{routes:.+}", function (Request $request, Response $response
 
         $response->getBody()->write(file_get_contents($path));
         return $response->withHeader('Content-Type', $contentType);
-        /*->withHeader('Content-Length', (string) filesize($path))
-
-    ->withHeader('Content-Disposition', 'inline; filename="' . basename($path) . '"')
-
-    ->withHeader('Access-Control-Allow-Headers', '*')
-    ->withHeader('Access-Control-Allow-Methods', '*');*/
     } else {
         ob_start();
         include __DIR__ . "/dist/index.html";
@@ -186,18 +156,4 @@ $app->map(["GET"], "{routes:.+}", function (Request $request, Response $response
     return $response;
 });
 
-/*$app->add(function ($request, $handler) {
-$uri = $request->getUri()->getPath();
-$excludedRoutes = ['/api', '/pay'];
-
-if (in_array($uri, $excludedRoutes)) {
-return $handler->handle($request);
-}
-
-$response = new \Slim\Psr7\Response();
-$response->getBody()->write('Redirecting to catch-all route');
-return $response;
-});
-
- */
 $app->run();
