@@ -27,16 +27,16 @@ try {
 }
 $app->addErrorMiddleware(!$isProd, true, true);
 
-$app->get('', function (Request $request, Response $response, $args) {
+// $app->get('/', function (Request $request, Response $response, $args) {
 
-    ob_start();
-    //phpinfo();
-    include __DIR__ . "/templates/test.html";
-    $html = ob_get_clean();
+//     ob_start();
+//     //phpinfo();
+//     include __DIR__ . "/templates/test.html";
+//     $html = ob_get_clean();
 
-    $response->getBody()->write($html);
-    return $response;
-});
+//     $response->getBody()->write($html);
+//     return $response;
+// });
 
 $app->get('/pay', function (Request $request, Response $response, $args) {
     $response = new ApiResponse();
@@ -101,7 +101,9 @@ $html = ob_get_clean();
 $response->getBody()->write($html);
 return $response;
 });*/
-
+/**
+ * @todo remove
+ */
 // CORS Middleware (DO NOT!!!! LEAVE IN FINAL RELEASE)
 $corsMiddleware = function ($request, $handler) {
     $response = $handler->handle($request);
@@ -111,9 +113,9 @@ $corsMiddleware = function ($request, $handler) {
         ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
         ->withHeader('Access-Control-Allow-Credentials', 'true'); // If needed
 };
+$app->add($corsMiddleware);
 
 // Add middleware to your Slim app
-$app->add($corsMiddleware);
 
 $app->post('/api', [BuffetApi::class, 'main']);
 $app->get('/api/notification', [BuffetApi::class, 'handleThePayNotification']);
@@ -146,7 +148,13 @@ $app->get('/wstest', function (Request $request, Response $response, $args) {
     return $response;
 });
 
-$app->map(["GET"], "/{path:.*}", function (Request $request, Response $response, $args) {
+// $app->any('/{routes:.+}', function (Request $request, Response $response, $args) {
+//     // Handle undefined routes here
+//     $response->getBody()->write('Route not found');
+//     return $response->withStatus(404);
+// });
+
+$app->map(["GET"], "{routes:.+}", function (Request $request, Response $response, $args) {
 
     if (isset(explode(".", $request->getUri())[1])) {
         $path = __DIR__ . "/dist/" . $request->getUri()->getPath();
@@ -178,4 +186,18 @@ $app->map(["GET"], "/{path:.*}", function (Request $request, Response $response,
     return $response;
 });
 
+/*$app->add(function ($request, $handler) {
+$uri = $request->getUri()->getPath();
+$excludedRoutes = ['/api', '/pay'];
+
+if (in_array($uri, $excludedRoutes)) {
+return $handler->handle($request);
+}
+
+$response = new \Slim\Psr7\Response();
+$response->getBody()->write('Redirecting to catch-all route');
+return $response;
+});
+
+ */
 $app->run();
