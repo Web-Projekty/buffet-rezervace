@@ -142,8 +142,12 @@ $app->map(["GET"], "{routes:.+}", function (Request $request, Response $response
         } else {
             $contentType = mime_content_type($path);
         }
-
-        $response->getBody()->write(file_get_contents($path));
+        if (is_file($path)) {
+            $response->getBody()->write(file_get_contents($path));
+        } else {
+            return $response->withStatus(404);
+        }
+        
         return $response->withHeader('Content-Type', $contentType);
     } else {
         ob_start();
