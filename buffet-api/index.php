@@ -27,16 +27,16 @@ try {
 }
 $app->addErrorMiddleware(!$isProd, true, true);
 
-// $app->get('/', function (Request $request, Response $response, $args) {
+$app->get('/debug', function (Request $request, Response $response, $args) {
 
-//     ob_start();
-//     //phpinfo();
-//     include __DIR__ . "/templates/test.html";
-//     $html = ob_get_clean();
+    ob_start();
+    //phpinfo();
+    include __DIR__ . "/templates/test.html";
+    $html = ob_get_clean();
 
-//     $response->getBody()->write($html);
-//     return $response;
-// });
+    $response->getBody()->write($html);
+    return $response;
+});
 
 $app->get('/pay', function (Request $request, Response $response, $args) {
     $response = new ApiResponse();
