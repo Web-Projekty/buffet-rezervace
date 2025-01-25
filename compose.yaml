@@ -1,10 +1,11 @@
 services:
     # PHP and Apache Web Server
     web:
-        image: wlczak/buffet
+        image: wlczak/buffet:latest
+        pull_policy: always
         container_name: php-apache
         volumes:
-            - ./buffet-api:/var/www/html
+            #- ./buffet-api:/var/www/html
             - ./conf/:/var/www/html/conf/:rw
         ports:
             - "8080:80" # Access Apache via http://localhost:8080
