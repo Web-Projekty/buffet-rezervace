@@ -38,19 +38,5 @@ services:
             - "8081:80" # Access phpMyAdmin via http://localhost:8081
         depends_on:
             - db
-
-    # Node.js for React.js development (optional)
-    frontend:
-        image: node:latest
-        container_name: react-app
-        working_dir: /usr/src/app
-        volumes:
-            - ./buffet-app:/usr/src/app
-        ports:
-            - "3000:3000" # Access React app via http://localhost:3000
-        command: ["bash", "-c", "npm install && npm run dev"] # Runs `npm dev start` to serve the React app
-        depends_on:
-            - web
-
 volumes:
     db_data:
