@@ -135,19 +135,19 @@ $app->map(["GET"], "{routes:.+}", function (Request $request, Response $response
     if (isset(explode(".", $request->getUri())[1])) {
         $path = __DIR__ . "/dist/" . $request->getUri()->getPath();
 
-        if (explode(".", $request->getUri())[1] == "js") {
-            $contentType = 'application/javascript';
-        } elseif (explode(".", $request->getUri())[1] == "css") {
-            $contentType = 'text/css';
-        } else {
-            $contentType = mime_content_type($path);
-        }
         if (is_file($path)) {
+            if (explode(".", $request->getUri())[1] == "js") {
+                $contentType = 'application/javascript';
+            } elseif (explode(".", $request->getUri())[1] == "css") {
+                $contentType = 'text/css';
+            } else {
+                $contentType = mime_content_type($path);
+            }
             $response->getBody()->write(file_get_contents($path));
         } else {
             return $response->withStatus(404);
         }
-        
+
         return $response->withHeader('Content-Type', $contentType);
     } else {
         ob_start();
