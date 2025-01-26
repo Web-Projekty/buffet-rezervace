@@ -45,6 +45,8 @@ phpunit-coverage:
         - composer install
         - chown -R 1000:1000 conf/
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
+        - cd /var/lib/docker/overlay2
+        - ls
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
 
 docker_build:
