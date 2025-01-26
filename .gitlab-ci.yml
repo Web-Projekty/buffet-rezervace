@@ -1,7 +1,7 @@
 stages:
+    - test
     - Tests
     - Code Coverage
-    - test
 
 # Job to run PHPStan
 phpstan:
@@ -48,13 +48,15 @@ phpunit-coverage:
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
 
 docker_build:
-  stage: test
-  image: docker:latest
-  services:
-    - docker:dind
-  variables:
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_TLS_CERTDIR: ""
-  script:
-    - docker info
-    - docker images
+    stage: test
+    image: docker:latest
+    services:
+        - docker:dind
+    variables:
+        DOCKER_HOST: unix:///var/run/docker.sock
+        DOCKER_TLS_CERTDIR: ""
+    script:
+        - docker info
+        - docker images
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
