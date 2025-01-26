@@ -9,8 +9,8 @@ phpstan:
     script:
         - cd buffet-api
         - composer install
-        - ./vendor/bin/phpstan analyse --memory-limit 4G -c phpstan.neon --autoload-file vendor/autoload.php --error-format=gitlab src
-          tests >> phpstan-result.json
+        - ./vendor/bin/phpstan analyse --memory-limit 4G -c phpstan.neon --autoload-file vendor/autoload.php
+          --error-format=gitlab src tests >> phpstan-result.json
     artifacts:
         reports:
             codequality: buffet-api/phpstan-result.json
