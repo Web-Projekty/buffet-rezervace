@@ -59,3 +59,4 @@ docker_build:
         - docker version
         - cd scripts
         - sh docker_build_buffet.sh
+        #   changed runner image
