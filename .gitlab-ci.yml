@@ -52,4 +52,4 @@ docker_build:
     image: docker:latest
     script:
         - cd scripts
-        - bash docker_build_buffet.sh
+        - ./docker_build_buffet.sh
