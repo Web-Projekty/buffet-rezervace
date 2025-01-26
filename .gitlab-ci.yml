@@ -56,5 +56,6 @@ docker_build:
     services:
         - docker:dind
     script:
+        - docker version
         - cd scripts
         - sh docker_build_buffet.sh
