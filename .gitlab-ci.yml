@@ -58,3 +58,4 @@ docker_build:
     script:
         - docker info
         - docker images
+        - docker ps -a
