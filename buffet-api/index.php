@@ -11,7 +11,9 @@ use Buffet\Types\Settings;
 use Buffet\Utils\EnvReader;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Exception\HttpNotFoundException;
 use Slim\Factory\AppFactory;
+use Slim\Psr7\Factory\ServerRequestFactory;
 
 require __DIR__ . '/vendor/autoload.php';
 //require __DIR__ . '/src/Database/config.php'; // Databse config file
@@ -132,20 +134,22 @@ $app->get('/wstest', function (Request $request, Response $response, $args) {
 
 $app->map(["GET"], "{routes:.+}", function (Request $request, Response $response, $args) {
 
-    if (isset(explode(".", $request->getUri())[1])) {
-        $path = __DIR__ . "/dist/" . $request->getUri()->getPath();
+$requestPath = $request->getUri()->getPath();
 
-        if (is_file($path)) {
-            if (explode(".", $request->getUri())[1] == "js") {
+    if (isset(explode(".", $requestPath)[1])) {
+        $filePath = __DIR__ . "/dist/" . $request->getUri()->getPath();
+
+        if (is_file($filePath)) {
+            if (explode(".", $requestPath)[1] == "js") {
                 $contentType = 'application/javascript';
-            } elseif (explode(".", $request->getUri())[1] == "css") {
+            } elseif (explode(".", $requestPath)[1] == "css") {
                 $contentType = 'text/css';
             } else {
-                $contentType = mime_content_type($path);
+                $contentType = mime_content_type($filePath);
             }
-            $response->getBody()->write(file_get_contents($path));
+            $response->getBody()->write(file_get_contents($filePath));
         } else {
-            return $response->withStatus(404);
+            throw new HttpNotFoundException(ServerRequestFactory::createFromGlobals(), 1);
         }
 
         return $response->withHeader('Content-Type', $contentType);
