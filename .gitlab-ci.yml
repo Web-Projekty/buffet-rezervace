@@ -1,6 +1,7 @@
 stages:
     - Tests
     - Code Coverage
+    - test
 
 # Job to run PHPStan
 phpstan:
@@ -45,3 +46,15 @@ phpunit-coverage:
         - chown -R 1000:1000 conf/
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+
+docker_build:
+  stage: test
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - docker info
+    - docker images
