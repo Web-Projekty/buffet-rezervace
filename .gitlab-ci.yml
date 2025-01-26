@@ -50,6 +50,8 @@ phpunit-coverage:
 docker_build:
     stage: test
     image: docker:latest
+    variables:
+        DOCKER_HOST: unix:///var/run/docker.sock
     services:
         - docker:dind
     script:
