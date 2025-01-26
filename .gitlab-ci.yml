@@ -49,13 +49,12 @@ phpunit-coverage:
 
 docker_build:
     stage: test
-    image: docker:latest
+    image: docker:24.0.5
     variables:
         DOCKER_HOST: tcp://docker:2375
         DOCKER_DRIVER: overlay2
     services:
-        - name: docker:dind
-          alias: docker
+        - name: docker:24.0.5-dind
     script:
         - docker version
         - cd scripts
