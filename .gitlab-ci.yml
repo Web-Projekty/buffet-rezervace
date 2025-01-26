@@ -51,4 +51,5 @@ docker_build:
     stage: test
     image: docker:latest
     script:
-        - pwd
+        - cd scripts
+        - bash docker_build_buffet.sh
