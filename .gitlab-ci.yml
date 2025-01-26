@@ -1,7 +1,7 @@
 stages:
-  - test
-  - Tests
-  - Code Coverage
+    - test
+    - Tests
+    - Code Coverage
 
 # Job to run PHPStan
 phpstan:
@@ -50,6 +50,8 @@ phpunit-coverage:
 docker_build:
     stage: test
     image: docker:latest
+    services:
+        - docker:dind
     script:
         - cd scripts
         - sh docker_build_buffet.sh
