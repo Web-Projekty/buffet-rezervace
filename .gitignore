@@ -10,3 +10,4 @@ buffet-api/vendor
 conf/.env
 buffet-app/tsconfig.app.tsbuildinfo
 buffet-app/tsconfig.node.tsbuildinfo
+/buffet-api/dist
