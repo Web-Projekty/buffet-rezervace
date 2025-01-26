@@ -53,4 +53,4 @@ docker_build:
     script:
         - cd scripts
         - chmod +x docker_build_buffet.sh 
-        - ./ docker_build_buffet.sh
+        - ./docker_build_buffet.sh
