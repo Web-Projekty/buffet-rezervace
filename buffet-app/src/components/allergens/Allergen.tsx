@@ -10,15 +10,8 @@ const Allergen = ({ allergen }: AlergenProps) => {
   return (
     <motion.li
       {...scaleUpAnimation(0.5)}
-      className="flex w-[18rem] items-center gap-2 rounded-lg bg-slate-900 px-3 py-6"
+      className="relative flex w-[18rem] items-center gap-2 rounded-lg bg-slate-900 px-3 py-6"
     >
-      {/*<img
-        src={
-          "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg"
-        }
-        alt={allergen.name + "'s image"}
-        className="w-[8rem] rounded-lg object-cover"
-      />*/}
       <div className="text-4xl">{allergen.icon ? allergen.icon : null}</div>
       <span className="rounded-full bg-slate-800 px-4 py-2 text-xl">
         {allergen.id}

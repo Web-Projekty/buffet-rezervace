@@ -4,6 +4,8 @@ import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import MenuItemEditInput from "./MenuItemEditInput";
 import { onImageChange } from "../../utils/utils";
+import { motion } from "framer-motion";
+import { slideInAnimation } from "../../../animations";
 
 type MenuCategoryEditBarProps = {
   handleBarOpen: () => void;
@@ -33,7 +35,10 @@ const MenuCategoryEditBar = ({
   };
 
   return (
-    <div className="sticky top-0 h-screen flex-shrink-0">
+    <motion.div
+      {...slideInAnimation(0.2)}
+      className="sticky top-0 h-screen flex-shrink-0"
+    >
       <div className="sticky right-3 top-0 z-10 flex w-[28rem] flex-col gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black">
         <h1 className="text-center">Úprava kategorie</h1>
         <div className="flex w-full flex-col gap-4">
@@ -88,7 +93,7 @@ const MenuCategoryEditBar = ({
           </Button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

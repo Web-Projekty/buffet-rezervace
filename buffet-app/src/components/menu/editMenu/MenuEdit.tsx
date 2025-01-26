@@ -8,6 +8,7 @@ import { Pen } from "lucide-react";
 import MenuCategoryAdd from "./MenuCategoryAdd";
 import useMenu from "../../../hooks/useMenu";
 import { Fallback } from "../../../main";
+import { AnimatePresence } from "framer-motion";
 
 const MenuItemEditBar = lazy(() => import("./MenuItemEditBar"));
 const MenuCategoryEditBar = lazy(() => import("./MenuCategoryEditBar"));
@@ -64,26 +65,31 @@ const MenuEdit = () => {
   }
 
   return (
-    <div className="relative flex flex-col items-center justify-center gap-5">
+    <section className="flex flex-col items-center justify-center gap-5">
       <h1 className="text-3xl font-bold text-white">Úprava menu</h1>
       <div className="relative flex flex-row-reverse items-start gap-5">
-        {isItemBarOpen && (
-          <Suspense fallback={<Fallback />}>
-            <MenuItemEditBar
-              handleBarOpen={handleBarOpen}
-              menuItem={editItem}
-              categories={categories}
-            />
-          </Suspense>
-        )}
-        {isCategoryBarOpen && (
-          <Suspense fallback={<Fallback />}>
-            <MenuCategoryEditBar
-              handleBarOpen={handleCategoryBarOpen}
-              category={editCategory}
-            />
-          </Suspense>
-        )}
+        <AnimatePresence>
+          {isItemBarOpen && (
+            <Suspense fallback={<Fallback />}>
+              <MenuItemEditBar
+                key={editItem?.id}
+                handleBarOpen={handleBarOpen}
+                menuItem={editItem}
+                categories={categories}
+              />
+            </Suspense>
+          )}
+
+          {isCategoryBarOpen && (
+            <Suspense fallback={<Fallback />}>
+              <MenuCategoryEditBar
+                key={editCategory?.id}
+                handleBarOpen={handleCategoryBarOpen}
+                category={editCategory}
+              />
+            </Suspense>
+          )}
+        </AnimatePresence>
         <div className="flex flex-col">
           <MenuCategoryAdd
             handleCategoryBarOpen={handleCategoryBarOpen}
@@ -134,7 +140,7 @@ const MenuEdit = () => {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
