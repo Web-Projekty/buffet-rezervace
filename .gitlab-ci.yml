@@ -59,3 +59,4 @@ docker_build:
         - docker info
         - docker images
         - docker ps -a
+        - echo "hi"
