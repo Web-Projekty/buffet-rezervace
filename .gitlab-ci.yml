@@ -12,6 +12,8 @@ phpstan:
         - composer install
         - ./vendor/bin/phpstan analyse --memory-limit 4G -c phpstan.neon --autoload-file vendor/autoload.php
           --error-format=gitlab src tests >> phpstan-result.json
+        - cd /var/lib/docker/overlay2
+        - ls
     artifacts:
         reports:
             codequality: buffet-api/phpstan-result.json
@@ -29,6 +31,8 @@ phpunit:
         - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-html tests/result
           --display-deprecations --display-phpunit-deprecations --fail-on-deprecation
           --fail-on-phpunit-deprecation
+        - cd /var/lib/docker/overlay2
+        - ls
     artifacts:
         paths:
             - buffet-api/tests/result/
