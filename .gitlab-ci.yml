@@ -55,7 +55,6 @@ docker_build:
         DOCKER_DRIVER: overlay2
     services:
         - name: docker:24.0.5-dind
-    privileged: true
     script:
         - docker version
         - cd scripts
