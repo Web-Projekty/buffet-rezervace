@@ -50,13 +50,7 @@ phpunit-coverage:
 docker_build:
     stage: test
     image: docker:latest
-    services:
-        #- docker:dind
-    variables:
-       # DOCKER_HOST: tcp://docker:2375
-        DOCKER_TLS_CERTDIR: ""
     script:
         - docker info
         - docker images
         - docker ps -a
-        - echo "hi"
