@@ -47,6 +47,7 @@ phpunit-coverage:
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
         - cd /var/lib/docker/overlay2
         - ls
+        - echo "this is pain"
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
 
 docker_build:
