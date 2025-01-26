@@ -52,4 +52,5 @@ docker_build:
     image: docker:latest
     script:
         - cd scripts
-        - ./docker_build_buffet.sh
+        - chmod +x docker_build_buffet.sh 
+        - bash docker_build_buffet.sh
