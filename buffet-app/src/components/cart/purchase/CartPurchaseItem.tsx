@@ -6,7 +6,7 @@ type CartPurchaseItemProps = {
 };
 
 const CartPurchaseItem = ({ cartItem }: CartPurchaseItemProps) => {
-  const { name, quantity, price, variants } = cartItem;
+  const { name, quantity, price } = cartItem;
   return (
     <div className="flex flex-col gap-1">
       <div className="flex flex-row items-center justify-between">
@@ -16,7 +16,7 @@ const CartPurchaseItem = ({ cartItem }: CartPurchaseItemProps) => {
         <p className="italic">{formatCurrency(quantity * price)}</p>
       </div>
 
-      <div>
+      {/* <div>
         {variants &&
           variants.map((variant) => {
             return (
@@ -26,7 +26,7 @@ const CartPurchaseItem = ({ cartItem }: CartPurchaseItemProps) => {
               </div>
             );
           })}
-      </div>
+      </div> */}
     </div>
   );
 };

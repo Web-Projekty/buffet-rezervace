@@ -11,7 +11,9 @@ use Buffet\Types\Settings;
 use Buffet\Utils\EnvReader;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Exception\HttpNotFoundException;
 use Slim\Factory\AppFactory;
+use Slim\Psr7\Factory\ServerRequestFactory;
 
 require __DIR__ . '/vendor/autoload.php';
 //require __DIR__ . '/src/Database/config.php'; // Databse config file
@@ -27,7 +29,7 @@ try {
 }
 $app->addErrorMiddleware(!$isProd, true, true);
 
-$app->get('/', function (Request $request, Response $response, $args) {
+$app->get('/debug', function (Request $request, Response $response, $args) {
 
     ob_start();
     //phpinfo();
@@ -51,19 +53,13 @@ $app->get('/pay', function (Request $request, Response $response, $args) {
 
 $app->get('/return', function (Request $request, Response $response, $args) {
     error_log($request->getBody());
-    /*error_log(sprintf("Headers: %s", $request->getHeaders()));
-    error_log(sprintf("Query: %s", $request->getQueryParams()));
-    error_log(sprintf("POST: %s", $request->getParsedBody()));
-    error_log(sprintf("Args: %s", $args));*/
     if ($request->getParsedBody()) {
 
         foreach ($request->getParsedBody() as $key => $value) {
             error_log(sprintf("POST %s: %s", $key, $value));
         }
     }
-
     if ($request->getQueryParams()) {
-
         foreach ($request->getQueryParams() as $key => $value) {
             error_log(sprintf("QUERY %s: %s", $key, $value));
         }
@@ -89,19 +85,9 @@ $app->get('/cred', function (Request $request, Response $response, $args) {
     return $response;
 });
 
-### Deprecated ###
-
-/*$app->post('/credGen', function (Request $request, Response $response, $args) {
-
-ob_start();
-$cred = new CredentialsManager;
-$cred->createCredentials($_POST['username'], $_POST['password']);
-$html = ob_get_clean();
-
-$response->getBody()->write($html);
-return $response;
-});*/
-
+/**
+ * @todo remove
+ */
 // CORS Middleware (DO NOT!!!! LEAVE IN FINAL RELEASE)
 $corsMiddleware = function ($request, $handler) {
     $response = $handler->handle($request);
@@ -143,6 +129,38 @@ $app->get('/wstest', function (Request $request, Response $response, $args) {
         }, function ($e) {
             echo "Could not connect: {$e->getMessage()}\n";
         });
+    return $response;
+});
+
+$app->map(["GET"], "{routes:.+}", function (Request $request, Response $response, $args) {
+
+$requestPath = $request->getUri()->getPath();
+
+    if (isset(explode(".", $requestPath)[1])) {
+        $filePath = __DIR__ . "/dist/" . $request->getUri()->getPath();
+
+        if (is_file($filePath)) {
+            if (explode(".", $requestPath)[1] == "js") {
+                $contentType = 'application/javascript';
+            } elseif (explode(".", $requestPath)[1] == "css") {
+                $contentType = 'text/css';
+            } else {
+                $contentType = mime_content_type($filePath);
+            }
+            $response->getBody()->write(file_get_contents($filePath));
+        } else {
+            throw new HttpNotFoundException(ServerRequestFactory::createFromGlobals(), 1);
+        }
+
+        return $response->withHeader('Content-Type', $contentType);
+    } else {
+        ob_start();
+        include __DIR__ . "/dist/index.html";
+        $html = ob_get_clean();
+
+        $response->getBody()->write($html);
+    }
+
     return $response;
 });
 

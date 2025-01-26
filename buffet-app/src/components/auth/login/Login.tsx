@@ -60,7 +60,7 @@ const Login = () => {
           value={formData.username}
           required={true}
           onChange={handleChange}
-          inputClassName="rounded-md border p-2 text-black w-full"
+          className="w-full rounded-md border p-2 text-black"
           placeholder="Uživatelské jméno"
           disabled={loading}
         />
@@ -71,7 +71,7 @@ const Login = () => {
           value={formData.password}
           required={true}
           onChange={handleChange}
-          inputClassName="rounded-md border p-2 text-black w-full"
+          className="w-full rounded-md border p-2 text-black"
           placeholder="Heslo"
           disabled={loading}
         />
