@@ -1,1 +1,0 @@
-import{j as e,x as n}from"./index-Dm23vDGZ.js";const i=({items:s})=>e.jsxs("div",{className:"flex w-full flex-row items-center justify-between gap-2 font-bold",children:[e.jsx("span",{children:"Celkem"}),e.jsx("p",{children:n(s.reduce((t,r)=>t+r.price*r.quantity,0))})]});export{i as O};
