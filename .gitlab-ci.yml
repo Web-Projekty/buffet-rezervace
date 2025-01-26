@@ -65,3 +65,5 @@ docker_build:
         - cd scripts
         - sh docker_build_buffet.sh
         #   changed runner image
+    rules:
+        - if: '$CI_COMMIT_BRANCH == "main"'
