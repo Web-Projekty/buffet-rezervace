@@ -51,6 +51,4 @@ docker_build:
     stage: test
     image: docker:latest
     script:
-        - docker info
-        - docker images
-        - docker ps -a
+        - pwd
