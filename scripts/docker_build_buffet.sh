@@ -6,4 +6,5 @@ cd ..
 rm -rf buffet-api/dist
 cp -r buffet-app/dist buffet-api
 docker build -t wlczak/buffet:latest .
+echo ${DOCKER_TOKEN} | docker login --username wlczak --password-stdin
 docker push wlczak/buffet # can replace wlczak with your dockerhub username
