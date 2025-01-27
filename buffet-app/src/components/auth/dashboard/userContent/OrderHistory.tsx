@@ -45,10 +45,16 @@ const OrderHistory = () => {
           ({dataList ? dataList.itemsCount : <Loading size={20} />})
         </span>
       </h1>
-      <div className="flex min-h-[26rem] flex-col justify-between gap-4">
+      <div className="flex min-h-[26rem] flex-col items-center justify-between gap-4">
+        <div className="flex w-full gap-[8.2rem] rounded-md bg-backgroundColor px-6 py-2 font-semibold text-descriptionColor md:w-[45rem]">
+          <span>ID</span>
+          <span>Status</span>
+          <span>Čas vyzvednutí</span>
+        </div>
+
         <AnimatePresence>
           {!isLoading ? (
-            <ul className="flex flex-col items-center gap-2">
+            <ul className="flex flex-col gap-2">
               {dataList?.data?.map((order) => (
                 <Order
                   key={order.pickUpId + "" + order.userId}
