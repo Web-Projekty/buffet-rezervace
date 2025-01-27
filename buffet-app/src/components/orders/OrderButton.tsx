@@ -24,7 +24,7 @@ const Buttons: OrderButton[] = [
   {
     name: "Zrušit",
     icon: <X />,
-    disabledStatus: ["storno", "cancelled"],
+    disabledStatus: ["storno", "cancelled", "done"],
   },
 ];
 
@@ -78,6 +78,10 @@ const OrderButton = ({ handleStatus, status, loading }: OrderButtonsProps) => {
     <div>
       {Buttons.map(({ name, icon, disabledStatus }) => {
         const isDisabled = disabledStatus.includes(status);
+
+        if (status === "done") {
+          return null;
+        }
 
         return (
           <Button
