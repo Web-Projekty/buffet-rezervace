@@ -35,7 +35,7 @@ const Order = ({ order, items }: OrderProps) => {
       : true;
 
   return (
-    <motion.div
+    <motion.article
       initial={{ y: 50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: 50, opacity: 0 }}
@@ -82,7 +82,7 @@ const Order = ({ order, items }: OrderProps) => {
           loading={loading}
         />
       </motion.ul>
-    </motion.div>
+    </motion.article>
   );
 };
 

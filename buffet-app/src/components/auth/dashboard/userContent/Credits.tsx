@@ -14,7 +14,7 @@ const Credits = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <section className="flex flex-col gap-4">
       <h1 className="text-2xl font-bold">Kredity</h1>
       <div className="flex flex-col gap-4 rounded-lg bg-backgroundColor px-4 py-2">
         <h2 className="text-xl">Přidání kupónem</h2>
@@ -40,7 +40,7 @@ const Credits = () => {
           <p className="text-white">Zatím žádná historie kreditů.</p>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

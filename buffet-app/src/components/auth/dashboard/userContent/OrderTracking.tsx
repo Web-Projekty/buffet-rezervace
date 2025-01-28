@@ -64,7 +64,7 @@ const OrderTracking = () => {
   const mappedItems = mapItemsWithOrders(latestOrder?.items, fetchedItems);
 
   return (
-    <div className="flex h-full w-full flex-col gap-2 rounded-lg text-white">
+    <section className="flex h-full w-full flex-col gap-2 rounded-lg text-white">
       <h1 className="text-2xl font-bold">Aktuální objednávka</h1>
       {!isLoading ? (
         error ? (
@@ -102,7 +102,7 @@ const OrderTracking = () => {
       ) : (
         <Loading size={30} />
       )}
-    </div>
+    </section>
   );
 };
 

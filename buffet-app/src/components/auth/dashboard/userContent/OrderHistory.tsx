@@ -38,7 +38,7 @@ const OrderHistory = () => {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <section className="flex flex-col gap-2">
       <h1 className="flex items-center gap-2 text-2xl font-bold">
         Tvá historie objednávek
         <span className="flex items-center gap-2">
@@ -69,7 +69,7 @@ const OrderHistory = () => {
         </AnimatePresence>
       </div>
       <div className="mx-auto">{renderPagingButtons()}</div>
-    </div>
+    </section>
   );
 };
 

@@ -14,7 +14,7 @@ const LDAPSettings = ({
   formData: LDAPForm;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => (
-  <div className="grid w-full grid-rows-3 gap-2">
+  <section className="grid w-full grid-rows-3 gap-2">
     <div className="flex flex-row items-center gap-4">
       <label htmlFor="ldap-host" className="w-1/4">
         Hostitel a port
@@ -69,7 +69,7 @@ const LDAPSettings = ({
         value={formData.password}
       />
     </div>
-  </div>
+  </section>
 );
 
 export default LDAPSettings;

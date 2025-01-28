@@ -32,7 +32,7 @@ const SuccessOrder = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-5 text-white">
+    <article className="flex flex-col items-center justify-center gap-5 text-white">
       {renderSvg()}
       <div className="flex flex-col items-center">
         <h1 className="text-center text-2xl font-bold">
@@ -51,7 +51,7 @@ const SuccessOrder = () => {
           .
         </h2>
       </div>
-    </div>
+    </article>
   );
 };
 

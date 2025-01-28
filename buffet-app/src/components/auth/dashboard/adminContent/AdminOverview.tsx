@@ -1,5 +1,5 @@
 const AdminOverview = () => {
-  return <div>Denní přehled</div>;
+  return <section>Denní přehled</section>;
 };
 
 export default AdminOverview;
