@@ -53,12 +53,12 @@ const UserMenu = () => {
         "Meow? (Waiting for something to happen?)"
       </p>
     ) : (
-      <motion.div
+      <motion.section
         {...menuItemShowAnimation(0.5)}
         className="flex flex-col items-start"
       >
         {filteredCategories.map((category) => (
-          <div className="mt-5 flex flex-col gap-3" key={category.id}>
+          <section className="mt-5 flex flex-col gap-3" key={category.id}>
             <div className="flex flex-col items-center gap-2 md:flex-row md:justify-between md:gap-0">
               <h1 className="text-4xl font-bold text-white">{category.name}</h1>
               <p className="text-white md:mr-5">{category.description}</p>
@@ -69,9 +69,9 @@ const UserMenu = () => {
               categories={categories}
               categoryId={category.id}
             />
-          </div>
+          </section>
         ))}
-      </motion.div>
+      </motion.section>
     );
   };
 
