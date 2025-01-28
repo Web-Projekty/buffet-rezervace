@@ -45,11 +45,11 @@ const OrderHistory = () => {
           ({dataList ? dataList.itemsCount : <Loading size={20} />})
         </span>
       </h1>
-      <div className="flex min-h-[26rem] flex-col items-center justify-between gap-4">
-        <div className="flex w-full gap-[8.2rem] rounded-md bg-backgroundColor px-6 py-2 font-semibold text-descriptionColor md:w-[45rem]">
-          <span>ID</span>
-          <span>Status</span>
-          <span>Čas vyzvednutí</span>
+      <div className="flex min-h-[27rem] flex-col items-center gap-4">
+        <div className="flex w-full gap-[5.4rem] rounded-md bg-backgroundColor px-6 py-2 text-center font-semibold text-descriptionColor md:w-[45rem] md:gap-[8.2rem]">
+          <p>ID</p>
+          <p>Status</p>
+          <p>Čas vyzvednutí</p>
         </div>
 
         <AnimatePresence>
@@ -67,8 +67,8 @@ const OrderHistory = () => {
             <Loading size={30} />
           )}
         </AnimatePresence>
-        {renderPagingButtons()}
       </div>
+      <div className="mx-auto">{renderPagingButtons()}</div>
     </div>
   );
 };
