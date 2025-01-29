@@ -2,7 +2,7 @@ parameters:
     ignoreErrors:
             - 
                identifier: argument.named
-    level: 6
+    level: 7
     paths:
         - src
         - tests
