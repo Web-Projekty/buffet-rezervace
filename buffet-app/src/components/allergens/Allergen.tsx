@@ -12,7 +12,7 @@ const Allergen = ({ allergen }: AlergenProps) => {
       {...scaleUpAnimation(0.5)}
       className="relative flex w-[18rem] items-center gap-2 rounded-lg bg-slate-900 px-3 py-6"
     >
-      <div className="text-4xl">{allergen.icon ? allergen.icon : null}</div>
+      <p className="text-4xl">{allergen.icon ? allergen.icon : null}</p>
       <span className="rounded-full bg-slate-800 px-4 py-2 text-xl">
         {allergen.id}
       </span>
