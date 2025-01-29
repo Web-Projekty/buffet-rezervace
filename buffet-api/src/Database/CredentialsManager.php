@@ -80,8 +80,12 @@ class CredentialsManager
      * @param  string $password   Password to encrypt.
      * @return void   Description of the return value.
      */
-    function createCredentials(string $username, string $password, string $host = "vlastas.cc", string $database = "buffet"): void
+    function createCredentials(string $username, string $password): void
     {
+        $host = EnvReader::getEnvProperty(Settings::DBHost);
+
+        $database = EnvReader::getEnvProperty(Settings::DBHost);
+
         $key = EnvReader::getEnvProperty(Settings::DecryptKey);
 
         $cipher = "aes-256-ecb";
