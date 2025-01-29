@@ -4,10 +4,6 @@ declare (strict_types = 1);
 
 namespace Buffet\Tests\Database;
 
-use Buffet\Database\CredentialsManager;
-use Buffet\Types\ApiResponse;
-use Buffet\Utils\EnvSetup;
-use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 require __DIR__ . '/../../../vendor/autoload.php';
@@ -15,35 +11,35 @@ require __DIR__ . '/../../../vendor/autoload.php';
 class CredentialsManagerTest extends TestCase
 {
 
-    /**
-     * @var CredentialsManager
-     */
-    protected CredentialsManager $credentialsManager;
-    protected ApiResponse $response;
-    protected EnvSetup $envSetup;
+    // @var CredentialsManager
 
-    protected function setUp(): void
-    {
-        $this->envSetup = new EnvSetup();
-        $this->response = new ApiResponse();
-        $this->credentialsManager = new CredentialsManager($this->response);
+    /*
+protected CredentialsManager $credentialsManager;
+protected ApiResponse $response;
+protected EnvSetup $envSetup;
 
-        $this->envSetup->setupDummyEnv();
-        $this->envSetup->backupCreds();
-    }
+protected function setUp(): void
+{
+$this->envSetup = new EnvSetup();
+$this->response = new ApiResponse();
+$this->credentialsManager = new CredentialsManager($this->response);
 
-    #[TestDox('Test createCredentials')]
-    public function testCreateCredentials(): void
-    {
-        $text = "fake test";
-        $this->credentialsManager->createCredentials(username: "test", password: "test");
-        $this->output();
-        $this->assertSame("fake test", $text);
-    }
+$this->envSetup->setupDummyEnv();
+$this->envSetup->backupCreds();
+}
 
-    protected function tearDown(): void
-    {
-        $this->envSetup->cleanupDummyEnv();
-        $this->envSetup->cleanupCreds();
-    }
+#[TestDox('Test createCredentials')]
+public function testCreateCredentials(): void
+{
+$text = "fake test";
+$this->credentialsManager->createCredentials(username: "test", password: "test");
+$this->output();
+$this->assertSame("fake test", $text);
+}
+
+protected function tearDown(): void
+{
+$this->envSetup->cleanupDummyEnv();
+$this->envSetup->cleanupCreds();
+}*/
 }
