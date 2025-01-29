@@ -33,7 +33,7 @@ class CredentialsManagerTest extends TestCase
     }
 
     #[TestDox('Test createCredentials')]
-    public function testCreateCredentials():void
+    public function testCreateCredentials(): void
     {
         $text = "fake test";
         $this->credentialsManager->createCredentials(username: "test", password: "test");
