@@ -1,5 +1,5 @@
 <?php
-
+/*
 declare (strict_types = 1);
 
 namespace Buffet\Tests\Utils;
@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 require __DIR__ . '/../../../vendor/autoload.php';
 
 class EnvSetupTest extends TestCase
-{ /*
+{
 protected EnvSetup $envSetup;
 
 protected bool $returnOriginalEnv = false;
@@ -118,6 +118,7 @@ unlink($this->envSetup->envBackupPath);
 protected function tearDown(): void
 {
 $this->envSetup->cleanupDummyEnv();
-}*/
+}
 
-    }
+}
+ */
