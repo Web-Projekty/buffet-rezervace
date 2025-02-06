@@ -133,7 +133,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/success-order/:id",
+        path: "/return",
         element: (
           <ErrorBoundary>
             <Suspense fallback={<Fallback />}>
