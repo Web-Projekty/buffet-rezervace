@@ -175,29 +175,6 @@ const router = createBrowserRouter([
         </ErrorBoundary>
       </RequireAuth>
     ),
-    children: [
-      {
-        path: "souhrn",
-        element: (
-          <ErrorBoundary>
-            <Suspense fallback={<Fallback />}>
-              <Kds />
-            </Suspense>
-          </ErrorBoundary>
-        ),
-      },
-      {
-        path: "objednavky",
-        index: true,
-        element: (
-          <ErrorBoundary>
-            <Suspense fallback={<Fallback />}>
-              <Kds />
-            </Suspense>
-          </ErrorBoundary>
-        ),
-      },
-    ],
   },
 ]);
 const container = document.getElementById("root");
