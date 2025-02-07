@@ -1,10 +1,7 @@
+import React from "react";
 import Loading from "./Loading";
 
-export type ButtonProps = {
-  type?: "button" | "submit" | "reset";
-  onClick?: () => void;
-  className?: string;
-  disabled?: boolean;
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children: React.ReactNode;
   loading?: boolean;
 };

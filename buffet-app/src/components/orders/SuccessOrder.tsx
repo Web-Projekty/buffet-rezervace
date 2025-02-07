@@ -1,10 +1,11 @@
-import { Link, useLocation } from "react-router-dom";
-import { Order } from "../../types";
+import { Link, useSearchParams } from "react-router-dom";
 import { ReactNode } from "react";
 
 const SuccessOrder = () => {
-  const location = useLocation();
-  const order = location.state?.order as Order;
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get("id");
+
+  console.log("SuccessOrder", id);
 
   /*if (!order) {
     return <PageNotFound />;
@@ -32,13 +33,11 @@ const SuccessOrder = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-5 text-white">
+    <article className="flex flex-col items-center justify-center gap-5 text-white">
       {renderSvg()}
       <div className="flex flex-col items-center">
         <h1 className="text-center text-2xl font-bold">
-          Objednávka{" "}
-          <span className="text-cyan-500">#{order ? order.id : 256}</span> byla
-          úspěšně vytvořena!
+          Objednávka <span className="text-cyan-500">#{id ? id : 256}</span>
         </h1>
         <h2 className="text-xl">
           Můžete ji sledovat{" "}
@@ -51,7 +50,7 @@ const SuccessOrder = () => {
           .
         </h2>
       </div>
-    </div>
+    </article>
   );
 };
 

@@ -12,16 +12,16 @@ const CartReservationCalendar = ({
   onTimeSelect,
 }: CartReservationCalendarProps) => {
   const [days, setDays] = useState<DateType[]>([]);
-  const [selectedDate, setSelectedDate] = useState<DateType | null>(days[0]);
+  const [selectedDate, setSelectedDate] = useState<DateType | null>(null);
   const [selectedHour, setSelectedHour] = useState<Hour | null>(null);
   const [selectedMinute, setSelectedMinute] = useState<Minute | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setLoading(true);
     const fetchDates = async () => {
       try {
+        setLoading(true);
         const { timeslots, error } = await getTimeSlots();
 
         if (error) {
