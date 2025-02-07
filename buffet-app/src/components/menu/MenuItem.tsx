@@ -23,7 +23,7 @@ const MenuItem = ({ item }: MenuItemProps) => {
   };
 
   return (
-    <motion.div
+    <motion.article
       {...menuItemShowAnimation(0.5)}
       className="relative flex h-[26rem] w-[18rem] flex-shrink-0 flex-col justify-start gap-2 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black"
     >
@@ -38,12 +38,12 @@ const MenuItem = ({ item }: MenuItemProps) => {
           disabled={!canAddToCart()}
         >
           <p>Do košíku</p>
-          <span className="rounded-lg font-normal italic">
+          <p className="rounded-lg font-normal italic">
             od {formatCurrency(item.price)}
-          </span>
+          </p>
         </Button>
       </div>
-    </motion.div>
+    </motion.article>
   );
 };
 

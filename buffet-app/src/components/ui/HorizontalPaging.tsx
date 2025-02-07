@@ -79,7 +79,7 @@ const HorizontalPaging = ({
   }, []);
 
   return (
-    <div className="relative flex flex-row">
+    <section className="relative flex flex-row">
       <AnimatePresence>
         {canScrollLeft && (
           <motion.div
@@ -116,7 +116,7 @@ const HorizontalPaging = ({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </section>
   );
 };
 

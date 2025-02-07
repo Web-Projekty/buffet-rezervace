@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode, JwtPayload } from "jwt-decode";
-import { FETCH_URL } from "../../../constants";
+import { FETCH_URL } from "../../constants";
 
 export const setTokenExpiration = (token: string): void => {
   //const expirationTime = new Date().getTime() + expiresIn * 1000;

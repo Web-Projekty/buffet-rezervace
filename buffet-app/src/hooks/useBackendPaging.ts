@@ -41,7 +41,7 @@ export const useBackendPaging = <T>(
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [currentPage, itemsPerPage]);
+  }, [currentPage]);
 
   const totalPagesCount: number = itemsCount
     ? Math.ceil(itemsCount / itemsPerPage)

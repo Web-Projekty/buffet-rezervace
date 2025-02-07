@@ -6,7 +6,7 @@ const AccountInformation = () => {
   const { fullName, email, classTitle, credits } = useUser();
 
   return (
-    <motion.div
+    <motion.section
       {...scaleUpAnimation(0.5)}
       className="flex h-[8rem] flex-col justify-between gap-1 rounded-lg bg-slate-900 p-2"
     >
@@ -24,7 +24,7 @@ const AccountInformation = () => {
         Předplacené kredity
         <span>{credits ? credits : "Chyba v načítání kreditů"}</span>
       </p>
-    </motion.div>
+    </motion.section>
   );
 };
 

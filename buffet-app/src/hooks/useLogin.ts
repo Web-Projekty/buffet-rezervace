@@ -2,8 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useNavigate } from "react-router-dom";
-import { setTokenExpiration } from "../components/auth/login/login";
 import { FETCH_URL } from "../constants";
+import { setTokenExpiration } from "../components/utils/auth";
 
 type UseLoginReturn = {
   loading: boolean;

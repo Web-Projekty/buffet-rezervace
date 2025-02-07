@@ -102,7 +102,7 @@ const AdminService = () => {
   };
 
   return (
-    <div className="flex w-full flex-col justify-between gap-5">
+    <section className="flex w-full flex-col justify-between gap-5">
       <h1 className="text-2xl font-bold">Nastavení provozu</h1>
       <div className="flex w-full flex-col justify-center gap-2 rounded-lg bg-backgroundColor p-2">
         <h2 className="text-xl font-bold">Otevírací doba</h2>
@@ -225,7 +225,7 @@ const AdminService = () => {
           <Button className="w-1/5">Uložit změny</Button>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

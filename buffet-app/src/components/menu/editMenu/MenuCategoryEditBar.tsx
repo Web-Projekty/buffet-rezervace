@@ -35,7 +35,7 @@ const MenuCategoryEditBar = ({
   };
 
   return (
-    <motion.div
+    <motion.aside
       {...slideInAnimation(0.2)}
       className="sticky top-0 h-screen flex-shrink-0"
     >
@@ -93,7 +93,7 @@ const MenuCategoryEditBar = ({
           </Button>
         </div>
       </div>
-    </motion.div>
+    </motion.aside>
   );
 };
 

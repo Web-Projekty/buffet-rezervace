@@ -30,7 +30,7 @@ const KdsOrders = () => {
   };
 
   return (
-    <div className="mx-auto flex w-[85.5%] flex-col justify-center">
+    <section className="mx-auto flex w-[85.5%] flex-col justify-center">
       <KdsStatusBar
         delayed={
           pendingOrders.filter(
@@ -69,7 +69,7 @@ const KdsOrders = () => {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

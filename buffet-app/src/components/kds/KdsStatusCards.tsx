@@ -10,12 +10,12 @@ const KdsStatusCards = ({
   backgroundColor = "white",
 }: KdsStatusCardsProps) => {
   return (
-    <div
+    <section
       className={`flex flex-row items-center gap-5 ${backgroundColor} px-5 py-3 text-white`}
     >
       <span className="text-2xl font-bold">{amount || 0}</span>
       <h2 className="text-xl">{title}</h2>
-    </div>
+    </section>
   );
 };
 

@@ -74,30 +74,26 @@ const OrderButton = ({ handleStatus, status, loading }: OrderButtonsProps) => {
     return icon;
   };
 
-  return (
-    <div>
-      {Buttons.map(({ name, icon, disabledStatus }) => {
-        const isDisabled = disabledStatus.includes(status);
+  return Buttons.map(({ name, icon, disabledStatus }) => {
+    const isDisabled = disabledStatus.includes(status);
 
-        if (status === "done") {
-          return null;
-        }
+    if (status === "done") {
+      return null;
+    }
 
-        return (
-          <Button
-            key={name}
-            className={`flex w-full flex-row items-center justify-center gap-1 ${isDisabled ? "gray-400 border-gray-500 bg-gray-500 hover:border-gray-500 hover:bg-gray-500" : "border-red-400 bg-red-400 hover:border-red-500 hover:bg-red-500"}`}
-            onClick={cancelOrder}
-            disabled={isDisabled || loading}
-            loading={loading}
-          >
-            {renderButtonContent(name, isDisabled)}
-            {renderIcon(icon, isDisabled)}
-          </Button>
-        );
-      })}
-    </div>
-  );
+    return (
+      <Button
+        key={name}
+        className={`flex w-full flex-row items-center justify-center gap-1 ${isDisabled ? "gray-400 border-gray-500 bg-gray-500 hover:border-gray-500 hover:bg-gray-500" : "border-red-400 bg-red-400 hover:border-red-500 hover:bg-red-500"}`}
+        onClick={cancelOrder}
+        disabled={isDisabled || loading}
+        loading={loading}
+      >
+        {renderButtonContent(name, isDisabled)}
+        {renderIcon(icon, isDisabled)}
+      </Button>
+    );
+  });
 };
 
 export default OrderButton;
