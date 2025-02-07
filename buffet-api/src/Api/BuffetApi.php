@@ -677,7 +677,7 @@ class BuffetApi
         }
 
         if ($response->hasRequestByKey("fullName")) {
-
+            UserModel::query()->where("id", $uid)->update(["fullName" => $response->getRequestByKey("fullName")]);
         }
 
         return $response;
