@@ -666,8 +666,23 @@ class BuffetApi
     {
         $response->setRequestKeys(["token"]);
 
-        if ($response->hasRequestByKey("fullName")) {
+        $jwt = new JWTApi;
 
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $isAdmin = UserModel::isAdmin($uid);
+
+        if (!$isAdmin) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        if ($response->hasRequestByKey("fullName")) {
         }
 
         return $response;
