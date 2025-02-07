@@ -10,7 +10,6 @@ use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\Types\Settings;
 use Buffet\Utils\EnvReader;
-use Dotenv\Dotenv;
 
 class CredentialsManager
 {
@@ -35,8 +34,15 @@ class CredentialsManager
         $cipher = "aes-256-ecb";
 
         ## opens local file with stored credentials
-        $filename = __DIR__ . "/creds.json";
-        $fileContent = file_get_contents($filename);
+        /*$filename = __DIR__ . "/creds.json";
+        $fileContent = file_get_contents($filename);*/
+
+        $jsonFile = ["db_host" => EnvReader::getEnvProperty(Settings::DBHost),
+            "db_user" => EnvReader::getEnvProperty(Settings::DBUser),
+            "db_pass" => EnvReader::getEnvProperty(Settings::DBPass),
+            "db_name" => EnvReader::getEnvProperty(Settings::DBName)
+        ];
+        $fileContent = json_encode($jsonFile);
 
         $json = json_decode($fileContent);
 
@@ -74,8 +80,12 @@ class CredentialsManager
      * @param  string $password   Password to encrypt.
      * @return void   Description of the return value.
      */
-    function createCredentials(string $username, string $password, string $host = "vlastas.cc", string $database = "buffet"): void
+    function createCredentials(string $username, string $password): void
     {
+        $host = EnvReader::getEnvProperty(Settings::DBHost);
+
+        $database = EnvReader::getEnvProperty(Settings::DBHost);
+
         $key = EnvReader::getEnvProperty(Settings::DecryptKey);
 
         $cipher = "aes-256-ecb";
