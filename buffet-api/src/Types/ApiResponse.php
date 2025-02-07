@@ -64,7 +64,7 @@ class ApiResponse
      */
     public function getPayload(string $key = null)
     {
-        if(!$key) {
+        if (!$key) {
             return $this->payload;
         }
         return $this->payload[$key] ?? null;
@@ -95,6 +95,9 @@ class ApiResponse
         return $this->request[$key] ?? null;
     }
 
+    /**
+     * @param string $key
+     */
     public function hasRequestByKey(string $key): bool
     {
         return isset($this->request[$key]);

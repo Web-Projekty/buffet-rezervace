@@ -62,8 +62,8 @@
       // Convert FormData to a plain object
       const data = {};
       formData.forEach((value, key) => {
-        if(key == "items"){
-          value = JSON.parse(value); 
+        if (key == "items") {
+          value = JSON.parse(value);
         }
 
         data[key] = value;
