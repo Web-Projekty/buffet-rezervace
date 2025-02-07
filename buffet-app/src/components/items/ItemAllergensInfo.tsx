@@ -7,7 +7,7 @@ type ItemAllergensInfoProps = {
 
 const ItemAllergensInfo = ({ allergens }: ItemAllergensInfoProps) => {
   return (
-    <div className="absolute bottom-0 left-0 right-0 z-10 rounded-b-md bg-slate-900 bg-opacity-75 px-5 py-2 text-white">
+    <div className="absolute bottom-0 left-0 right-0 z-10 max-h-48 overflow-y-auto rounded-b-md bg-slate-900 bg-opacity-75 px-5 py-2 text-white">
       <ul className="flex flex-col">
         {allergens.map((allergen) => (
           <li key={allergen.id} className="list-disc">

@@ -8,7 +8,7 @@ type MenuCategoryProps = {
 
 const MenuCategory = ({ category, onClick }: MenuCategoryProps) => {
   return (
-    <div
+    <article
       className={`group relative aspect-[18/10] cursor-pointer overflow-hidden rounded-lg md:aspect-[15/3]`}
       onClick={() => onClick(category.name === "Vše" ? "" : category.name)}
     >
@@ -18,7 +18,7 @@ const MenuCategory = ({ category, onClick }: MenuCategoryProps) => {
           {category.name}
         </h2>
       </div>
-    </div>
+    </article>
   );
 };
 

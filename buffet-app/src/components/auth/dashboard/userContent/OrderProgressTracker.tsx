@@ -21,7 +21,7 @@ const ProgressTracker = ({
   isCancelled,
 }: ProgressTrackerProps) => {
   return (
-    <div className="flex w-full items-center justify-center">
+    <section className="flex w-full items-center justify-center">
       <div className="flex items-center gap-8 md:gap-28">
         {steps.map((step, index) => {
           const isCompleted: boolean =
@@ -74,7 +74,7 @@ const ProgressTracker = ({
           );
         })}
       </div>
-    </div>
+    </section>
   );
 };
 

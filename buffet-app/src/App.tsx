@@ -22,9 +22,9 @@ const App = () => {
           </Suspense>
         )}
       </AnimatePresence>
-      <div className="mb-[3rem] mt-[10rem] flex-1">
+      <main className="mb-[3rem] mt-[10rem] flex-1">
         <Outlet />
-      </div>
+      </main>
       <Footer />
     </div>
   );

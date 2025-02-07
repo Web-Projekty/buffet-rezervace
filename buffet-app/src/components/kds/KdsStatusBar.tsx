@@ -14,7 +14,7 @@ const KdsStatusBar = ({
   waiting,
 }: KdsStatusProps) => {
   return (
-    <div className="my-2 flex h-[5rem] w-full items-center justify-between bg-white px-10">
+    <section className="my-2 flex h-[5rem] w-full items-center justify-between bg-white px-10">
       <div className="flex flex-row items-center gap-10">
         <KdsStatusCards
           amount={delayed}
@@ -37,7 +37,7 @@ const KdsStatusBar = ({
         title="Výdej"
         backgroundColor="bg-[#14ce9c]"
       />
-    </div>
+    </section>
   );
 };
 

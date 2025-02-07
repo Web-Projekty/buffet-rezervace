@@ -20,7 +20,7 @@ const EmailServerSettings = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => void;
 }) => (
-  <div className="flex w-full flex-col gap-2">
+  <section className="flex w-full flex-col gap-2">
     <div className="flex flex-row items-center gap-4">
       <label htmlFor="email-cipher" className="w-1/4">
         Šifrování
@@ -131,7 +131,7 @@ const EmailServerSettings = ({
         value={formData.senderName}
       />
     </div>
-  </div>
+  </section>
 );
 
 export default EmailServerSettings;

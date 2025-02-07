@@ -3,10 +3,10 @@ import { Fallback } from "../../../main";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "../../ui/Button";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
-import { removeTokenExpiration } from "../login/login";
 import { removeDiacritics } from "../../utils/utils";
 import { useUser } from "../../../hooks/useUser";
 import DashboardContent from "./DashboardContent";
+import { removeTokenExpiration } from "../../utils/auth";
 
 const AccountInformation = lazy(() => import("./AccountInformation"));
 const DashboardButtons = lazy(() => import("./DashboardButtons"));

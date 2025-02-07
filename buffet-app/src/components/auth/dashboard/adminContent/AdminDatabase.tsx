@@ -1,5 +1,5 @@
 const AdminDatabase = () => {
-  return <div>AdminDatabase</div>;
+  return <section>AdminDatabase</section>;
 };
 
 export default AdminDatabase;

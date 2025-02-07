@@ -1,5 +1,5 @@
 const AdminAccounting = () => {
-  return <div>AdminAccounting</div>;
+  return <section>AdminAccounting</section>;
 };
 
 export default AdminAccounting;

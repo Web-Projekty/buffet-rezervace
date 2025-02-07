@@ -35,9 +35,10 @@ const Order = ({ order, items }: OrderProps) => {
       : true;
 
   return (
-    <motion.div
-      initial={{ x: 100, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
+    <motion.article
+      initial={{ y: 50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      exit={{ y: 50, opacity: 0 }}
       transition={{ duration: 0.5 }}
       className={`relative flex w-full flex-col rounded-lg bg-backgroundColor p-4 md:w-[45rem]`}
     >
@@ -81,7 +82,7 @@ const Order = ({ order, items }: OrderProps) => {
           loading={loading}
         />
       </motion.ul>
-    </motion.div>
+    </motion.article>
   );
 };
 

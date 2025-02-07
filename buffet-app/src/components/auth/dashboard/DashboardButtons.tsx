@@ -53,11 +53,13 @@ const DashboardButtons = ({
           <button
             key={name + "button"}
             className={
-              "flex flex-row items-center justify-between rounded-lg border-2 border-white p-2 text-white" +
-              (page === name ? " bg-backgroundColor" : "")
+              "relative flex flex-row items-center justify-between rounded-lg border-2 border-slate-900 bg-backgroundColor p-2 text-white"
             }
             onClick={() => handlePageChange(name as Page)}
           >
+            {page === name && (
+              <div className="absolute left-0 top-0 h-full w-1 rounded-l-md bg-white" />
+            )}
             {Icon && <Icon size={24} />}
             {name}
           </button>

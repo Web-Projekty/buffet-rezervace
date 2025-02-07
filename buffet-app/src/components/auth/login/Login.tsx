@@ -44,7 +44,7 @@ const Login = () => {
   };
 
   return (
-    <motion.div
+    <motion.section
       {...loginShowAnimation}
       className="mt-14 flex flex-col items-center justify-center gap-5 text-white md:mt-16 xl:mt-20"
     >
@@ -95,7 +95,7 @@ const Login = () => {
           </Button>
         )}
       </form>
-    </motion.div>
+    </motion.section>
   );
 };
 
