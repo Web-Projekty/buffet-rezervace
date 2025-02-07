@@ -666,6 +666,16 @@ class BuffetApi
     {
         $response->setRequestKeys(["token"]);
 
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
         if ($response->hasRequestByKey("fullName")) {
 
         }
