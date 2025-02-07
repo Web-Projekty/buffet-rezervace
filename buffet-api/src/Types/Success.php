@@ -20,6 +20,9 @@ enum Success: string {
     // JWT
     case Verification = 'Token verified succesfully';
 
+    // Update user
+    case UserUpdated = 'User updated successfully';
+
     ############################ Orders ############################
     case OrderCreated = 'Order created successfully';
     case OrderUpdated = 'Order updated successfully';
