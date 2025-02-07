@@ -172,6 +172,9 @@ class BuffetApi
             case "updatePayment":
                 return $this->handleUpdatePayment($response);
 
+            case "updateUser":
+                return $this->handleUpdateUser($response);
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -653,6 +656,21 @@ class BuffetApi
         }
 
         return $response->setSuccess(Success::PaymentUpdated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleUpdateUser(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token"]);
+
+        if ($response->hasRequestByKey("fullName")) {
+
+        }
+
+        return $response;
     }
 
     /**
