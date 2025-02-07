@@ -64,6 +64,8 @@ enum Error: string {
     case InvalidStatus = 'Status is invalid';
     case UserNotFound = 'User not found';
     case InvalidPickupId = 'Pickup id is invalid';
+    case MissingItems = 'Items are missing';
+    case OrderCreationError = 'Order creation error';
 
     ############################ Settings ############################
     case InvalidOrderDateLimitMax = 'Order date limit max is invalid';
@@ -75,6 +77,9 @@ enum Error: string {
     ############################ ThePay ############################
     case ThePayError = 'ThePay error';
     case PaymentCreationError = 'Payment creation error';
+    case InvalidType = 'Invalid type';
+    case InvalidPaymentId = 'Invalid payment id';
+    case PaymentNotFound = 'Payment not found';
     /**
      * @return string
      */

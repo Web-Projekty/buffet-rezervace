@@ -1,4 +1,5 @@
 stages:
+    - test
     - Tests
     - Code Coverage
 
@@ -9,8 +10,8 @@ phpstan:
     script:
         - cd buffet-api
         - composer install
-        - ./vendor/bin/phpstan analyse --memory-limit 4G -c phpstan.neon --autoload-file vendor/autoload.php --error-format=gitlab src
-          tests >> phpstan-result.json
+        - ./vendor/bin/phpstan analyse --memory-limit 4G -c phpstan.neon --autoload-file vendor/autoload.php
+          --error-format=gitlab src tests >> phpstan-result.json
     artifacts:
         reports:
             codequality: buffet-api/phpstan-result.json
@@ -45,3 +46,24 @@ phpunit-coverage:
         - chown -R 1000:1000 conf/
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+
+docker_build:
+    stage: test
+    image: docker:27.3.1
+    variables:
+        DOCKER_DRIVER: overlay2
+        DOCKER_DIND: "docker:27.3.1-dind"
+        DOCKER_TLS_CERTDIR: ""
+        DOCKER_DIND: "docker:20.10.16-dind"
+        DOCKER_HOST: "tcp://docker:2375"
+    services:
+        - name: docker:27.3.1-dind
+          alias: docker
+          command: ["--tls=false"]
+    script:
+        - docker version
+        - cd scripts
+        - sh docker_build_buffet.sh
+        #   changed runner image
+    rules:
+        - if: '$CI_COMMIT_BRANCH == "main"'

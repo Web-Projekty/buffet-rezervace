@@ -1,0 +1,1 @@
+docker run -p 8080:80 -v $(pwd)/../conf:/var/www/html/conf vlastas/buffet:latest

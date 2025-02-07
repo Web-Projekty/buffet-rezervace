@@ -28,6 +28,8 @@ enum Success: string {
     case ChannelConnected = 'Channel connected successfully';
     case Subscribed = 'Subscribed successfully';
 
+    ############################ ThePay ############################
+    case PaymentUpdated = 'Payment created successfully';
     /**
      * @return string
      */
