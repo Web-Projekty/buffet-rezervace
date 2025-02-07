@@ -6,7 +6,7 @@ namespace Buffet\Types;
 
 class ApiResponse
 {
-    public ApiStatus $status = ApiStatus::Pending;
+    private ApiStatus $status = ApiStatus::Pending;
 
     /**
      * @var array<mixed>
