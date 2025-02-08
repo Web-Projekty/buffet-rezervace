@@ -677,8 +677,18 @@ class BuffetApi
         }
 
         if ($response->hasRequestByKey("fullName")) {
-            if (!$response->getRequestByKey("fullName") == "") {
+            if ($response->getRequestByKey("fullName") != "") {
                 UserModel::query()->where("id", $uid)->update(["fullName" => $response->getRequestByKey("fullName")]);
+            }
+        }
+        if ($response->hasRequestByKey("tel")) {
+            if ($response->getRequestByKey("tel") != "" && preg_match('/^\+?[1-9]\d{1,14}$/', $response->getRequestByKey("tel")) === 1) {
+                UserModel::query()->where("id", $uid)->update(["tel" => $response->getRequestByKey("tel")]);
+            }
+        }
+        if ($response->hasRequestByKey("email")) {
+            if ($response->getRequestByKey("email") != "" && filter_var($response->getRequestByKey("email"), FILTER_VALIDATE_EMAIL)) {
+                UserModel::query()->where("id", $uid)->update(["email" => $response->getRequestByKey("email")]);
             }
         }
 
