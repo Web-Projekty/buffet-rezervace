@@ -175,6 +175,9 @@ class BuffetApi
             case "updateUser":
                 return $this->handleUpdateUser($response);
 
+            case "updatePassword":
+                return $this->handleUpdatePassword($response);
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -693,6 +696,41 @@ class BuffetApi
         }
 
         return $response->setStatus(true)->setSuccess(Success::UserUpdated);
+    }
+
+/**
+ * @param  ApiResponse   $response
+ * @return ApiResponse
+ */
+    function handleUpdatePassword(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "password", "newPassword"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $password = $response->getRequestByKey("password");
+        $newPassword = $response->getRequestByKey("newPassword");
+
+        if (!isset($newPassword) || $newPassword == "" || !isset($password) || $password == "") {
+            return $response->setError(Error::InvalidPassword);
+        }
+
+        if (password_verify($password, UserModel::getPasswordById($uid))) {
+            UserModel::query()->where("id", $uid)->update(["password" => password_hash($newPassword, PASSWORD_DEFAULT)]);
+        }
+        else{
+            return $response->setError(Error::WrongPassword);
+        }
+
+        return $response->setStatus(true)->setSuccess(Success::PasswordUpdated);
     }
 
     /**
