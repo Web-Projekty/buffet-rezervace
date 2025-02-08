@@ -63,9 +63,7 @@ docker_build:
     script:
         - docker version
         - cd scripts
-        - apk add neofetch
-        - neofetch
-       # - sh docker_build_buffet.sh
+        - sh docker_build_buffet.sh
         #   changed runner image
     #rules:
      #   - if: '$CI_COMMIT_BRANCH == "main"'
