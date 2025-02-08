@@ -71,6 +71,7 @@ enum Error: string {
     ############################ Settings ############################
     case InvalidOrderDateLimitMax = 'Order date limit max is invalid';
     case SettingsError = 'Settings error';
+    case InvalidSetting = 'Invalid setting';
 
     ############################ General ############################
     case GeneralError = 'Oops something has gone wrong';
