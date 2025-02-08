@@ -24,6 +24,7 @@ use Buffet\Types\OrderStatus;
 use Buffet\Types\Settings;
 use Buffet\Types\Success;
 use Buffet\Utils\EnvReader;
+use Buffet\Utils\EnvWriter;
 use Buffet\Utils\HttpClient;
 use Buffet\Utils\WebsocketClient;
 use Carbon\Carbon;
@@ -34,6 +35,8 @@ use Illuminate\Support\Collection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use RuntimeException;
+use TypeError;
+use ValueError;
 
 class BuffetApi
 {
@@ -177,6 +180,9 @@ class BuffetApi
 
             case "updatePassword":
                 return $this->handleUpdatePassword($response);
+
+            case "updateSetting":
+                return $this->handleUpdateSetting($response);
 
             case null:
             default:
@@ -725,12 +731,54 @@ class BuffetApi
 
         if (password_verify($password, UserModel::getPasswordById($uid))) {
             UserModel::query()->where("id", $uid)->update(["password" => password_hash($newPassword, PASSWORD_DEFAULT)]);
-        }
-        else{
+        } else {
             return $response->setError(Error::WrongPassword);
         }
 
         return $response->setStatus(true)->setSuccess(Success::PasswordUpdated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+
+    function handleUpdateSetting(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "setting", "value"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        $settingKey = $response->getRequestByKey("setting");
+        $settingValue = $response->getRequestByKey("value");
+
+        if (!isset($settingKey) || $settingKey == "" || !isset($settingValue) || $settingValue == "") {
+            return $response->setError(Error::InvalidSetting);
+        }
+
+        try {
+            $setting = Settings::from($settingKey);
+        } catch (ValueError $e) {
+            return $response->setError(Error::InvalidSetting);
+        } catch (TypeError $e) {
+            return $response->setError(Error::InvalidSetting);
+        }
+
+        EnvWriter::write($setting, $settingValue);
+
+        return $response->setSuccess(Success::SettingUpdated);
     }
 
     /**
