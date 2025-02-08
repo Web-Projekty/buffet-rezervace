@@ -32,7 +32,7 @@ phpunit:
     artifacts:
         paths:
             - buffet-api/tests/result/
-        expire_in: 1 hour
+        expire_in: 7 days
 
 # Job to extract the coverage percentage from the PHPUnit output
 phpunit-coverage:
