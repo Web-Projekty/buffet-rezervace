@@ -10,6 +10,8 @@
 <body>
   <form id="myForm">
     <select name="requestType">
+      <option value="updatePassword">updatePassword</option>
+      <option value="updateUser">updateUser</option>
       <option value="updatePayment">updatePayment</option>
       <option value="updateOrder">updateOrder</option>
       <option value="getOrderTimeTable">getOrderTimeTable</option>
@@ -61,8 +63,8 @@
       // Convert FormData to a plain object
       const data = {};
       formData.forEach((value, key) => {
-        if(key == "items"){
-          value = JSON.parse(value); 
+        if (key == "items") {
+          value = JSON.parse(value);
         }
 
         data[key] = value;

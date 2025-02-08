@@ -31,6 +31,7 @@ enum Error: string {
     // login
     case NonexistentUser = 'User doesn\'t exist';
     case WrongPassword = 'Wrong password';
+    case InvalidPassword = 'Invalid password';
 
     // JWT
 

@@ -1,7 +1,7 @@
 stages:
-    - test
     - Tests
     - Code Coverage
+    - Docker Image Build
 
 # Job to run PHPStan
 phpstan:
@@ -48,7 +48,7 @@ phpunit-coverage:
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
 
 docker_build:
-    stage: test
+    stage: Docker Image Build
     image: docker:27.3.1
     variables:
         DOCKER_DRIVER: overlay2
