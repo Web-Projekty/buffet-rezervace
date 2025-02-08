@@ -49,7 +49,9 @@ phpunit-coverage:
 
 docker_build:
     stage: Docker Image Build
-    image: docker:27.3.1
+    image: 
+        name: docker:27.3.1
+        pull_policy: always
     variables:
         DOCKER_DRIVER: overlay2
         DOCKER_DIND: "docker:27.3.1-dind"
@@ -67,4 +69,3 @@ docker_build:
         #   changed runner image
     #rules:
      #   - if: '$CI_COMMIT_BRANCH == "main"'
-    pull_policy: always
