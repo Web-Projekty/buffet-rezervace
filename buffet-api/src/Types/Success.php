@@ -22,6 +22,7 @@ enum Success: string {
 
     // Update user
     case UserUpdated = 'User updated successfully';
+    case PasswordUpdated = 'Password updated successfully';
 
     ############################ Orders ############################
     case OrderCreated = 'Order created successfully';
