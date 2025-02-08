@@ -63,7 +63,8 @@ docker_build:
     script:
         - docker version
         - cd scripts
-        - apt update && apt install -y lsb-release apt-transport-https ca-certificates wget curl
+        - apk intall neofetch
+        - neofetch
        # - sh docker_build_buffet.sh
         #   changed runner image
     #rules:
