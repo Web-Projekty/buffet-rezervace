@@ -172,6 +172,12 @@ class BuffetApi
             case "updatePayment":
                 return $this->handleUpdatePayment($response);
 
+            case "updateUser":
+                return $this->handleUpdateUser($response);
+
+            case "updatePassword":
+                return $this->handleUpdatePassword($response);
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -653,6 +659,78 @@ class BuffetApi
         }
 
         return $response->setSuccess(Success::PaymentUpdated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleUpdateUser(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if ($response->hasRequestByKey("fullName")) {
+            if ($response->getRequestByKey("fullName") != "") {
+                UserModel::query()->where("id", $uid)->update(["fullName" => $response->getRequestByKey("fullName")]);
+            }
+        }
+        if ($response->hasRequestByKey("tel")) {
+            if ($response->getRequestByKey("tel") != "" && preg_match('/^\+?[1-9]\d{1,14}$/', $response->getRequestByKey("tel")) === 1) {
+                UserModel::query()->where("id", $uid)->update(["tel" => $response->getRequestByKey("tel")]);
+            }
+        }
+        if ($response->hasRequestByKey("email")) {
+            if ($response->getRequestByKey("email") != "" && filter_var($response->getRequestByKey("email"), FILTER_VALIDATE_EMAIL)) {
+                UserModel::query()->where("id", $uid)->update(["email" => $response->getRequestByKey("email")]);
+            }
+        }
+
+        return $response->setStatus(true)->setSuccess(Success::UserUpdated);
+    }
+
+/**
+ * @param  ApiResponse   $response
+ * @return ApiResponse
+ */
+    function handleUpdatePassword(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "password", "newPassword"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $password = $response->getRequestByKey("password");
+        $newPassword = $response->getRequestByKey("newPassword");
+
+        if (!isset($newPassword) || $newPassword == "" || !isset($password) || $password == "") {
+            return $response->setError(Error::InvalidPassword);
+        }
+
+        if (password_verify($password, UserModel::getPasswordById($uid))) {
+            UserModel::query()->where("id", $uid)->update(["password" => password_hash($newPassword, PASSWORD_DEFAULT)]);
+        }
+        else{
+            return $response->setError(Error::WrongPassword);
+        }
+
+        return $response->setStatus(true)->setSuccess(Success::PasswordUpdated);
     }
 
     /**

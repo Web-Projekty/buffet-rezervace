@@ -69,7 +69,7 @@ class UserModel extends Model
      * @param string $password
      */
 
-    public static function createUser(string $username, string $password, string $fullName, string|null $tel, string $email): bool
+    public static function createUser(string $username, string $password, string $fullName, string | null $tel, string $email): bool
     {
         try {
             UserModel::query()->create([
@@ -95,6 +95,18 @@ class UserModel extends Model
             return (bool) UserModel::query()->where('id', $uid)->first()->isAdmin;
         } catch (QueryException) {}
         return false;
+    }
+
+    /**
+     * @param $uid
+     */
+    public static function getPasswordById(int $uid): string | bool
+    {
+        try {
+            return (string) UserModel::query()->where('id', $uid)->first()["password"];
+        } catch (QueryException) {
+            return false;
+        }
     }
 
     /**
