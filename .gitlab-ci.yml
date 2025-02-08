@@ -63,7 +63,8 @@ docker_build:
     script:
         - docker version
         - cd scripts
-        - sh docker_build_buffet.sh
+        - apt update && apt install -y lsb-release apt-transport-https ca-certificates wget curl
+       # - sh docker_build_buffet.sh
         #   changed runner image
-    rules:
-        - if: '$CI_COMMIT_BRANCH == "main"'
+    #rules:
+     #   - if: '$CI_COMMIT_BRANCH == "main"'
