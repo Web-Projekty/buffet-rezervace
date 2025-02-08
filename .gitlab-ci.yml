@@ -65,7 +65,10 @@ docker_build:
     script:
         - docker version
         - cd scripts
-        - sh docker_build_buffet.sh
+        - npm --version
+        - composer -V
+        - bash
+        #- sh docker_build_buffet.sh
         #   changed runner image
     #rules:
      #   - if: '$CI_COMMIT_BRANCH == "main"'
