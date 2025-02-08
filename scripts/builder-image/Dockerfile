@@ -5,10 +5,6 @@ FROM docker:27.3.1
 
 RUN apk update && apk add --no-cache php83 php83-cli php83-phar php83-openssl php83-mbstring nodejs npm curl
 
-RUN npm --version
-
-RUN node --version
-
 RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
 RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 RUN rm composer-setup.php
