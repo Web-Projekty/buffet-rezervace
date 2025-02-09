@@ -67,6 +67,7 @@ enum Error: string {
     case InvalidPickupId = 'Pickup id is invalid';
     case MissingItems = 'Items are missing';
     case OrderCreationError = 'Order creation error';
+    case MissingStatus = 'Status is missing';
 
     ############################ Settings ############################
     case InvalidOrderDateLimitMax = 'Order date limit max is invalid';

@@ -567,39 +567,55 @@ class BuffetApi
 
         $isAdmin = UserModel::isAdmin($uid);
 
-        if (!$isAdmin) {
-            return $response->setError(Error::Unauthorized);
-            /**
-             * @todo insert user logic here!!!
-             */
-        }
-
         $orderId = (int) $response->getRequestByKey("orderId");
-        if ($orderId === 0) {
+        if ($orderId === 0 || OrderModel::query()->find($orderId)->exists == false) {
             return $response->setError(Error::OrderIdNotFound);
         }
 
-        $orderParameters = [];
-        foreach (OrderModel::getCollumns() as $column) {
-            if ($response->hasRequestByKey($column)) {
-                $orderParameters["$column"] = $response->getRequestByKey($column);
+        if ($isAdmin) {
+            $orderParameters = [];
+            foreach (OrderModel::getCollumns() as $column) {
+                if ($response->hasRequestByKey($column)) {
+                    $orderParameters["$column"] = $response->getRequestByKey($column);
+                }
             }
-        }
-        try {
-            $orderApi->updateOrder($orderId, $orderParameters);
-        } catch (\Exception $e) {
-            switch ($e->getCode()) {
-                case 1:
-                    return $response->setError(Error::OrderIdNotFound);
-                case 2:
-                    return $response->setError(Error::InvalidStatus);
-                case 3:
-                    return $response->setError(Error::UserNotFound);
-                case 4:
-                    return $response->setError(Error::InvalidPickupId);
+            try {
+                $orderApi->updateOrder($orderId, $orderParameters);
+            } catch (\Exception $e) {
+                switch ($e->getCode()) {
+                    case 1:
+                        return $response->setError(Error::OrderIdNotFound);
+                    case 2:
+                        return $response->setError(Error::InvalidStatus);
+                    case 3:
+                        return $response->setError(Error::UserNotFound);
+                    case 4:
+                        return $response->setError(Error::InvalidPickupId);
 
+                }
+                return $response->setError(Error::GeneralError);
             }
-            return $response->setError(Error::GeneralError);
+
+        } else { // user update
+            $order = OrderModel::query()->find($orderId);
+
+            if ($order->get("userId") != $uid) {
+                return $response->setError(Error::Unauthorized);
+            }
+
+            if ($response->hasRequestByKey("status")) {
+                $response->getRequestByKey("status");
+
+                $status = $order->get("status");
+                if ($status == OrderStatus::Sent) {
+                    $order->find($orderId)->update(["status" => OrderStatus::Storno->value]);
+                } else {
+                    return $response->setError(Error::InvalidStatus);
+                }
+            } else {
+                return $response->setError(Error::MissingStatus);
+            }
+
         }
 
         $updatedOrder = OrderModel::getById($orderId);
