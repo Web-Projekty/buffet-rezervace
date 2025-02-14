@@ -2,9 +2,10 @@ import { useState } from "react";
 import { useUser } from "../../../hooks/useUser";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
+import { updateUserData } from "../../utils/api";
 
 const Profile = () => {
-  const { fullName, email, tel } = useUser();
+  const { token, fullName, email, tel } = useUser();
   const canEditProfile = true;
   const [formData, setFormData] = useState({
     name: fullName || "",
@@ -19,10 +20,18 @@ const Profile = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSaveInfo = () => {
+  const handleSaveInfo = async () => {
     const { name, email, tel } = formData;
-    // save data
-    console.log(name, email, tel);
+
+    const response = await updateUserData(token, name, tel, email);
+
+    if (response.status === "failed") {
+      console.log(response);
+      return;
+    } else if (response.status === "success") {
+      console.log(response);
+      return;
+    }
   };
 
   const handleSavePassword = () => {
