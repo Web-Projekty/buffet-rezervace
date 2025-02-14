@@ -49,19 +49,15 @@ const OrderTracking = () => {
     ? latestOrder.status === "cancelled" || latestOrder.status === "storno"
     : false;
 
-  const dateText = useMemo(() => {
-    if (!latestOrder) {
-      return "Chyba";
-    }
-
-    const date = new Date(latestOrder.pickupDate);
-    const startTime = latestOrder.startTime.substring(1, 5);
-    const endTime = latestOrder.endTime.substring(1, 5);
-
-    return `${startTime} - ${endTime} ${date.toLocaleDateString()}`;
-  }, [latestOrder]);
-
   const mappedItems = mapItemsWithOrders(latestOrder?.items, fetchedItems);
+
+  const timeText = latestOrder
+    ? new Date(latestOrder.pickupDate).toLocaleDateString() +
+      " " +
+      latestOrder.startTime +
+      " - " +
+      latestOrder.endTime
+    : "";
 
   return (
     <section className="flex h-full w-full flex-col gap-2 rounded-lg text-white">
@@ -71,32 +67,30 @@ const OrderTracking = () => {
           <div className="text-white">{error}</div>
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-16 rounded-lg bg-backgroundColor p-6">
-            <>
-              <Suspense fallback={<Fallback />}>
-                <ProgressTracker
-                  currentStep={currentStep}
-                  isCancelled={isCancelled}
-                />
-              </Suspense>
-              <div className="flex flex-col items-center gap-3">
-                <p className="text-center">{getTextBySteps(currentStep)}</p>
+            <Suspense fallback={<Fallback />}>
+              <ProgressTracker
+                currentStep={currentStep}
+                isCancelled={isCancelled}
+              />
+            </Suspense>
+            <div className="flex flex-col items-center gap-3">
+              <p className="text-center">{getTextBySteps(currentStep)}</p>
 
-                {latestOrder && !isCancelled ? (
-                  <div className="flex flex-col gap-5">
-                    <div className="flex flex-col items-center gap-2">
-                      <p className="text-center">
-                        Vaše objednávka bude k vyzvednutí pod číslem
-                      </p>
-                      <h3 className="text-2xl font-bold">
-                        {latestOrder.pickUpId}
-                      </h3>
-                      <p>{dateText}</p>
-                    </div>
-                    <OrderItems mappedItems={mappedItems} />
+              {latestOrder && !isCancelled ? (
+                <div className="flex flex-col gap-5">
+                  <div className="flex flex-col items-center gap-2">
+                    <p className="text-center">
+                      Vaše objednávka bude k vyzvednutí pod číslem
+                    </p>
+                    <h3 className="text-2xl font-bold">
+                      {latestOrder.pickUpId}
+                    </h3>
+                    <p>{timeText}</p>
                   </div>
-                ) : null}
-              </div>
-            </>
+                  <OrderItems mappedItems={mappedItems} />
+                </div>
+              ) : null}
+            </div>
           </div>
         )
       ) : (
