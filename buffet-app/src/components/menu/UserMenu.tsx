@@ -32,7 +32,7 @@ const UserMenu = () => {
       description: "Zobrazit všechny položky",
     };
     return (
-      <HorizontalPaging className="w-[25rem] md:w-[40rem] 2xl:w-[51rem]">
+      <HorizontalPaging className="w-[25rem] transition-all duration-1000 ease-in-out sm:w-[30rem] md:w-[35rem] lg:w-[40rem] xl:w-[48rem] 2xl:w-[51rem]">
         <MenuCategory category={AllCategory} onClick={handleFilter} />
         {categories.map((category) => {
           return (
