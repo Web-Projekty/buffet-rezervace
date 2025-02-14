@@ -185,3 +185,47 @@ export const getTimeSlots = async (): Promise<TimeSlotsApiReturn> => {
     };
   }
 };
+
+export const updateUserData = async (
+  token: string | null,
+  fullName: string,
+  tel: string,
+  email: string,
+): Promise<{
+  status: "success" | "failed";
+  payload: { msg: string };
+}> => {
+  try {
+    if (!token) throw new Error("Chybějící token.");
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "updateUser",
+      token,
+      "fullName - optional": fullName,
+      "tel - optional": tel,
+      "email - optional": email,
+    });
+
+    return data;
+  } catch {
+    return {
+      status: "failed",
+      payload: { msg: "Chyba při aktualizaci dat." },
+    };
+  }
+};
+
+export const getUserData = async (token: string) => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "getUser",
+      token,
+    });
+
+    return data;
+  } catch {
+    return {
+      status: "failed",
+      payload: { msg: "Chyba při získávání dat." },
+    };
+  }
+};
