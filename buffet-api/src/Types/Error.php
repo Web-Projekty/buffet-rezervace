@@ -69,6 +69,11 @@ enum Error: string {
     case OrderCreationError = 'Order creation error';
     case MissingStatus = 'Status is missing';
 
+############################ Items ############################
+    case ItemIdNotFound = 'Item id not found';
+    case MissingItemId = 'Item id is missing';
+    case ItemNotFound = 'Item not found';
+
     ############################ Settings ############################
     case InvalidOrderDateLimitMax = 'Order date limit max is invalid';
     case SettingsError = 'Settings error';

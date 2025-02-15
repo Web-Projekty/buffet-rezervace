@@ -84,9 +84,22 @@ class ItemModel extends Model
         return $query->get();
     }
 
+    public static function exists(int $itemId): bool
+    {
+        return ItemModel::query()->where("id", "=", $itemId)->exists();
+    }
+
     public static function getTableName(): string
     {
 
         return (new self())->getTable();
+    }
+
+    /**
+     * @return array<string>
+     */
+    public static function getCollumns(): array
+    {
+        return (new self)->fillable;
     }
 }

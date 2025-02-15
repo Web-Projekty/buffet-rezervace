@@ -184,6 +184,9 @@ class BuffetApi
             case "updateSetting":
                 return $this->handleUpdateSetting($response);
 
+            case "updateItem":
+                return $this->handleUpdateItem($response);
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -797,6 +800,51 @@ class BuffetApi
         EnvWriter::write($setting, $settingValue);
 
         return $response->setSuccess(Success::SettingUpdated);
+    }
+
+/**
+ * @param  ApiResponse   $response
+ * @return ApiResponse
+ */
+
+    function handleUpdateItem(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "itemId"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        if (!$response->hasRequestByKey("itemId")) {
+            return $response->setError(Error::MissingItemId);
+        }
+        $itemId = (int) $response->getRequestByKey("itemId");
+
+        if (!ItemModel::exists($itemId)) {
+            return $response->setError(Error::ItemNotFound);
+        }
+
+        $itemParameters = [];
+        foreach (ItemModel::getCollumns() as $column) {
+            if ($response->hasRequestByKey($column)) {
+                $itemParameters["$column"] = $response->getRequestByKey($column);
+            }
+        }
+        if (!empty($itemParameters)) {
+            ItemModel::query()->where("id", $itemId)->update($itemParameters);
+        }
+
+        return $response->setSuccess(Success::ItemUpdated);
     }
 
     /**
