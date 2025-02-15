@@ -34,7 +34,7 @@ enum Success: string {
     ############################ Items ############################
     case ItemUpdated = 'Item updated successfully';
     case ItemCreated = 'Item created successfully';
-    case ItemDeleted = 'Item deleted successfully';
+    case ItemRemoved = 'Item removed successfully';
 
     ############################ Channels ############################
     case ChannelConnected = 'Channel connected successfully';
