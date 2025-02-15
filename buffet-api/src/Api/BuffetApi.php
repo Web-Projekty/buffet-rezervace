@@ -187,6 +187,9 @@ class BuffetApi
             case "updateItem":
                 return $this->handleUpdateItem($response);
 
+            case "createItem":
+                return $this->handleCreateItem($response);
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -845,6 +848,44 @@ class BuffetApi
         }
 
         return $response->setSuccess(Success::ItemUpdated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleCreateItem(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(array_merge(["token"], ItemModel::getCollumns()));
+
+        if (!$response->hasRequestKeys()) {
+            return $response;
+        }
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+        $itemParameters = [];
+        foreach (ItemModel::getCollumns() as $column) {
+            if ($response->hasRequestByKey($column)) {
+                $itemParameters["$column"] = $response->getRequestByKey($column);
+            } else {
+                return $response;
+            }
+        }
+        ItemModel::query()->create($itemParameters);
+
+        return $response->setSuccess(Success::ItemCreated);
     }
 
     /**
