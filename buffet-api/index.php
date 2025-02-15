@@ -134,7 +134,7 @@ $app->get('/wstest', function (Request $request, Response $response, $args) {
 
 $app->map(["GET"], "{routes:.+}", function (Request $request, Response $response, $args) {
 
-$requestPath = $request->getUri()->getPath();
+    $requestPath = $request->getUri()->getPath();
 
     if (isset(explode(".", $requestPath)[1])) {
         $filePath = __DIR__ . "/dist/" . $request->getUri()->getPath();
