@@ -1,7 +1,5 @@
 parameters:
     ignoreErrors:
-            - 
-               identifier: argument.named
     level: 6
     paths:
         - src

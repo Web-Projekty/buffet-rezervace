@@ -21,7 +21,7 @@ class ItemModel extends Model
     /**
      * @var array<string>
      */
-    protected $fillable = ['name', 'price', 'description', 'image', 'allergens'];
+    protected $fillable = ['name', 'price', 'description', 'allergens', 'category'];
 
     /**
      * @var bool
@@ -84,9 +84,25 @@ class ItemModel extends Model
         return $query->get();
     }
 
+    /**
+     * @param int $itemId
+     */
+    public static function exists(int $itemId): bool
+    {
+        return ItemModel::query()->where("id", "=", $itemId)->exists();
+    }
+
     public static function getTableName(): string
     {
 
         return (new self())->getTable();
+    }
+
+    /**
+     * @return array<string>
+     */
+    public static function getCollumns(): array
+    {
+        return (new self)->fillable;
     }
 }

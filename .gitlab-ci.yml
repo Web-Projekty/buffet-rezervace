@@ -1,7 +1,7 @@
 stages:
-    - test
     - Tests
     - Code Coverage
+    - Docker Image Build
 
 # Job to run PHPStan
 phpstan:
@@ -32,7 +32,7 @@ phpunit:
     artifacts:
         paths:
             - buffet-api/tests/result/
-        expire_in: 1 hour
+        expire_in: 7 days
 
 # Job to extract the coverage percentage from the PHPUnit output
 phpunit-coverage:
@@ -48,8 +48,10 @@ phpunit-coverage:
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
 
 docker_build:
-    stage: test
-    image: docker:27.3.1
+    stage: Docker Image Build
+    image: 
+        name: wlczak/buffet-builder:latest
+        pull_policy: always
     variables:
         DOCKER_DRIVER: overlay2
         DOCKER_DIND: "docker:27.3.1-dind"
@@ -63,6 +65,8 @@ docker_build:
     script:
         - docker version
         - cd scripts
+        - npm --version
+        - composer -V
         - sh docker_build_buffet.sh
         #   changed runner image
     rules:

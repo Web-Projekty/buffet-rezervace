@@ -20,9 +20,21 @@ enum Success: string {
     // JWT
     case Verification = 'Token verified succesfully';
 
+    // Update user
+    case UserUpdated = 'User updated successfully';
+    case PasswordUpdated = 'Password updated successfully';
+
+    ############################ Settings ############################
+    case SettingUpdated = 'Setting updated successfully';
+
     ############################ Orders ############################
     case OrderCreated = 'Order created successfully';
     case OrderUpdated = 'Order updated successfully';
+
+    ############################ Items ############################
+    case ItemUpdated = 'Item updated successfully';
+    case ItemCreated = 'Item created successfully';
+    case ItemRemoved = 'Item removed successfully';
 
     ############################ Channels ############################
     case ChannelConnected = 'Channel connected successfully';

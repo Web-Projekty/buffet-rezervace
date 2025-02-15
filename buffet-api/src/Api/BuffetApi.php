@@ -24,6 +24,7 @@ use Buffet\Types\OrderStatus;
 use Buffet\Types\Settings;
 use Buffet\Types\Success;
 use Buffet\Utils\EnvReader;
+use Buffet\Utils\EnvWriter;
 use Buffet\Utils\HttpClient;
 use Buffet\Utils\WebsocketClient;
 use Carbon\Carbon;
@@ -34,6 +35,8 @@ use Illuminate\Support\Collection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use RuntimeException;
+use TypeError;
+use ValueError;
 
 class BuffetApi
 {
@@ -172,6 +175,23 @@ class BuffetApi
             case "updatePayment":
                 return $this->handleUpdatePayment($response);
 
+            case "updateUser":
+                return $this->handleUpdateUser($response);
+
+            case "updatePassword":
+                return $this->handleUpdatePassword($response);
+
+            case "updateSetting":
+                return $this->handleUpdateSetting($response);
+
+            case "updateItem":
+                return $this->handleUpdateItem($response);
+
+            case "removeItem":
+                return $this->handleRemoveItem($response);
+            case "createItem":
+                return $this->handleCreateItem($response);
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -259,9 +279,10 @@ class BuffetApi
 
         $queryResult = null;
         $categories = CategoryModel::getAll()->toArray();
+        $backendUrl = EnvReader::getEnvProperty(Settings::UrlBackend);
 
         foreach ($categories as &$category) {
-            $category["image"] = "https://wlczak.vlastas.cc/backend/image/categories/" . $category["id"];
+            $category["image"] = $backendUrl . "/image/categories/" . $category["id"];
             //var_dump($category);
         }
 
@@ -297,7 +318,7 @@ class BuffetApi
             $array[$i]["allergens"] = $alergenList;
 
             // add image
-            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
+            $array[$i]["image"] = $backendUrl . "/image/items/" . $array[$i]['id'];
             //$array[$i]["image"] = "http://localhost:8080/image/items/" . $array[$i]['id'];
 
             // get category name
@@ -555,39 +576,57 @@ class BuffetApi
 
         $isAdmin = UserModel::isAdmin($uid);
 
-        if (!$isAdmin) {
-            return $response->setError(Error::Unauthorized);
-            /**
-             * @todo insert user logic here!!!
-             */
-        }
-
         $orderId = (int) $response->getRequestByKey("orderId");
-        if ($orderId === 0) {
+        if ($orderId === 0 || OrderModel::query()->find($orderId)->exists == false) {
             return $response->setError(Error::OrderIdNotFound);
         }
 
-        $orderParameters = [];
-        foreach (OrderModel::getCollumns() as $column) {
-            if ($response->hasRequestByKey($column)) {
-                $orderParameters["$column"] = $response->getRequestByKey($column);
+        if ($isAdmin) {
+            $orderParameters = [];
+            foreach (OrderModel::getCollumns() as $column) {
+                if ($response->hasRequestByKey($column)) {
+                    $orderParameters["$column"] = $response->getRequestByKey($column);
+                }
             }
-        }
-        try {
-            $orderApi->updateOrder($orderId, $orderParameters);
-        } catch (\Exception $e) {
-            switch ($e->getCode()) {
-                case 1:
-                    return $response->setError(Error::OrderIdNotFound);
-                case 2:
-                    return $response->setError(Error::InvalidStatus);
-                case 3:
-                    return $response->setError(Error::UserNotFound);
-                case 4:
-                    return $response->setError(Error::InvalidPickupId);
+            try {
+                $orderApi->updateOrder($orderId, $orderParameters);
+            } catch (\Exception $e) {
+                switch ($e->getCode()) {
+                    case 1:
+                        return $response->setError(Error::OrderIdNotFound);
+                    case 2:
+                        return $response->setError(Error::InvalidStatus);
+                    case 3:
+                        return $response->setError(Error::UserNotFound);
+                    case 4:
+                        return $response->setError(Error::InvalidPickupId);
 
+                }
+                return $response->setError(Error::GeneralError);
             }
-            return $response->setError(Error::GeneralError);
+
+        } else { // user update
+            $order = OrderModel::query()->where("id", $orderId);
+            $orderItems = $order->get()->toArray()[0];
+
+            if ($orderItems["userId"] != $uid) {
+                return $response->setError(Error::Unauthorized);
+            }
+
+            if ($response->hasRequestByKey("status")) {
+                $response->getRequestByKey("status");
+
+                $status = $orderItems["status"];
+
+                if ($status == OrderStatus::Sent->value) {
+                    $order->find($orderId)->update(["status" => OrderStatus::Storno->value]);
+                } else {
+                    return $response->setError(Error::InvalidStatus);
+                }
+            } else {
+                return $response->setError(Error::MissingStatus);
+            }
+
         }
 
         $updatedOrder = OrderModel::getById($orderId);
@@ -653,6 +692,239 @@ class BuffetApi
         }
 
         return $response->setSuccess(Success::PaymentUpdated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleUpdateUser(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if ($response->hasRequestByKey("fullName")) {
+            if ($response->getRequestByKey("fullName") != "") {
+                UserModel::query()->where("id", $uid)->update(["fullName" => $response->getRequestByKey("fullName")]);
+            }
+        }
+        if ($response->hasRequestByKey("tel")) {
+            if ($response->getRequestByKey("tel") != "" && preg_match('/^\+?[1-9]\d{1,14}$/', $response->getRequestByKey("tel")) === 1) {
+                UserModel::query()->where("id", $uid)->update(["tel" => $response->getRequestByKey("tel")]);
+            }
+        }
+        if ($response->hasRequestByKey("email")) {
+            if ($response->getRequestByKey("email") != "" && filter_var($response->getRequestByKey("email"), FILTER_VALIDATE_EMAIL)) {
+                UserModel::query()->where("id", $uid)->update(["email" => $response->getRequestByKey("email")]);
+            }
+        }
+
+        return $response->setStatus(true)->setSuccess(Success::UserUpdated);
+    }
+
+/**
+ * @param  ApiResponse   $response
+ * @return ApiResponse
+ */
+    function handleUpdatePassword(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "password", "newPassword"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $password = $response->getRequestByKey("password");
+        $newPassword = $response->getRequestByKey("newPassword");
+
+        if (!isset($newPassword) || $newPassword == "" || !isset($password) || $password == "") {
+            return $response->setError(Error::InvalidPassword);
+        }
+
+        if (password_verify($password, UserModel::getPasswordById($uid))) {
+            UserModel::query()->where("id", $uid)->update(["password" => password_hash($newPassword, PASSWORD_DEFAULT)]);
+        } else {
+            return $response->setError(Error::WrongPassword);
+        }
+
+        return $response->setStatus(true)->setSuccess(Success::PasswordUpdated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+
+    function handleUpdateSetting(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "setting", "value"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        $settingKey = $response->getRequestByKey("setting");
+        $settingValue = $response->getRequestByKey("value");
+
+        if (!isset($settingKey) || $settingKey == "" || !isset($settingValue) || $settingValue == "") {
+            return $response->setError(Error::InvalidSetting);
+        }
+
+        try {
+            $setting = Settings::from($settingKey);
+        } catch (ValueError $e) {
+            return $response->setError(Error::InvalidSetting);
+        } catch (TypeError $e) {
+            return $response->setError(Error::InvalidSetting);
+        }
+
+        EnvWriter::write($setting, $settingValue);
+
+        return $response->setSuccess(Success::SettingUpdated);
+    }
+
+/**
+ * @param  ApiResponse   $response
+ * @return ApiResponse
+ */
+
+    function handleUpdateItem(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "itemId"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        if (!$response->hasRequestByKey("itemId")) {
+            return $response->setError(Error::MissingItemId);
+        }
+        $itemId = (int) $response->getRequestByKey("itemId");
+
+        if (!ItemModel::exists($itemId)) {
+            return $response->setError(Error::ItemNotFound);
+        }
+
+        $itemParameters = [];
+        foreach (ItemModel::getCollumns() as $column) {
+            if ($response->hasRequestByKey($column)) {
+                $itemParameters["$column"] = $response->getRequestByKey($column);
+            }
+        }
+        if (!empty($itemParameters)) {
+            ItemModel::query()->where("id", $itemId)->update($itemParameters);
+        }
+
+        return $response->setSuccess(Success::ItemUpdated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleRemoveItem(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "itemId"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        if (!$response->hasRequestByKey("itemId")) {
+            return $response->setError(Error::MissingItemId);
+        }
+        $itemId = (int) $response->getRequestByKey("itemId");
+
+        if (!ItemModel::exists($itemId)) {
+            return $response->setError(Error::ItemNotFound);
+        }
+
+        ItemModel::query()->where("id", $itemId)->delete();
+
+        return $response->setSuccess(Success::ItemRemoved);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleCreateItem(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(array_merge(["token"], ItemModel::getCollumns()));
+
+        if (!$response->hasRequestKeys()) {
+            return $response;
+        }
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+        $itemParameters = [];
+        foreach (ItemModel::getCollumns() as $column) {
+            if ($response->hasRequestByKey($column)) {
+                $itemParameters["$column"] = $response->getRequestByKey($column);
+            } else {
+                return $response;
+            }
+        }
+        ItemModel::query()->create($itemParameters);
+
+        return $response->setSuccess(Success::ItemCreated);
     }
 
     /**

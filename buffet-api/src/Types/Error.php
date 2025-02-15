@@ -31,6 +31,7 @@ enum Error: string {
     // login
     case NonexistentUser = 'User doesn\'t exist';
     case WrongPassword = 'Wrong password';
+    case InvalidPassword = 'Invalid password';
 
     // JWT
 
@@ -66,10 +67,17 @@ enum Error: string {
     case InvalidPickupId = 'Pickup id is invalid';
     case MissingItems = 'Items are missing';
     case OrderCreationError = 'Order creation error';
+    case MissingStatus = 'Status is missing';
+
+############################ Items ############################
+    case ItemIdNotFound = 'Item id not found';
+    case MissingItemId = 'Item id is missing';
+    case ItemNotFound = 'Item not found';
 
     ############################ Settings ############################
     case InvalidOrderDateLimitMax = 'Order date limit max is invalid';
     case SettingsError = 'Settings error';
+    case InvalidSetting = 'Invalid setting';
 
     ############################ General ############################
     case GeneralError = 'Oops something has gone wrong';

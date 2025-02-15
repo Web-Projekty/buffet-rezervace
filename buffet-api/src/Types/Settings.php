@@ -5,6 +5,13 @@ namespace Buffet\Types;
 
 enum Settings: string {
     case DecryptKey = 'DECRYPT_KEY';
+
+    case DBHost = "DB_HOST";
+    case DBPort = "DB_PORT";
+    case DBUser = "DB_USER";
+    case DBPass = "DB_PASS";
+    case DBName = "DB_NAME";
+
     case IsProd = 'IS_PRODUCTION';
     case ImageCacheTime = 'IMAGE_CACHE_TIME';
     case OrderDateLimitMax = 'ORDER_DATE_LIMIT_MAX';
@@ -18,4 +25,7 @@ enum Settings: string {
     case ThePayMerchantId = 'THEPAY_MERCHANT_ID';
 
     case Timezone = 'TIMEZONE';
+
+    case UrlFrontend = 'URL_FRONTEND';
+    case UrlBackend = 'URL_BACKEND';
 }
