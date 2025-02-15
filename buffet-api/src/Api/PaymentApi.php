@@ -69,8 +69,10 @@ class PaymentApi
                 $currency = EnvReader::getEnvProperty(Settings::PaymentCurrency);
                 $stringUid = strval(rand(0, 2147483640)); // has to be unique for each transaction
                 $params = new CreatePaymentParams($amount, $currency, $stringUid);
-                $params->setReturnUrl('https://wlczak.vlastas.cc/return');
-                $params->setNotifUrl('https://wlczak.vlastas.cc/backend/api/notification');
+                $frontendUrl = EnvReader::getEnvProperty(Settings::UrlFrontend);
+                $backendUrl = EnvReader::getEnvProperty(Settings::UrlBackend);
+                $params->setReturnUrl($frontendUrl . '/return');
+                $params->setNotifUrl($backendUrl . '/api/notification');
 
                 $response = $this->thePayClient->createPayment($params);
                 $url = $response->getPayUrl();
