@@ -347,7 +347,7 @@ class BuffetApi
      */
     function handleGetOrders(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(["token"]); // optional - "page", "itemsCount"
+        $response->setRequestKeys(["token"]); // optional - "page", "itemsCount", "isKDS"
         $response->setPayloadKeys(["data", "items"]);
 
         $jwt = new JWTApi;
@@ -365,7 +365,17 @@ class BuffetApi
         $isAdmin = UserModel::isAdmin($uid);
 
         if ($isAdmin) {
-            $orders = OrderModel::getAll();
+            if ($response->getRequestByKey("isKDS")) {
+                $isKDS = (bool) $response->getRequestByKey("isKDS");
+            } else {
+                $isKDS = false;
+            }
+            if ($isKDS) {
+                $orders = OrderModel::query()->where("status", "=", OrderStatus::Sent->value)->orWhere("status", "=", OrderStatus::Preparing->value)->orWhere("status", "=", OrderStatus::Waiting->value);
+            } else {
+                $orders = OrderModel::getAll();
+            }
+
         } else {
             $orders = OrderModel::getByUser((int) $uid);
         }
