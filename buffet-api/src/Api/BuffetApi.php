@@ -852,6 +852,10 @@ class BuffetApi
         return $response->setSuccess(Success::ItemUpdated);
     }
 
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
     function handleRemoveItem(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "itemId"]);
