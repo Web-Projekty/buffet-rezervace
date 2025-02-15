@@ -25,4 +25,6 @@ enum Settings: string {
     case ThePayMerchantId = 'THEPAY_MERCHANT_ID';
 
     case Timezone = 'TIMEZONE';
+
+    case Url = 'URL';
 }
