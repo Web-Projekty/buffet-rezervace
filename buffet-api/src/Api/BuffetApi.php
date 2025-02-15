@@ -884,7 +884,6 @@ class BuffetApi
         ItemModel::query()->where("id", $itemId)->delete();
 
         return $response->setSuccess(Success::ItemRemoved);
-        return $response;
     }
 
     /**
