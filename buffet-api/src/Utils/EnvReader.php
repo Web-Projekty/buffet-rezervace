@@ -23,6 +23,7 @@ class EnvReader
             self::createEnv();
         }
         if (!$envContent = file_get_contents(self::$envPath)) {
+            self::createEnv();
             return null;
         }
 
@@ -44,6 +45,7 @@ class EnvReader
                 return $value;
             }
         }
+        self::createEnv();
         throw new SettingsException("The key " . $needle->value . " does not exist in the env file");
     }
 
