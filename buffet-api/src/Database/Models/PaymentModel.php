@@ -4,7 +4,10 @@ declare (strict_types = 1);
 
 namespace Buffet\Database\Models;
 
+use Buffet\Api\JWTApi;
+use Buffet\Types\EventTypes;
 use Buffet\Types\PaymentMethods;
+use Buffet\Utils\WebsocketClient;
 use Illuminate\Database\Eloquent\Model;
 use ThePay\ApiClient\Model\PaymentMethod;
 
@@ -55,15 +58,27 @@ class PaymentModel extends Model
     }
 
     /**
-     * @param int $paymentId
+     * @param int $thePayId
      */
-    public static function setPaid(int $paymentId): void
+    public static function setPaid(int $thePayId): void
     {
-        $paymentQuery = PaymentModel::query()->where('thePayId', $paymentId);
+        $paymentQuery = PaymentModel::query()->where('thePayId', $thePayId);
+
+        ob_start();
+        #var_dump($paymentId);
+        $paymentId = $paymentQuery->first()->toArray();
+
+        $order = OrderModel::query()->where("paymentId", "=", $paymentId)->get()->toArray();
+        
+        error_log(ob_get_clean());
+        #error_log($orderId);
         if ($paymentQuery->get()->count() === 0) {
             throw new \Exception("Payment not found", 1);
         }
         $paymentQuery->update(['paid' => 1]);
+
+
+        WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
     }
 
     public static function getTableName(): string
