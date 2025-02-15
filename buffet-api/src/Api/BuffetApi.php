@@ -277,9 +277,10 @@ class BuffetApi
 
         $queryResult = null;
         $categories = CategoryModel::getAll()->toArray();
+        $baseUrl = EnvReader::getEnvProperty(Settings::Url);
 
         foreach ($categories as &$category) {
-            $category["image"] = "https://wlczak.vlastas.cc/backend/image/categories/" . $category["id"];
+            $category["image"] = $baseUrl . "/image/categories/" . $category["id"];
             //var_dump($category);
         }
 
@@ -315,7 +316,7 @@ class BuffetApi
             $array[$i]["allergens"] = $alergenList;
 
             // add image
-            $array[$i]["image"] = "https://wlczak.vlastas.cc/backend/image/items/" . $array[$i]['id'];
+            $array[$i]["image"] = $baseUrl . "/image/items/" . $array[$i]['id'];
             //$array[$i]["image"] = "http://localhost:8080/image/items/" . $array[$i]['id'];
 
             // get category name
