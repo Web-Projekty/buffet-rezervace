@@ -26,5 +26,6 @@ enum Settings: string {
 
     case Timezone = 'TIMEZONE';
 
-    case Url = 'URL';
+    case UrlFrontend = 'URL_FRONTEND';
+    case UrlBackend = 'URL_BACKEND';
 }
