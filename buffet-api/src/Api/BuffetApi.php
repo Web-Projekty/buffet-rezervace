@@ -189,6 +189,8 @@ class BuffetApi
 
             case "removeItem":
                 return $this->handleRemoveItem($response);
+            case "createItem":
+                return $this->handleCreateItem($response);
 
             case null:
             default:
@@ -646,10 +648,6 @@ class BuffetApi
      * @param  ApiResponse   $response
      * @return ApiResponse
      */
-    /**
-     * @param ApiResponse $response
-     * @return mixed
-     */
     public function handleUpdatePayment(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "type", "paymentId"]);
@@ -884,6 +882,44 @@ class BuffetApi
         ItemModel::query()->where("id", $itemId)->delete();
 
         return $response->setSuccess(Success::ItemRemoved);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleCreateItem(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(array_merge(["token"], ItemModel::getCollumns()));
+
+        if (!$response->hasRequestKeys()) {
+            return $response;
+        }
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+        $itemParameters = [];
+        foreach (ItemModel::getCollumns() as $column) {
+            if ($response->hasRequestByKey($column)) {
+                $itemParameters["$column"] = $response->getRequestByKey($column);
+            } else {
+                return $response;
+            }
+        }
+        ItemModel::query()->create($itemParameters);
+
+        return $response->setSuccess(Success::ItemCreated);
     }
 
     /**
