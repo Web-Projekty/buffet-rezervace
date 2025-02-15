@@ -21,6 +21,7 @@ use Buffet\Types\Exceptions\OutOfOrderIdsException;
 use Buffet\Types\Exceptions\PaymentCreationException;
 use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\OrderStatus;
+use Buffet\Types\PaymentMethods;
 use Buffet\Types\Settings;
 use Buffet\Types\Success;
 use Buffet\Utils\EnvReader;
@@ -559,8 +560,10 @@ class BuffetApi
         $response->setPayload("url", $order["url"]);
 
         $order["items"] = json_decode($order["items"]);
-
-        WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
+        
+        if ($order["paymentMethod"] == PaymentMethods::Cash->value) {
+            WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
+        }
 
         return $response->setStatus(true)->setSuccess(Success::OrderCreated);
     }
