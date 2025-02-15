@@ -31,6 +31,9 @@ enum Success: string {
     case OrderCreated = 'Order created successfully';
     case OrderUpdated = 'Order updated successfully';
 
+    ############################ Items ############################
+    case ItemUpdated = 'Item updated successfully';
+
     ############################ Channels ############################
     case ChannelConnected = 'Channel connected successfully';
     case Subscribed = 'Subscribed successfully';
