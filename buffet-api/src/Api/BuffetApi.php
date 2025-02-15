@@ -187,6 +187,8 @@ class BuffetApi
             case "updateItem":
                 return $this->handleUpdateItem($response);
 
+            case "removeItem":
+                return $this->handleRemoveItem($response);
             case "createItem":
                 return $this->handleCreateItem($response);
 
@@ -848,6 +850,42 @@ class BuffetApi
         }
 
         return $response->setSuccess(Success::ItemUpdated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleRemoveItem(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "itemId"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        if (!$response->hasRequestByKey("itemId")) {
+            return $response->setError(Error::MissingItemId);
+        }
+        $itemId = (int) $response->getRequestByKey("itemId");
+
+        if (!ItemModel::exists($itemId)) {
+            return $response->setError(Error::ItemNotFound);
+        }
+
+        ItemModel::query()->where("id", $itemId)->delete();
+
+        return $response->setSuccess(Success::ItemRemoved);
     }
 
     /**
