@@ -597,17 +597,19 @@ class BuffetApi
             }
 
         } else { // user update
-            $order = OrderModel::query()->find($orderId);
+            $order = OrderModel::query()->where("id", $orderId);
+            $orderItems = $order->get()->toArray()[0];
 
-            if ($order->get("userId") != $uid) {
+            if ($orderItems["userId"] != $uid) {
                 return $response->setError(Error::Unauthorized);
             }
 
             if ($response->hasRequestByKey("status")) {
                 $response->getRequestByKey("status");
 
-                $status = $order->get("status");
-                if ($status == OrderStatus::Sent) {
+                $status = $orderItems["status"];
+
+                if ($status == OrderStatus::Sent->value) {
                     $order->find($orderId)->update(["status" => OrderStatus::Storno->value]);
                 } else {
                     return $response->setError(Error::InvalidStatus);
