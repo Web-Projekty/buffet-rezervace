@@ -95,7 +95,6 @@ class BuffetApi
             "type" => $type,
             "paymentId" => $paymentUid
         ];
-        //$msg = [];
 
         error_log(HttpClient::post("http://localhost/api", json_encode($msg)));
 
