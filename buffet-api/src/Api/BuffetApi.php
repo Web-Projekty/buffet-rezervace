@@ -561,7 +561,7 @@ class BuffetApi
 
         $order["items"] = json_decode($order["items"]);
         
-        if ($order["paymentMethod"] == PaymentMethods::Cash->value) {
+        if ($paymentMethod == PaymentMethods::Cash->value) {
             WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
         }
 
