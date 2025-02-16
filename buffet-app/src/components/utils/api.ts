@@ -229,3 +229,36 @@ export const getUserData = async (token: string) => {
     };
   }
 };
+
+export const updateUserPassword = async (
+  token: string | null,
+  password: string,
+  newPassword: string,
+  newPasswordConfirm: string,
+): Promise<{
+  status: "success" | "failed";
+  payload: { msg: string };
+}> => {
+  try {
+    if (newPassword !== newPasswordConfirm) {
+      return {
+        status: "failed",
+        payload: { msg: "Hesla se neshodují." },
+      };
+    }
+
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "updatePassword",
+      token,
+      password,
+      newPassword,
+    });
+
+    return data;
+  } catch {
+    return {
+      status: "failed",
+      payload: { msg: "Chyba při změně hesla." },
+    };
+  }
+};
