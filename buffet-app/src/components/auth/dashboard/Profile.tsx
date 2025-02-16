@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useUser } from "../../../hooks/useUser";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
-import { updateUserData } from "../../utils/api";
+import { updateUserData, updateUserPassword } from "../../utils/api";
 
 const Profile = () => {
   const { token, fullName, email, tel } = useUser();
@@ -34,13 +34,23 @@ const Profile = () => {
     }
   };
 
-  const handleSavePassword = () => {
-    const { newPassword, newPasswordConfirmation } = formData;
+  const handleSavePassword = async () => {
+    const { password, newPassword, newPasswordConfirmation } = formData;
 
-    if (newPassword !== newPasswordConfirmation) {
+    const response = await updateUserPassword(
+      token,
+      password,
+      newPassword,
+      newPasswordConfirmation,
+    );
+
+    if (response.status === "failed") {
+      console.log(response);
+      return;
+    } else if (response.status === "success") {
+      console.log(response);
       return;
     }
-    // send check to backend
   };
 
   return (
