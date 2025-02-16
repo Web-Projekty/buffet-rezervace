@@ -24,8 +24,9 @@ const ErrorComponent = ({
       <img
         src={Logo}
         alt="Hamburger Logo"
-        className={`w-[248px] min-w-[248px] animate-slowWiggle rounded-full bg-white p-1`}
+        className={`h-[248px] w-[248px] animate-slowWiggle rounded-full bg-white p-1`}
       />
+
       <div className="flex flex-col items-center gap-1">
         <h1 className="text-2xl">{title}</h1>
         <span className="text-4xl">{subtitle}</span>

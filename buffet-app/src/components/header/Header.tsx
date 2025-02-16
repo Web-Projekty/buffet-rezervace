@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Logo from "../../assets/images/logo.svg";
 import SchoolLogo from "../../assets/images/logo-white_alfa.png";
 import Navbar from "../nav/Navbar";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 
 const Header = () => {
@@ -39,7 +39,7 @@ const Header = () => {
     >
       <Link
         to={"/"}
-        className={`z-[55] w-[100px] rounded-full bg-white p-1 md:hover:animate-wiggle`}
+        className={`z-[55] h-[100px] w-[100px] rounded-full bg-white p-1 md:hover:animate-wiggle`}
       >
         <img src={Logo} alt="Hamburger Logo" />
       </Link>
