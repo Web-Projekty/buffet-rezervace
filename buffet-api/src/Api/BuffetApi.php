@@ -601,7 +601,7 @@ class BuffetApi
 
         if ($isAdmin) {
             $orderParameters = [];
-            foreach (OrderModel::getCollumns() as $column) {
+            foreach (OrderModel::getColumns() as $column) {
                 if ($response->hasRequestByKey($column)) {
                     $orderParameters["$column"] = $response->getRequestByKey($column);
                 }
@@ -859,7 +859,7 @@ class BuffetApi
         }
 
         $itemParameters = [];
-        foreach (ItemModel::getCollumns() as $column) {
+        foreach (ItemModel::getColumns() as $column) {
             if ($response->hasRequestByKey($column)) {
                 $itemParameters["$column"] = $response->getRequestByKey($column);
             }
@@ -913,7 +913,7 @@ class BuffetApi
      */
     function handleCreateItem(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(array_merge(["token"], ItemModel::getCollumns()));
+        $response->setRequestKeys(array_merge(["token"], ItemModel::getColumns()));
 
         if (!$response->hasRequestKeys()) {
             return $response;
@@ -933,7 +933,7 @@ class BuffetApi
             return $response->setError(Error::Unauthorized);
         }
         $itemParameters = [];
-        foreach (ItemModel::getCollumns() as $column) {
+        foreach (ItemModel::getColumns() as $column) {
             if ($response->hasRequestByKey($column)) {
                 $itemParameters["$column"] = $response->getRequestByKey($column);
             } else {
