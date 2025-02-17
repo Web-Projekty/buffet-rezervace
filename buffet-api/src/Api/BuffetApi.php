@@ -550,6 +550,10 @@ class BuffetApi
                 switch ($e->getCode()) {
                     case 1:
                         return $response->setError(Error::MissingItems);
+                    case 2:
+                        return $response->setError(Error::InvalidVariant);
+                    case 3:
+                        return $response->setError(Error::DuplicateExclusiveVariantSelected);
                     default:
                         return $response->setError(Error::OrderCreationError);
                 }

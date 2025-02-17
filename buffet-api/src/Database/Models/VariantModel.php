@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace Buffet\Database\Models;
 
+use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 
@@ -60,6 +62,9 @@ class VariantModel extends Model
         return true;
     }
 
+    /**
+     * @param int $id
+     */
     public static function exists(int $id): bool
     {
         try {
@@ -67,6 +72,31 @@ class VariantModel extends Model
         } catch (\Illuminate\Database\QueryException) {
             return false;
         }
+    }
+
+    /**
+     * @param array<int> $variantIds
+     */
+    public static function getByIdArray(array $variantIds) : Collection
+    {
+        $query = self::query();
+        foreach ($variantIds as $variantId) {
+            $query->orWhere('id', '=', $variantId);
+        }
+
+        $variants = $query->get();
+
+        foreach ($variantIds as $itemId) {
+            if (!$variants->contains("id", "=", $itemId)) {
+                throw new Exception("Invalid variants", 2);
+            }
+        }
+
+        if ($variants->count() != count($variantIds)) {
+            throw new Exception("Invalid variants", 2);
+        }
+
+        return $query->get();
     }
 
     /**
