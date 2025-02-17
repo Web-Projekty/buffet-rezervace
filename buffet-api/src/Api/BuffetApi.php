@@ -200,6 +200,9 @@ class BuffetApi
             case "updateVariant":
                 return $this->handleUpdateVariant($response);
 
+            case "removeVariant":
+                return $this->handleRemoveVariant($response);
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -1039,6 +1042,43 @@ class BuffetApi
         }
 
         return $response->setSuccess(Success::VariantUpdated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleRemoveVariant(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "variantId"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        if (!$response->hasRequestByKey("variantId")) {
+            return $response->setError(Error::MissingItemId);
+        }
+
+        $variantId = (int) $response->getRequestByKey("variantId");
+
+        if (!VariantsModel::exists($variantId)) {
+            return $response->setError(Error::VariantNotFound);
+        }
+
+        VariantsModel::query()->where("id", $variantId)->delete();
+
+        return $response->setSuccess(Success::ItemRemoved);
     }
 
     /**
