@@ -309,12 +309,21 @@ class BuffetApi
             }
         }
 
+        $variants = VariantModel::getAll();
+
         // adding category list
 
         $response->addPayload("categoryList", $categories);
 
         $array = $queryResult->toArray();
+
         for ($i = 0; $i < sizeof($array); $i++) {
+            $id = $array[$i]["id"];
+
+            $array[$i]["variants"] = [];
+            if (!$variants->where("itemId", "=", $id)->isEmpty()) {
+                $array[$i]["variants"] = $variants->where("itemId", "=", $id)->toArray();
+            }
             // parse allergens
             $alergenList = [];
             $alergens = json_decode($array[$i]["allergens"]);
@@ -325,9 +334,8 @@ class BuffetApi
 
             $array[$i]["allergens"] = $alergenList;
 
-            
             $array[$i]["image"] = $backendUrl . "/image/items/" . $array[$i]['id'];
-            
+
         }
 
         $response->setPayload("data", $array);
