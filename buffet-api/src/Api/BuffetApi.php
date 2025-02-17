@@ -13,7 +13,7 @@ use Buffet\Database\Models\PaymentModel;
 use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\TimeslotModel;
 use Buffet\Database\Models\UserModel;
-use Buffet\Database\Models\VariantsModel;
+use Buffet\Database\Models\VariantModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\Types\EventTypes;
@@ -987,7 +987,7 @@ class BuffetApi
         }
 
         try {
-            VariantsModel::createVariant($itemId, $name, $addedPrice, $isExclusive);
+            VariantModel::createVariant($itemId, $name, $addedPrice, $isExclusive);
         } catch (\Exception $e) {
             return $response->setError(Error::VariantCreationFailed);
         }
@@ -1027,18 +1027,18 @@ class BuffetApi
 
         $variantId = (int) $response->getRequestByKey("variantId");
 
-        if (!VariantsModel::exists($variantId)) {
+        if (!VariantModel::exists($variantId)) {
             return $response->setError(Error::VariantNotFound);
         }
 
         $variantParameters = [];
-        foreach (VariantsModel::getColums() as $column) {
+        foreach (VariantModel::getColums() as $column) {
             if ($response->hasRequestByKey($column)) {
                 $variantParameters["$column"] = $response->getRequestByKey($column);
             }
         }
         if (!empty($variantParameters)) {
-            VariantsModel::query()->where("id", $variantId)->update($variantParameters);
+            VariantModel::query()->where("id", $variantId)->update($variantParameters);
         }
 
         return $response->setSuccess(Success::VariantUpdated);
@@ -1072,11 +1072,11 @@ class BuffetApi
 
         $variantId = (int) $response->getRequestByKey("variantId");
 
-        if (!VariantsModel::exists($variantId)) {
+        if (!VariantModel::exists($variantId)) {
             return $response->setError(Error::VariantNotFound);
         }
 
-        VariantsModel::query()->where("id", $variantId)->delete();
+        VariantModel::query()->where("id", $variantId)->delete();
 
         return $response->setSuccess(Success::ItemRemoved);
     }

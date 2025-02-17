@@ -7,7 +7,7 @@ namespace Buffet\Database\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 
-class VariantsModel extends Model
+class VariantModel extends Model
 {
     // Specify the table if it's not the pluralized form of the class name
     /**
