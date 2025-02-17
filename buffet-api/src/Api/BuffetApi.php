@@ -294,10 +294,7 @@ class BuffetApi
 
         foreach ($categories as &$category) {
             $category["image"] = $backendUrl . "/image/categories/" . $category["id"];
-            //var_dump($category);
         }
-
-        //var_dump($categories);
 
         $page = (int) $response->getRequestByKey("page");
         $itemsCount = (int) $response->getRequestByKey("itemsCount");
@@ -328,26 +325,16 @@ class BuffetApi
 
             $array[$i]["allergens"] = $alergenList;
 
-            // add image
+            
             $array[$i]["image"] = $backendUrl . "/image/items/" . $array[$i]['id'];
-            //$array[$i]["image"] = "http://localhost:8080/image/items/" . $array[$i]['id'];
-
-            // get category name
-            //$array[$i]["categoryName"] = $getName($array[$i]["category"], $categories);
-            //  $array[$i]["image"] = "http://localhost:8080/image/items/" . $array[$i]['id'];
+            
         }
-
-        //var_dump($array);
 
         $response->setPayload("data", $array);
 
         // paging info
 
         $response->setPayload("itemsCount", ItemModel::countAll());
-
-        /* // production
-        $response->setPayload("menuItems", $queryResult->toArray());
-         */
 
         $response->setStatus(true);
         return $response;
