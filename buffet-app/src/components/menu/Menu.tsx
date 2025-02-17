@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useUser } from "../../hooks/useUser";
 import { Fallback } from "../../main.tsx";
 
@@ -7,14 +7,18 @@ const UserMenu = lazy(() => import("./UserMenu.tsx"));
 
 const Menu = () => {
   const { isAdmin } = useUser();
+  const [isMounted, setIsMounted] = useState(false);
 
-  return isAdmin ? (
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
+
+  if (!isMounted) return <Fallback />;
+
+  return (
     <Suspense fallback={<Fallback />}>
-      <MenuEdit />
-    </Suspense>
-  ) : (
-    <Suspense fallback={<Fallback />}>
-      <UserMenu />
+      {isAdmin ? <MenuEdit /> : <UserMenu />}
     </Suspense>
   );
 };
