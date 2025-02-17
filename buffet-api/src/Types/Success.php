@@ -36,6 +36,9 @@ enum Success: string {
     case ItemCreated = 'Item created successfully';
     case ItemRemoved = 'Item removed successfully';
 
+    ############################ Variants ############################
+    case VariantCreated = 'Variant created successfully';
+
     ############################ Channels ############################
     case ChannelConnected = 'Channel connected successfully';
     case Subscribed = 'Subscribed successfully';
