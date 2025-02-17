@@ -13,6 +13,7 @@ use Buffet\Database\Models\PaymentModel;
 use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\TimeslotModel;
 use Buffet\Database\Models\UserModel;
+use Buffet\Database\Models\VariantsModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\Types\EventTypes;
@@ -189,8 +190,12 @@ class BuffetApi
 
             case "removeItem":
                 return $this->handleRemoveItem($response);
+
             case "createItem":
                 return $this->handleCreateItem($response);
+
+            case "createVariant":
+                return $this->handleCreateVariant($response);
 
             case null:
             default:
@@ -938,6 +943,50 @@ class BuffetApi
         ItemModel::query()->create($itemParameters);
 
         return $response->setSuccess(Success::ItemCreated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    public function handleCreateVariant(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "itemId", "name", "addedPrice", "isExclusive"]);
+
+        if (!$response->hasRequestKeys()) {
+            return $response;
+        }
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        $itemId = (int) $response->getRequestByKey("itemId");
+        $name = (string) $response->getRequestByKey("name");
+        $addedPrice = (int) $response->getRequestByKey("addedPrice");
+        $isExclusive = (bool) $response->getRequestByKey("isExclusive");
+
+        if (!ItemModel::exists($itemId)) {
+            return $response->setError(Error::ItemIdNotFound);
+        }
+
+        try {
+            VariantsModel::createVariant($itemId, $name, $addedPrice, $isExclusive);
+        } catch (\Exception $e) {
+            return $response->setError(Error::VariantCreationFailed);
+        }
+
+        return $response->setSuccess(Success::VariantCreated);
     }
 
     /**
