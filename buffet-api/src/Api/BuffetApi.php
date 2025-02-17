@@ -364,6 +364,9 @@ class BuffetApi
         }
         $isAdmin = UserModel::isAdmin($uid);
 
+        $paymentTableName = PaymentModel::getTableName();
+        $orderTableName = OrderModel::getTableName();
+
         if ($isAdmin) {
             if ($response->getRequestByKey("isKDS")) {
                 $isKDS = (bool) $response->getRequestByKey("isKDS");
@@ -371,21 +374,19 @@ class BuffetApi
                 $isKDS = false;
             }
             if ($isKDS) {
-                $orders = OrderModel::query()->where("status", "=", OrderStatus::Sent->value)->orWhere("status", "=", OrderStatus::Preparing->value)->orWhere("status", "=", OrderStatus::Waiting->value);
+                $orders = OrderModel::query()->getQuery()->join($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id')->where("paid", "=", 1)->where("status", "=", OrderStatus::Sent->value)->orWhere("status", "=", OrderStatus::Preparing->value)->orWhere("status", "=", OrderStatus::Waiting->value);
+                error_log($orders->toSql());
             } else {
-                $orders = OrderModel::getAll();
+                $orders = OrderModel::getAll()->getQuery()->join($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id');
             }
 
         } else {
-            $orders = OrderModel::getByUser((int) $uid);
+            $orders = OrderModel::getByUser((int) $uid)->getQuery()->join($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id');
         }
-
-        $paymentTableName = PaymentModel::getTableName();
-        $orderTableName = OrderModel::getTableName();
 
         if ($page > 0 && $itemsCount > 0) {
             if ($orders) {
-                $orders = $orders->getQuery()->join($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id')->select("$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl");
+                $orders = $orders->select("$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl");
 
                 $paginate = $orders->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
                 $response->setPayload("itemsCount", $paginate->total());
@@ -395,7 +396,7 @@ class BuffetApi
             }
         } else {
             $response->setPayload("itemsCount", OrderModel::query()->count());
-            $ordersArray = $orders->getQuery()->join($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id')->select("$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl")->get()->toArray();
+            $ordersArray = $orders->select("$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl")->get()->toArray();
         }
 
         $itemIds = [];
@@ -559,7 +560,7 @@ class BuffetApi
         $response->setPayload("url", $order["url"]);
 
         $order["items"] = json_decode($order["items"]);
-        
+
         if ($paymentMethod == PaymentMethods::Cash->value) {
             WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
         }
