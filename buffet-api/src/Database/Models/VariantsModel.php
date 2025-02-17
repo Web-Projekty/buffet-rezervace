@@ -60,6 +60,15 @@ class VariantsModel extends Model
         return true;
     }
 
+    public static function exists(int $id): bool
+    {
+        try {
+            return self::query()->where('id', '=', $id)->exists();
+        } catch (\Illuminate\Database\QueryException) {
+            return false;
+        }
+    }
+
     /**
      * @return array<string>
      */

@@ -197,6 +197,9 @@ class BuffetApi
             case "createVariant":
                 return $this->handleCreateVariant($response);
 
+            case "updateVariant":
+                return $this->handleUpdateVariant($response);
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -987,6 +990,55 @@ class BuffetApi
         }
 
         return $response->setSuccess(Success::VariantCreated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    public function handleUpdateVariant(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "variantId"]);
+
+        if (!$response->hasRequestKeys()) {
+            return $response;
+        }
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        if (!$response->hasRequestByKey("variantId")) {
+            return $response->setError(Error::MissingVariantId);
+        }
+
+        $variantId = (int) $response->getRequestByKey("variantId");
+
+        if (!VariantsModel::exists($variantId)) {
+            return $response->setError(Error::VariantNotFound);
+        }
+
+        $variantParameters = [];
+        foreach (VariantsModel::getColums() as $column) {
+            if ($response->hasRequestByKey($column)) {
+                $variantParameters["$column"] = $response->getRequestByKey($column);
+            }
+        }
+        if (!empty($variantParameters)) {
+            VariantsModel::query()->where("id", $variantId)->update($variantParameters);
+        }
+
+        return $response->setSuccess(Success::VariantUpdated);
     }
 
     /**
