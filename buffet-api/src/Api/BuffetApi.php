@@ -385,7 +385,7 @@ class BuffetApi
         }
 
         if ($page > 0 && $itemsCount > 0) {
-            if ($orders) {
+            if (!$orders->get()->isEmpty()) {
                 $orders = $orders->select("$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl");
 
                 $paginate = $orders->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
