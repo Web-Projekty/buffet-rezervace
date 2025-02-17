@@ -406,6 +406,10 @@ class BuffetApi
         }
 
         $itemIds = [];
+        /**
+         * @var array<int> $variantIds
+         */
+        $variantIds = [];
 
         foreach ($ordersArray as &$order) {
             // cast to array $paginate->items() - returns array<stdObj>
@@ -424,6 +428,11 @@ class BuffetApi
             unset($order["thePayUrl"]);
 
             $order["items"] = json_decode($order["items"]);
+//            var_dump($order["items"]);
+            foreach ($order["items"] as &$item) {
+                //var_dump((array) $item->variants);
+                $variantIds = array_merge($variantIds, (array) $item->variants);
+            }
             $orderitemIds = Collection::make($order["items"])->pluck("id")->toArray();
             array_push($itemIds, ...$orderitemIds);
         }
@@ -431,6 +440,7 @@ class BuffetApi
         $response->setPayload("data", $ordersArray);
 
         $itemIds = array_unique($itemIds);
+        $variantIds = array_unique($variantIds);
 
         try {
             $items = ItemModel::getByIdArray($itemIds)->toArray();
@@ -439,10 +449,25 @@ class BuffetApi
                 return $response->setError(Error::MissingItems);
             }
         }
+
+        try {
+            $variants = VariantModel::getByIdArray($variantIds)->toArray();
+        } catch (Exception $e) {
+            if ($e->getCode() == 2) {
+                return $response->setError(Error::InvalidVariant);
+            }
+        }
+
         if (!empty($items)) {
             $response->setPayload("items", $items);
         } else {
             $response->setPayload("items", []);
+        }
+
+        if (!empty($variants)) {
+            $response->setPayload("variants", $variants);
+        } else {
+            $response->setPayload("variants", []);
         }
         $response->setStatus(true);
         return $response;
