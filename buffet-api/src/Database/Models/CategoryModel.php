@@ -14,6 +14,11 @@ class CategoryModel extends Model
     protected $table = 'Categories';
 
     /**
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
      * @var array<string>
      */
     protected $fillable = [
@@ -23,6 +28,5 @@ class CategoryModel extends Model
     public static function getAll(): bool | \Illuminate\Database\Eloquent\Collection
     {
         return CategoryModel::all();
-
     }
 }
