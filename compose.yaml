@@ -24,6 +24,7 @@ services:
             MYSQL_PASSWORD: prestizniBuffet2305
         volumes:
             - db_data:/var/lib/mysql
+            - ./sql:/docker-entrypoint-initdb.d/
         #ports:
         #  - "3306:3306"
 
