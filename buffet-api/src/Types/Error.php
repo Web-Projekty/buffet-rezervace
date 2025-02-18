@@ -81,6 +81,10 @@ enum Error: string {
     case InvalidVariant = 'Variant is invalid';
     case DuplicateExclusiveVariantSelected = 'Exclusive variant is selected twice';
 
+    ############################ Categories ############################
+    case MissingCategoryId = 'Category id is missing';
+    case CategoryNotFound = 'Category not found';
+
     ############################ Settings ############################
     case InvalidOrderDateLimitMax = 'Order date limit max is invalid';
     case SettingsError = 'Settings error';
