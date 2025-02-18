@@ -2,6 +2,7 @@
 
 use Buffet\Api\BuffetApi;
 use Buffet\Api\ImageProvider;
+use Buffet\Api\ImageUploader;
 use Buffet\Api\PaymentApi;
 use Buffet\Database\DatabaseManager;
 use Buffet\Database\Models\PaymentModel;
@@ -58,22 +59,29 @@ if (!$isProd) {
         $response->getBody()->write(ob_get_clean());
         return $response;
     });
-    
+
     $app->get('/wstest', function (Request $request, Response $response, $args) {
         $connector = new Ratchet\Client\Connector();
-    
+
         $connector('ws://localhost:8069/ok') // Specify the WebSocket server address
             ->then(function ($conn) {
                 echo "Connected to WebSocket server\n";
-    
+
                 // Send a message
                 $conn->send('Hello, WebSocket Server!');
-    
+
                 // Close the connection after sending the message
                 $conn->close();
             }, function ($e) {
                 echo "Could not connect: {$e->getMessage()}\n";
             });
+        return $response;
+    });
+
+    $app->any('/imgup', function (Request $request, Response $response, $args) {
+        ob_start();
+        include __DIR__ . "/templates/img.html";
+        $response->getBody()->write(ob_get_clean());
         return $response;
     });
 }
@@ -107,6 +115,7 @@ $app->add($corsMiddleware);
 
 $app->post('/api', [BuffetApi::class, 'main']);
 $app->get('/api/notification', [BuffetApi::class, 'handleThePayNotification']);
+$app->post('/api/upload', [ImageUploader::class, 'uploadImage']);
 
 $app->any('/image/{path:.*}', [ImageProvider::class, 'main']);
 
