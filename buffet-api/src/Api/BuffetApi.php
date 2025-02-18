@@ -203,6 +203,14 @@ class BuffetApi
             case "removeVariant":
                 return $this->handleRemoveVariant($response);
 
+            case "createCategory":
+                return $this->handleCreateCategory($response);
+
+            case "updateCategory":
+                return $this->handleUpdateCategory($response);
+
+            case "removeCategory":
+                return $this->handleRemoveCategory($response);
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -1093,7 +1101,7 @@ class BuffetApi
         }
 
         if (!$response->hasRequestByKey("variantId")) {
-            return $response->setError(Error::MissingItemId);
+            return $response->setError(Error::MissingVariantId);
         }
 
         $variantId = (int) $response->getRequestByKey("variantId");
@@ -1104,7 +1112,131 @@ class BuffetApi
 
         VariantModel::query()->where("id", $variantId)->delete();
 
-        return $response->setSuccess(Success::ItemRemoved);
+        return $response->setSuccess(Success::VaraintRemoved);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleCreateCategory(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "name", "description"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!$response->hasRequestKeys()) {
+            return $response->setError(Error::MissingPayloadKeys);
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        $category["name"] = $response->getRequestByKey("name");
+        $category["description"] = $response->getRequestByKey("description");
+
+        CategoryModel::query()->create($category);
+
+        return $response->setSuccess(Success::CategoryCreated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+
+    function handleRemoveCategory(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "categoryId"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        if (!$response->hasRequestByKey("categoryId")) {
+            return $response->setError(Error::MissingCategoryId);
+        }
+
+        $categoryId = (int) $response->getRequestByKey("categoryId");
+
+        if (!CategoryModel::exists($categoryId)) {
+            return $response->setError(Error::CategoryNotFound);
+        }
+
+        CategoryModel::query()->where("id", $response->getRequestByKey("categoryId"))->update(["removed" => true]);
+
+        return $response->setSuccess(Success::CategoryRemoved);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+
+    function handleUpdateCategory(ApiResponse $response): ApiResponse
+    {
+        {
+            $response->setRequestKeys(["token", "categoryId"]);
+
+            if (!$response->hasRequestKeys()) {
+                return $response;
+            }
+
+            $jwt = new JWTApi;
+
+            $jwt->validateToken($response);
+
+            $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+            if ($response->hasFailed()) {
+                return $response;
+            }
+
+            if (!UserModel::isAdmin($uid)) {
+                return $response->setError(Error::Unauthorized);
+            }
+
+            if (!$response->hasRequestByKey("categoryId")) {
+                return $response->setError(Error::MissingVariantId);
+            }
+
+            $categoryId = (int) $response->getRequestByKey("categoryId");
+
+            if (!CategoryModel::exists($categoryId)) {
+                return $response->setError(Error::CategoryNotFound);
+            }
+
+            $categoryParameters = [];
+            foreach (CategoryModel::getColums() as $column) {
+                if ($response->hasRequestByKey($column)) {
+                    $categoryParameters["$column"] = $response->getRequestByKey($column);
+                }
+            }
+            if (!empty($categoryParameters)) {
+                CategoryModel::query()->where("id", $categoryId)->update($categoryParameters);
+            }
+
+            return $response->setSuccess(Success::CategoryUpdated);
+        }
     }
 
     /**
@@ -1159,7 +1291,7 @@ class BuffetApi
      * @param  ApiResponse   $response
      * @return ApiResponse
      */
-    public function handleGenerateTemp(ApiResponse $response): ApiResponse
+    function handleGenerateTemp(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token"]);
 
@@ -1193,7 +1325,7 @@ class BuffetApi
      * @param  ApiResponse   $response
      * @return ApiResponse
      */
-    public function handleGetOrderTimeTable(ApiResponse $response): ApiResponse
+    function handleGetOrderTimeTable(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys([]);
 
