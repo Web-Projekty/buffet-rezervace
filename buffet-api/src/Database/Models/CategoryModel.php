@@ -22,7 +22,7 @@ class CategoryModel extends Model
      * @var array<string>
      */
     protected $fillable = [
-        'name', 'image', 'description', "removed"
+        'name', 'image', 'description'
     ];
 
     public static function getAll(): bool | \Illuminate\Database\Eloquent\Collection
@@ -40,5 +40,14 @@ class CategoryModel extends Model
         } catch (\Illuminate\Database\QueryException) {
             return false;
         }
+    }
+
+    /**
+     * @return array<string>
+     */
+    public static function getColums(): array
+    {
+        $model = new self();
+        return $model->fillable;
     }
 }

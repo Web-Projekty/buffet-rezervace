@@ -1188,6 +1188,58 @@ class BuffetApi
     }
 
     /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+
+    function handleUpdateCategory(ApiResponse $response): ApiResponse
+    {
+        {
+            $response->setRequestKeys(["token", "categoryId"]);
+
+            if (!$response->hasRequestKeys()) {
+                return $response;
+            }
+
+            $jwt = new JWTApi;
+
+            $jwt->validateToken($response);
+
+            $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+            if ($response->hasFailed()) {
+                return $response;
+            }
+
+            if (!UserModel::isAdmin($uid)) {
+                return $response->setError(Error::Unauthorized);
+            }
+
+            if (!$response->hasRequestByKey("categoryId")) {
+                return $response->setError(Error::MissingVariantId);
+            }
+
+            $categoryId = (int) $response->getRequestByKey("categoryId");
+
+            if (!CategoryModel::exists($categoryId)) {
+                return $response->setError(Error::VariantNotFound);
+            }
+
+            $categoryParameters = [];
+            foreach (CategoryModel::getColums() as $column) {
+                if ($response->hasRequestByKey($column)) {
+                    $categoryParameters["$column"] = $response->getRequestByKey($column);
+                }
+            }
+            if (!empty($categoryParameters)) {
+                CategoryModel::query()->where("id", $categoryId)->update($categoryParameters);
+            }
+
+            return $response->setSuccess(Success::VariantUpdated);
+        }
+    }
+
+    /**
      * @param ApiResponse $response
      */
     function handleGenerateTimeslots(ApiResponse $response): ApiResponse
