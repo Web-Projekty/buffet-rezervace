@@ -380,19 +380,19 @@ class BuffetApi
                 $isKDS = false;
             }
             if ($isKDS) {
-                $orders = OrderModel::query()->getQuery()->join($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id')->where("paid", "=", 1)->where("status", "=", OrderStatus::Sent->value)->orWhere("status", "=", OrderStatus::Preparing->value)->orWhere("status", "=", OrderStatus::Waiting->value);
+                $orders = OrderModel::query()->where("paid", "=", 1)->where("status", "=", OrderStatus::Sent->value)->orWhere("status", "=", OrderStatus::Preparing->value)->orWhere("status", "=", OrderStatus::Waiting->value);
                 error_log($orders->toSql());
             } else {
-                $orders = OrderModel::getAll()->getQuery()->join($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id');
+                $orders = OrderModel::getAll();
             }
 
         } else {
-            $orders = OrderModel::getByUser((int) $uid)->getQuery()->join($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id');
+            $orders = OrderModel::getByUser((int) $uid);
         }
 
         if ($page > 0 && $itemsCount > 0) {
             if (!$orders->get()->isEmpty()) {
-                $orders = $orders->select("$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl");
+                $orders = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl"]);
 
                 $paginate = $orders->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
                 $response->setPayload("itemsCount", $paginate->total());
@@ -401,8 +401,8 @@ class BuffetApi
                 return $response->setError(Error::QueryFailed);
             }
         } else {
-            $response->setPayload("itemsCount", OrderModel::query()->count());
-            $ordersArray = $orders->select("$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl")->get()->toArray();
+            $response->setPayload("itemsCount", $orders->count());
+            $ordersArray = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl"])->get()->toArray();
         }
 
         $itemIds = [];
@@ -451,7 +451,9 @@ class BuffetApi
         }
 
         try {
-            $variants = VariantModel::getByIdArray($variantIds)->toArray();
+            if(!empty($variantIds)) {
+                $variants = VariantModel::getByIdArray($variantIds)->toArray();    
+            }
         } catch (Exception $e) {
             if ($e->getCode() == 2) {
                 return $response->setError(Error::InvalidVariant);
