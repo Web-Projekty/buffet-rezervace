@@ -203,6 +203,9 @@ class BuffetApi
             case "removeVariant":
                 return $this->handleRemoveVariant($response);
 
+            case "createCategory":
+                return $this->handleCreateCategory($response);
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -1104,7 +1107,46 @@ class BuffetApi
 
         VariantModel::query()->where("id", $variantId)->delete();
 
-        return $response->setSuccess(Success::ItemRemoved);
+        return $response->setSuccess(Success::VaraintRemoved);
+    }
+
+/**
+ * @param  ApiResponse   $response
+ * @return ApiResponse
+ */
+    function handleCreateCategory(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "name", "description"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!$response->hasRequestKeys()) {
+            return $response->setError(Error::MissingPayloadKeys);
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        $category["name"] = $response->getRequestByKey("name");
+        $category["description"] = $response->getRequestByKey("description");
+
+        CategoryModel::query()->create($category);
+
+        return $response->setSuccess(Success::CategoryCreated);
+    }
+
+    /**
+     * @param ApiResponse $response
+     */
     }
 
     /**
