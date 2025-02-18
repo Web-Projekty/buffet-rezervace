@@ -43,8 +43,8 @@
                 body: formData
             })
             .then(response => response.text())
-            .then(data => alert('File uploaded successfully: ' + data))
-            .catch(error => alert('Error uploading file: ' + error));
+            .then(data => console.log('File uploaded successfully: ' + data))
+            .catch(error => console.log('Error uploading file: ' + error));
         }
     </script>
 </body>
