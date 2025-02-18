@@ -451,8 +451,8 @@ class BuffetApi
         }
 
         try {
-            if(!empty($variantIds)) {
-                $variants = VariantModel::getByIdArray($variantIds)->toArray();    
+            if (!empty($variantIds)) {
+                $variants = VariantModel::getByIdArray($variantIds)->toArray();
             }
         } catch (Exception $e) {
             if ($e->getCode() == 2) {
