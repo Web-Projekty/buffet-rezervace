@@ -1222,7 +1222,7 @@ class BuffetApi
             $categoryId = (int) $response->getRequestByKey("categoryId");
 
             if (!CategoryModel::exists($categoryId)) {
-                return $response->setError(Error::VariantNotFound);
+                return $response->setError(Error::CategoryNotFound);
             }
 
             $categoryParameters = [];
@@ -1235,7 +1235,7 @@ class BuffetApi
                 CategoryModel::query()->where("id", $categoryId)->update($categoryParameters);
             }
 
-            return $response->setSuccess(Success::VariantUpdated);
+            return $response->setSuccess(Success::CategoryUpdated);
         }
     }
 
