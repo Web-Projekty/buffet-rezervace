@@ -101,7 +101,7 @@ class ItemModel extends Model
     /**
      * @return array<string>
      */
-    public static function getCollumns(): array
+    public static function getColumns(): array
     {
         return (new self)->fillable;
     }

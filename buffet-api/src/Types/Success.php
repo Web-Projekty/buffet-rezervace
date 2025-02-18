@@ -38,6 +38,7 @@ enum Success: string {
 
     ############################ Variants ############################
     case VariantCreated = 'Variant created successfully';
+    case VariantUpdated = 'Variant updated successfully';
 
     ############################ Channels ############################
     case ChannelConnected = 'Channel connected successfully';

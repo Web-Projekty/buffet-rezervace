@@ -76,6 +76,10 @@ enum Error: string {
 
     ############################ Variants ############################
     case VariantCreationFailed = 'Variant creation failed';
+    case VariantNotFound = 'Variant not found';
+    case MissingVariantId = 'Variant id is missing';
+    case InvalidVariant = 'Variant is invalid';
+    case DuplicateExclusiveVariantSelected = 'Exclusive variant is selected twice';
 
     ############################ Settings ############################
     case InvalidOrderDateLimitMax = 'Order date limit max is invalid';
