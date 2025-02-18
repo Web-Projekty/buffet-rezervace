@@ -73,10 +73,13 @@ class OrderModel extends Model
      */
     public $timestamps = true;
 
-    public static function getAll(): false | \Illuminate\Database\Eloquent\Builder
+    public static function getAll(): false | \Illuminate\Database\Query\Builder
     {
+        $paymentTableName = PaymentModel::getTableName();
+        $orderTableName = OrderModel::getTableName();
+
         try {
-            return OrderModel::query();
+            return OrderModel::query()->getQuery()->leftJoin($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id');
         } catch (QueryException $e) {
             return false;
         }
@@ -85,10 +88,14 @@ class OrderModel extends Model
     /**
      * @param $userId
      */
-    public static function getByUser(int $userId): false | \Illuminate\Database\Eloquent\Builder
+    public static function getByUser(int $userId): false | \Illuminate\Database\Query\Builder
     {
+        $paymentTableName = PaymentModel::getTableName();
+        $orderTableName = OrderModel::getTableName();
+
         try {
-            return OrderModel::query()->where('userId', $userId);
+            //var_dump(OrderModel::query()->getQuery()->leftJoin($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id')->where('userId', $userId)->toSql());
+            return OrderModel::query()->getQuery()->leftJoin($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id')->where('userId', $userId);
         } catch (QueryException $e) {
             return false;
         }
@@ -124,7 +131,7 @@ class OrderModel extends Model
      * @param  int                                                                                                                                           $userId
      * @param  OrderStatus                                                                                                                                   $status
      * @param  string                                                                                                                                        $pickupDate
-     * @param  array<array{id:int,quantity:int,variants:array<int>}>                                                                                            $items
+     * @param  array<array{id:int,quantity:int,variants:array<int>}>                                                                                         $items
      * @param  string                                                                                                                                        $paymentMethod
      * @param  string                                                                                                                                        $startTime
      * @param  string                                                                                                                                        $endTime
@@ -169,7 +176,7 @@ class OrderModel extends Model
     /**
      * @return array<string>
      */
-    public static function getCollumns(): array
+    public static function getColumns(): array
     {
         $model = new OrderModel();
         return $model->fillable;
