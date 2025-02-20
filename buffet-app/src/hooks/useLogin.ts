@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { FETCH_URL } from "../constants";
 import { setTokenExpiration } from "../components/utils/auth";
 import toast from "react-hot-toast";
+import { toastMessages } from "../components/utils/toastMessages";
 
 type UseLoginReturn = {
   loading: boolean;
@@ -38,7 +39,6 @@ export const useLogin = (loginData: LoginData): UseLoginReturn => {
       const { data } = await axios.post(FETCH_URL, loginData);
 
       const success: boolean = data.status === "success";
-
       const isAdmin = data.payload.isAdmin === 1;
 
       if (success) {
@@ -47,8 +47,6 @@ export const useLogin = (loginData: LoginData): UseLoginReturn => {
             token: data.payload.token,
             type: "Bearer",
           },
-          // refresh:
-          //   "5iQldrf4LwmkgVPoiVBCSRzDu4qeIFOyKdqT3OtJbXJI1Vxmzge0Au11dGmMbeuI",
           userState: {
             fullName: data.payload.fullName,
             email: data.payload.email,
@@ -57,18 +55,16 @@ export const useLogin = (loginData: LoginData): UseLoginReturn => {
           },
         });
         setTokenExpiration(data.payload.token as string);
-        toast.success("Přihlášení proběhlo úspěšně");
+        toast.success(toastMessages.login.success);
         navigate("/", { replace: true });
         if (isAdmin) window.location.reload();
       } else {
         setError("Error occured");
-        console.log("Error occured");
-        toast.error("Chyba při přihlášení");
+        toast.error(toastMessages.login.error);
       }
-    } catch (error) {
+    } catch {
       setError("Error occured");
-      console.log(error);
-      toast.error("Chyba při přihlášení");
+      toast.error(toastMessages.login.error);
     } finally {
       setLoading(false);
     }

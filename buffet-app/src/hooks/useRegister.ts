@@ -5,6 +5,7 @@ import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useNavigate } from "react-router-dom";
 import { UserData } from "./useLogin";
 import toast from "react-hot-toast";
+import { toastMessages } from "../components/utils/toastMessages";
 
 type UseRegisterReturn = {
   loading: boolean;
@@ -48,17 +49,15 @@ export const useRegister = (registerData: RegisterData): UseRegisterReturn => {
             ...data.payload.data,
           },
         });
-        toast.success("Registrace proběhla úspěšně");
-        navigate("/login");
+        toast.success(toastMessages.register.success);
+        navigate("/login", { replace: true });
       } else {
         setError("Error occured");
-        console.log("Error occured");
-        toast.error("Chyba při registraci");
+        toast.error(toastMessages.register.error);
       }
-    } catch (error) {
+    } catch {
       setError("Error occured");
-      console.log(error);
-      toast.error("Chyba při registraci");
+      toast.error(toastMessages.register.error);
     } finally {
       setLoading(false);
     }
