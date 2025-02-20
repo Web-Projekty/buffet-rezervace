@@ -1358,10 +1358,31 @@ class BuffetApi
      */
     function handleUploadImage(ApiResponse $response): ApiResponse
     {
+        $response->setRequestKeys(["token", "imageId", "directory"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!$response->hasRequestKeys()) {
+            return $response->setError(Error::MissingPayloadKeys);
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
         $imageUploader = new ImageUploader;
 
-        //$imageUploader->uploadImage()
-        return $response->setStatus(true);
+        $imageUploader->uploadImage($this->requestInterface);
+
+        return $response->setSuccess(Success::ImageUploaded);
     }
 
     /**
@@ -1432,10 +1453,10 @@ class BuffetApi
         }
         /**
          * @deprecated legacy code
-         */ 
+         */
         /*$post = file_get_contents('php://input');
         $json = json_decode($post, true);*/
-        
+
         return $data;
     }
 }

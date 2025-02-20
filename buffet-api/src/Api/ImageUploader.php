@@ -12,9 +12,8 @@ class ImageUploader
 {
     /**
      * @param ServerRequestInterface $request
-     * @param ResponseInterface      $html
      */
-    public function uploadImage(ServerRequestInterface $request, ResponseInterface $html): ResponseInterface
+    public function uploadImage(ServerRequestInterface $request):void
     {
         $directory = __DIR__ . '/../../img';
         ob_start();
@@ -26,12 +25,7 @@ class ImageUploader
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
             //var_dump($directory);
             $filename = $this->moveUploadedFile($directory, $uploadedFile);
-            $html->getBody()->write('Uploaded: ' . $filename . '<br/>');
         }
-
-        $html->getBody()->write(ob_get_clean());
-
-        return $html;
     }
 
     /**
