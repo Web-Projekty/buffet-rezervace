@@ -35,6 +35,7 @@ use DateException;
 use Exception;
 use Illuminate\Support\Collection;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use RuntimeException;
 use TypeError;
@@ -48,13 +49,17 @@ class BuffetApi
      *
      * Handles api request calls
      *
-     * @param  RequestInterface  $request
-     * @param  ResponseInterface $html
-     * @return ResponseInterface html code
+     * @param  ServerRequestInterface $request
+     * @param  ResponseInterface      $html
+     * @return ResponseInterface      html code
      */
 
-    function main(RequestInterface $request, ResponseInterface $html): ResponseInterface
+    public ServerRequestInterface $requestInterface;
+
+    function main(ServerRequestInterface $request, ResponseInterface $html): ResponseInterface
     {
+        $this->requestInterface = $request;
+
         try {
             $response = $this->handleApiCall();
         } catch (SettingsException $e) {
@@ -117,6 +122,7 @@ class BuffetApi
     {
         if (!$request) {
             $request = $this->getPostJson();
+
         } else {
             $request = json_decode($request, true);
         }
@@ -1398,11 +1404,22 @@ class BuffetApi
  *
  * @return array<mixed> decoded json from POST raw data
  */
-
     function getPostJson()
     {
-        $post = file_get_contents('php://input');
-        $json = json_decode($post, true);
-        return $json;
+        $request = $this->requestInterface;
+        //$data = $request->getParsedBody();
+
+        if ($request->getUploadedFiles()) {
+            $data = $request->getParsedBody();
+        } else {
+            $data = (array) json_decode($request->getBody()->getContents());
+        }
+        /**
+         * @deprecated legacy code
+         */ 
+        /*$post = file_get_contents('php://input');
+        $json = json_decode($post, true);*/
+        
+        return $data;
     }
 }
