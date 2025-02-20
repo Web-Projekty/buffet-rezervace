@@ -4,6 +4,7 @@ import SchoolLogo from "../../assets/images/logo-white_alfa.png";
 import Navbar from "../nav/Navbar";
 import { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
+import { fadeInAnimation } from "../../animations";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -37,7 +38,8 @@ const Header = () => {
         to={"/"}
         className={`z-[55] h-[100px] w-[100px] rounded-full bg-white p-1`}
       >
-        <img
+        <motion.img
+          {...fadeInAnimation(0.5)}
           src={Logo}
           alt="Hamburger Logo"
           className="md:hover:animate-wiggle"

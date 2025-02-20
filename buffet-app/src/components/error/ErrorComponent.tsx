@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import Button from "../ui/Button";
 import Logo from "../../assets/images/logo.svg";
+import { motion } from "framer-motion";
+import { fadeInAnimation } from "../../animations";
 
 type Error = {
   title: string;
@@ -21,10 +23,11 @@ const ErrorComponent = ({
     <div
       className={`flex flex-col items-center justify-center gap-5 overflow-x-hidden bg-slate-800 font-sans text-white ${className}`}
     >
-      <img
+      <motion.img
+        {...fadeInAnimation(0.5)}
         src={Logo}
         alt="Hamburger Logo"
-        className={`h-[248px] w-[248px] animate-slowWiggle rounded-full bg-white p-1`}
+        className={`h-[248px] w-[248px] animate-slowWiggle rounded-full bg-white`}
       />
 
       <div className="flex flex-col items-center gap-1">
