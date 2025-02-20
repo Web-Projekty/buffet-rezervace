@@ -68,7 +68,7 @@ const OrderHistory = () => {
           )}
         </AnimatePresence>
       </div>
-      <div className="mx-auto">{renderPagingButtons()}</div>
+      {renderPagingButtons()}
     </section>
   );
 };
