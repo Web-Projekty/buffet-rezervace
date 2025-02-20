@@ -7,6 +7,7 @@ import { Date as DateType, Hour, Minute, PaymentMethod } from "../../../types";
 import { createOrder } from "../../utils/api";
 import { parseSelectedTime } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const CartReservationCalendar = lazy(() => import("./CartReservationCalendar"));
 const CartPurchaseMethods = lazy(() => import("./CartPurchaseMethods"));
@@ -80,8 +81,10 @@ const CartPurchase = () => {
 
       if (error) {
         setError("Chyba při vytváření objednávky.");
+        toast.error("Chyba při vytváření objednávky.");
       } else {
         setSuccess(true);
+        toast.success("Objednávka byla úspěšně vytvořena.");
         if (paywallUrl) {
           window.location.href = paywallUrl;
         } else {
