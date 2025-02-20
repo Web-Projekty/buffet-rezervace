@@ -28,7 +28,8 @@
 <body>
     <div class="upload-container">
         <h2>Upload an Image</h2>
-        <form action="api/upload" method="post" enctype="multipart/form-data" id="uploadForm">
+        <form action="api" method="post" enctype="multipart/form-data" id="uploadForm">
+            <input type="text" name="requestType" value="uploadImage" hidden>
             <input type="file" name="image" accept="image/*" required>
             <br>
             <button type="submit">Upload</button>
@@ -38,7 +39,7 @@
     <script>
         function sendFile() {
             const formData = new FormData(document.getElementById('uploadForm'));
-            fetch('api/upload', {
+            fetch('api', {
                 method: 'POST',
                 body: formData
             })
