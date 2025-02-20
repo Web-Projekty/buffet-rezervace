@@ -2,10 +2,24 @@ import { useState } from "react";
 import { useUser } from "../../../hooks/useUser";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
-import { updateUserData, updateUserPassword } from "../../utils/api";
+
+export type ProfileFormDataType = {
+  name: string;
+  email: string;
+  tel: string;
+  password: string;
+  newPassword: string;
+  newPasswordConfirmation: string;
+};
 
 const Profile = () => {
-  const { token, fullName, email, tel } = useUser();
+  const {
+    fullName,
+    email,
+    tel,
+    handleSavePassword: savePassword,
+    handleSaveInfo: saveInfo,
+  } = useUser();
   const canEditProfile = true;
   const [formData, setFormData] = useState({
     name: fullName || "",
@@ -21,36 +35,11 @@ const Profile = () => {
   };
 
   const handleSaveInfo = async () => {
-    const { name, email, tel } = formData;
-
-    const response = await updateUserData(token, name, tel, email);
-
-    if (response.status === "failed") {
-      console.log(response);
-      return;
-    } else if (response.status === "success") {
-      console.log(response);
-      return;
-    }
+    saveInfo(formData);
   };
 
-  const handleSavePassword = async () => {
-    const { password, newPassword, newPasswordConfirmation } = formData;
-
-    const response = await updateUserPassword(
-      token,
-      password,
-      newPassword,
-      newPasswordConfirmation,
-    );
-
-    if (response.status === "failed") {
-      console.log(response);
-      return;
-    } else if (response.status === "success") {
-      console.log(response);
-      return;
-    }
+  const handleSavePassword = () => {
+    savePassword(formData);
   };
 
   return (
