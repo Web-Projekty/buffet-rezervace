@@ -8,10 +8,10 @@ type ItemVariantsProps = {
 const ItemVariants = ({ variants }: ItemVariantsProps) => {
   return (
     <div className="flex flex-col gap-1">
-      {variants &&
+      {/* {variants &&
         variants.map((item) => {
           return item;
-        })}
+        })} */}
     </div>
   );
 };
