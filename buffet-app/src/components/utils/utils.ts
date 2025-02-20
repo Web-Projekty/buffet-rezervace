@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { MappedOrderItem, OrderItem, OrderItems } from "../../types";
 
 export const formatCurrency = (number: number): string => {
@@ -114,4 +115,18 @@ export const checkPassword = (password: string): boolean => {
     !!password.match(/[0-9]/);
 
   return isValid;
+};
+
+export const handleResponse = (
+  status: "success" | "failed",
+  successMessage: string,
+  errorMessage: string,
+) => {
+  if (status === "failed") {
+    toast.error(errorMessage);
+  } else if (status === "success") {
+    toast.success(successMessage);
+  }
+
+  return { success: successMessage };
 };
