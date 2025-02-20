@@ -217,6 +217,10 @@ class BuffetApi
 
             case "removeCategory":
                 return $this->handleRemoveCategory($response);
+
+            case "uploadImage":
+                return $this->handleUploadImage($response);
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -1345,6 +1349,18 @@ class BuffetApi
 
         $data = TempModel::getFormatedArray();
         $response->setPayload("data", $data);
+        return $response->setStatus(true);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleUploadImage(ApiResponse $response): ApiResponse
+    {
+        $imageUploader = new ImageUploader;
+
+        //$imageUploader->uploadImage()
         return $response->setStatus(true);
     }
 
