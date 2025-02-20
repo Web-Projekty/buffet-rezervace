@@ -4,42 +4,51 @@ declare (strict_types = 1);
 
 namespace Buffet\Api;
 
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 
 class ImageUploader
 {
     /**
-     * @param RequestInterface  $request
-     * @param ResponseInterface $html
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface      $html
      */
-    public function uploadImage(RequestInterface $request, ResponseInterface $html): ResponseInterface
+    public function uploadImage(ServerRequestInterface $request, ResponseInterface $html): ResponseInterface
     {
+        $directory = __DIR__ . '/../../img';
         ob_start();
-        if (isset($_FILES['image'])) {
-            $uploadDir = '../../img/';
+        //phpinfo();
+        $uploadedFiles = $request->getUploadedFiles();
 
-            $file = $_FILES['image'];
-            $fileName = basename($file['name']);
-            $fileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-            $allowedTypes = ['jpg', 'jpeg', 'png'];
-
-            if (in_array($fileType, $allowedTypes)) {
-                $targetFile = $uploadDir . uniqid() . '.' . $fileType;
-                if (move_uploaded_file($file['tmp_name'], $targetFile)) {
-                    echo "File uploaded successfully: " . htmlspecialchars($targetFile);
-                } else {
-                    echo "Error uploading file.";
-                }
-            } else {
-                echo "Invalid file type. Only JPG and PNG are allowed.";
-            }
-        } else {
-            echo "No file uploaded.";
+        // handle single input with single file upload
+        $uploadedFile = $uploadedFiles['image'];
+        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+            //var_dump($directory);
+            $filename = $this->moveUploadedFile($directory, $uploadedFile);
+            $html->getBody()->write('Uploaded: ' . $filename . '<br/>');
         }
 
         $html->getBody()->write(ob_get_clean());
 
         return $html;
+    }
+
+    /**
+     * @param string                $directory
+     * @param UploadedFileInterface $uploadedFile
+     */
+
+    function moveUploadedFile(string $directory, UploadedFileInterface $uploadedFile): string
+    {
+        $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+
+        // see http://php.net/manual/en/function.random-bytes.php
+        $basename = bin2hex(random_bytes(8));
+        $filename = sprintf('%s.%0.8s', $basename, $extension);
+
+        $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+
+        return $filename;
     }
 }
