@@ -4,7 +4,6 @@ declare (strict_types = 1);
 
 namespace Buffet\Api;
 
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
@@ -13,18 +12,20 @@ class ImageUploader
     /**
      * @param ServerRequestInterface $request
      */
-    public function uploadImage(ServerRequestInterface $request):void
+    public function uploadImage(ServerRequestInterface $request, int $imageId, string $directory): void
     {
-        $directory = __DIR__ . '/../../img';
-        ob_start();
-        //phpinfo();
+        $baseDirectory = __DIR__ . '/../../img';
+
         $uploadedFiles = $request->getUploadedFiles();
 
-        // handle single input with single file upload
+        $fileDirectory = $baseDirectory . '/' . $directory;
+
+        // var_dump($fileDirectory);
+        //var_dump($uploadedFiles['image']);
+
         $uploadedFile = $uploadedFiles['image'];
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-            //var_dump($directory);
-            $filename = $this->moveUploadedFile($directory, $uploadedFile);
+            $filename = $this->moveUploadedFile($fileDirectory, $uploadedFile, $imageId);
         }
     }
 
@@ -33,15 +34,18 @@ class ImageUploader
      * @param UploadedFileInterface $uploadedFile
      */
 
-    function moveUploadedFile(string $directory, UploadedFileInterface $uploadedFile): string
+    function moveUploadedFile(string $directory, UploadedFileInterface $uploadedFile, int $imageId): string
     {
         $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
 
-        // see http://php.net/manual/en/function.random-bytes.php
-        $basename = bin2hex(random_bytes(8));
-        $filename = sprintf('%s.%0.8s', $basename, $extension);
+        $filename = strval($imageId) . '.' . $extension;
+        $fullPath = $directory . DIRECTORY_SEPARATOR . $filename;
 
-        $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+        if (file_exists($fullPath)) {
+            unlink($fullPath);
+        }
+        
+        $uploadedFile->moveTo($fullPath);
 
         return $filename;
     }

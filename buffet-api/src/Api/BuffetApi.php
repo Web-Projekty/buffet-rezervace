@@ -1378,9 +1378,12 @@ class BuffetApi
             return $response->setError(Error::Unauthorized);
         }
 
+        $imageId = (int) $response->getRequestByKey("imageId");
+        $directory = (string) $response->getRequestByKey("directory");
+
         $imageUploader = new ImageUploader;
 
-        $imageUploader->uploadImage($this->requestInterface);
+        $imageUploader->uploadImage($this->requestInterface, $imageId, $directory);
 
         return $response->setSuccess(Success::ImageUploaded);
     }
