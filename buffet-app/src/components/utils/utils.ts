@@ -30,23 +30,23 @@ export const parseSelectedTime = (selectedTime: string | null) => {
   if (!selectedTime) return { startTime: "", endTime: "", formattedDate: "" };
 
   const monthMap: { [key: string]: number } = {
-    leden: 1,
-    únor: 2,
-    březen: 3,
-    duben: 4,
-    květen: 5,
-    červen: 6,
-    červenec: 7,
-    srpen: 8,
+    ledna: 1,
+    února: 2,
+    března: 3,
+    dubna: 4,
+    května: 5,
+    června: 6,
+    července: 7,
+    srpna: 8,
     září: 9,
-    říjen: 10,
-    listopad: 11,
-    prosinec: 12,
+    října: 10,
+    listopadu: 11,
+    prosince: 12,
   };
 
   const parts = selectedTime.split(" ");
   const day = parts[1].split(".")[0].padStart(2, "0");
-  const month = monthMap[parts[2].toLowerCase()] || 1;
+  const month = monthMap[parts[2].toLowerCase()];
   const year = new Date().getFullYear();
 
   const formattedDate = `${year}-${month}-${day}`;
