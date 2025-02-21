@@ -74,6 +74,7 @@ const useCart = create<CartItems>((set, get) => ({
 
     set({ cartItems: updatedItems });
     setItem(CART_LOCAL_STORAGE_KEY, updatedItems);
+    toast.success(toastMessages.cart.added);
   },
   removeFromCart: (id: number) => {
     const cartItems = get().cartItems;
@@ -86,9 +87,9 @@ const useCart = create<CartItems>((set, get) => ({
         : updateCartItemQuantity(cartItems, id, -1);
 
     set({ cartItems: updatedItems });
-    setItem(CART_LOCAL_STORAGE_KEY, updatedItems);
 
     setItem(CART_LOCAL_STORAGE_KEY, get().cartItems);
+    toast.success(toastMessages.cart.removed);
   },
   clearCart: () => {
     set({ cartItems: [] });
