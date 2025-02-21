@@ -16,7 +16,7 @@ const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={`rounded-md border border-cyan-900 bg-cyan-500 p-2 text-white hover:bg-cyan-600 ${className} ${disabled ? "cursor-not-allowed bg-cyan-600" : ""}`}
+      className={`rounded-md border border-cyan-900 bg-interactiveColor p-2 text-white hover:bg-cyan-600 ${className} ${disabled ? "cursor-not-allowed bg-cyan-600" : ""}`}
       type={type}
       onClick={onClick}
       disabled={disabled}

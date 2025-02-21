@@ -35,6 +35,7 @@ export default {
         transparentBlack: "rgba(0, 0, 0, 0.5)",
         descriptionColor: "#9ca3af",
         interactiveColor: "#06b6d4",
+        interactiveHoverColor: "#0891b2",
         backgroundColor: "#1e293b",
       },
     },
