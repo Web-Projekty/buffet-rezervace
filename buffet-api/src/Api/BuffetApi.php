@@ -1383,7 +1383,7 @@ class BuffetApi
 
         $imageUploader = new ImageUploader;
 
-        $imageUploader->uploadImage($this->requestInterface, $imageId, $directory);
+        $imageUploader->uploadImage($this->requestInterface, $imageId, $directory, $response);
 
         return $response->setSuccess(Success::ImageUploaded);
     }
