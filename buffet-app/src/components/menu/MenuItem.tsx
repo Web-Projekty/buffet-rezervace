@@ -35,7 +35,6 @@ const MenuItem = ({ item }: MenuItemProps) => {
         <Button
           onClick={handleAddToCart}
           className={`flex items-center justify-between ${canAddToCart() ? "" : "bg-gray-400 hover:bg-gray-400"}`}
-          disabled={!canAddToCart()}
         >
           <p>Do košíku</p>
           <p className="rounded-lg font-normal italic">
