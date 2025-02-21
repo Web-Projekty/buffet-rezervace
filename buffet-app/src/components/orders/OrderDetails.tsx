@@ -41,12 +41,13 @@ const OrderDetails = ({
             </p>
           </div>
         </div>
-
-        <OrderButton
-          status={status}
-          handleStatus={handleStatus}
-          loading={loading}
-        />
+        {status !== "done" && status !== "storno" && status !== "cancelled" && (
+          <OrderButton
+            status={status}
+            handleStatus={handleStatus}
+            loading={loading}
+          />
+        )}
       </div>
     </div>
   );
