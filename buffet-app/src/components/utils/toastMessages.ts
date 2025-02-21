@@ -39,7 +39,7 @@ export const toastMessages = {
     full: "Košík je plný",
     fullItem: "Maximální počet této položky",
     empty: "Košík je prázdný",
-    add: "Položka byla přidána do košíku",
-    remove: "Položka byla odebrána z košíku",
+    added: "Položka byla přidána do košíku",
+    removed: "Položka byla odebrána z košíku",
   },
 };
