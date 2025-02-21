@@ -3,8 +3,23 @@ import { useUser } from "../../../hooks/useUser";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
 
+export type ProfileFormDataType = {
+  name: string;
+  email: string;
+  tel: string;
+  password: string;
+  newPassword: string;
+  newPasswordConfirmation: string;
+};
+
 const Profile = () => {
-  const { fullName, email, tel } = useUser();
+  const {
+    fullName,
+    email,
+    tel,
+    handleSavePassword: savePassword,
+    handleSaveInfo: saveInfo,
+  } = useUser();
   const canEditProfile = true;
   const [formData, setFormData] = useState({
     name: fullName || "",
@@ -19,19 +34,12 @@ const Profile = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSaveInfo = () => {
-    const { name, email, tel } = formData;
-    // save data
-    console.log(name, email, tel);
+  const handleSaveInfo = async () => {
+    saveInfo(formData);
   };
 
   const handleSavePassword = () => {
-    const { newPassword, newPasswordConfirmation } = formData;
-
-    if (newPassword !== newPasswordConfirmation) {
-      return;
-    }
-    // send check to backend
+    savePassword(formData);
   };
 
   return (

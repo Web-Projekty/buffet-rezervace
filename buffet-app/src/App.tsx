@@ -6,6 +6,7 @@ import { lazy, Suspense } from "react";
 import { Fallback } from "./main";
 import useCart from "./store/CartStore";
 import { AnimatePresence } from "framer-motion";
+import { Toaster } from "react-hot-toast";
 
 const CartModal = lazy(() => import("./components/cart/CartModal"));
 
@@ -25,6 +26,7 @@ const App = () => {
       <main className="mb-[3rem] mt-[10rem] flex-1">
         <Outlet />
       </main>
+      <Toaster position="bottom-right" />
       <Footer />
     </div>
   );

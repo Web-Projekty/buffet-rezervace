@@ -4,6 +4,8 @@ import { useState } from "react";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useNavigate } from "react-router-dom";
 import { UserData } from "./useLogin";
+import toast from "react-hot-toast";
+import { toastMessages } from "../components/utils/toastMessages";
 
 type UseRegisterReturn = {
   loading: boolean;
@@ -30,11 +32,10 @@ export const useRegister = (registerData: RegisterData): UseRegisterReturn => {
   const register = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.post(
-        FETCH_URL,
-        // "http://localhost:8080/api",
-        { requestType: "register", ...registerData },
-      );
+      const { data } = await axios.post(FETCH_URL, {
+        requestType: "register",
+        ...registerData,
+      });
 
       const success: boolean = data.status === "success";
 
@@ -44,20 +45,19 @@ export const useRegister = (registerData: RegisterData): UseRegisterReturn => {
             token: data.payload.token,
             type: "Bearer",
           },
-          // refresh:
-          //   "5iQldrf4LwmkgVPoiVBCSRzDu4qeIFOyKdqT3OtJbXJI1Vxmzge0Au11dGmMbeuI",
           userState: {
             ...data.payload.data,
           },
         });
-        navigate("/login");
+        toast.success(toastMessages.register.success);
+        navigate("/login", { replace: true });
       } else {
         setError("Error occured");
-        console.log("Error occured");
+        toast.error(toastMessages.register.error);
       }
-    } catch (error) {
+    } catch {
       setError("Error occured");
-      console.log(error);
+      toast.error(toastMessages.register.error);
     } finally {
       setLoading(false);
     }

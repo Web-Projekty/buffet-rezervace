@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { removeDiacritics } from "../components/utils/utils";
 
-type UseFilterReturn<T> = {
+export type UseFilterReturn<T> = {
   handleFilter: (filter: string) => void;
   data: T[];
   filterValue: string;

@@ -6,6 +6,8 @@ import {
   MAX_ITEMS_CART,
 } from "../constants";
 import { getItem, removeItem, setItem } from "../components/utils/localStorage";
+import toast from "react-hot-toast";
+import { toastMessages } from "../components/utils/toastMessages";
 
 export type CartItem = MenuItem & { quantity: number };
 
@@ -57,8 +59,14 @@ const useCart = create<CartItems>((set, get) => ({
   addToCart: (item: MenuItem) => {
     const cartItems = get().cartItems;
     const quantity = getItemQuantity(cartItems, item.id);
-    if (quantity >= MAX_ITEMS || get().getCartQuantity() >= MAX_ITEMS_CART)
+    if (get().getCartQuantity() >= MAX_ITEMS_CART) {
+      toast.error(toastMessages.cart.full);
       return;
+    }
+    if (quantity >= MAX_ITEMS) {
+      toast.error(toastMessages.cart.fullItem);
+      return;
+    }
 
     const updatedItems = isItemInCart(cartItems, item.id)
       ? updateCartItemQuantity(cartItems, item.id, 1)
@@ -66,6 +74,7 @@ const useCart = create<CartItems>((set, get) => ({
 
     set({ cartItems: updatedItems });
     setItem(CART_LOCAL_STORAGE_KEY, updatedItems);
+    toast.success(toastMessages.cart.added);
   },
   removeFromCart: (id: number) => {
     const cartItems = get().cartItems;
@@ -78,9 +87,9 @@ const useCart = create<CartItems>((set, get) => ({
         : updateCartItemQuantity(cartItems, id, -1);
 
     set({ cartItems: updatedItems });
-    setItem(CART_LOCAL_STORAGE_KEY, updatedItems);
 
     setItem(CART_LOCAL_STORAGE_KEY, get().cartItems);
+    toast.success(toastMessages.cart.removed);
   },
   clearCart: () => {
     set({ cartItems: [] });

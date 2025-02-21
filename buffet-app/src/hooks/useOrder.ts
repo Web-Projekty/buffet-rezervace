@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Order, OrderItem, OrderStatus } from "../types";
 import { updateOrder } from "../components/utils/api";
 import { mapItemsWithOrders } from "../components/utils/utils";
+import toast from "react-hot-toast";
 
 export type HandleStatusReturn = {
   order: Order;
@@ -32,14 +33,17 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
       try {
         const { payload, error } = await updateOrder(token, order.id, status);
 
-        console.log(payload);
+        if (error) {
+          toast.error("Chyba při aktualizaci objednávky.");
+        } else {
+          toast.success("Objednávka byla aktualizována.");
+          setStatus(status);
+        }
 
-        const data = {
+        return {
           order: payload || order,
           error: error,
         };
-        if (!error) setStatus(status);
-        return data;
       } catch (error) {
         console.error(error);
         return { order, error: true };
@@ -51,17 +55,24 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
   );
 
   const handleDelayed = useCallback(() => {
-    const now = new Date();
-    const pickupDateTime = new Date(`${order.pickupDate}T${order.startTime}`);
-    setDelayed(now > pickupDateTime);
-  }, [order.pickupDate, order.startTime]);
+    if (order.pickupDate && order.startTime) {
+      const now = new Date().getTime();
+      const pickupDateTime = new Date(
+        `${order.pickupDate}T${order.startTime}`,
+      ).getTime();
+
+      console.log(order.pickUpId + ", " + now, pickupDateTime);
+
+      setDelayed(now > pickupDateTime);
+    }
+  }, [order]);
 
   const color = delayed ? "bg-red-400" : getColorByStatus(status);
   const statusText = getTextByStatus(status);
   const dateCreated = new Date(order.dateCreated).toLocaleString();
   const pickUpDate = new Date(order.pickupDate).toLocaleDateString();
-  const startTime = order.startTime.substring(0, 5);
-  const endTime = order.endTime.substring(0, 5);
+  const startTime = order.startTime;
+  const endTime = order.endTime;
 
   useEffect(() => {
     if (

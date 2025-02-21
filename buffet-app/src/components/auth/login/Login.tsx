@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
-import LoginError from "./LoginError";
 import { useLogin } from "../../../hooks/useLogin";
 import Loading from "../../ui/Loading";
 import { Link } from "react-router-dom";
@@ -85,9 +84,7 @@ const Login = () => {
             Registruje se
           </Link>
         </div>
-        {error ? (
-          <LoginError />
-        ) : loading ? (
+        {loading ? (
           <Loading />
         ) : (
           <Button type="submit" className="w-full">

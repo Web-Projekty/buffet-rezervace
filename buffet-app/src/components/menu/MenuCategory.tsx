@@ -9,7 +9,7 @@ type MenuCategoryProps = {
 const MenuCategory = ({ category, onClick }: MenuCategoryProps) => {
   return (
     <article
-      className={`group relative aspect-[18/10] cursor-pointer overflow-hidden rounded-lg md:aspect-[15/3]`}
+      className={`group relative aspect-[18/10] cursor-pointer overflow-hidden rounded-lg transition-all duration-1000 ease-in-out md:aspect-[15/3]`}
       onClick={() => onClick(category.name === "Vše" ? "" : category.name)}
     >
       <LazyImage image={category.image} alt={category.name + "'s image"} />
