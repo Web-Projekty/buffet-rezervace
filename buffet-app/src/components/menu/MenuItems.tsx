@@ -13,7 +13,7 @@ const MenuItems = ({ menuItems, categories, categoryId }: MenuItemsProps) => {
     (item) => categories.length > 0 && item.category === categoryId,
   );
   return (
-    <HorizontalPaging className="w-[25rem] md:w-[80rem] 2xl:w-[100rem]">
+    <HorizontalPaging className="w-[25rem] transition-all duration-1000 ease-in-out sm:w-[30rem] md:w-[60rem] lg:w-[70rem] xl:w-[85rem] 2xl:w-[100rem]">
       {filteredItems &&
         filteredItems.map((item) => <MenuItem key={item.id} item={item} />)}
     </HorizontalPaging>

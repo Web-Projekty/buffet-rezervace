@@ -25,7 +25,7 @@ const CartReservationCalendar = ({
         const { timeslots, error } = await getTimeSlots();
 
         if (error) {
-          setError("Chyba při načítání časů.");
+          setError("Chyba při načítání kalendáře.");
         }
 
         const formattedDate = timeslots.map((timeslot) => ({
@@ -41,7 +41,7 @@ const CartReservationCalendar = ({
         setDays(formattedDate);
         setSelectedDate(formattedDate[0]);
       } catch {
-        setError("Chyba při načítání časů.");
+        setError("Chyba při načítání kalendáře.");
       } finally {
         setLoading(false);
       }
@@ -70,15 +70,11 @@ const CartReservationCalendar = ({
     }
   }, [selectedDate, selectedHour, selectedMinute, onTimeSelect]);
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   const renderDays = () => {
     return (
       <div className="w-full overflow-x-auto">
         <HorizontalPaging className="m-0 w-[25rem] p-0 md:w-[75rem] 2xl:w-[100rem]">
-          {days.map((day) => (
+          {days?.map((day) => (
             <button
               key={day.date}
               className={`flex-shrink-0 rounded px-4 py-2 text-white ${day.available ? (selectedDate === day ? "bg-green-500" : "bg-sky-400") : "bg-gray-600"}`}
@@ -131,6 +127,7 @@ const CartReservationCalendar = ({
 
   return (
     <div className="flex min-h-[25rem] flex-col gap-5 rounded-lg bg-backgroundColor p-6 shadow-md">
+      {error && <p className="grid h-full place-items-center">{error}</p>}
       {!loading ? (
         <>
           {renderDays()}
