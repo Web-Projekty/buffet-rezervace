@@ -47,7 +47,7 @@ const Order = ({ order, items }: OrderProps) => {
           className={`absolute left-0 h-[64px] w-2 ${color} round-bl-lg rounded-bl-lg rounded-tl-lg`}
         ></div>
         <div className="flex w-full flex-row items-center gap-16">
-          <h2 className="text-xl font-bold">#{order.pickUpId}</h2>
+          <h2 className="text-xl font-bold">{order.pickUpId}</h2>
           <p className="text-base">{statusText}</p>
           {showPickUpDate && (
             <>
