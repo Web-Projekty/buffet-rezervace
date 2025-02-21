@@ -11,7 +11,7 @@ type UseLoginReturn = {
   loading: boolean;
   error: string;
   setError: (error: string) => void;
-  login: () => void;
+  login: (url?: string) => void;
 };
 
 type LoginData = {
@@ -33,7 +33,7 @@ export const useLogin = (loginData: LoginData): UseLoginReturn => {
   const signIn = useSignIn<UserData>();
   const navigate = useNavigate();
 
-  const login = async () => {
+  const login = async (url?: string) => {
     try {
       setLoading(true);
       const { data } = await axios.post(FETCH_URL, loginData);
@@ -56,7 +56,7 @@ export const useLogin = (loginData: LoginData): UseLoginReturn => {
         });
         setTokenExpiration(data.payload.token as string);
         toast.success(toastMessages.login.success);
-        navigate("/", { replace: true });
+        navigate(url ? "/" + url : "/", { replace: true });
         if (isAdmin) window.location.reload();
       } else {
         setError("Error occured");

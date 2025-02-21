@@ -4,7 +4,7 @@ import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import { useLogin } from "../../../hooks/useLogin";
 import Loading from "../../ui/Loading";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 type LoginFormData = {
   username: string;
@@ -23,6 +23,9 @@ const Login = () => {
     password: "u",
   });
 
+  const [searchParams] = useSearchParams();
+  const to = searchParams.get("to") as string;
+
   const { loading, error, setError, login } = useLogin({
     requestType: "login",
     ...formData,
@@ -30,7 +33,7 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    login();
+    login(to);
   };
 
   const handleResetLogin = () => {

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useUser } from "../../../hooks/useUser";
 
 const CartUserInformation = () => {
@@ -17,7 +18,16 @@ const CartUserInformation = () => {
           </div>
         </>
       ) : (
-        "Pro pokračování se prosím přihlaste"
+        <p>
+          Pro pokračování se prosím{" "}
+          <Link
+            to="/login?to=cart"
+            className="hover:text-interactiveHoverColor text-interactiveColor"
+          >
+            přihlaste
+          </Link>
+          .
+        </p>
       )}
     </div>
   );
