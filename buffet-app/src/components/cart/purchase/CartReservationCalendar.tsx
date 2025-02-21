@@ -131,7 +131,7 @@ const CartReservationCalendar = ({
       {!loading ? (
         <>
           {renderDays()}
-          <div className="flex flex-col items-start justify-center gap-10 md:flex-row md:gap-6">
+          <div className="flex flex-col items-start justify-center gap-10 md:gap-6 lg:flex-row">
             {renderHours()}
             {renderMinutes()}
           </div>
