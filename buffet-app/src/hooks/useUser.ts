@@ -5,6 +5,10 @@ import { User } from "../types";
 import { toastMessages } from "../components/utils/toastMessages";
 import { updateUserData, updateUserPassword } from "../components/utils/api";
 import { ProfileFormDataType } from "../components/auth/dashboard/Profile";
+import { removeTokenExpiration } from "../components/utils/auth";
+import useSignOut from "react-auth-kit/hooks/useSignOut";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 type UseUserReturn = {
   user: User | null;
@@ -17,12 +21,15 @@ type UseUserReturn = {
   credits: string | null;
   handleSavePassword: (formData: ProfileFormDataType) => void;
   handleSaveInfo: (formData: ProfileFormDataType) => void;
+  logout: () => void;
 };
 
 export const useUser = (): UseUserReturn => {
   const header: string | null = useAuthHeader();
   const user: User | null = useAuthUser();
   const token: string | null = extractToken(header);
+  const signOut = useSignOut();
+  const navigate = useNavigate();
 
   const isAdmin: boolean = user?.isAdmin || false;
   const fullName: string | null = user?.fullName || null;
@@ -60,6 +67,14 @@ export const useUser = (): UseUserReturn => {
     );
   };
 
+  const logout = async () => {
+    signOut();
+    removeTokenExpiration();
+    toast.success(toastMessages.logout.success);
+    navigate("/login", { replace: true });
+    if (isAdmin) window.location.reload();
+  };
+
   return {
     user,
     token,
@@ -71,5 +86,6 @@ export const useUser = (): UseUserReturn => {
     credits,
     handleSavePassword,
     handleSaveInfo,
+    logout,
   };
 };
