@@ -36,8 +36,9 @@ export const toastMessages = {
     error: "Chyba při změně profilu",
   },
   order: {
-    success: "Objednávka byla odeslána",
-    error: "Chyba při odesílání objednávky",
+    success: "Objednávka byla uspěšně vytvořena",
+    error: "Chyba při vytváření objednávky",
+    fillForm: "Vyplňte všechny údaje",
   },
   cart: {
     full: "Košík je plný",

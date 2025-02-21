@@ -3,6 +3,7 @@ import { Order, OrderItem, OrderStatus } from "../types";
 import { updateOrder } from "../components/utils/api";
 import { mapItemsWithOrders } from "../components/utils/utils";
 import toast from "react-hot-toast";
+import { toastMessages } from "../components/utils/toastMessages";
 
 export type HandleStatusReturn = {
   order: Order;
@@ -34,9 +35,9 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
         const { payload, error } = await updateOrder(token, order.id, status);
 
         if (error) {
-          toast.error("Chyba při aktualizaci objednávky.");
+          toast.error(toastMessages.updateOrder.error);
         } else {
-          toast.success("Objednávka byla aktualizována.");
+          toast.success(toastMessages.updateOrder.success);
           setStatus(status);
         }
 
