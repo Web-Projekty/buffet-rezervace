@@ -30,7 +30,7 @@ const ScrollToTop = () => {
           onClick={handleClick}
           className="fixed bottom-5 right-5 z-20 animate-pulse cursor-pointer rounded-full p-2"
         >
-          <ChevronUp size={30} color="white" />
+          <ChevronUp size={42} color="white" />
         </motion.div>
       )}
     </AnimatePresence>
