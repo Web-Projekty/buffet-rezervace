@@ -69,10 +69,21 @@ enum Error: string {
     case OrderCreationError = 'Order creation error';
     case MissingStatus = 'Status is missing';
 
-############################ Items ############################
+    ############################ Items ############################
     case ItemIdNotFound = 'Item id not found';
     case MissingItemId = 'Item id is missing';
     case ItemNotFound = 'Item not found';
+
+    ############################ Variants ############################
+    case VariantCreationFailed = 'Variant creation failed';
+    case VariantNotFound = 'Variant not found';
+    case MissingVariantId = 'Variant id is missing';
+    case InvalidVariant = 'Variant is invalid';
+    case DuplicateExclusiveVariantSelected = 'Exclusive variant is selected twice';
+
+    ############################ Categories ############################
+    case MissingCategoryId = 'Category id is missing';
+    case CategoryNotFound = 'Category not found';
 
     ############################ Settings ############################
     case InvalidOrderDateLimitMax = 'Order date limit max is invalid';

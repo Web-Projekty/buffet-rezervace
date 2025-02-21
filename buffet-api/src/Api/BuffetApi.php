@@ -13,6 +13,7 @@ use Buffet\Database\Models\PaymentModel;
 use Buffet\Database\Models\TempModel;
 use Buffet\Database\Models\TimeslotModel;
 use Buffet\Database\Models\UserModel;
+use Buffet\Database\Models\VariantModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\Types\EventTypes;
@@ -21,6 +22,7 @@ use Buffet\Types\Exceptions\OutOfOrderIdsException;
 use Buffet\Types\Exceptions\PaymentCreationException;
 use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\OrderStatus;
+use Buffet\Types\PaymentMethods;
 use Buffet\Types\Settings;
 use Buffet\Types\Success;
 use Buffet\Utils\EnvReader;
@@ -94,7 +96,6 @@ class BuffetApi
             "type" => $type,
             "paymentId" => $paymentUid
         ];
-        //$msg = [];
 
         error_log(HttpClient::post("http://localhost/api", json_encode($msg)));
 
@@ -189,9 +190,27 @@ class BuffetApi
 
             case "removeItem":
                 return $this->handleRemoveItem($response);
+
             case "createItem":
                 return $this->handleCreateItem($response);
 
+            case "createVariant":
+                return $this->handleCreateVariant($response);
+
+            case "updateVariant":
+                return $this->handleUpdateVariant($response);
+
+            case "removeVariant":
+                return $this->handleRemoveVariant($response);
+
+            case "createCategory":
+                return $this->handleCreateCategory($response);
+
+            case "updateCategory":
+                return $this->handleUpdateCategory($response);
+
+            case "removeCategory":
+                return $this->handleRemoveCategory($response);
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -283,10 +302,7 @@ class BuffetApi
 
         foreach ($categories as &$category) {
             $category["image"] = $backendUrl . "/image/categories/" . $category["id"];
-            //var_dump($category);
         }
-
-        //var_dump($categories);
 
         $page = (int) $response->getRequestByKey("page");
         $itemsCount = (int) $response->getRequestByKey("itemsCount");
@@ -301,12 +317,21 @@ class BuffetApi
             }
         }
 
+        $variants = VariantModel::getAll();
+
         // adding category list
 
         $response->addPayload("categoryList", $categories);
 
         $array = $queryResult->toArray();
+
         for ($i = 0; $i < sizeof($array); $i++) {
+            $id = $array[$i]["id"];
+
+            $array[$i]["variants"] = [];
+            if (!$variants->where("itemId", "=", $id)->isEmpty()) {
+                $array[$i]["variants"] = $variants->where("itemId", "=", $id)->toArray();
+            }
             // parse allergens
             $alergenList = [];
             $alergens = json_decode($array[$i]["allergens"]);
@@ -317,26 +342,15 @@ class BuffetApi
 
             $array[$i]["allergens"] = $alergenList;
 
-            // add image
             $array[$i]["image"] = $backendUrl . "/image/items/" . $array[$i]['id'];
-            //$array[$i]["image"] = "http://localhost:8080/image/items/" . $array[$i]['id'];
 
-            // get category name
-            //$array[$i]["categoryName"] = $getName($array[$i]["category"], $categories);
-            //  $array[$i]["image"] = "http://localhost:8080/image/items/" . $array[$i]['id'];
         }
-
-        //var_dump($array);
 
         $response->setPayload("data", $array);
 
         // paging info
 
         $response->setPayload("itemsCount", ItemModel::countAll());
-
-        /* // production
-        $response->setPayload("menuItems", $queryResult->toArray());
-         */
 
         $response->setStatus(true);
         return $response;
@@ -347,7 +361,7 @@ class BuffetApi
      */
     function handleGetOrders(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(["token"]); // optional - "page", "itemsCount"
+        $response->setRequestKeys(["token"]); // optional - "page", "itemsCount", "isKDS"
         $response->setPayloadKeys(["data", "items"]);
 
         $jwt = new JWTApi;
@@ -364,18 +378,29 @@ class BuffetApi
         }
         $isAdmin = UserModel::isAdmin($uid);
 
+        $paymentTableName = PaymentModel::getTableName();
+        $orderTableName = OrderModel::getTableName();
+
         if ($isAdmin) {
-            $orders = OrderModel::getAll();
+            if ($response->getRequestByKey("isKDS")) {
+                $isKDS = (bool) $response->getRequestByKey("isKDS");
+            } else {
+                $isKDS = false;
+            }
+            if ($isKDS) {
+                $orders = OrderModel::query()->where("paid", "=", 1)->where("status", "=", OrderStatus::Sent->value)->orWhere("status", "=", OrderStatus::Preparing->value)->orWhere("status", "=", OrderStatus::Waiting->value);
+                error_log($orders->toSql());
+            } else {
+                $orders = OrderModel::getAll();
+            }
+
         } else {
             $orders = OrderModel::getByUser((int) $uid);
         }
 
-        $paymentTableName = PaymentModel::getTableName();
-        $orderTableName = OrderModel::getTableName();
-
         if ($page > 0 && $itemsCount > 0) {
-            if ($orders) {
-                $orders = $orders->getQuery()->join($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id')->select("$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl");
+            if (!$orders->get()->isEmpty()) {
+                $orders = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl"]);
 
                 $paginate = $orders->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
                 $response->setPayload("itemsCount", $paginate->total());
@@ -384,11 +409,15 @@ class BuffetApi
                 return $response->setError(Error::QueryFailed);
             }
         } else {
-            $response->setPayload("itemsCount", OrderModel::query()->count());
-            $ordersArray = $orders->getQuery()->join($paymentTableName, $orderTableName . '.paymentId', '=', $paymentTableName . '.id')->select("$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl")->get()->toArray();
+            $response->setPayload("itemsCount", $orders->count());
+            $ordersArray = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl"])->get()->toArray();
         }
 
         $itemIds = [];
+        /**
+         * @var array<int> $variantIds
+         */
+        $variantIds = [];
 
         foreach ($ordersArray as &$order) {
             // cast to array $paginate->items() - returns array<stdObj>
@@ -407,6 +436,11 @@ class BuffetApi
             unset($order["thePayUrl"]);
 
             $order["items"] = json_decode($order["items"]);
+//            var_dump($order["items"]);
+            foreach ($order["items"] as &$item) {
+                //var_dump((array) $item->variants);
+                $variantIds = array_merge($variantIds, (array) $item->variants);
+            }
             $orderitemIds = Collection::make($order["items"])->pluck("id")->toArray();
             array_push($itemIds, ...$orderitemIds);
         }
@@ -414,6 +448,7 @@ class BuffetApi
         $response->setPayload("data", $ordersArray);
 
         $itemIds = array_unique($itemIds);
+        $variantIds = array_unique($variantIds);
 
         try {
             $items = ItemModel::getByIdArray($itemIds)->toArray();
@@ -422,10 +457,27 @@ class BuffetApi
                 return $response->setError(Error::MissingItems);
             }
         }
+
+        try {
+            if (!empty($variantIds)) {
+                $variants = VariantModel::getByIdArray($variantIds)->toArray();
+            }
+        } catch (Exception $e) {
+            if ($e->getCode() == 2) {
+                return $response->setError(Error::InvalidVariant);
+            }
+        }
+
         if (!empty($items)) {
             $response->setPayload("items", $items);
         } else {
             $response->setPayload("items", []);
+        }
+
+        if (!empty($variants)) {
+            $response->setPayload("variants", $variants);
+        } else {
+            $response->setPayload("variants", []);
         }
         $response->setStatus(true);
         return $response;
@@ -533,6 +585,10 @@ class BuffetApi
                 switch ($e->getCode()) {
                     case 1:
                         return $response->setError(Error::MissingItems);
+                    case 2:
+                        return $response->setError(Error::InvalidVariant);
+                    case 3:
+                        return $response->setError(Error::DuplicateExclusiveVariantSelected);
                     default:
                         return $response->setError(Error::OrderCreationError);
                 }
@@ -550,7 +606,9 @@ class BuffetApi
 
         $order["items"] = json_decode($order["items"]);
 
-        WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
+        if ($paymentMethod == PaymentMethods::Cash->value) {
+            WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
+        }
 
         return $response->setStatus(true)->setSuccess(Success::OrderCreated);
     }
@@ -583,7 +641,7 @@ class BuffetApi
 
         if ($isAdmin) {
             $orderParameters = [];
-            foreach (OrderModel::getCollumns() as $column) {
+            foreach (OrderModel::getColumns() as $column) {
                 if ($response->hasRequestByKey($column)) {
                     $orderParameters["$column"] = $response->getRequestByKey($column);
                 }
@@ -841,7 +899,7 @@ class BuffetApi
         }
 
         $itemParameters = [];
-        foreach (ItemModel::getCollumns() as $column) {
+        foreach (ItemModel::getColumns() as $column) {
             if ($response->hasRequestByKey($column)) {
                 $itemParameters["$column"] = $response->getRequestByKey($column);
             }
@@ -895,7 +953,7 @@ class BuffetApi
      */
     function handleCreateItem(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(array_merge(["token"], ItemModel::getCollumns()));
+        $response->setRequestKeys(array_merge(["token"], ItemModel::getColumns()));
 
         if (!$response->hasRequestKeys()) {
             return $response;
@@ -915,7 +973,7 @@ class BuffetApi
             return $response->setError(Error::Unauthorized);
         }
         $itemParameters = [];
-        foreach (ItemModel::getCollumns() as $column) {
+        foreach (ItemModel::getColumns() as $column) {
             if ($response->hasRequestByKey($column)) {
                 $itemParameters["$column"] = $response->getRequestByKey($column);
             } else {
@@ -925,6 +983,260 @@ class BuffetApi
         ItemModel::query()->create($itemParameters);
 
         return $response->setSuccess(Success::ItemCreated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    public function handleCreateVariant(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "itemId", "name", "addedPrice", "isExclusive"]);
+
+        if (!$response->hasRequestKeys()) {
+            return $response;
+        }
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        $itemId = (int) $response->getRequestByKey("itemId");
+        $name = (string) $response->getRequestByKey("name");
+        $addedPrice = (int) $response->getRequestByKey("addedPrice");
+        $isExclusive = (bool) $response->getRequestByKey("isExclusive");
+
+        if (!ItemModel::exists($itemId)) {
+            return $response->setError(Error::ItemIdNotFound);
+        }
+
+        try {
+            VariantModel::createVariant($itemId, $name, $addedPrice, $isExclusive);
+        } catch (\Exception $e) {
+            return $response->setError(Error::VariantCreationFailed);
+        }
+
+        return $response->setSuccess(Success::VariantCreated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    public function handleUpdateVariant(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "variantId"]);
+
+        if (!$response->hasRequestKeys()) {
+            return $response;
+        }
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        if (!$response->hasRequestByKey("variantId")) {
+            return $response->setError(Error::MissingVariantId);
+        }
+
+        $variantId = (int) $response->getRequestByKey("variantId");
+
+        if (!VariantModel::exists($variantId)) {
+            return $response->setError(Error::VariantNotFound);
+        }
+
+        $variantParameters = [];
+        foreach (VariantModel::getColums() as $column) {
+            if ($response->hasRequestByKey($column)) {
+                $variantParameters["$column"] = $response->getRequestByKey($column);
+            }
+        }
+        if (!empty($variantParameters)) {
+            VariantModel::query()->where("id", $variantId)->update($variantParameters);
+        }
+
+        return $response->setSuccess(Success::VariantUpdated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleRemoveVariant(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "variantId"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        if (!$response->hasRequestByKey("variantId")) {
+            return $response->setError(Error::MissingVariantId);
+        }
+
+        $variantId = (int) $response->getRequestByKey("variantId");
+
+        if (!VariantModel::exists($variantId)) {
+            return $response->setError(Error::VariantNotFound);
+        }
+
+        VariantModel::query()->where("id", $variantId)->delete();
+
+        return $response->setSuccess(Success::VaraintRemoved);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleCreateCategory(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "name", "description"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!$response->hasRequestKeys()) {
+            return $response->setError(Error::MissingPayloadKeys);
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        $category["name"] = $response->getRequestByKey("name");
+        $category["description"] = $response->getRequestByKey("description");
+
+        CategoryModel::query()->create($category);
+
+        return $response->setSuccess(Success::CategoryCreated);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+
+    function handleRemoveCategory(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "categoryId"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        if (!$response->hasRequestByKey("categoryId")) {
+            return $response->setError(Error::MissingCategoryId);
+        }
+
+        $categoryId = (int) $response->getRequestByKey("categoryId");
+
+        if (!CategoryModel::exists($categoryId)) {
+            return $response->setError(Error::CategoryNotFound);
+        }
+
+        CategoryModel::query()->where("id", $response->getRequestByKey("categoryId"))->update(["removed" => true]);
+
+        return $response->setSuccess(Success::CategoryRemoved);
+    }
+
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+
+    function handleUpdateCategory(ApiResponse $response): ApiResponse
+    {
+        {
+            $response->setRequestKeys(["token", "categoryId"]);
+
+            if (!$response->hasRequestKeys()) {
+                return $response;
+            }
+
+            $jwt = new JWTApi;
+
+            $jwt->validateToken($response);
+
+            $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+            if ($response->hasFailed()) {
+                return $response;
+            }
+
+            if (!UserModel::isAdmin($uid)) {
+                return $response->setError(Error::Unauthorized);
+            }
+
+            if (!$response->hasRequestByKey("categoryId")) {
+                return $response->setError(Error::MissingVariantId);
+            }
+
+            $categoryId = (int) $response->getRequestByKey("categoryId");
+
+            if (!CategoryModel::exists($categoryId)) {
+                return $response->setError(Error::CategoryNotFound);
+            }
+
+            $categoryParameters = [];
+            foreach (CategoryModel::getColums() as $column) {
+                if ($response->hasRequestByKey($column)) {
+                    $categoryParameters["$column"] = $response->getRequestByKey($column);
+                }
+            }
+            if (!empty($categoryParameters)) {
+                CategoryModel::query()->where("id", $categoryId)->update($categoryParameters);
+            }
+
+            return $response->setSuccess(Success::CategoryUpdated);
+        }
     }
 
     /**
@@ -979,7 +1291,7 @@ class BuffetApi
      * @param  ApiResponse   $response
      * @return ApiResponse
      */
-    public function handleGenerateTemp(ApiResponse $response): ApiResponse
+    function handleGenerateTemp(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token"]);
 
@@ -1013,7 +1325,7 @@ class BuffetApi
      * @param  ApiResponse   $response
      * @return ApiResponse
      */
-    public function handleGetOrderTimeTable(ApiResponse $response): ApiResponse
+    function handleGetOrderTimeTable(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys([]);
 

@@ -60,7 +60,7 @@ class KDSChannel implements MessageInterface
                         //$conn->send(Helper::getErrorResponse(Error::AlreadySubscribed));
                     }
                     $conn->send(Helper::getSuccessResponse(Success::Subscribed));
-                    $conn->send(HttpClient::post('http://localhost/api', json_encode(['requestType' => 'getOrders', 'token' => $token])));
+                    $conn->send(HttpClient::post('http://localhost/api', json_encode(['requestType' => 'getOrders', 'token' => $token, "isKDS" => true])));
                     break;
                 case "publish":
                     if (!$isAdmin) {
