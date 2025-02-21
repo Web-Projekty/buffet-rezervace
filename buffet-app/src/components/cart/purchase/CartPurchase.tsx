@@ -65,8 +65,6 @@ const CartPurchase = () => {
       const { startTime, endTime, formattedDate } =
         parseSelectedTime(selectedTime);
 
-      //console.log(startTime, endTime, formattedDate);
-
       const { order, error, paywallUrl } = await createOrder(
         token,
         cartItems.map(({ id, quantity }) => ({
