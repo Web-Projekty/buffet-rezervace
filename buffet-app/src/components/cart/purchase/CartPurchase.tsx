@@ -8,6 +8,7 @@ import { createOrder } from "../../utils/api";
 import { parseSelectedTime } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { toastMessages } from "../../utils/toastMessages";
 
 const CartReservationCalendar = lazy(() => import("./CartReservationCalendar"));
 const CartPurchaseMethods = lazy(() => import("./CartPurchaseMethods"));
@@ -20,7 +21,7 @@ const PageNotFound = lazy(() => import("../../error/PageNotFound"));
 
 const CartPurchase = () => {
   const { token, isAdmin } = useUser();
-  const { cartItems, isCartEmpty } = useCart();
+  const { cartItems, isCartEmpty, clearCart } = useCart();
   const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<
     PaymentMethod[]
   >([]);
@@ -53,7 +54,10 @@ const CartPurchase = () => {
   );
 
   const handleSubmit = useCallback(async () => {
-    if (isDisabled) return;
+    if (isDisabled) {
+      toast.error(toastMessages.order.fillForm);
+      return;
+    }
     if (isSubmitting) return;
     if (success) return;
 
@@ -78,11 +82,12 @@ const CartPurchase = () => {
       );
 
       if (error) {
-        setError("Chyba při vytváření objednávky.");
-        toast.error("Chyba při vytváření objednávky.");
+        setError(toastMessages.order.error);
+        toast.error(toastMessages.order.error);
       } else {
         setSuccess(true);
-        toast.success("Objednávka byla úspěšně vytvořena.");
+        toast.success(toastMessages.order.success);
+        clearCart();
         if (paywallUrl) {
           window.location.href = paywallUrl;
         } else {
@@ -93,7 +98,8 @@ const CartPurchase = () => {
         }
       }
     } catch {
-      setError("Chyba při vytváření objednávky.");
+      setError(toastMessages.order.error);
+      toast.error(toastMessages.order.error);
     } finally {
       setIsSubmitting(false);
     }
@@ -130,7 +136,7 @@ const CartPurchase = () => {
   }
 
   return (
-    <div className="m-auto grid w-[95%] grid-cols-1 gap-10 text-white md:w-[75%] md:grid-cols-2 2xl:w-[60%]">
+    <div className="m-auto grid max-w-[25rem] grid-cols-1 gap-10 text-white transition-all duration-1000 ease-in-out md:max-w-[65rem] md:grid-cols-2">
       <div className="flex w-full flex-col gap-5">
         <div className="flex flex-col rounded-lg bg-slate-700 p-6 font-sans">
           <h2 className="text-2xl font-bold">Čas vyzvednutí</h2>
@@ -178,7 +184,7 @@ const CartPurchase = () => {
         </div>
         <div className="flex flex-col rounded-lg bg-slate-700 p-3">
           <Button
-            disabled={isDisabled || isSubmitting || success}
+            disabled={isSubmitting || success}
             onClick={handleSubmit}
             loading={isSubmitting}
           >
