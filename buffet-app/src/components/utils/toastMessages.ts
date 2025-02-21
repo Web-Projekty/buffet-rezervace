@@ -3,6 +3,10 @@ export const toastMessages = {
     success: "Přihlášení proběhlo úspěšně",
     error: "Chyba při přihlášení",
   },
+  logout: {
+    success: "Odhlášení proběhlo úspěšně",
+    error: "Chyba při odhlášení",
+  },
   register: {
     success: "Registrace proběhla úspěšně",
     error: "Chyba při registraci",
