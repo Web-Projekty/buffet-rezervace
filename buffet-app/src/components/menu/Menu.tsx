@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useUser } from "../../hooks/useUser";
 import { Fallback } from "../../main.tsx";
+import ScrollToTop from "../ui/ScrollToTop.tsx";
 
 const MenuEdit = lazy(() => import("./editMenu/MenuEdit.tsx"));
 const UserMenu = lazy(() => import("./UserMenu.tsx"));
@@ -17,9 +18,12 @@ const Menu = () => {
   if (!isMounted) return <Fallback />;
 
   return (
-    <Suspense fallback={<Fallback />}>
-      {isAdmin ? <MenuEdit /> : <UserMenu />}
-    </Suspense>
+    <>
+      <Suspense fallback={<Fallback />}>
+        {isAdmin ? <MenuEdit /> : <UserMenu />}
+      </Suspense>
+      <ScrollToTop />
+    </>
   );
 };
 
