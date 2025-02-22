@@ -40,31 +40,37 @@ export const useUser = (): UseUserReturn => {
 
   const handleSavePassword = async (formData: ProfileFormDataType) => {
     const { password, newPassword, newPasswordConfirmation } = formData;
+    try {
+      const response = await updateUserPassword(
+        token,
+        password,
+        newPassword,
+        newPasswordConfirmation,
+      );
 
-    const response = await updateUserPassword(
-      token,
-      password,
-      newPassword,
-      newPasswordConfirmation,
-    );
-
-    handleResponse(
-      response.status,
-      toastMessages.passwordChange.success,
-      toastMessages.passwordChange.error,
-    );
+      handleResponse(
+        response.status,
+        toastMessages.passwordChange.success,
+        toastMessages.passwordChange.error,
+      );
+    } catch {
+      toast.error(toastMessages.passwordChange.error);
+    }
   };
 
   const handleSaveInfo = async (formData: ProfileFormDataType) => {
     const { name, email, tel } = formData;
 
-    const response = await updateUserData(token, name, tel, email);
-
-    handleResponse(
-      response.status,
-      toastMessages.profileChange.success,
-      toastMessages.profileChange.error,
-    );
+    try {
+      const response = await updateUserData(token, name, tel, email);
+      handleResponse(
+        response.status,
+        toastMessages.profileChange.success,
+        toastMessages.profileChange.error,
+      );
+    } catch {
+      toast.error(toastMessages.profileChange.error);
+    }
   };
 
   const logout = async () => {
@@ -72,7 +78,6 @@ export const useUser = (): UseUserReturn => {
     removeTokenExpiration();
     toast.success(toastMessages.logout.success);
     navigate("/login", { replace: true });
-    if (isAdmin) window.location.reload();
   };
 
   return {
