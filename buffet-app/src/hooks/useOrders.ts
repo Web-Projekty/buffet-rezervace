@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useFetch } from "./useFetch";
 import { useUser } from "./useUser";
 import { Order, OrdersData } from "../types";
@@ -10,6 +10,7 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
   const [latestOrder, setLatestOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [refetchIndex, setRefetchIndex] = useState<number>(0);
 
   const {
     data: fetchedOrders,
@@ -24,17 +25,11 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
       itemsCount: itemsCount === "all" ? undefined : itemsCount,
     },
     { data: [], itemsCount: 0, items: [] },
-    [token],
+    [token, refetchIndex],
   );
 
   useEffect(() => {
     if (fetchedOrders && fetchedOrders.data) {
-      // const sortedOrders = [...fetchedOrders.data].sort((a, b) => {
-      //   return (
-      //     new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
-      //   );
-      // });
-
       if (
         !orders ||
         JSON.stringify(orders) !== JSON.stringify(fetchedOrders.data)
@@ -43,9 +38,13 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
         setLatestOrder(fetchedOrders.data[0]);
       }
     }
-    setIsLoading(fetchLoading);
+    setIsLoading(refetchIndex > 0 ? false : fetchLoading);
     setError(fetchError);
   }, [fetchedOrders, fetchLoading, fetchError]);
+
+  const refetch = useCallback(() => {
+    setRefetchIndex((prevIndex) => prevIndex + 1);
+  }, []);
 
   return {
     orders,
@@ -53,6 +52,7 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
     error,
     isLoading,
     fetchedItems: fetchedOrders?.items,
+    refetch,
   };
 };
 
