@@ -187,6 +187,7 @@ const CartPurchase = () => {
             disabled={isSubmitting || success}
             onClick={handleSubmit}
             loading={isSubmitting}
+            className={`${isDisabled ? "cursor-not-allowed hover:bg-interactiveColor" : ""}`}
           >
             {error ? error : "Potvrdit objednávku"}
           </Button>
