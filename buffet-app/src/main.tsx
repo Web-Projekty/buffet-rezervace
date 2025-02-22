@@ -56,6 +56,7 @@ const router = createBrowserRouter([
         </Suspense>
       </ErrorBoundary>
     ),
+    errorElement: <PageNotFound />,
     children: [
       {
         path: "/",
