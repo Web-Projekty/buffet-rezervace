@@ -3,7 +3,7 @@ import Loading from "../ui/Loading";
 import useMenu from "../../hooks/useMenu";
 import MenuCategories from "./MenuCategories";
 import MenuSections from "./MenuSections";
-import { useCallback, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
 const UserMenu = () => {
   const { menuItems, error, isLoading, categories } = useMenu();
@@ -21,6 +21,14 @@ const UserMenu = () => {
     }
   }, []);
 
+  const filteredCategories = useMemo(
+    () =>
+      categories.filter((category) =>
+        menuItems?.some((item) => item.category === category.id),
+      ),
+    [categories, menuItems],
+  );
+
   if (error) {
     return (
       <ErrorComponent title="Načítání položek se nezdařilo." subtitle="🛠️👷" />
@@ -33,16 +41,12 @@ const UserMenu = () => {
       {!isLoading ? (
         <>
           <MenuCategories
-            categories={categories.filter((category) =>
-              menuItems?.some((item) => item.category === category.id),
-            )}
+            categories={filteredCategories}
             onFilter={handleFilter}
           />
           <MenuSections
             menuItems={menuItems}
-            categories={categories.filter((category) =>
-              menuItems?.some((item) => item.category === category.id),
-            )}
+            categories={filteredCategories}
             refs={categoryRefs}
           />
         </>
