@@ -5,6 +5,7 @@ declare (strict_types = 1);
 namespace Buffet\Api;
 
 use Buffet\Types\ApiResponse;
+use Buffet\Types\Error;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Psr7\UploadedFile;
 
@@ -12,6 +13,7 @@ class ImageUploader
 {
 
     public string $mime;
+    public ApiResponse $apiResponse;
     /**
      * @param ServerRequestInterface $request
      * @param int                    $imageId
@@ -25,6 +27,8 @@ class ImageUploader
         $uploadedFiles = $request->getUploadedFiles();
 
         $fileDirectory = $baseDirectory . '/' . $directory;
+
+        $this->apiResponse = $response;
 
         /**
          * @var UploadedFile
@@ -48,14 +52,14 @@ class ImageUploader
             mkdir($baseDirectory . DIRECTORY_SEPARATOR . "tmp");
         }
 
-        $filename = strval($imageId) . '.png';
+        $filename = strval($imageId) . '.webp';
         $tempFilename = $tempFileName = 'temp_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $extension;
 
         $tempPath = $baseDirectory . DIRECTORY_SEPARATOR . "tmp" . DIRECTORY_SEPARATOR . $tempFileName;
         $targetPath = $directory . DIRECTORY_SEPARATOR . $filename;
 
         if ($this->isImage($uploadedFile)) {
-            var_dump($this->mime);
+            //var_dump($this->mime);
         }
 
         $mime = $this->mime;
@@ -63,15 +67,15 @@ class ImageUploader
         $uploadedFile->moveTo($tempPath);
 
         if (file_exists($tempPath)) {
-            var_dump("exists");
+            // var_dump("exists");
         }
-        var_dump($mime);
+        //var_dump($mime);
         switch ($mime) {
             case 'image/jpeg':
                 $image = imagecreatefromjpeg($tempPath);
                 break;
             case 'image/png':
-                var_dump("png");
+                //      var_dump("png");
                 $image = imagecreatefrompng($tempPath);
                 break;
             case 'image/gif':
@@ -81,21 +85,27 @@ class ImageUploader
                 $image = imagecreatefromwebp($tempPath);
                 break;
             default:
-                var_dump("false");
                 $image = false;
         }
         if ($image) {
-            var_dump($targetPath);
-            var_dump($image);
-            $targetFile = fopen($targetPath, "w+");
-            imagepng($image, $targetFile, 1);
-            var_dump("webp");
-        }
 
-        if (file_exists($targetPath)) {
-            unlink($targetPath);
-        }
+            if (file_exists($targetPath)) {
+                unlink($targetPath);
+            }
 
+            $file = fopen($targetPath, "w");
+
+            imagewebp($image, $file, 9);
+
+            imagedestroy($image);
+
+            unlink($tempPath);
+
+            if(!file_exists($targetPath)) {
+                $this->apiResponse->setError(Error::ImageWriteFailed);
+            }
+            
+        }
         return $filename;
     }
 
