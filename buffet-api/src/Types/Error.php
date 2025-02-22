@@ -93,6 +93,9 @@ enum Error: string {
     ############################ General ############################
     case GeneralError = 'Oops something has gone wrong';
 
+    ############################ Images ############################
+    case InvalidDirectory = 'Invalid directory';
+
     ############################ ThePay ############################
     case ThePayError = 'ThePay error';
     case PaymentCreationError = 'Payment creation error';
