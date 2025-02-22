@@ -57,7 +57,6 @@ export const useLogin = (loginData: LoginData): UseLoginReturn => {
         setTokenExpiration(data.payload.token as string);
         toast.success(toastMessages.login.success);
         navigate(url ? "/" + url : "/", { replace: true });
-        if (isAdmin) window.location.reload();
       } else {
         setError("Error occured");
         toast.error(toastMessages.login.error);

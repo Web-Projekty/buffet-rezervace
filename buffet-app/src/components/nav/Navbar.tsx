@@ -30,7 +30,7 @@ const Navbar = ({ isOpen, toggleMobileMenu }: NavbarProps) => {
   const { user, isAdmin } = useUser();
 
   return (
-    <nav className="relative">
+    <nav className="relative" key={user?.id}>
       <div className="hidden flex-row md:flex">
         <ul className="relative flex w-auto flex-row items-center justify-between gap-5 text-xl text-black">
           {NavLinks.map(({ id, path, name, requireAdmin }) => {
