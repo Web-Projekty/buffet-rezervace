@@ -37,6 +37,8 @@ WORKDIR /var/www/html
 # Copy the contents of the backend (PHP app) to the container
 COPY ./buffet-api/ /var/www/html/
 
+COPY buffet-api/php.ini /usr/local/etc/php/php.ini
+
 # Install composer
 #RUN composer install --no-interaction
 
