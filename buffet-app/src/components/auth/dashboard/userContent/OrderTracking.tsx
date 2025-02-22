@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo } from "react";
+import { lazy, Suspense, useEffect, useMemo } from "react";
 import { Order } from "../../../../types";
 import useOrders from "../../../../hooks/useOrders";
 import Loading from "../../../ui/Loading";
@@ -38,7 +38,10 @@ const getCurrentStep = (order: Order | null): number => {
 };
 
 const OrderTracking = () => {
-  const { latestOrder, isLoading, error, fetchedItems } = useOrders(1, 1);
+  const { latestOrder, isLoading, error, fetchedItems, refetch } = useOrders(
+    1,
+    1,
+  );
 
   const currentStep: number = useMemo(
     () => (latestOrder ? getCurrentStep(latestOrder) : -1),
@@ -59,8 +62,23 @@ const OrderTracking = () => {
       latestOrder.endTime
     : "";
 
+  useEffect(() => {
+    if (
+      latestOrder?.status !== "done" &&
+      latestOrder?.status !== "cancelled" &&
+      latestOrder?.status !== "storno"
+    ) {
+      const interval = setInterval(() => {
+        refetch();
+      }, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [latestOrder?.status]);
   return (
-    <section className="flex h-full w-full flex-col gap-2 rounded-lg text-white">
+    <section
+      className="flex h-full w-full flex-col gap-2 rounded-lg text-white"
+      key={latestOrder?.status}
+    >
       <h1 className="text-2xl font-bold">Aktuální objednávka</h1>
       {!isLoading ? (
         error ? (
