@@ -1380,6 +1380,11 @@ class BuffetApi
 
         $imageId = (int) $response->getRequestByKey("imageId");
         $directory = (string) $response->getRequestByKey("directory");
+        $allowedCategories = ["categories", "items", "variants"];
+
+        if (!in_array($directory, $allowedCategories, true)) {
+            return $response->setError(Error::InvalidDirectory);
+        }
 
         $imageUploader = new ImageUploader;
 
