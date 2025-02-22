@@ -96,6 +96,8 @@ enum Error: string {
     ############################ Images ############################
     case InvalidDirectory = 'Invalid directory';
     case ImageWriteFailed = 'Image write failed';
+    case ImageReadFailed = 'Image read failed';
+    case ImageUploadFailed = 'Image upload failed';
 
     ############################ ThePay ############################
     case ThePayError = 'ThePay error';
