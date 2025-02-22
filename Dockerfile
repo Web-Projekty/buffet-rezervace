@@ -19,7 +19,8 @@ RUN apt-get install -y \
 		libjpeg62-turbo-dev \
 		libpng-dev \
         libpng-dev \
-        libwebp-dev
+        libwebp-dev \
+        libgd-dev
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
 && docker-php-ext-install -j$(nproc) gd
