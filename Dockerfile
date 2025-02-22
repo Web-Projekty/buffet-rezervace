@@ -13,6 +13,17 @@ RUN apt-get update && apt-get install -y git unzip zip curl supervisor
 # Install necessary PHP extensions
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
+#PHP GD
+RUN apt-get install -y \
+		libfreetype-dev \
+		libjpeg62-turbo-dev \
+		libpng-dev \
+        libpng-dev \
+        libwebp-dev
+
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+&& docker-php-ext-install -j$(nproc) gd
+
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
