@@ -6,7 +6,7 @@ services:
             dockerfile: Dockerfile
         container_name: php-apache_dev
         volumes:
-            - ./../buffet-api:/var/www/html
+            - ./../buffet-api:/var/www/html/:rw
             - ./../conf/:/var/www/html/conf/:rw
 
         ports:
