@@ -6,6 +6,8 @@ namespace Buffet\Api;
 
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\Types\Settings;
+use Buffet\Utils\EnvReader;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Psr7\UploadedFile;
 
@@ -37,6 +39,8 @@ class ImageUploader
 
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
             $filename = $this->moveUploadedFile($baseDirectory, $fileDirectory, $uploadedFile, $imageId);
+        } else {
+            $this->apiResponse->setError(Error::ImageUploadFailed);
         }
     }
 
@@ -66,16 +70,11 @@ class ImageUploader
 
         $uploadedFile->moveTo($tempPath);
 
-        if (file_exists($tempPath)) {
-            // var_dump("exists");
-        }
-        //var_dump($mime);
         switch ($mime) {
             case 'image/jpeg':
                 $image = imagecreatefromjpeg($tempPath);
                 break;
             case 'image/png':
-                //      var_dump("png");
                 $image = imagecreatefrompng($tempPath);
                 break;
             case 'image/gif':
@@ -95,16 +94,20 @@ class ImageUploader
 
             $file = fopen($targetPath, "w");
 
-            imagewebp($image, $file, 9);
+            $quality = (int) EnvReader::getEnvProperty(Settings::ImageUploadQuality);
+
+            imagewebp($image, $file, $quality);
 
             imagedestroy($image);
 
             unlink($tempPath);
 
-            if(!file_exists($targetPath)) {
+            if (!file_exists($targetPath)) {
                 $this->apiResponse->setError(Error::ImageWriteFailed);
             }
-            
+
+        } else {
+            $this->apiResponse->setError(Error::ImageReadFailed);
         }
         return $filename;
     }
