@@ -16,6 +16,7 @@ class EnvReader
 
     /**
      * @param Settings $needle
+     * @throws SettingsException
      */
     public static function getEnvProperty(Settings $needle): string | bool | null
     {

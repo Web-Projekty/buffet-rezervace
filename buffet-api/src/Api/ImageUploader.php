@@ -6,6 +6,7 @@ namespace Buffet\Api;
 
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\Settings;
 use Buffet\Utils\EnvReader;
 use Psr\Http\Message\ServerRequestInterface;
@@ -94,13 +95,15 @@ class ImageUploader
 
             $file = fopen($targetPath, "w");
 
-            $quality = (int) EnvReader::getEnvProperty(Settings::ImageUploadQuality);
-
+            try {
+                $quality = (int) EnvReader::getEnvProperty(Settings::ImageUploadQuality);
+            } catch (SettingsException $e) {
+                unlink($tempPath);
+                throw $e;
+            }
             imagewebp($image, $file, $quality);
 
             imagedestroy($image);
-
-            unlink($tempPath);
 
             if (!file_exists($targetPath)) {
                 $this->apiResponse->setError(Error::ImageWriteFailed);
