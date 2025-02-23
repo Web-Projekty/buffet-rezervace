@@ -48,4 +48,4 @@ EXPOSE 80
 # Run the post-create script
 #RUN bash .devcontainer/start.sh d
 
-CMD ["bash", "-c", "mkdir -p ./logs && cp ./src/WebSockets/apache.conf /etc/apache2/sites-available/000-default.conf && composer install && supervisord -c ./src/WebSockets/supervisor.conf && usermod -a -G root www-data && chown -R www-data:www-data /var/www/html/conf && apache2-foreground"]
+CMD ["bash", "-c", "mkdir -p ./logs && cp ./src/WebSockets/apache.conf /etc/apache2/sites-available/000-default.conf && composer install && supervisord -c ./src/WebSockets/supervisor.conf && usermod -a -G root www-data && chown -R www-data:www-data /var/www/html/conf && chown -R www-data:www-data /var/www/html/img && apache2-foreground"]
