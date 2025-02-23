@@ -43,7 +43,7 @@ export const toastMessages = {
   cart: {
     full: "Košík je plný",
     fullItem: "Maximální počet této položky",
-    empty: "Košík je prázdný",
+    empty: "Máte prázdný košík",
     added: "Položka byla přidána do košíku",
     removed: "Položka byla odebrána z košíku",
   },
