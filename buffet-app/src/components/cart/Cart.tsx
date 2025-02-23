@@ -5,6 +5,8 @@ import { scaleUpAnimation } from "../../animations";
 import EmptyCart from "./EmptyCart";
 import CartItem from "./CartItem";
 import Button from "../ui/Button";
+import toast from "react-hot-toast";
+import { toastMessages } from "../utils/toastMessages";
 
 type CartProps = {
   type?: "modal" | "menu";
@@ -46,12 +48,15 @@ const Cart = ({ type = "modal", onClick }: CartProps) => {
           </Button>
         )}
         <Button
-          className="w-32"
+          className={`w-32 ${isCartEmpty() ? "cursor-not-allowed hover:bg-interactiveColor" : ""}`}
           onClick={() => {
+            if (isCartEmpty()) {
+              toast.error(toastMessages.cart.empty);
+              return;
+            }
             handleContinue();
             if (onClick) onClick();
           }}
-          disabled={isCartEmpty()}
         >
           K pokladně
         </Button>
