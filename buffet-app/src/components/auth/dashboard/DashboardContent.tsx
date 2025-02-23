@@ -15,72 +15,39 @@ const AdminAccounting = lazy(() => import("./adminContent/AdminAccounting"));
 const PageNotFound = lazy(() => import("../../error/PageNotFound"));
 
 type DashboardContentProps = {
-  page: Page;
+  page: Page | undefined;
   isAdmin: boolean;
+};
+
+type Pages = {
+  [key: string]: JSX.Element;
+};
+
+const adminPages: Pages = {
+  Profil: <Profile />,
+  Přehled: <AdminOverview />,
+  Systém: <AdminSystem />,
+  Databáze: <AdminDatabase />,
+  Provoz: <AdminService />,
+  Platby: <AdminPayments />,
+  Účetnictví: <AdminAccounting />,
+};
+
+const userPages: Pages = {
+  Přehled: <OrderTracking />,
+  Profil: <Profile />,
+  Historie: <OrderHistory />,
+  Kredity: <Credits />,
 };
 
 const DashboardContent = ({ page, isAdmin }: DashboardContentProps) => {
   const renderContent = () => {
-    switch (page) {
-      case "Přehled":
-        return (
-          <Suspense fallback={<Fallback />}>
-            {isAdmin ? <AdminOverview /> : <OrderTracking />}
-          </Suspense>
-        );
-      case "Historie":
-        return (
-          <Suspense fallback={<Fallback />}>
-            {isAdmin ? <PageNotFound /> : <OrderHistory />}
-          </Suspense>
-        );
-      case "Profil":
-        return (
-          <Suspense fallback={<Fallback />}>
-            <Profile />
-          </Suspense>
-        );
-      case "Kredity":
-        return (
-          <Suspense fallback={<Fallback />}>
-            {isAdmin ? <PageNotFound /> : <Credits />}
-          </Suspense>
-        );
-      case "Systém":
-        return (
-          <Suspense fallback={<Fallback />}>
-            {isAdmin ? <AdminSystem /> : <PageNotFound />}
-          </Suspense>
-        );
-      case "Databáze":
-        return (
-          <Suspense fallback={<Fallback />}>
-            {isAdmin ? <AdminDatabase /> : <PageNotFound />}
-          </Suspense>
-        );
-      case "Provoz":
-        return (
-          <Suspense fallback={<Fallback />}>
-            {isAdmin ? <AdminService /> : <PageNotFound />}
-          </Suspense>
-        );
-      case "Platby":
-        return (
-          <Suspense fallback={<Fallback />}>
-            {isAdmin ? <AdminPayments /> : <PageNotFound />}
-          </Suspense>
-        );
-      case "Účetnictví":
-        return (
-          <Suspense fallback={<Fallback />}>
-            {isAdmin ? <AdminAccounting /> : <PageNotFound />}
-          </Suspense>
-        );
-      default:
-        return <PageNotFound />;
-    }
+    return isAdmin
+      ? adminPages[page as string] || <PageNotFound />
+      : userPages[page as string] || <PageNotFound />;
   };
-  return renderContent();
+
+  return <Suspense fallback={<Fallback />}>{renderContent()}</Suspense>;
 };
 
 export default DashboardContent;

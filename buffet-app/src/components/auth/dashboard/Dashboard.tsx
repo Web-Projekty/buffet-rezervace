@@ -18,8 +18,7 @@ export type Page =
   | "Databáze"
   | "Provoz"
   | "Platby"
-  | "Účetnictví"
-  | undefined;
+  | "Účetnictví";
 
 const Dashboard = () => {
   const { isAdmin, logout } = useUser();
