@@ -27,7 +27,6 @@ const CartPurchase = () => {
   >([]);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -62,7 +61,6 @@ const CartPurchase = () => {
     if (success) return;
 
     setIsSubmitting(true);
-    setError(null);
 
     try {
       //console.log(selectedTime);
@@ -82,7 +80,6 @@ const CartPurchase = () => {
       );
 
       if (error) {
-        setError(toastMessages.order.error);
         toast.error(toastMessages.order.error);
       } else {
         setSuccess(true);
@@ -98,7 +95,6 @@ const CartPurchase = () => {
         }
       }
     } catch {
-      setError(toastMessages.order.error);
       toast.error(toastMessages.order.error);
     } finally {
       setIsSubmitting(false);
@@ -119,13 +115,6 @@ const CartPurchase = () => {
     },
     [],
   );
-
-  // if (cartItems.length <= 0)
-  //   return (
-  //     <Suspense fallback={<Fallback />}>
-  //       <PageNotFound />
-  //     </Suspense>
-  //   );
 
   if (isAdmin) {
     return (
@@ -189,7 +178,7 @@ const CartPurchase = () => {
             loading={isSubmitting}
             className={`${isDisabled ? "cursor-not-allowed hover:bg-interactiveColor" : ""}`}
           >
-            {error ? error : "Potvrdit objednávku"}
+            Potvrdit objednávku
           </Button>
           <p className="text-center text-xs text-descriptionColor">
             Potvrzením objednávky uživatel souhlasí se všeobecnými obchodními
