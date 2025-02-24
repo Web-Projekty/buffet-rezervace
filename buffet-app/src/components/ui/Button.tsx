@@ -1,5 +1,6 @@
 import React from "react";
 import Loading from "./Loading";
+import { twMerge } from "tailwind-merge";
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children: React.ReactNode;
@@ -16,7 +17,10 @@ const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={`rounded-md border border-cyan-900 bg-interactiveColor p-2 text-white hover:bg-cyan-600 ${className} ${disabled ? "cursor-not-allowed bg-cyan-600" : ""}`}
+      className={twMerge(
+        `rounded-md border border-cyan-900 bg-interactiveColor p-2 text-white hover:bg-interactiveHoverColor ${disabled ? "cursor-not-allowed bg-cyan-600" : ""}`,
+        className,
+      )}
       type={type}
       onClick={onClick}
       disabled={disabled}

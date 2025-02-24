@@ -1,4 +1,5 @@
 import React from "react";
+import { twMerge } from "tailwind-merge";
 
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
@@ -37,7 +38,7 @@ const Input = ({
         value={value}
         required={required}
         onChange={onChange}
-        className={"rounded-lg p-1 text-black " + className}
+        className={twMerge("rounded-lg p-1 text-black", className)}
         placeholder={placeholder}
         autoComplete={autoComplete}
         disabled={disabled}
@@ -75,7 +76,7 @@ const Input = ({
 
   if (required && displayStar) {
     return (
-      <div className={"relative w-full " + className}>
+      <div className={twMerge("relative w-full", className)}>
         <span className="absolute right-1 text-xl text-red-500" title="Povinné">
           *
         </span>
@@ -106,7 +107,7 @@ const Input = ({
       value={value}
       required={required}
       onChange={onChange}
-      className={"rounded-lg p-1 text-black " + className}
+      className={twMerge("rounded-lg p-1 text-black", className)}
       placeholder={placeholder}
       autoComplete={autoComplete}
       disabled={disabled}

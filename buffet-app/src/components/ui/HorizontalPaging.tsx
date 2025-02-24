@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { fadeInAnimation } from "../../animations";
+import { twMerge } from "tailwind-merge";
 
 type HorizontalPagingProps = {
   children: React.ReactNode;
@@ -96,7 +97,10 @@ const HorizontalPaging = ({
       </AnimatePresence>
 
       <div
-        className={`flex overflow-x-auto ${className} items-center gap-3 overflow-y-hidden`}
+        className={twMerge(
+          `flex items-center gap-3 overflow-x-auto overflow-y-hidden`,
+          className,
+        )}
         ref={scrollContainerRef}
       >
         {children}
