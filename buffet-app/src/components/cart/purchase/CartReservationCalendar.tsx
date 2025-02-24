@@ -95,7 +95,7 @@ const CartReservationCalendar = ({
         {selectedDate?.hours?.map((hour, index) => (
           <button
             key={hour.label + index}
-            className={`rounded px-4 py-2 text-white disabled:text-white ${hour.available ? (selectedHour === hour ? "bg-green-500" : "bg-sky-400") : "bg-gray-600"}`}
+            className={`min-w-[4rem] rounded py-2 text-center text-white disabled:text-white ${hour.available ? (selectedHour === hour ? "bg-green-500" : "bg-sky-400") : "bg-gray-600"}`}
             onClick={() => hour.available && handleHourClick(hour)}
             disabled={!hour.available}
           >
@@ -113,7 +113,7 @@ const CartReservationCalendar = ({
           return (
             <button
               key={minute.label + index}
-              className={`text-nowrap rounded px-4 py-2 text-center text-white disabled:text-white ${minute.available ? (selectedMinute === minute ? "bg-green-500" : "bg-sky-400") : "bg-gray-600"}`}
+              className={`min-w-[4rem] text-nowrap rounded py-2 text-center text-white disabled:text-white ${minute.available ? (selectedMinute === minute ? "bg-green-500" : "bg-sky-400") : "bg-gray-600"}`}
               onClick={() => minute.available && handleMinuteClick(minute)}
               disabled={!minute.available}
             >
