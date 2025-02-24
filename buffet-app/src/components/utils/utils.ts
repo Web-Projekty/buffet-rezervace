@@ -21,9 +21,12 @@ export const extractToken = (header: string | null): string => {
   return header ? header.split(" ")[1] : "";
 };
 
-export const formatDate = (date: string): string => {
+export const formatDate = (
+  date: string,
+  options?: Intl.DateTimeFormatOptions,
+): string => {
   const dateObject = new Date(date);
-  return dateObject.toLocaleDateString("cs-CZ");
+  return dateObject.toLocaleDateString("cs-CZ", options);
 };
 
 export const parseSelectedTime = (selectedTime: string | null) => {

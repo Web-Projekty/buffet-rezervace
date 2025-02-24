@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Order, OrderItem, OrderStatus } from "../types";
 import { updateOrder } from "../components/utils/api";
-import { mapItemsWithOrders } from "../components/utils/utils";
+import { formatDate, mapItemsWithOrders } from "../components/utils/utils";
 import toast from "react-hot-toast";
 import { toastMessages } from "../components/utils/toastMessages";
 
@@ -70,8 +70,14 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
 
   const color = delayed ? "bg-red-400" : getColorByStatus(status);
   const statusText = getTextByStatus(status);
-  const dateCreated = new Date(order.dateCreated).toLocaleString();
-  const pickUpDate = new Date(order.pickupDate).toLocaleDateString();
+  const dateCreated = formatDate(order.dateCreated, {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const pickUpDate = formatDate(order.pickupDate);
   const startTime = order.startTime;
   const endTime = order.endTime;
 
