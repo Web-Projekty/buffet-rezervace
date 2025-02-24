@@ -97,9 +97,7 @@ const OrderTracking = () => {
               {latestOrder && !isCancelled ? (
                 <div className="flex flex-col gap-5">
                   <div className="flex flex-col items-center gap-2">
-                    <p className="text-center">
-                      Vaše objednávka bude k vyzvednutí pod číslem
-                    </p>
+                    <p className="text-center">Bude k vyzvednutí pod číslem</p>
                     <h3 className="text-2xl font-bold">
                       {latestOrder.pickUpId}
                     </h3>
