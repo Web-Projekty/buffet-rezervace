@@ -12,7 +12,7 @@ import { toastMessages } from "../../utils/toastMessages";
 
 const CartReservationCalendar = lazy(() => import("./CartReservationCalendar"));
 const CartPurchaseMethods = lazy(() => import("./CartPurchaseMethods"));
-const CartPurchaseItems = lazy(() => import("./CartPurchaseItems"));
+const OrderItems = lazy(() => import("../../orders/OrderItems"));
 const CartUserInformation = lazy(() => import("./CartUserInformation"));
 const CartPurchaseSelectedMethods = lazy(
   () => import("./CartPurchaseSelectedMethods"),
@@ -154,13 +154,13 @@ const CartPurchase = () => {
         <div className="flex flex-col rounded-lg bg-slate-700 p-3">
           <h2 className="text-2xl font-bold">Objednávka</h2>
           <Suspense fallback={<Fallback />}>
-            <CartPurchaseItems cartItems={cartItems} />
+            <OrderItems mappedItems={cartItems} />
           </Suspense>
         </div>
 
         <div className="flex flex-row items-center justify-between rounded-lg bg-slate-700 p-3">
           <h2 className="text-2xl font-bold">Čas vyzvednutí</h2>{" "}
-          <p>{selectedTime ? selectedTime : "Není vybrán žádný čas"}</p>
+          <p>{selectedTime ? selectedTime : "Nebyl vybrán žádný čas"}</p>
         </div>
 
         <div className="flex flex-row items-start justify-between rounded-lg bg-slate-700 p-3">
