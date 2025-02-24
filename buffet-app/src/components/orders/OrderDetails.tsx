@@ -12,6 +12,7 @@ type OrderDetailsProps = {
     token: string | null,
   ) => Promise<HandleStatusReturn>;
   loading: boolean;
+  paid: boolean;
 };
 
 const OrderDetails = ({
@@ -20,6 +21,7 @@ const OrderDetails = ({
   status,
   handleStatus,
   loading,
+  paid,
 }: OrderDetailsProps) => {
   return (
     <div
@@ -35,11 +37,11 @@ const OrderDetails = ({
           <p>
             <span className="font-semibold">Vytvořeno:</span> {dateCreated}
           </p>
-          <div>
-            <p>
-              <span className="font-semibold">Platba:</span> {}
-            </p>
-          </div>
+
+          <p>
+            <span className="font-semibold">Zaplaceno:</span>{" "}
+            {paid ? "Ano" : "Ne"}
+          </p>
         </div>
         {status !== "done" && status !== "storno" && status !== "cancelled" && (
           <OrderButton

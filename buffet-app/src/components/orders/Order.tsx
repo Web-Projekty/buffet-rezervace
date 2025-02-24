@@ -80,6 +80,7 @@ const Order = ({ order, items }: OrderProps) => {
           status={status}
           handleStatus={handleStatus}
           loading={loading}
+          paid={order.paid}
         />
       </motion.ul>
     </motion.article>
