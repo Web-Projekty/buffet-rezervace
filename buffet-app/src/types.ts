@@ -56,11 +56,12 @@ export type Order = {
   endTime: string;
   items: OrderItems[];
   pickUpId: string;
-  type: "thePay" | "cash";
+  //type: "thePay" | "cash";
   thePayDetailsUrl: string;
   totalAmount: number;
-  useCredits: boolean;
-  creditsAmount: number;
+  //useCredits: boolean;
+  //creditsAmount: number;
+  paid: boolean;
 };
 
 export type OrdersData = {
