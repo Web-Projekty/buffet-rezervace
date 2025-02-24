@@ -27,6 +27,7 @@
     "react-lazy-load-image-component": "^1.6.3",
     "react-router-dom": "^6.26.2",
     "react-use-websocket": "^3.0.0",
+    "tailwind-merge": "^3.0.2",
     "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
