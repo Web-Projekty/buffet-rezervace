@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import Button from "../../ui/Button";
 import Loading from "../../ui/Loading";
 import { RegisterData, useRegister } from "../../../hooks/useRegister";
 import Input from "../../ui/Input";
+import { useUser } from "../../../hooks/useUser";
 
 const Register = () => {
+  const { user } = useUser();
+
   const [formData, setFormData] = useState<RegisterData>({
     fullName: "",
     username: "",
@@ -19,6 +22,10 @@ const Register = () => {
   const { loading, error, setError, register } = useRegister({
     ...formData,
   });
+
+  if (user) {
+    return <Navigate to="/account" />;
+  }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

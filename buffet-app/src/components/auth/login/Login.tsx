@@ -4,7 +4,8 @@ import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import { useLogin } from "../../../hooks/useLogin";
 import Loading from "../../ui/Loading";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useSearchParams } from "react-router-dom";
+import { useUser } from "../../../hooks/useUser";
 
 type LoginFormData = {
   username: string;
@@ -18,6 +19,8 @@ const loginShowAnimation = {
 };
 
 const Login = () => {
+  const { user } = useUser();
+
   const [formData, setFormData] = useState<LoginFormData>({
     username: "user4",
     password: "u",
@@ -30,6 +33,10 @@ const Login = () => {
     requestType: "login",
     ...formData,
   });
+
+  if (user) {
+    return <Navigate to={to ? to : "/account"} />;
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
