@@ -13,6 +13,7 @@ type OrderDetailsProps = {
   ) => Promise<HandleStatusReturn>;
   loading: boolean;
   paid: boolean;
+  payURL: string;
 };
 
 const OrderDetails = ({
@@ -22,6 +23,7 @@ const OrderDetails = ({
   handleStatus,
   loading,
   paid,
+  payURL,
 }: OrderDetailsProps) => {
   return (
     <div
@@ -43,13 +45,26 @@ const OrderDetails = ({
             {paid ? "Ano" : "Ne"}
           </p>
         </div>
-        {status !== "done" && status !== "storno" && status !== "cancelled" && (
-          <OrderButton
-            status={status}
-            handleStatus={handleStatus}
-            loading={loading}
-          />
-        )}
+        <div className="flex flex-row items-center gap-2">
+          {status !== "done" &&
+            status !== "storno" &&
+            status !== "cancelled" &&
+            !paid && (
+              <>
+                <OrderButton
+                  loading={loading}
+                  payURL={payURL}
+                  buttonText="Zaplatit (online)"
+                />
+                <OrderButton
+                  status={status}
+                  handleStatus={handleStatus}
+                  loading={loading}
+                  buttonText="Zrušit"
+                />
+              </>
+            )}
+        </div>
       </div>
     </div>
   );
