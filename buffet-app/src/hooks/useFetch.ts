@@ -23,11 +23,8 @@ export const useFetch = <T>(
   const [itemsCount, setItemsCount] = useState<number>(0);
 
   useEffect(() => {
-    setIsLoading(true);
-
-    // console.log("useFetch", url, requestData);
-
     async function fetchData() {
+      setIsLoading(true);
       try {
         const { data } = await axios.post(url, requestData);
         setData(data.payload);
