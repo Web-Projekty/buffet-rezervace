@@ -38,7 +38,7 @@ const OrderHistory = () => {
   }
 
   return (
-    <section className="flex flex-col gap-2">
+    <section className="flex w-full flex-col gap-2">
       <h1 className="flex items-center gap-2 text-2xl font-bold">
         Tvá historie objednávek
         <span className="flex items-center gap-2">
@@ -54,7 +54,7 @@ const OrderHistory = () => {
 
         <AnimatePresence>
           {!isLoading ? (
-            <ul className="flex flex-col gap-2">
+            <ul className="flex w-[45rem] flex-col gap-2">
               {dataList?.data?.map((order) => (
                 <Order
                   key={order.pickUpId + "" + order.userId}

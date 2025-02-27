@@ -40,7 +40,7 @@ const Order = ({ order, items }: OrderProps) => {
       animate={{ y: 0, opacity: 1 }}
       exit={{ y: 50, opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className={`relative flex w-full flex-col rounded-lg bg-backgroundColor p-4 md:w-[45rem]`}
+      className={`relative flex flex-col rounded-lg bg-backgroundColor p-4 md:w-full`}
     >
       <div className="flex flex-row items-center justify-between">
         <div
@@ -81,6 +81,7 @@ const Order = ({ order, items }: OrderProps) => {
           handleStatus={handleStatus}
           loading={loading}
           paid={order.paid}
+          payURL={order.thePayDetailsUrl}
         />
       </motion.ul>
     </motion.article>
