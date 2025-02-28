@@ -19,6 +19,7 @@ const Profile = () => {
     tel,
     handleSavePassword: savePassword,
     handleSaveInfo: saveInfo,
+    loading,
   } = useUser();
   const canEditProfile = true;
   const [formData, setFormData] = useState({
@@ -83,7 +84,9 @@ const Profile = () => {
               onChange={handleInputChange}
             />
           </div>
-          <Button onClick={handleSaveInfo}>Uložit změny</Button>
+          <Button onClick={handleSaveInfo} loading={loading}>
+            Uložit změny
+          </Button>
         </div>
         <div className="flex w-full flex-col justify-between gap-3 rounded-lg bg-backgroundColor p-2">
           <h2 className="text-xl font-bold">Změna hesla</h2>
@@ -123,7 +126,9 @@ const Profile = () => {
               onChange={handleInputChange}
             />
           </div>
-          <Button onClick={handleSavePassword}>Uložit změny</Button>
+          <Button onClick={handleSavePassword} loading={loading}>
+            Uložit změny
+          </Button>
         </div>
       </div>
     </div>

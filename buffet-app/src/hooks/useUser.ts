@@ -9,6 +9,7 @@ import { removeTokenExpiration } from "../components/utils/auth";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useState } from "react";
 
 type UseUserReturn = {
   user: User | null;
@@ -22,6 +23,7 @@ type UseUserReturn = {
   handleSavePassword: (formData: ProfileFormDataType) => void;
   handleSaveInfo: (formData: ProfileFormDataType) => void;
   logout: () => void;
+  loading: boolean;
 };
 
 export const useUser = (): UseUserReturn => {
@@ -30,6 +32,7 @@ export const useUser = (): UseUserReturn => {
   const token: string | null = extractToken(header);
   const signOut = useSignOut();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const isAdmin: boolean = user?.isAdmin || false;
   const fullName: string | null = user?.fullName || null;
@@ -41,6 +44,7 @@ export const useUser = (): UseUserReturn => {
   const handleSavePassword = async (formData: ProfileFormDataType) => {
     const { password, newPassword, newPasswordConfirmation } = formData;
     try {
+      setLoading(true);
       const response = await updateUserPassword(
         token,
         password,
@@ -55,6 +59,8 @@ export const useUser = (): UseUserReturn => {
       );
     } catch {
       toast.error(toastMessages.passwordChange.error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,6 +68,7 @@ export const useUser = (): UseUserReturn => {
     const { name, email, tel } = formData;
 
     try {
+      setLoading(true);
       const response = await updateUserData(token, name, tel, email);
       handleResponse(
         response.status,
@@ -70,6 +77,8 @@ export const useUser = (): UseUserReturn => {
       );
     } catch {
       toast.error(toastMessages.profileChange.error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -92,5 +101,6 @@ export const useUser = (): UseUserReturn => {
     handleSavePassword,
     handleSaveInfo,
     logout,
+    loading,
   };
 };
