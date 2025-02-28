@@ -5,6 +5,7 @@ import Loading from "../../../ui/Loading";
 import { Fallback } from "../../../../main";
 import OrderItems from "../../../orders/OrderItems";
 import { mapItemsWithOrders } from "../../../utils/utils";
+import FetchError from "../../../error/FetchError";
 
 const ProgressTracker = lazy(() => import("./OrderProgressTracker"));
 
@@ -74,6 +75,7 @@ const OrderTracking = () => {
       return () => clearInterval(interval);
     }
   }, [latestOrder?.status]);
+
   return (
     <section
       className="flex h-full w-full flex-col gap-2 rounded-lg text-white"
@@ -82,7 +84,7 @@ const OrderTracking = () => {
       <h1 className="text-2xl font-bold">Aktuální objednávka</h1>
       {!isLoading ? (
         error ? (
-          <div className="text-white">{error}</div>
+          <FetchError refetch={refetch} />
         ) : (
           <div className="flex h-full w-full flex-col items-center justify-center gap-16 rounded-lg bg-backgroundColor p-6">
             <Suspense fallback={<Fallback />}>
