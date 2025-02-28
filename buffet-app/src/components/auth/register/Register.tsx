@@ -2,10 +2,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link, Navigate } from "react-router-dom";
 import Button from "../../ui/Button";
-import Loading from "../../ui/Loading";
 import { RegisterData, useRegister } from "../../../hooks/useRegister";
 import Input from "../../ui/Input";
 import { useUser } from "../../../hooks/useUser";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const { user } = useUser();
@@ -32,6 +32,7 @@ const Register = () => {
 
     if (formData.password !== formData.confirmPassword) {
       setError("Hesla se neshodují.");
+      toast.error("Hesla se neshodují.");
       return;
     }
 
@@ -124,15 +125,9 @@ const Register = () => {
           .
         </div>
 
-        {error ? (
-          <div className="text-wrap rounded-md bg-red-500 p-2 text-center">
-            {error}
-          </div>
-        ) : loading ? (
-          <Loading />
-        ) : (
-          <Button type="submit">Registrovat se</Button>
-        )}
+        <Button type="submit" loading={loading}>
+          Registrovat se
+        </Button>
       </form>
     </motion.section>
   );
