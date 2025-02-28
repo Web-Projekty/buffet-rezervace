@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import { useLogin } from "../../../hooks/useLogin";
-import Loading from "../../ui/Loading";
 import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { useUser } from "../../../hooks/useUser";
 
@@ -94,13 +93,10 @@ const Login = () => {
             Registruje se
           </Link>
         </div>
-        {loading ? (
-          <Loading />
-        ) : (
-          <Button type="submit" className="w-full">
-            Přihlásit se
-          </Button>
-        )}
+
+        <Button type="submit" className="w-full" loading={loading}>
+          Přihlásit se
+        </Button>
       </form>
     </motion.section>
   );
