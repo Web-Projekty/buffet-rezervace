@@ -10,10 +10,10 @@ type ItemPrice = {
 const ItemPrice = ({ id, price, variants }: ItemPrice) => {
   const { getItemQuantity } = useCart();
 
-  const variantsPrice = variants
+  /*const variantsPrice = variants
     ? variants.reduce((acc, variant) => acc + variant, 0)
-    : 0;
-  const finalPrice = getItemQuantity(id) * (price + variantsPrice);
+    : 0;*/
+  const finalPrice = getItemQuantity(id) * price /* + variantsPrice*/;
 
   return (
     <div className="flex items-center justify-between text-lg">
