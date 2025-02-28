@@ -38,7 +38,7 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
         setLatestOrder(fetchedOrders.data[0]);
       }
     }
-    setIsLoading(refetchIndex > 0 ? false : fetchLoading);
+    setIsLoading(fetchLoading);
     setError(fetchError);
   }, [fetchedOrders, fetchLoading, fetchError]);
 
