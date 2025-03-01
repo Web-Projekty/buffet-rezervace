@@ -31,7 +31,7 @@ const ItemButtons = ({ item }: ItemButtonsProps) => {
   };
 
   const handleRemoveFromCart = () => {
-    removeFromCart(item.id);
+    removeFromCart(item);
   };
 
   return (

@@ -8,17 +8,18 @@ import {
 import { getItem, removeItem, setItem } from "../components/utils/localStorage";
 import toast from "react-hot-toast";
 import { toastMessages } from "../components/utils/toastMessages";
+import { showCartItemToast } from "../components/ui/CartItemToast";
 
 export type CartItem = MenuItem & { quantity: number };
 
-type CartItems = {
+export type CartItems = {
   isOpen: boolean;
   handleOpenCart: () => void;
   handleCloseCart: () => void;
   handleToggleCart: () => void;
   cartItems: CartItem[];
   addToCart: (item: MenuItem) => void;
-  removeFromCart: (id: number) => void;
+  removeFromCart: (item: MenuItem) => void;
   clearCart: () => void;
   getCartTotal: () => number;
   getCartQuantity: () => number;
@@ -76,8 +77,9 @@ const useCart = create<CartItems>((set, get) => ({
     setItem(CART_LOCAL_STORAGE_KEY, updatedItems);
     toast.success(toastMessages.cart.added);
   },
-  removeFromCart: (id: number) => {
+  removeFromCart: (item: MenuItem) => {
     const cartItems = get().cartItems;
+    const { id } = item;
     if (!isItemInCart(cartItems, id)) return;
 
     const quantity = getItemQuantity(cartItems, id);
@@ -89,7 +91,10 @@ const useCart = create<CartItems>((set, get) => ({
     set({ cartItems: updatedItems });
 
     setItem(CART_LOCAL_STORAGE_KEY, get().cartItems);
-    toast.success(toastMessages.cart.removed);
+    showCartItemToast({
+      item,
+      addToCart: get().addToCart,
+    });
   },
   clearCart: () => {
     set({ cartItems: [] });
