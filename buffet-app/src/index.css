@@ -29,3 +29,9 @@
     scrollbar-width: none;
   }
 }
+
+@layer utilities {
+  .pause-animation {
+    animation-play-state: paused;
+  }
+}

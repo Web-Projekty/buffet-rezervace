@@ -9,7 +9,7 @@ export type CartItemToastProps = {
 };
 
 export const CartItemToast = ({ item, addToCart }: CartItemToastProps) => (
-  <div className="flex items-center gap-3">
+  <div className="relative flex items-center gap-3">
     <ShoppingCartIcon size={24} />
     <div className="flex flex-col">
       <h1>{toastMessages.cart.removed}</h1>
@@ -22,5 +22,8 @@ export const CartItemToast = ({ item, addToCart }: CartItemToastProps) => (
     >
       <Undo />
     </button>
+    <div className="absolute -bottom-3 left-0 h-1 w-full rounded-full bg-gray-200">
+      <div className="animate-durationLine group-hover:pause-animation h-full rounded-full bg-descriptionColor"></div>
+    </div>
   </div>
 );

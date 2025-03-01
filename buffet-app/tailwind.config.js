@@ -14,6 +14,7 @@ export default {
         "one-spin": "spin 0.5s ease-in-out",
         wiggle: "wiggle 0.5s ease-in-out infinite",
         slowWiggle: "wiggle 1s ease-in-out infinite",
+        durationLine: "durationLine 5s linear",
       },
       keyframes: {
         fadeIn: {
@@ -27,6 +28,11 @@ export default {
         wiggle: {
           "0%, 100%": { transform: "rotate(-3deg)" },
           "50%": { transform: "rotate(3deg)" },
+        },
+        durationLine: {
+          "0%": { width: "100%" },
+          "50%": { width: "50%" },
+          "100%": { width: "0%" },
         },
       },
       colors: {
