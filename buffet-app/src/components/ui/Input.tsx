@@ -29,6 +29,9 @@ const Input = ({
   displayStar,
   basic,
 }: InputProps) => {
+  const inputBaseClass =
+    "rounded-lg p-1 text-black focus:outline-none focus:ring-0 focus:border-transparent";
+
   if (basic) {
     return (
       <input
@@ -38,7 +41,7 @@ const Input = ({
         value={value}
         required={required}
         onChange={onChange}
-        className={twMerge("rounded-lg p-1 text-black", className)}
+        className={twMerge(inputBaseClass, className)}
         placeholder={placeholder}
         autoComplete={autoComplete}
         disabled={disabled}
@@ -62,7 +65,7 @@ const Input = ({
           value={value}
           required={required}
           onChange={onChange}
-          className={inputClassName}
+          className={twMerge(inputBaseClass, inputClassName)}
           placeholder={placeholder}
           autoComplete={autoComplete}
           disabled={disabled}
@@ -87,7 +90,7 @@ const Input = ({
           value={value}
           required={required}
           onChange={onChange}
-          className={"rounded-lg p-1 text-black" + inputClassName}
+          className={twMerge(inputBaseClass, inputClassName)}
           placeholder={placeholder}
           autoComplete={autoComplete}
           disabled={disabled}
@@ -107,7 +110,7 @@ const Input = ({
       value={value}
       required={required}
       onChange={onChange}
-      className={twMerge("rounded-lg p-1 text-black", className)}
+      className={twMerge(inputBaseClass, className)}
       placeholder={placeholder}
       autoComplete={autoComplete}
       disabled={disabled}
