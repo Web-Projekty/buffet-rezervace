@@ -22,8 +22,8 @@ export const CartItemToast = ({ item, addToCart }: CartItemToastProps) => (
     >
       <Undo />
     </button>
-    <div className="absolute -bottom-3 left-0 h-1 w-full rounded-full bg-gray-200">
-      <div className="animate-durationLine group-hover:pause-animation h-full rounded-full bg-descriptionColor"></div>
+    <div className="absolute -bottom-3 left-0 h-1 w-full scale-x-110 rounded-full bg-gray-200">
+      <div className="group-hover:pause-animation h-full animate-durationLine rounded-full bg-descriptionColor"></div>
     </div>
   </div>
 );
