@@ -5,16 +5,11 @@ import Button from "../../ui/Button";
 import { useLogin } from "../../../hooks/useLogin";
 import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { useUser } from "../../../hooks/useUser";
+import { slideInRightAnimation } from "../../../animations";
 
 type LoginFormData = {
   username: string;
   password: string;
-};
-
-const loginShowAnimation = {
-  initial: { opacity: 0, x: 50 },
-  animate: { opacity: 1, x: 0 },
-  transition: { duration: 0.5 },
 };
 
 const Login = () => {
@@ -53,7 +48,7 @@ const Login = () => {
 
   return (
     <motion.section
-      {...loginShowAnimation}
+      {...slideInRightAnimation()}
       className="mt-14 flex flex-col items-center justify-center gap-5 text-white md:mt-16 xl:mt-20"
     >
       <h1 className="text-2xl">Přihlášení</h1>
