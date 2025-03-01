@@ -8,7 +8,7 @@ import {
 import { getItem, removeItem, setItem } from "../components/utils/localStorage";
 import toast from "react-hot-toast";
 import { toastMessages } from "../components/utils/toastMessages";
-import { showCartItemToast } from "../components/ui/CartItemToast";
+import { showCartItemToast } from "../components/ui/CustomToasts";
 
 export type CartItem = MenuItem & { quantity: number };
 
