@@ -1,11 +1,11 @@
 import toast, { ToastOptions } from "react-hot-toast";
-import { CartItemToast, CartItemToastProps } from "./CustomToasts";
+import { CartItemToast, CartItemToastProps } from "./CartRemoveToast";
 
 const defaultOptions: ToastOptions = {
   duration: 5000,
 };
 
-const showCartItemToast = ({ item, addToCart }: CartItemToastProps) => {
+export const showCartItemToast = ({ item, addToCart }: CartItemToastProps) => {
   if (!item) return;
 
   return toast(
@@ -13,5 +13,3 @@ const showCartItemToast = ({ item, addToCart }: CartItemToastProps) => {
     defaultOptions,
   );
 };
-
-export default showCartItemToast;
