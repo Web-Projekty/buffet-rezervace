@@ -8,7 +8,7 @@ const UserMenu = lazy(() => import("./UserMenu.tsx"));
 
 const Menu = () => {
   const { isAdmin } = useUser();
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
 
   useEffect(() => {
     setIsMounted(true);
