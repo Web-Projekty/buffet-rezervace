@@ -5,7 +5,7 @@ import Button from "../../ui/Button";
 import { RegisterData, useRegister } from "../../../hooks/useRegister";
 import Input from "../../ui/Input";
 import { useUser } from "../../../hooks/useUser";
-import toast from "react-hot-toast";
+import { slideInRightAnimation } from "../../../animations";
 
 const Register = () => {
   const { user } = useUser();
@@ -19,7 +19,7 @@ const Register = () => {
     confirmPassword: "",
   });
 
-  const { loading, error, setError, register } = useRegister({
+  const { loading, error, register } = useRegister({
     ...formData,
   });
 
@@ -27,92 +27,102 @@ const Register = () => {
     return <Navigate to="/account" />;
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Hesla se neshodují.");
-      toast.error("Hesla se neshodují.");
-      return;
-    }
-
-    register();
-  };
-
-  const handleResetRegister = () => {
-    setError("");
+    await register();
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (error) handleResetRegister();
+  };
+
+  const ErrorMessage = ({ name }: { name: string }) => {
+    return error && error[name] ? (
+      <p className="ml-2 text-sm text-red-500">{error[name]}</p>
+    ) : null;
   };
 
   return (
     <motion.section
-      initial={{ opacity: 0, x: 50 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 1 }}
+      {...slideInRightAnimation()}
       className="flex flex-col items-center justify-center gap-5 text-white"
     >
       <h1 className="text-2xl">Registrace</h1>
       <form onSubmit={handleSubmit} className="flex w-[300px] flex-col gap-2">
-        <Input
-          id="fullName"
-          name="fullName"
-          inputClassName="rounded-md border p-2 text-black w-full"
-          type="text"
-          placeholder="Jméno a příjmení"
-          value={formData.fullName}
-          onChange={handleInputChange}
-          required
-          displayStar
-        />
-        <Input
-          id="username"
-          name="username"
-          inputClassName="rounded-md border p-2 text-black w-full"
-          type="text"
-          placeholder="Uživatelské jméno"
-          value={formData.username}
-          onChange={handleInputChange}
-          required
-          displayStar
-        />
-        <Input
-          id="email"
-          name="email"
-          inputClassName="rounded-md border p-2 text-black w-full"
-          type="email"
-          placeholder="Zadejte email"
-          value={formData.email}
-          onChange={handleInputChange}
-          required
-          displayStar
-        />
+        <div>
+          <Input
+            id="fullName"
+            name="fullName"
+            inputClassName="rounded-md border p-2 text-black w-full"
+            type="text"
+            placeholder="Jméno a příjmení"
+            value={formData.fullName}
+            onChange={handleInputChange}
+            required
+            displayStar
+          />
+          <ErrorMessage name="fullName" />
+        </div>
+        <div>
+          <Input
+            id="username"
+            name="username"
+            inputClassName="rounded-md border p-2 text-black w-full"
+            type="text"
+            placeholder="Uživatelské jméno"
+            value={formData.username}
+            onChange={handleInputChange}
+            required
+            displayStar
+          />
+          <ErrorMessage name="username" />
+        </div>
 
-        <Input
-          id="password"
-          name="password"
-          inputClassName="rounded-md border p-2 text-black w-full"
-          type="password"
-          placeholder="Zadejte heslo"
-          value={formData.password}
-          onChange={handleInputChange}
-          required
-          displayStar
-        />
-        <Input
-          id="confirmPassword"
-          name="confirmPassword"
-          inputClassName="rounded-md border p-2 text-black w-full"
-          type="password"
-          placeholder="Potrvďte heslo"
-          value={formData.confirmPassword}
-          onChange={handleInputChange}
-          required
-          displayStar
-        />
+        <div>
+          <Input
+            id="email"
+            name="email"
+            inputClassName="rounded-md border p-2 text-black w-full"
+            type="email"
+            placeholder="Zadejte email"
+            value={formData.email}
+            onChange={handleInputChange}
+            required
+            displayStar
+          />
+          <ErrorMessage name="email" />
+        </div>
+
+        <div>
+          <Input
+            id="password"
+            name="password"
+            inputClassName="rounded-md border p-2 text-black w-full"
+            type="password"
+            placeholder="Zadejte heslo"
+            value={formData.password}
+            onChange={handleInputChange}
+            required
+            displayStar
+          />
+          <ErrorMessage name="password" />
+        </div>
+
+        <div className="flex flex-col">
+          <Input
+            id="confirmPassword"
+            name="confirmPassword"
+            inputClassName="rounded-md border p-2 text-black w-full"
+            type="password"
+            placeholder="Potrvďte heslo"
+            value={formData.confirmPassword}
+            onChange={handleInputChange}
+            required
+            displayStar
+          />
+          <ErrorMessage name="confirmPassword" />
+        </div>
 
         <div className="text-center">
           Už máte účet?{" "}
