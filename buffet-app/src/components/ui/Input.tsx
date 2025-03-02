@@ -30,7 +30,7 @@ const Input = ({
   basic,
 }: InputProps) => {
   const inputBaseClass =
-    "rounded-lg p-1 text-black focus:outline-none focus:ring-0 focus:border-transparent disabled:bg-gray-200 disabled:text-gray-500";
+    "rounded-lg p-1 text-black focus:outline-none focus:ring-0 focus:border-transparent disabled:bg-gray-200 disabled:text-gray-500 h-11";
 
   if (basic) {
     return (
@@ -41,7 +41,7 @@ const Input = ({
         value={value}
         required={required}
         onChange={onChange}
-        className={twMerge(inputBaseClass, className)}
+        className={twMerge(inputBaseClass, inputClassName)}
         placeholder={placeholder}
         autoComplete={autoComplete}
         disabled={disabled}
