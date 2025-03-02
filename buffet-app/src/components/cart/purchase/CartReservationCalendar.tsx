@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import HorizontalPaging from "../../ui/HorizontalPaging";
 import { getTimeSlots } from "../../utils/api";
 import { Date as DateType, Hour, Minute } from "../../../types";
 import Loading from "../../ui/Loading";
+import FetchError from "../../error/FetchError";
 
 type CartReservationCalendarProps = {
   onTimeSelect: (day: DateType, hour: Hour, minute: Minute) => void;
@@ -17,36 +18,34 @@ const CartReservationCalendar = ({
   const [selectedMinute, setSelectedMinute] = useState<Minute | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [refetchIndex, setRefetchIndex] = useState<number>(0);
 
-  useEffect(() => {
-    const fetchDates = async () => {
-      try {
-        setLoading(true);
-        const { timeslots, error } = await getTimeSlots();
+  const fetchDates = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const { timeslots, error } = await getTimeSlots();
 
-        if (error) {
-          setError("Chyba při načítání kalendáře.");
-        }
-
-        const formattedDate = timeslots.map((timeslot) => ({
-          ...timeslot,
-          date: new Date(timeslot.date).toLocaleDateString("cs-CZ", {
-            weekday: "long",
-            //year: "numeric",
-            month: "long",
-            day: "numeric",
-          }),
-        }));
-
-        setDays(formattedDate);
-        setSelectedDate(formattedDate[0]);
-      } catch {
+      if (error) {
         setError("Chyba při načítání kalendáře.");
-      } finally {
-        setLoading(false);
       }
-    };
-    fetchDates();
+
+      const formattedDate = timeslots.map((timeslot) => ({
+        ...timeslot,
+        date: new Date(timeslot.date).toLocaleDateString("cs-CZ", {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+        }),
+      }));
+
+      setDays(formattedDate);
+      setSelectedDate(formattedDate[0]);
+    } catch {
+      setError("Chyba při načítání kalendáře.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const handleDateClick = (date: DateType) => {
@@ -63,6 +62,10 @@ const CartReservationCalendar = ({
   const handleMinuteClick = (minute: Minute) => {
     setSelectedMinute(minute);
   };
+
+  useEffect(() => {
+    fetchDates();
+  }, [fetchDates, refetchIndex]);
 
   useEffect(() => {
     if (selectedDate && selectedHour && selectedMinute) {
@@ -125,9 +128,13 @@ const CartReservationCalendar = ({
     );
   };
 
+  const refetch = () => {
+    setRefetchIndex((prevIndex) => prevIndex + 1);
+  };
+
   return (
-    <div className="flex min-h-[25rem] flex-col gap-5 rounded-lg bg-backgroundColor p-6 shadow-md">
-      {error && <p className="grid h-full place-items-center">{error}</p>}
+    <div className="flex min-h-[25rem] flex-col justify-center gap-5 rounded-lg bg-backgroundColor p-6 shadow-md">
+      {error && <FetchError refetch={refetch} />}
       {!loading ? (
         <>
           {renderDays()}
@@ -137,7 +144,7 @@ const CartReservationCalendar = ({
           </div>
         </>
       ) : (
-        <Loading size={30} />
+        <Loading size={45} />
       )}
     </div>
   );
