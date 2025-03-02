@@ -1,6 +1,6 @@
-import { tailspin } from "ldrs";
+import { bouncy } from "ldrs";
 
-tailspin.register();
+bouncy.register();
 
 type LoadingProps = {
   size?: number;
@@ -9,7 +9,7 @@ type LoadingProps = {
 const Loading = ({ size = 30 }: LoadingProps) => {
   return (
     <div className="flex items-center justify-center">
-      <l-tailspin size={size} stroke="5" speed="0.9" color="white" />
+      <l-bouncy size={size} speed="1.75" color="white" />
     </div>
   );
 };
