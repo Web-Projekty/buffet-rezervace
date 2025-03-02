@@ -18,14 +18,14 @@ const Button = ({
   return (
     <button
       className={twMerge(
-        `rounded-md border border-cyan-900 bg-interactiveColor p-2 text-white hover:bg-interactiveHoverColor ${disabled || loading ? "cursor-not-allowed bg-cyan-600 hover:bg-cyan-600" : ""}`,
+        `h-11 rounded-md border border-cyan-900 bg-interactiveColor p-2 text-white hover:bg-interactiveHoverColor ${disabled || loading ? "cursor-not-allowed bg-cyan-600 hover:bg-cyan-600" : ""}`,
         className,
       )}
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
     >
-      {loading ? <Loading size={20} /> : children}
+      {loading ? <Loading size={28} /> : children}
     </button>
   );
 };
