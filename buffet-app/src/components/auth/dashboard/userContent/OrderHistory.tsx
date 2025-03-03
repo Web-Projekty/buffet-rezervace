@@ -50,19 +50,18 @@ const OrderHistory = () => {
         </span>
       </h1>
       <div className="flex min-h-[27rem] flex-col items-center gap-4">
-        <div className="flex w-full gap-[5.4rem] rounded-md bg-backgroundColor px-6 py-2 text-center font-semibold text-descriptionColor md:w-[45rem] md:gap-[8.2rem]">
+        <div className="flex w-full items-center gap-[5.4rem] rounded-md bg-backgroundColor px-6 py-2 text-center font-semibold text-descriptionColor md:w-[45rem] md:gap-[8.2rem]">
           <p>ID</p>
           <p>Status</p>
           <p>Čas vyzvednutí</p>
         </div>
-
         <AnimatePresence>
           {isLoading ? (
             <Loading />
           ) : error ? (
             <FetchError refetch={refetch} />
           ) : (
-            <ul className="flex w-[45rem] flex-col gap-2">
+            <ul className="flex w-full max-w-[45rem] flex-col gap-2">
               {dataList?.data?.map((order) => (
                 <Order
                   key={order.pickUpId + "" + order.userId}

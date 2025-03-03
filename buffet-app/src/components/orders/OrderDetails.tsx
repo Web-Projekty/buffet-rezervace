@@ -29,7 +29,7 @@ const OrderDetails = ({
     <div
       className={`mt-5 grid grid-cols-1 justify-center gap-5 overflow-hidden px-4 md:grid-cols-2 md:justify-between md:gap-0`}
     >
-      <div className="flex max-w-[300px] flex-col gap-2">
+      <div className="flex w-full max-w-[300px] flex-col gap-2">
         <p className="font-semibold">Objednané položky:</p>
         <OrderItems mappedItems={mappedItems} />
       </div>
@@ -45,7 +45,7 @@ const OrderDetails = ({
             {paid ? "Ano" : "Ne"}
           </p>
         </div>
-        <div className="flex flex-row items-center gap-2">
+        <div className="flex flex-col items-center gap-2 md:flex-row">
           {status !== "done" &&
             status !== "storno" &&
             status !== "cancelled" &&

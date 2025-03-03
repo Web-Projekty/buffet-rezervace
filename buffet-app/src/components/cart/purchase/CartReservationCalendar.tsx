@@ -133,7 +133,9 @@ const CartReservationCalendar = ({
   };
 
   return (
-    <div className="flex min-h-[25rem] flex-col justify-center gap-5 rounded-lg bg-backgroundColor p-6 shadow-md">
+    <div
+      className={`flex min-h-[25rem] flex-col gap-5 rounded-lg bg-backgroundColor p-6 shadow-md ${loading ? "justify-center" : ""}`}
+    >
       {error && <FetchError refetch={refetch} />}
       {!loading ? (
         <>
