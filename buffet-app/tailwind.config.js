@@ -5,8 +5,6 @@ export default {
     extend: {
       fontFamily: {
         FiraSans: ["Fira Sans", "sans-serif"],
-        SourGummy: ["Sour Gummy", "IBM Plex Mono", "Lato", "sans-serif"],
-        SansSerif: ["sans-serif", "IBM Plex Mono", "Lato"],
       },
       animation: {
         fadeIn: "fadeIn 0.5s ease-in-out",
