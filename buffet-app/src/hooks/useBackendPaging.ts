@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { RequestData } from "../types";
 import { useFetch } from "./useFetch";
@@ -14,6 +14,7 @@ type BackendPagingReturn<T> = {
   arrayOfPages: number[];
   handlePage: (page: number) => void;
   fetchedData: T | null;
+  refetch: () => void;
 };
 
 export const useBackendPaging = <T>(
@@ -23,6 +24,7 @@ export const useBackendPaging = <T>(
   paramsName: string = "page",
 ): BackendPagingReturn<T> => {
   const [searchParams, setSearchParams] = useSearchParams("");
+  const [refetchIndex, setRefetchIndex] = useState<number>(0);
   const { token } = useUser();
 
   const currentPage: number = parseInt(searchParams.get(paramsName) || "1", 10);
@@ -36,7 +38,7 @@ export const useBackendPaging = <T>(
       itemsCount: itemsPerPage,
     },
     null,
-    [currentPage],
+    [currentPage, refetchIndex],
   );
 
   useEffect(() => {
@@ -52,6 +54,10 @@ export const useBackendPaging = <T>(
     setSearchParams(searchParams);
   };
 
+  const refetch = () => {
+    setRefetchIndex((prev) => prev + 1);
+  };
+
   return {
     dataList: data,
     arrayOfPages: Array.from(
@@ -64,5 +70,6 @@ export const useBackendPaging = <T>(
     totalPagesCount,
     handlePage,
     fetchedData: data,
+    refetch,
   };
 };
