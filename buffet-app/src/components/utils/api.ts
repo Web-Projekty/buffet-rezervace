@@ -200,9 +200,9 @@ export const updateUserData = async (
     const { data } = await axios.post(FETCH_URL, {
       requestType: "updateUser",
       token,
-      "fullName - optional": fullName,
-      "tel - optional": tel,
-      "email - optional": email,
+      fullName,
+      email,
+      tel: tel,
     });
 
     return data;
