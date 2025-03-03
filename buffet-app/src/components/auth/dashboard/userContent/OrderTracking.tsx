@@ -82,11 +82,13 @@ const OrderTracking = () => {
       key={latestOrder?.status}
     >
       <h1 className="text-2xl font-bold">Aktuální objednávka</h1>
-      {!isLoading ? (
-        error ? (
+      <div className="flex h-full min-h-[25rem] w-full flex-col items-center justify-center gap-16 rounded-lg bg-backgroundColor p-6 shadow-md">
+        {isLoading ? (
+          <Loading />
+        ) : error ? (
           <FetchError refetch={refetch} />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-16 rounded-lg bg-backgroundColor p-6">
+          <>
             <Suspense fallback={<Fallback />}>
               <ProgressTracker
                 currentStep={currentStep}
@@ -109,11 +111,9 @@ const OrderTracking = () => {
                 </div>
               ) : null}
             </div>
-          </div>
-        )
-      ) : (
-        <Loading size={30} />
-      )}
+          </>
+        )}
+      </div>
     </section>
   );
 };
