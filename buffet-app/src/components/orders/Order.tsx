@@ -44,7 +44,7 @@ const Order = ({ order, items }: OrderProps) => {
     >
       <div className="flex flex-row items-center justify-between">
         <div
-          className={`absolute left-0 h-[64px] w-2 ${color} round-bl-lg rounded-bl-lg rounded-tl-lg`}
+          className={`absolute left-0 top-0 w-2 ${color} h-full rounded-bl-lg rounded-tl-lg transition-all duration-300 ease-in-out`}
         ></div>
         <div className="flex w-full flex-row items-center gap-16">
           <h2 className="text-xl font-bold">{order.pickUpId}</h2>
@@ -73,6 +73,7 @@ const Order = ({ order, items }: OrderProps) => {
           closed: { height: 0, opacity: 0 },
         }}
         transition={{ duration: 0.3 }}
+        className="overflow-hidden"
       >
         <OrderDetails
           dateCreated={dateCreated}
