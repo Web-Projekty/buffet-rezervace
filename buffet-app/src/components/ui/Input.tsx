@@ -30,7 +30,7 @@ const Input = ({
   basic,
 }: InputProps) => {
   const inputBaseClass =
-    "rounded-lg p-1 text-black focus:outline-none focus:ring-0 focus:border-transparent disabled:bg-gray-200 disabled:text-gray-500 h-11";
+    "rounded-lg p-1 text-black focus:outline-none focus:ring-0 focus:border-transparent disabled:bg-gray-200 disabled:text-gray-500 h-10";
 
   if (basic) {
     return (
