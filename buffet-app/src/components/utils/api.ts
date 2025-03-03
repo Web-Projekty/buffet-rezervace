@@ -109,14 +109,15 @@ export const deleteOrder = async (
 
 export const createMenuItem = async (
   token: string,
-  menuItem: MenuItem,
+  menuItem: Omit<MenuItem, "id">,
 ): Promise<MenuItemApiReturn> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
-      requestType: "createMenuItemEvent",
+      requestType: "updateItem",
       token: token,
       ...menuItem,
     });
+    console.log(data);
     return {
       menuItem: data.payload.data as MenuItem,
       error: data.status !== "success",
@@ -132,7 +133,7 @@ export const updateMenuItem = async (
 ): Promise<MenuItemApiReturn> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
-      requestType: "updateMenuItemEvent",
+      requestType: "updateItem",
       token: token,
       ...menuItem,
     });
