@@ -7,17 +7,25 @@ import { OrdersData } from "../../../../types";
 import Order from "../../../orders/Order";
 import Loading from "../../../ui/Loading";
 import PagingButtons from "../../../ui/PagingButtons";
+import FetchError from "../../../error/FetchError";
 
 const HorizontalPaging = lazy(() => import("../../../ui/HorizontalPaging"));
 
 const OrderHistory = () => {
-  const { currentPage, dataList, arrayOfPages, handlePage, isLoading, error } =
-    useBackendPaging<OrdersData>(
-      "getOrders",
-      ORDERS_PER_PAGE,
-      true,
-      "orderPage",
-    );
+  const {
+    currentPage,
+    dataList,
+    arrayOfPages,
+    handlePage,
+    isLoading,
+    error,
+    refetch,
+  } = useBackendPaging<OrdersData>(
+    "getOrders",
+    ORDERS_PER_PAGE,
+    true,
+    "orderPage",
+  );
 
   const renderPagingButtons = useCallback(() => {
     return (
@@ -32,10 +40,6 @@ const OrderHistory = () => {
       </Suspense>
     );
   }, [currentPage, arrayOfPages, handlePage]);
-
-  if (error) {
-    return <div className="text-white">{error}</div>;
-  }
 
   return (
     <section className="flex w-full flex-col gap-2">
@@ -53,7 +57,11 @@ const OrderHistory = () => {
         </div>
 
         <AnimatePresence>
-          {!isLoading ? (
+          {isLoading ? (
+            <Loading />
+          ) : error ? (
+            <FetchError refetch={refetch} />
+          ) : (
             <ul className="flex w-[45rem] flex-col gap-2">
               {dataList?.data?.map((order) => (
                 <Order
@@ -63,8 +71,6 @@ const OrderHistory = () => {
                 />
               ))}
             </ul>
-          ) : (
-            <Loading size={30} />
           )}
         </AnimatePresence>
       </div>
