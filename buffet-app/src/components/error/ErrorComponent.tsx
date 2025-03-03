@@ -19,6 +19,10 @@ const ErrorComponent = ({
   linkTo,
   className,
 }: Error) => {
+  const tryAgain = () => {
+    window.location.reload();
+  };
+
   return (
     <div
       className={`flex flex-col items-center justify-center gap-5 overflow-x-hidden bg-slate-800 font-sans text-white ${className}`}
@@ -34,9 +38,12 @@ const ErrorComponent = ({
         <h1 className="text-2xl">{title}</h1>
         <span className="text-4xl">{subtitle}</span>
       </div>
-      <Link to={linkTo ? linkTo : "/"} onClick={onBack}>
-        <Button>Zpět na hlavní stránku</Button>
-      </Link>
+      <div className="flex flex-col gap-2">
+        <Button onClick={tryAgain}>Zkusit znovu</Button>
+        <Link to={linkTo ? linkTo : "/"} onClick={onBack}>
+          <Button>Zpět na hlavní stránku</Button>
+        </Link>
+      </div>
     </div>
   );
 };
