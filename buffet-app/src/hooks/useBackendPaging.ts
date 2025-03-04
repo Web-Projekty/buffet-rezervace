@@ -52,7 +52,7 @@ export const useBackendPaging = <T>(
     data: T;
     itemsCount: number;
   }>({
-    queryKey: [key],
+    queryKey: [key + currentPage],
     queryFn: () =>
       fetchPagedData(
         requestType,
