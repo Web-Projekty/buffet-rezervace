@@ -39,10 +39,7 @@ const getCurrentStep = (order: Order | null): number => {
 };
 
 const OrderTracking = () => {
-  const { latestOrder, isLoading, error, fetchedItems, refetch } = useOrders(
-    1,
-    1,
-  );
+  const { latestOrder, isLoading, items, error, refetch } = useOrders(1, 1);
 
   const currentStep: number = useMemo(
     () => (latestOrder ? getCurrentStep(latestOrder) : -1),
@@ -53,7 +50,7 @@ const OrderTracking = () => {
     ? latestOrder.status === "cancelled" || latestOrder.status === "storno"
     : false;
 
-  const mappedItems = mapItemsWithOrders(latestOrder?.items, fetchedItems);
+  const mappedItems = mapItemsWithOrders(latestOrder?.items, items);
 
   const timeText = latestOrder
     ? new Date(latestOrder.pickupDate).toLocaleDateString() +

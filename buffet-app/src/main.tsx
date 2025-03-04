@@ -9,6 +9,7 @@ import { UserData } from "./hooks/useLogin.ts";
 import Loading from "./components/ui/Loading.tsx";
 import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
 import RequireAuth from "./components/auth/RequireAuth.tsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const Menu = lazy(() => import("./components/menu/Menu.tsx"));
 const MenuEdit = lazy(() => import("./components/menu/editMenu/MenuEdit.tsx"));
@@ -184,10 +185,14 @@ if (!container) {
 }
 const root = createRoot(container);
 
+const queryClient = new QueryClient();
+
 root.render(
   <StrictMode>
     <AuthProvider store={store}>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </AuthProvider>
   </StrictMode>,
 );

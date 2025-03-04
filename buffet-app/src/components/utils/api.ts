@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Date, MenuItem, Order, OrderStatus } from "../../types";
+import { Category, Date, MenuItem, Order, OrderStatus } from "../../types";
 import { FETCH_URL } from "../../constants";
 
 type OrderApiReturn = {
@@ -8,20 +8,76 @@ type OrderApiReturn = {
   paywallUrl: string;
 };
 
-type UpdateOrderApiReturn = {
+type UpdateOrderApi = {
   eventType: string;
   payload: Order;
   error: boolean;
 };
 
-type MenuItemApiReturn = {
+type MenuItemApi = {
   menuItem: MenuItem | null;
   error: boolean;
 };
 
-type TimeSlotsApiReturn = {
+export type TimeSlotsApi = {
   timeslots: Date[];
   error: boolean;
+};
+
+export type MenuApi = {
+  menu: MenuItem[];
+  categoryList: Category[];
+  itemsCount: number;
+  status: "success" | "error";
+};
+
+export type OrdersApi = {
+  orders: Order[];
+  items: MenuItem[];
+  itemsCount: number;
+  status: "success" | "error";
+};
+
+export const getMenu = async (): Promise<MenuApi> => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "getMenu",
+    });
+
+    return {
+      menu: data.payload.data as MenuItem[],
+      categoryList: data.payload.categoryList as Category[],
+      itemsCount: data.payload.itemsCount as number,
+      status: data.status as "success" | "error",
+    };
+  } catch {
+    throw new Error("Chyba při načítání menu.");
+  }
+};
+
+export const getOrders = async (
+  token: string | null,
+  itemsCount: number | "all",
+  page?: number | undefined,
+): Promise<OrdersApi> => {
+  if (!token) throw new Error("Chyba při načítání objednávek.");
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "getOrders",
+      token: token,
+      page: page ? page : undefined,
+      itemsCount: itemsCount === "all" ? undefined : itemsCount,
+    });
+
+    return {
+      orders: data.payload.data as Order[],
+      items: data.payload.items as MenuItem[],
+      itemsCount: data.payload.itemsCount as number,
+      status: data.status,
+    };
+  } catch {
+    throw new Error("Chyba při načítání objednávek.");
+  }
 };
 
 export const createOrder = async (
@@ -67,7 +123,7 @@ export const updateOrder = async (
   token: string | null,
   orderId: number | null,
   status: OrderStatus,
-): Promise<UpdateOrderApiReturn> => {
+): Promise<UpdateOrderApi> => {
   if (!token || !orderId) throw new Error("Chyba při aktualizaci objednávky.");
   try {
     const { data } = await axios.post(FETCH_URL, {
@@ -110,7 +166,7 @@ export const deleteOrder = async (
 export const createMenuItem = async (
   token: string,
   menuItem: Omit<MenuItem, "id">,
-): Promise<MenuItemApiReturn> => {
+): Promise<MenuItemApi> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "updateItem",
@@ -130,7 +186,7 @@ export const createMenuItem = async (
 export const updateMenuItem = async (
   token: string,
   menuItem: MenuItem,
-): Promise<MenuItemApiReturn> => {
+): Promise<MenuItemApi> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "updateItem",
@@ -149,7 +205,7 @@ export const updateMenuItem = async (
 export const deleteMenuItem = async (
   token: string,
   menuItemId: number,
-): Promise<MenuItemApiReturn> => {
+): Promise<MenuItemApi> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "deleteMenuItemEvent",
@@ -165,7 +221,7 @@ export const deleteMenuItem = async (
   }
 };
 
-export const getTimeSlots = async (): Promise<TimeSlotsApiReturn> => {
+export const getTimeSlots = async (): Promise<TimeSlotsApi> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "getOrderTimeTable",

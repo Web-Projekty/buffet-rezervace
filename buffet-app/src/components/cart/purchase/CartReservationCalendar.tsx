@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import HorizontalPaging from "../../ui/HorizontalPaging";
-import { getTimeSlots } from "../../utils/api";
+import { getTimeSlots, TimeSlotsApi } from "../../utils/api";
 import { Date as DateType, Hour, Minute } from "../../../types";
 import Loading from "../../ui/Loading";
 import FetchError from "../../error/FetchError";
+import { useQuery } from "@tanstack/react-query";
 
 type CartReservationCalendarProps = {
   onTimeSelect: (day: DateType, hour: Hour, minute: Minute) => void;
@@ -16,21 +17,20 @@ const CartReservationCalendar = ({
   const [selectedDate, setSelectedDate] = useState<DateType | null>(null);
   const [selectedHour, setSelectedHour] = useState<Hour | null>(null);
   const [selectedMinute, setSelectedMinute] = useState<Minute | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [refetchIndex, setRefetchIndex] = useState<number>(0);
 
-  const fetchDates = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const { timeslots, error } = await getTimeSlots();
+  const {
+    isPending: loading,
+    error,
+    data,
+    refetch,
+  } = useQuery<TimeSlotsApi>({
+    queryKey: ["calendar"],
+    queryFn: getTimeSlots,
+  });
 
-      if (error) {
-        setError("Chyba při načítání kalendáře.");
-      }
-
-      const formattedDate = timeslots.map((timeslot) => ({
+  useEffect(() => {
+    if (data) {
+      const formattedDate = data.timeslots.map((timeslot) => ({
         ...timeslot,
         date: new Date(timeslot.date).toLocaleDateString("cs-CZ", {
           weekday: "long",
@@ -41,12 +41,14 @@ const CartReservationCalendar = ({
 
       setDays(formattedDate);
       setSelectedDate(formattedDate[0]);
-    } catch {
-      setError("Chyba při načítání kalendáře.");
-    } finally {
-      setLoading(false);
     }
-  }, []);
+  }, [data]);
+
+  useEffect(() => {
+    if (selectedDate && selectedHour && selectedMinute) {
+      onTimeSelect(selectedDate, selectedHour, selectedMinute);
+    }
+  }, [selectedDate, selectedHour, selectedMinute, onTimeSelect]);
 
   const handleDateClick = (date: DateType) => {
     setSelectedMinute(null);
@@ -62,16 +64,6 @@ const CartReservationCalendar = ({
   const handleMinuteClick = (minute: Minute) => {
     setSelectedMinute(minute);
   };
-
-  useEffect(() => {
-    fetchDates();
-  }, [fetchDates, refetchIndex]);
-
-  useEffect(() => {
-    if (selectedDate && selectedHour && selectedMinute) {
-      onTimeSelect(selectedDate, selectedHour, selectedMinute);
-    }
-  }, [selectedDate, selectedHour, selectedMinute, onTimeSelect]);
 
   const renderDays = () => {
     return (
@@ -126,10 +118,6 @@ const CartReservationCalendar = ({
         })}
       </div>
     );
-  };
-
-  const refetch = () => {
-    setRefetchIndex((prevIndex) => prevIndex + 1);
   };
 
   return (

@@ -103,11 +103,6 @@ export type Category = {
   description: string;
 };
 
-export type MenuData = {
-  categoryList: Category[];
-  data: MenuItem[];
-};
-
 export type RequestData = {
   requestType: "login" | "verify" | "getMenu" | "getOrders";
   [key: string]: string | number | boolean | object | undefined;

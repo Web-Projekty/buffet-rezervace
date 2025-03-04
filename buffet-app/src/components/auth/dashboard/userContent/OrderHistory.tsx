@@ -25,6 +25,7 @@ const OrderHistory = () => {
     ORDERS_PER_PAGE,
     true,
     "orderPage",
+    "orders",
   );
 
   const renderPagingButtons = useCallback(() => {
