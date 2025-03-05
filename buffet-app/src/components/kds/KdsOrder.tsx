@@ -57,7 +57,7 @@ const KdsOrder = ({ order, onStatusChange, items }: KdsOrderProps) => {
   };
 
   return (
-    <article className="flex h-auto w-full flex-col justify-between bg-white sm:w-[15rem] md:w-[302px]">
+    <article className="flex h-auto w-full flex-col justify-between bg-white sm:max-w-[17rem]">
       <div className="flex w-full flex-col gap-2">
         <div
           className={`flex w-full flex-row items-center justify-between ${color} px-4 py-3 text-xl font-bold`}
