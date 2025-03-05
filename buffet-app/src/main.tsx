@@ -154,16 +154,6 @@ const router = createBrowserRouter([
           </ErrorBoundary>
         ),
       },
-      {
-        path: "/page-not-found",
-        element: (
-          <ErrorBoundary>
-            <Suspense fallback={<Fallback />}>
-              <PageNotFound />
-            </Suspense>
-          </ErrorBoundary>
-        ),
-      },
     ],
   },
   {
