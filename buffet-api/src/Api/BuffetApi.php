@@ -388,7 +388,7 @@ class BuffetApi
                 $isKDS = false;
             }
             if ($isKDS) {
-                $orders = OrderModel::query()->where("paid", "=", 1)->where("status", "=", OrderStatus::Sent->value)->orWhere("status", "=", OrderStatus::Preparing->value)->orWhere("status", "=", OrderStatus::Waiting->value);
+                $orders = OrderModel::getAll()->where("paid", "=", 1)->where("status", "=", OrderStatus::Sent->value)->orWhere("status", "=", OrderStatus::Preparing->value)->orWhere("status", "=", OrderStatus::Waiting->value);
                 error_log($orders->toSql());
             } else {
                 $orders = OrderModel::getAll();
@@ -409,7 +409,7 @@ class BuffetApi
                 return $response->setError(Error::QueryFailed);
             }
         } else {
-            $response->setPayload("itemsCount", $orders->count());
+            $response->setPayload("itemsCount", $orders->count($orderTableName.".id"));
             $ordersArray = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl"])->get()->toArray();
         }
 
