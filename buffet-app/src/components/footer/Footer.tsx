@@ -25,14 +25,14 @@ const Footer = () => {
         {authors.map((author, index) => {
           if (!author.github)
             return (
-              <span className="cursor-default">
+              <span className="cursor-default" key={author.name}>
                 {author.name}
                 {authors.length - 1 !== index && ","}
               </span>
             );
           return (
             <Link
-              key={index}
+              key={author.name}
               to={author.github}
               target="_blank"
               className={`hover:text-gray-200`}
