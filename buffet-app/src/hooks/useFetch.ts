@@ -29,9 +29,9 @@ export const useFetch = <T>(
         const { data } = await axios.post(url, requestData);
         setData(data.payload);
         setItemsCount(data.payload.itemsCount as number);
-        console.log("useFetch data", data);
-      } catch (e) {
-        console.log(e);
+        // console.log("useFetch data", data);
+      } catch {
+        // console.log(e);
         setError("Chyba načítání dat ze serveru.");
         setData(null);
       } finally {

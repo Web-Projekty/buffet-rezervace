@@ -62,7 +62,7 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
         `${order.pickupDate}T${order.startTime}`,
       ).getTime();
 
-      console.log(order.pickUpId + ", " + now, pickupDateTime);
+      // console.log(order.pickUpId + ", " + now, pickupDateTime);
 
       setDelayed(now > pickupDateTime);
     }
