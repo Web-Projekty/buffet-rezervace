@@ -116,11 +116,7 @@ export const createOrder = async (
       paywallUrl: data.payload.url,
     };
   } catch {
-    return {
-      order: null,
-      error: true,
-      paywallUrl: "",
-    };
+    throw new Error("Chyba při vytváření objednávky.");
   }
 };
 
@@ -241,10 +237,7 @@ export const getTimeSlots = async (): Promise<TimeSlotsApi> => {
       error: status !== "success",
     };
   } catch {
-    return {
-      timeslots: [],
-      error: true,
-    };
+    throw new Error("Chyba při načítání časových slotů.");
   }
 };
 
@@ -269,10 +262,7 @@ export const updateUserData = async (
 
     return data;
   } catch {
-    return {
-      status: "failed",
-      payload: { msg: "Chyba při aktualizaci dat." },
-    };
+    throw new Error("Chyba při aktualizaci uživatelských dat.");
   }
 };
 
@@ -285,10 +275,7 @@ export const getUserData = async (token: string) => {
 
     return data;
   } catch {
-    return {
-      status: "failed",
-      payload: { msg: "Chyba při získávání dat." },
-    };
+    throw new Error("Chyba při načítání uživatelských dat.");
   }
 };
 
@@ -318,9 +305,6 @@ export const updateUserPassword = async (
 
     return data;
   } catch {
-    return {
-      status: "failed",
-      payload: { msg: "Chyba při změně hesla." },
-    };
+    throw new Error("Chyba při aktualizaci hesla.");
   }
 };
