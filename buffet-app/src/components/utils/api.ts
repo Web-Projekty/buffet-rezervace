@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Category, Date, MenuItem, Order, OrderStatus } from "../../types";
 import { FETCH_URL } from "../../constants";
+import { CartItem } from "../../store/CartStore";
 
 type OrderApiReturn = {
   order: Order | null;
@@ -82,10 +83,14 @@ export const getOrders = async (
 
 export const createOrder = async (
   token: string | null,
-  cartItems: { id: number; quantity: number; variants: number[] }[],
-  startTime: string | null,
-  endTime: string | null,
-  date: string | null,
+  cartItems: {
+    id: CartItem["id"];
+    quantity: CartItem["quantity"];
+    variants: number[];
+  }[],
+  startTime: Order["startTime"] | null,
+  endTime: Order["endTime"] | null,
+  date: Order["pickupDate"] | null,
   // paymentMethod: PaymentMethod[],
 ): Promise<OrderApiReturn> => {
   if (!token) throw new Error("Chyba při vytváření objednávky.");
@@ -103,7 +108,7 @@ export const createOrder = async (
       paymentMethod: "thePay",
     });
 
-    console.log(data);
+    // console.log(data);
 
     return {
       order: data.payload.data as Order,
@@ -173,7 +178,7 @@ export const createMenuItem = async (
       token: token,
       ...menuItem,
     });
-    console.log(data);
+    // console.log(data);
     return {
       menuItem: data.payload.data as MenuItem,
       error: data.status !== "success",
@@ -227,7 +232,7 @@ export const getTimeSlots = async (): Promise<TimeSlotsApi> => {
       requestType: "getOrderTimeTable",
     });
 
-    console.log(data);
+    // console.log(data);
 
     const { status, payload } = data;
 
