@@ -1,7 +1,7 @@
 stages:
-    - Frontend Build Test
     - Tests
     - Code Coverage
+    - Frontend Build Test
     - Docker Image Build
 
 # Job to run PHPStan
