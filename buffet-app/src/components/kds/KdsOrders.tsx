@@ -13,6 +13,8 @@ const KdsOrders = () => {
     isLoading,
     items,
     nextOrdersCount,
+    delayedOrders,
+    upToDateOrders,
   } = useKdsOrders();
 
   const renderPendingOrders = () => {
@@ -30,18 +32,10 @@ const KdsOrders = () => {
   };
 
   return (
-    <section className="mx-auto flex w-[85.5%] flex-col justify-center">
+    <section className="mx-auto flex w-full max-w-[70rem] flex-col justify-center">
       <KdsStatusBar
-        delayed={
-          pendingOrders.filter(
-            (order) => new Date(order.pickupDate).getTime() < Date.now(),
-          ).length
-        }
-        uptodate={
-          pendingOrders.filter(
-            (order) => new Date(order.pickupDate).getTime() > Date.now(),
-          ).length
-        }
+        delayed={delayedOrders.length}
+        uptodate={upToDateOrders.length}
         current={nextOrdersCount}
         waiting={waitingOrders?.length}
       />
@@ -52,7 +46,7 @@ const KdsOrders = () => {
         // ) : error ? (
         //   <p className="text-center text-4xl text-white">{error}</p>
         <div className="flex flex-row items-start justify-between">
-          <div className="grid grid-cols-2 grid-rows-2 gap-2 md:grid-cols-3 2xl:grid-cols-4">
+          <div className="grid grid-cols-2 grid-rows-2 gap-2 md:grid-cols-3">
             {renderPendingOrders()}
           </div>
           <div className="flex flex-col gap-2">

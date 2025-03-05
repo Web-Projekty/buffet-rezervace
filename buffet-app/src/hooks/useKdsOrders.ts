@@ -68,6 +68,22 @@ export const useKdsOrders = () => {
     [orders],
   );
 
+  const delayedOrders = useMemo(
+    () =>
+      pendingOrders.filter(
+        (order) => new Date(order.pickupDate).getTime() < Date.now(),
+      ),
+    [pendingOrders],
+  );
+
+  const upToDateOrders = useMemo(
+    () =>
+      pendingOrders.filter(
+        (order) => new Date(order.pickupDate).getTime() > Date.now(),
+      ),
+    [pendingOrders],
+  );
+
   const onStatusChange = (updatedOrder: Order) => {
     setOrders((prevOrders) => {
       const newOrders = prevOrders.map((order) =>
@@ -100,5 +116,7 @@ export const useKdsOrders = () => {
     onStatusChange,
     isLoading,
     error,
+    delayedOrders,
+    upToDateOrders,
   };
 };
