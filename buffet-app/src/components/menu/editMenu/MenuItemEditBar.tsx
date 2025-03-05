@@ -22,7 +22,9 @@ const MenuItemEditBar = ({
   categories,
 }: MenuItemEditBarProps) => {
   const [itemName, setItemName] = useState<string>(menuItem?.name || "");
-  const [itemPrice, setItemPrice] = useState<number>(menuItem?.price || 0);
+  const [itemPrice, setItemPrice] = useState<string>(
+    String(menuItem?.price ? menuItem.price / 100 : menuItem?.price) || "0",
+  );
   const [itemDescription, setItemDescription] = useState<string>(
     menuItem?.description || "",
   );
@@ -42,6 +44,9 @@ const MenuItemEditBar = ({
   const handleSave = () => {
     // Save item to backend
     handleClose();
+    const formatPrice = (Number(itemPrice.replace(",", ".")) * 100).toFixed(0);
+
+    console.log(formatPrice);
   };
 
   const handleClose = () => {
@@ -125,9 +130,9 @@ const MenuItemEditBar = ({
           <MenuItemEditInput
             label="Cena"
             value={itemPrice}
-            onChange={(e) => setItemPrice(Number(e.target.value))}
+            onChange={(e) => setItemPrice(e.target.value)}
             id="itemPrice"
-            type="number"
+            type="string"
           />
 
           <div className="flex flex-row justify-between gap-2">
