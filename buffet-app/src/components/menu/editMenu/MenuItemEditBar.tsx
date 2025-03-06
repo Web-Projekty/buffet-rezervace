@@ -121,7 +121,7 @@ const MenuItemEditBar = ({
 
           <textarea
             id="itemDescription"
-            className="w-full rounded-md p-1 text-black"
+            className="w-full rounded-md p-1 text-black focus:outline-none"
             value={itemDescription}
             onChange={(e) => setItemDescription(e.target.value)}
             placeholder="Popis"
@@ -171,10 +171,11 @@ const MenuItemEditBar = ({
                 <div key={allergen.id} className="flex items-center gap-2">
                   <input
                     type="checkbox"
+                    id={allergen.name}
                     checked={allergensInput.includes(allergen.id)}
                     onChange={() => handleAllergenChange(allergen.id)}
                   />
-                  {allergen.name}
+                  <label htmlFor={allergen.name}>{allergen.name}</label>
                 </div>
               ))}
             </div>
