@@ -12,7 +12,7 @@ const CartItem = ({ item }: CartItemProps) => {
   return (
     <div
       key={item.id}
-      className="grid w-[22rem] grid-cols-1 gap-5 rounded-lg bg-slate-700 p-4 text-white shadow-sm shadow-black md:w-[32rem] md:grid-cols-2"
+      className="grid w-[20rem] grid-cols-1 gap-5 rounded-lg bg-slate-700 p-4 text-white shadow-sm shadow-black md:w-[32rem] md:grid-cols-2"
     >
       <div className="flex h-full flex-col justify-between gap-5">
         <div className="flex flex-col items-start">
