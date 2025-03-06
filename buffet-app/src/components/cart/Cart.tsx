@@ -7,6 +7,7 @@ import CartItem from "./CartItem";
 import Button from "../ui/Button";
 import toast from "react-hot-toast";
 import { toastMessages } from "../utils/toastMessages";
+import { useEffect } from "react";
 
 type CartProps = {
   type?: "modal" | "menu";
@@ -14,13 +15,26 @@ type CartProps = {
 };
 
 const Cart = ({ type = "modal", onClick }: CartProps) => {
-  const { handleCloseCart, cartItems, isCartEmpty } = useCart();
+  const { handleCloseCart, cartItems, isCartEmpty, isOpen } = useCart();
   const navigate = useNavigate();
 
   const handleContinue = () => {
     handleCloseCart();
     navigate("/cart");
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768 && isOpen) {
+        handleCloseCart();
+      }
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isOpen, handleCloseCart]);
 
   return (
     <motion.div
