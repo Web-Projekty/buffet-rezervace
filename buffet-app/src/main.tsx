@@ -169,13 +169,14 @@ const router = createBrowserRouter([
     ),
   },
 ]);
+
 const container = document.getElementById("root");
 if (!container) {
   throw new Error("Container not found");
 }
-const root = createRoot(container);
 
 const queryClient = new QueryClient();
+const root = createRoot(container);
 
 root.render(
   <StrictMode>
