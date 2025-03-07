@@ -29,7 +29,7 @@ class KDSChannel implements MessageInterface
      */
     public function onOpen(StaticConnectionInterface $conn): void
     {
-        $conn->send(Helper::getSuccessResponse(Success::ChannelConnected));
+        //$conn->send(Helper::getSuccessResponse(Success::ChannelConnected));
     }
 
     /**
@@ -59,7 +59,7 @@ class KDSChannel implements MessageInterface
                         Helper::attachClient($conn, $this->authenticatedClients);
                         //$conn->send(Helper::getErrorResponse(Error::AlreadySubscribed));
                     }
-                    $conn->send(Helper::getSuccessResponse(Success::Subscribed));
+                    //$conn->send(Helper::getSuccessResponse(Success::Subscribed));
                     $conn->send(HttpClient::post('http://localhost/api', json_encode(['requestType' => 'getOrders', 'token' => $token, "isKDS" => true])));
                     break;
                 case "publish":
