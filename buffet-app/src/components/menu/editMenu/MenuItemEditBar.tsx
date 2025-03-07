@@ -23,7 +23,7 @@ const MenuItemEditBar = ({
 }: MenuItemEditBarProps) => {
   const [itemName, setItemName] = useState<string>(menuItem?.name || "");
   const [itemPrice, setItemPrice] = useState<string>(
-    String(menuItem?.price ? menuItem.price / 100 : menuItem?.price) || "0",
+    String(menuItem?.price ? menuItem.price / 100 : 0) || "0",
   );
   const [itemDescription, setItemDescription] = useState<string>(
     menuItem?.description || "",
