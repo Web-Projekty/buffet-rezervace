@@ -18,6 +18,20 @@ export const useKdsOrders = () => {
           sendMessage(JSON.stringify({ requestType: "subscribe", token }));
         }
       },
+      onMessage: () => {
+        if (lastJsonMessage?.payload.data && lastJsonMessage?.payload.items) {
+          try {
+            const { data, items } = lastJsonMessage.payload;
+            setOrders((prev) => (prev === data ? prev : (data as Order[])));
+            setItems(items as OrderItem[]);
+          } catch {
+            setError("Chyba v komunikaci se serverem.");
+          }
+        }
+      },
+      onClose: () => {
+        console.log("Connection closed.");
+      },
       shouldReconnect: () => true,
       // reconnectInterval: 5000,
       /*onError: () => {
@@ -70,17 +84,25 @@ export const useKdsOrders = () => {
 
   const delayedOrders = useMemo(
     () =>
-      pendingOrders.filter(
-        (order) => new Date(order.pickupDate).getTime() < Date.now(),
-      ),
+      pendingOrders.filter((order) => {
+        const now = new Date().getTime();
+        const pickupDateTime = new Date(
+          `${order.pickupDate}T${order.startTime}`,
+        ).getTime();
+        return now > pickupDateTime;
+      }),
     [pendingOrders],
   );
 
   const upToDateOrders = useMemo(
     () =>
-      pendingOrders.filter(
-        (order) => new Date(order.pickupDate).getTime() > Date.now(),
-      ),
+      pendingOrders.filter((order) => {
+        const now = new Date().getTime();
+        const pickupDateTime = new Date(
+          `${order.pickupDate}T${order.startTime}`,
+        ).getTime();
+        return now < pickupDateTime;
+      }),
     [pendingOrders],
   );
 
@@ -96,26 +118,15 @@ export const useKdsOrders = () => {
   const isLoading: boolean = readyState === ReadyState.CONNECTING;
 
   useEffect(() => {
-    if (lastJsonMessage?.payload.data && lastJsonMessage?.payload.items) {
-      try {
-        const { data, items } = lastJsonMessage.payload;
-        setOrders((prev) => (prev === data ? prev : (data as Order[])));
-        setItems(items as OrderItem[]);
-        console.log(lastJsonMessage.payload);
-      } catch {
-        setError("Chyba v komunikaci se serverem.");
-      }
-    }
-
     const interval = setInterval(() => {
       if (readyState === ReadyState.OPEN) {
-        sendMessage(JSON.stringify({ message: "ping" }));
-        console.log("ping");
+        sendMessage(JSON.stringify({ requestType: "subscribe", token }));
+        console.log("Subscribed to KDS orders.");
       }
-    }, 50000);
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, [lastJsonMessage]);
+  }, [readyState, sendMessage]);
 
   return {
     pendingOrders,
