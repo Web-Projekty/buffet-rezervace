@@ -14,7 +14,8 @@ export const useKdsOrders = () => {
       data: Order[];
       items: OrderItem[];
     };
-    status: "success" | "error";
+    status?: "success" | "error";
+    eventType?: "createOrder" | "updateOrder";
   }> | null>(null);
 
   useEffect(() => {
@@ -27,7 +28,9 @@ export const useKdsOrders = () => {
           setOrders(message.payload.data);
           setItems(message.payload.items);
         } else {
-          setError("Chyba při získávání dat.");
+          if (message.eventType === "createOrder") {
+            setOrders((prevOrders) => [...prevOrders, message.payload.data[0]]);
+          }
         }
       },
       // onOpen
