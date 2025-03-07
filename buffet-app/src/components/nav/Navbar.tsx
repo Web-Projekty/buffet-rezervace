@@ -22,7 +22,7 @@ export type NavLinks = {
 
 const NavLinks: NavLinks[] = [
   { id: 1, name: "Menu", path: "/" },
-  { id: 2, name: "Alergeny", path: "/alergeny" },
+  { id: 2, name: "Alergeny", path: "/allergens" },
   { id: 3, name: "KDS", path: "/kds", requireAdmin: true },
 ];
 

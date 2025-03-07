@@ -83,7 +83,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/alergeny",
+        path: "/allergens",
         element: (
           <ErrorBoundary>
             <Suspense fallback={<Fallback />}>
