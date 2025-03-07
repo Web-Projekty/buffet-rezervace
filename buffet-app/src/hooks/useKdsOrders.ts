@@ -106,6 +106,15 @@ export const useKdsOrders = () => {
         setError("Chyba v komunikaci se serverem.");
       }
     }
+
+    const interval = setInterval(() => {
+      if (readyState === ReadyState.OPEN) {
+        sendMessage(JSON.stringify({ message: "ping" }));
+        console.log("ping");
+      }
+    }, 50000);
+
+    return () => clearInterval(interval);
   }, [lastJsonMessage]);
 
   return {
