@@ -66,7 +66,7 @@ const MobileNavbar = ({
             />
           );
         })}
-        {!isAdmin && <Cart type="menu" onClick={handleOpenMobileMenu} />}
+        {!isAdmin && <Cart onClick={handleOpenMobileMenu} />}
         <AccountButton type="menu" onClick={handleOpenMobileMenu} />
       </div>
     </motion.ul>

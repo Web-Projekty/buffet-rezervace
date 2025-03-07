@@ -10,11 +10,11 @@ import { toastMessages } from "../utils/toastMessages";
 import { useEffect } from "react";
 
 type CartProps = {
-  type?: "modal" | "menu";
+  modal?: boolean;
   onClick?: () => void;
 };
 
-const Cart = ({ type = "modal", onClick }: CartProps) => {
+const Cart = ({ modal, onClick }: CartProps) => {
   const { handleCloseCart, cartItems, isCartEmpty, isOpen } = useCart();
   const navigate = useNavigate();
 
@@ -39,10 +39,10 @@ const Cart = ({ type = "modal", onClick }: CartProps) => {
   return (
     <motion.div
       {...scaleUpAnimation(0.3)}
-      className={`relative m-auto flex ${type === "modal" ? "h-[800px]" : "h-[500px]"} w-[calc(100%-2rem)] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black md:h-[600px] md:w-[900px]`}
+      className={`relative m-auto flex ${modal ? "h-[800px]" : "h-[500px]"} w-[calc(100%-2rem)] flex-col items-center justify-between rounded-lg bg-slate-800 shadow-md shadow-black md:h-[600px] md:w-[900px]`}
     >
       <h1
-        className={`flex h-16 w-full items-center justify-center rounded-t-lg ${type === "modal" ? "bg-primary" : "bg-slate-900 py-2"} text-center text-xl font-bold text-white`}
+        className={`flex h-16 w-full items-center justify-center rounded-t-lg ${modal ? "bg-primary" : "bg-slate-900 py-2"} text-center text-xl font-bold text-white`}
       >
         Váš košík
       </h1>
@@ -56,7 +56,7 @@ const Cart = ({ type = "modal", onClick }: CartProps) => {
         })}
       </div>
       <div className="flex h-16 w-full items-center justify-center gap-10 rounded-b-lg bg-slate-900 py-2 text-xl text-white">
-        {type === "modal" && (
+        {modal && (
           <Button className="w-32" onClick={handleCloseCart}>
             Zavřít
           </Button>

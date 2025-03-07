@@ -11,7 +11,7 @@ const CartModal = () => {
       darkBackground
       handleContainerClick={handleCloseCart}
     >
-      <Cart />
+      <Cart modal />
     </Modal>
   );
 };
