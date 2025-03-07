@@ -1,44 +1,57 @@
-import useWebSocket, { ReadyState } from "react-use-websocket";
 import { Order, OrderItem } from "../types";
 import { useUser } from "./useUser";
-import { WEBSOCKET_URL } from "../constants";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { WebSocketService } from "../components/utils/webSockets";
 
 export const useKdsOrders = () => {
   const { token } = useUser();
   const [orders, setOrders] = useState<Order[]>([]);
   const [items, setItems] = useState<OrderItem[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const wsRef = useRef<WebSocketService<{
+    payload: {
+      data: Order[];
+      items: OrderItem[];
+    };
+    status: "success" | "error";
+  }> | null>(null);
 
-  const { sendMessage, lastJsonMessage, readyState } = useWebSocket(
-    WEBSOCKET_URL("kds"),
-    {
-      onOpen: () => {
+  useEffect(() => {
+    wsRef.current = new WebSocketService("kds");
+
+    wsRef.current.connect(
+      // onMessage
+      (message) => {
+        if (message.status === "success") {
+          setOrders(message.payload.data);
+          setItems(message.payload.items);
+        } else {
+          setError("Chyba při získávání dat.");
+        }
+      },
+      // onOpen
+      () => {
+        setIsConnected(true);
         if (token) {
-          sendMessage(JSON.stringify({ requestType: "subscribe", token }));
+          wsRef.current?.send({ requestType: "subscribe", token });
         }
       },
-      onMessage: () => {
-        if (lastJsonMessage?.payload.data && lastJsonMessage?.payload.items) {
-          try {
-            const { data, items } = lastJsonMessage.payload;
-            setOrders((prev) => (prev === data ? prev : (data as Order[])));
-            setItems(items as OrderItem[]);
-          } catch {
-            setError("Chyba v komunikaci se serverem.");
-          }
-        }
+      // onClose
+      () => {
+        setIsConnected(false);
+        setError("Připojení bylo přerušeno.");
       },
-      onClose: () => {
-        console.log("Connection closed.");
-      },
-      shouldReconnect: () => true,
-      // reconnectInterval: 5000,
-      /*onError: () => {
+      // onError
+      () => {
         setError("Chyba v komunikaci se serverem.");
-      },*/
-    },
-  );
+      },
+    );
+
+    return () => {
+      wsRef.current?.disconnect();
+    };
+  }, [token]);
 
   const pendingOrders = useMemo(
     () =>
@@ -115,26 +128,13 @@ export const useKdsOrders = () => {
     });
   };
 
-  const isLoading: boolean = readyState === ReadyState.CONNECTING;
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (readyState === ReadyState.OPEN) {
-        sendMessage(JSON.stringify({ requestType: "subscribe", token }));
-        console.log("Subscribed to KDS orders.");
-      }
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [readyState, sendMessage]);
-
   return {
     pendingOrders,
     waitingOrders,
     nextOrdersCount,
     items,
     onStatusChange,
-    isLoading,
+    isLoading: !isConnected,
     error,
     delayedOrders,
     upToDateOrders,
