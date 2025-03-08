@@ -113,8 +113,8 @@
                 intervalId = setInterval(() => {
 
                 if (ws.readyState === WebSocket.OPEN) {
-                const message = "hi";
-                ws.send(message);
+                const message = {requestType: "ping"};
+                ws.send(JSON.stringify(message));
                 console.log("Message sent:", message);
                 } else {
                 console.warn("WebSocket not open. Message not sent.");
