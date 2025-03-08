@@ -4,12 +4,13 @@ declare (strict_types = 1);
 
 namespace Buffet\WebSockets;
 
-use Buffet\Database\DatabaseManager;
+use Buffet\Database\CredentialsManager;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\WebSockets\Channels\EmptyChannel;
 use Buffet\WebSockets\Channels\KDSChannel;
 use Buffet\WebSockets\Interfaces\StaticConnectionInterface;
+use Illuminate\Database\Capsule\Manager as Capsule;
 use Ratchet\ConnectionInterface;
 use Ratchet\MessageComponentInterface;
 
@@ -28,6 +29,32 @@ class Router implements MessageComponentInterface
     {
         $this->kds = new KDSChannel();
         $this->default = new EmptyChannel();
+
+        $response = new ApiResponse();
+        $credentialsManager = new CredentialsManager($response);
+
+        $capsule = new Capsule;
+
+        $creds = $credentialsManager->getCredentials();
+        if ($creds['success'] == true) {
+            // Eloquent ORM Capsule setup
+            $capsule->addConnection([
+                'driver' => 'mysql',
+                'host' => $creds['db_host'],
+                'database' => $creds['db_name'],
+                'username' => $creds['db_user'],
+                'password' => $creds['db_pass'],
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_czech_ci',
+                'prefix' => ''
+            ]);
+
+            // Make the Capsule instance available globally via static methods
+            $capsule->setAsGlobal();
+
+            // Setup the Eloquent ORM
+            $capsule->bootEloquent();
+        }
     }
 
     /**
@@ -96,7 +123,6 @@ class Router implements MessageComponentInterface
         //echo "New request from: " . $path . "\n";
         switch ($path) {
             case '/kds':
-                (new DatabaseManager(new ApiResponse))->setupConnection();
                 $_SERVER['HTTP_HOST'] = 'localhost';
                 return $this->kds;
             default:

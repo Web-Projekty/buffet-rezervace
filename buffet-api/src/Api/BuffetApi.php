@@ -27,7 +27,6 @@ use Buffet\Types\Settings;
 use Buffet\Types\Success;
 use Buffet\Utils\EnvReader;
 use Buffet\Utils\EnvWriter;
-use Buffet\Utils\HttpClient;
 use Buffet\Utils\WebsocketClient;
 use Carbon\Carbon;
 use Carbon\CarbonTimeZone;
@@ -698,10 +697,9 @@ class BuffetApi
             "orderId" => $orderId,
             "payload" => $updatedOrder
         ];
-        //error_log(json_encode($ws));
+
         WebsocketClient::send("kds", json_encode($ws));
-        //error_log("we didn't make it here though");
-        //var_dump($response);
+
         return $response->setSuccess(Success::OrderUpdated);
     }
 

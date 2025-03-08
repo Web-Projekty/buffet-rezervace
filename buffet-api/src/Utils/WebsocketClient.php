@@ -17,10 +17,13 @@ class WebsocketClient
         $connector = new Connector();
 
         $connector("ws://localhost/" . $path)->then(function ($conn) use ($message) {
+            error_log("Sending message: " . $message);
             $conn->send($message);
-            $conn->on('message', function ($msg) use ($conn) {
+            $conn->close();
+            /*$conn->on('message', function ($msg) use ($conn) {
+                error_log("Received message: " . $msg);
                 $conn->close();
-            });
+            });*/
         });
 
     }
