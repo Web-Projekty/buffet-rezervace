@@ -58,7 +58,7 @@ frontend-build-test:
 
 docker_build:
     stage: Docker Image Build
-    image: 
+    image:
         name: wlczak/buffet-builder:latest
         pull_policy: always
     variables:
@@ -70,20 +70,17 @@ docker_build:
         #DOCKER_HOST: "tcp://docker:2375"
     services:
         - name: docker:27.3.1-dind
-        #- name: docker:stable-dind
+          #- name: docker:stable-dind
           alias: docker
           command: ["--tls=false"]
     script:
         - docker version
         - docker info
-        - apk update && apk add tree
-        - tree /home
-        - ctr -n moby images import /home/php-image.tar
-        - docker load < /home/php-image.tar
+        #- docker load < /home/php-image.tar
         - cd scripts
         - npm --version
         - composer diagnose
         - sh docker_build_buffet.sh
         #   changed runner image
-#    rules:
-#        - if: '$CI_COMMIT_BRANCH == "main"'
+    rules:
+        - if: '$CI_COMMIT_BRANCH == "main"'
