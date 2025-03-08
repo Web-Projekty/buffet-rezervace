@@ -78,6 +78,7 @@ docker_build:
         - docker info
         - apk update && apk add tree
         - tree /home
+        - ctr -n moby images import image.tar
         - docker load < /home/php-image.tar
         - cd scripts
         - npm --version
