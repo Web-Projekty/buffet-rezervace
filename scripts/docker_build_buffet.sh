@@ -2,7 +2,7 @@
 # docker builder prune -f
 cd ..
 cd buffet-app
-echo 'Installing npm packges:' && npm install && npm run build
+#echo 'Installing npm packges:' && npm install && npm run build
 cd ..
 
 cd buffet-api
