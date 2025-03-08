@@ -100,7 +100,7 @@ class BuffetApi
         error_log(HttpClient::post("http://localhost/api", json_encode($msg)));
 
         /*foreach ($request->getQueryParams() as $key => $param) {
-        error_log("Key: " . $key . "Param: " . $param);
+        //error_log("Key: " . $key . "Param: " . $param);
         }*/
         return $html;
     }
@@ -389,7 +389,7 @@ class BuffetApi
             }
             if ($isKDS) {
                 $orders = OrderModel::getAll()->where("paid", "=", 1)->where("status", "=", OrderStatus::Sent->value)->orWhere("status", "=", OrderStatus::Preparing->value)->orWhere("status", "=", OrderStatus::Waiting->value);
-                error_log($orders->toSql());
+                //error_log($orders->toSql());
             } else {
                 $orders = OrderModel::getAll();
             }
@@ -409,7 +409,7 @@ class BuffetApi
                 return $response->setError(Error::QueryFailed);
             }
         } else {
-            $response->setPayload("itemsCount", $orders->count($orderTableName.".id"));
+            $response->setPayload("itemsCount", $orders->count($orderTableName . ".id"));
             $ordersArray = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl"])->get()->toArray();
         }
 
@@ -577,7 +577,7 @@ class BuffetApi
             } catch (OutOfOrderIdsException $e) {
                 return $response->setError(Error::OutOfOrderIds);
             } catch (RuntimeException $e) {
-                error_log($e->getMessage());
+                //error_log($e->getMessage());
                 return $response->setError(Error::ThePayError);
             } catch (PaymentCreationException $e) {
                 return $response->setError(Error::PaymentCreationError);
@@ -700,6 +700,7 @@ class BuffetApi
         ];
 
         WebsocketClient::send("kds", json_encode($ws));
+
         return $response->setSuccess(Success::OrderUpdated);
     }
 
