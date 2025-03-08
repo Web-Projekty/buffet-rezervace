@@ -92,7 +92,7 @@ class Router implements MessageComponentInterface
             $path = rtrim($path, '/');
         }
 
-        echo "New request from: " . $path . "\n";
+        //echo "New request from: " . $path . "\n";
         switch ($path) {
             case '/kds':
                 return $this->kds;

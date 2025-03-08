@@ -48,7 +48,7 @@ class Helper
 
         return UserModel::isAdmin($uid);*/
 
-        echo $response = HttpClient::post('http://localhost/api', json_encode(['requestType' => 'isAdmin', 'token' => $token]));
+        $response = HttpClient::post('http://localhost/api', json_encode(['requestType' => 'isAdmin', 'token' => $token]));
 
         return json_decode($response)->payload->isAdmin ?? false;
     }

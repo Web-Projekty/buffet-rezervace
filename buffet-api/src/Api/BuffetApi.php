@@ -100,7 +100,7 @@ class BuffetApi
         //error_log(HttpClient::post("http://localhost/api", json_encode($msg)));
 
         /*foreach ($request->getQueryParams() as $key => $param) {
-        error_log("Key: " . $key . "Param: " . $param);
+        //error_log("Key: " . $key . "Param: " . $param);
         }*/
         return $html;
     }
