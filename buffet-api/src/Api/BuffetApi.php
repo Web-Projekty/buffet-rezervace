@@ -27,6 +27,7 @@ use Buffet\Types\Settings;
 use Buffet\Types\Success;
 use Buffet\Utils\EnvReader;
 use Buffet\Utils\EnvWriter;
+use Buffet\Utils\HttpClient;
 use Buffet\Utils\WebsocketClient;
 use Carbon\Carbon;
 use Carbon\CarbonTimeZone;
@@ -96,7 +97,7 @@ class BuffetApi
             "paymentId" => $paymentUid
         ];
 
-        //error_log(HttpClient::post("http://localhost/api", json_encode($msg)));
+        error_log(HttpClient::post("http://localhost/api", json_encode($msg)));
 
         /*foreach ($request->getQueryParams() as $key => $param) {
         //error_log("Key: " . $key . "Param: " . $param);
