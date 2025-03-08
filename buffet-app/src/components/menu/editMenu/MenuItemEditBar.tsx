@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { Category, MenuItem } from "../../../types";
+import { Allergen, Category, MenuItem } from "../../../types";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import MenuItemEditInput from "./MenuItemEditInput";
 import { allergens } from "../../../allergens";
 import ToggleSwitch from "../../ui/ToggleSwitch";
 import { onImageChange } from "../../utils/utils";
-import LazyImage from "../../ui/LazyImage";
 import { motion } from "framer-motion";
 import { slideInAnimation } from "../../../animations";
 import { createMenuItem, updateMenuItem } from "../../utils/api";
 import { useUser } from "../../../hooks/useUser";
+import ImageInput from "../../ui/ImageInput";
 
 type MenuItemEditBarProps = {
   handleBarOpen: () => void;
@@ -32,7 +32,7 @@ const MenuItemEditBar = ({
   const [itemDescription, setItemDescription] = useState<string>(
     menuItem?.description || "",
   );
-  const [allergensInput, setAllergensInput] = useState<number[]>(
+  const [allergensInput, setAllergensInput] = useState<Allergen["id"][]>(
     menuItem?.allergens.map((allergen) => allergen.id) || [],
   );
   const [itemImage, setItemImage] = useState<string>(menuItem?.image || "");
@@ -59,7 +59,7 @@ const MenuItemEditBar = ({
         description: itemDescription,
         image: "",
         category: itemCategory,
-        allergens: [],
+        allergens: allergensInput,
         variants: [],
       });
 
@@ -79,7 +79,7 @@ const MenuItemEditBar = ({
       category: itemCategory,
       categoryName:
         categories.find((category) => category.id === itemCategory)?.name || "",
-      allergens: [],
+      allergens: allergensInput,
       variants: itemVariants,
       //cashPayment: true,
       //cashVariants: cashVariants,
@@ -132,26 +132,13 @@ const MenuItemEditBar = ({
       className="sticky top-0 h-screen flex-shrink-0"
     >
       <div className="sticky right-3 top-0 z-10 flex w-[28rem] flex-col gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black">
-        <h1 className="text-center">Úprava itemu</h1>
+        <h1 className="text-center text-xl font-bold">Úprava itemu</h1>
         <div className="flex w-full flex-col gap-4">
-          <label htmlFor="itemImage" className="m-auto w-48 cursor-pointer">
-            {itemImage ? (
-              <LazyImage image={itemImage} alt={itemName + "' image"} />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center rounded-md border-2 border-gray-400">
-                <span>Upload Image</span>
-              </div>
-            )}
-
-            <Input
-              type="file"
-              id="itemImage"
-              name="itemImage"
-              onChange={handleImageChange}
-              className="hidden"
-              accept="image/*"
-            />
-          </label>
+          <ImageInput
+            itemImage={itemImage}
+            itemName={itemName}
+            handleImageChange={handleImageChange}
+          />
 
           <MenuItemEditInput
             label="Název"

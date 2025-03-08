@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Category } from "../../../types";
-import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import MenuItemEditInput from "./MenuItemEditInput";
 import { onImageChange } from "../../utils/utils";
@@ -8,6 +7,7 @@ import { motion } from "framer-motion";
 import { slideInAnimation } from "../../../animations";
 import { createCategory, updateCategory } from "../../utils/api";
 import { useUser } from "../../../hooks/useUser";
+import ImageInput from "../../ui/ImageInput";
 
 type MenuCategoryEditBarProps = {
   handleBarOpen: () => void;
@@ -67,31 +67,14 @@ const MenuCategoryEditBar = ({
       {...slideInAnimation(0.2)}
       className="sticky top-0 h-screen flex-shrink-0"
     >
-      <div className="sticky right-3 top-0 z-10 flex w-[28rem] flex-col gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black">
-        <h1 className="text-center">Úprava kategorie</h1>
+      <div className="sticky right-3 top-0 z-10 flex w-[24rem] flex-col gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black">
+        <h1 className="text-center text-xl font-bold">Úprava kategorie</h1>
         <div className="flex w-full flex-col gap-4">
-          <label htmlFor="itemImage" className="m-auto w-48 cursor-pointer">
-            {itemImage ? (
-              <img
-                src={itemImage}
-                alt="Item"
-                className="h-[12rem] w-[16rem] rounded-lg object-cover"
-              />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center border-2 border-gray-400">
-                <span>Upload Image</span>
-              </div>
-            )}
-
-            <Input
-              type="file"
-              id="itemImage"
-              name="itemImage"
-              onChange={handleImageChange}
-              inputClassName="hidden"
-              accept="image/*"
-            />
-          </label>
+          <ImageInput
+            itemImage={itemImage}
+            itemName={itemName}
+            handleImageChange={handleImageChange}
+          />
 
           <MenuItemEditInput
             label="Název"
@@ -103,7 +86,7 @@ const MenuCategoryEditBar = ({
 
           <textarea
             id="categoryDescription"
-            className="w-full rounded-md p-1 text-black"
+            className="max-h-[3.5rem] min-h-[2rem] w-full rounded-md p-1 text-black focus:outline-none"
             value={itemDescription}
             onChange={(e) => setItemDescription(e.target.value)}
             placeholder="Popis"
