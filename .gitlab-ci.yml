@@ -76,11 +76,11 @@ docker_build:
     script:
         - docker version
         - docker info
+        - apk update && apk add tree
+        - tree
         - cd scripts
         - npm --version
         - composer diagnose
-        - apk update && apk add tree
-        - tree
         - docker load -i php-image.tar
         - sh docker_build_buffet.sh
         #   changed runner image
