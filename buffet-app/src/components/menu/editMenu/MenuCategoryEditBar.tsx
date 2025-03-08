@@ -19,11 +19,15 @@ const MenuCategoryEditBar = ({
   category,
 }: MenuCategoryEditBarProps) => {
   const { token } = useUser();
-  const [itemImage, setItemImage] = useState<string>(category?.image || "");
-  const [itemName, setItemName] = useState<string>(category?.name || "");
-  const [itemDescription, setItemDescription] = useState<string>(
-    category?.description || "",
+  const [itemImage, setItemImage] = useState<Category["image"]>(
+    category?.image || "",
   );
+  const [itemName, setItemName] = useState<Category["name"]>(
+    category?.name || "",
+  );
+  const [itemDescription, setItemDescription] = useState<
+    Category["description"]
+  >(category?.description || "");
 
   const handleSave = async () => {
     handleClose();

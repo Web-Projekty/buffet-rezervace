@@ -25,28 +25,31 @@ const MenuItemEditBar = ({
 }: MenuItemEditBarProps) => {
   const { token } = useUser();
 
-  const [itemName, setItemName] = useState<string>(menuItem?.name || "");
+  const [itemName, setItemName] = useState<MenuItem["name"]>(
+    menuItem?.name || "",
+  );
   const [itemPrice, setItemPrice] = useState<string>(
     String(menuItem?.price ? menuItem.price / 100 : 0) || "0",
   );
-  const [itemDescription, setItemDescription] = useState<string>(
-    menuItem?.description || "",
-  );
+  const [itemDescription, setItemDescription] = useState<
+    MenuItem["description"]
+  >(menuItem?.description || "");
   const [allergensInput, setAllergensInput] = useState<Allergen["id"][]>(
     menuItem?.allergens.map((allergen) => allergen.id) || [],
   );
-  const [itemImage, setItemImage] = useState<string>(menuItem?.image || "");
-  const [itemCategory, setItemCategory] = useState<Category["id"]>(
+  const [itemImage, setItemImage] = useState<MenuItem["image"]>(
+    menuItem?.image || "",
+  );
+  const [itemCategory, setItemCategory] = useState<MenuItem["category"]>(
     menuItem?.category || 0,
   );
-  const [itemVariants, setItemVariants] = useState<number[]>(
+  const [itemVariants, setItemVariants] = useState<MenuItem["variants"]>(
     menuItem?.variants || [],
   );
   const [cashPayment, setCashPayment] = useState<boolean>(false);
   const [cashVariants, setCashVariants] = useState<boolean>(false);
 
   const handleSave = async () => {
-    // Save item to backend
     handleClose();
     const formatPrice = (Number(itemPrice.replace(",", ".")) * 100).toFixed(0);
 
