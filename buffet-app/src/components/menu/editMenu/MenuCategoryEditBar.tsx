@@ -28,11 +28,14 @@ const MenuCategoryEditBar = ({
   const handleSave = async () => {
     handleClose();
 
+    const data = {
+      name: itemName,
+      description: itemDescription,
+      image: itemImage,
+    };
+
     if (!category) {
-      const { error } = await createCategory(token, {
-        name: itemName,
-        description: itemDescription,
-      });
+      const { error } = await createCategory(token, data);
 
       if (error) {
         console.log("Error creating item");
@@ -43,9 +46,7 @@ const MenuCategoryEditBar = ({
 
     const { error } = await updateCategory(token, {
       categoryId: category.id,
-      name: itemName,
-      description: itemDescription,
-      image: itemImage,
+      ...data,
     });
 
     if (error) {

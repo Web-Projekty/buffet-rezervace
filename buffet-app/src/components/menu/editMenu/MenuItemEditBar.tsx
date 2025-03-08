@@ -52,15 +52,19 @@ const MenuItemEditBar = ({
 
     console.log(formatPrice);
 
+    const data = {
+      name: itemName,
+      price: Number(formatPrice),
+      description: itemDescription,
+      image: itemImage,
+      category: itemCategory,
+      allergens: allergensInput,
+      variants: itemVariants,
+    };
+
     if (!menuItem) {
       const { error } = await createMenuItem(token, {
-        name: itemName,
-        price: Number(formatPrice),
-        description: itemDescription,
-        image: "",
-        category: itemCategory,
-        allergens: allergensInput,
-        variants: [],
+        ...data,
       });
 
       if (error) {
@@ -72,17 +76,7 @@ const MenuItemEditBar = ({
 
     const { error } = await updateMenuItem(token, {
       itemId: menuItem.id,
-      name: itemName,
-      price: Number(formatPrice),
-      description: itemDescription,
-      image: itemImage,
-      category: itemCategory,
-      categoryName:
-        categories.find((category) => category.id === itemCategory)?.name || "",
-      allergens: allergensInput,
-      variants: itemVariants,
-      //cashPayment: true,
-      //cashVariants: cashVariants,
+      ...data,
     });
 
     if (error) {
