@@ -74,7 +74,8 @@ docker_build:
           alias: docker
           command: ["--tls=false"]
     script:
-        - docker version
+        #- docker version
+        - docker info
         - cd scripts
         - npm --version
         - composer -V
