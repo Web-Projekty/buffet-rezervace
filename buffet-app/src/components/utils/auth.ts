@@ -1,7 +1,5 @@
-import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode, JwtPayload } from "jwt-decode";
-import { FETCH_URL } from "../../constants";
 
 export const setTokenExpiration = (token: string): void => {
   //const expirationTime = new Date().getTime() + expiresIn * 1000;
@@ -29,7 +27,7 @@ export const removeTokenExpiration = (): void => {
   Cookies.remove("tokenExpiration");
 };
 
-export const setRefreshToken = (interval: number, token: string) => {
+/*export const setRefreshToken = (interval: number, token: string) => {
   setInterval(async () => {
     if (isTokenExpired()) {
       try {
@@ -47,3 +45,4 @@ export const setRefreshToken = (interval: number, token: string) => {
     }
   }, interval);
 };
+*/

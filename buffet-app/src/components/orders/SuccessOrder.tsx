@@ -5,8 +5,6 @@ const SuccessOrder = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
 
-  console.log("SuccessOrder", id);
-
   /*if (!order) {
     return <PageNotFound />;
   }*/
@@ -37,7 +35,7 @@ const SuccessOrder = () => {
       {renderSvg()}
       <div className="flex flex-col items-center">
         <h1 className="text-center text-2xl font-bold">
-          Objednávka <span className="text-cyan-500">#{id ? id : 256}</span>
+          Objednávka <span className="text-cyan-500">{id ? id : 256}</span>
         </h1>
         <h2 className="text-xl">
           Můžete ji sledovat{" "}

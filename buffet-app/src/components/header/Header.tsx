@@ -4,6 +4,7 @@ import SchoolLogo from "../../assets/images/logo-white_alfa.png";
 import Navbar from "../nav/Navbar";
 import { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
+import { fadeInAnimation } from "../../animations";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -16,11 +17,7 @@ const Header = () => {
   useEffect(() => {
     if (!isOpen) {
       const handleScroll = (): void => {
-        if (window.scrollY > 10) {
-          controls.start({ height: "5rem" });
-        } else {
-          controls.start({ height: "7rem" });
-        }
+        controls.start({ height: window.scrollY > 10 ? "5rem" : "7rem" });
       };
 
       window.addEventListener("scroll", handleScroll);
@@ -39,9 +36,14 @@ const Header = () => {
     >
       <Link
         to={"/"}
-        className={`z-[55] w-[100px] rounded-full bg-white p-1 md:hover:animate-wiggle`}
+        className={`z-[55] h-[100px] w-[100px] rounded-full bg-white p-1`}
       >
-        <img src={Logo} alt="Hamburger Logo" />
+        <motion.img
+          {...fadeInAnimation(0.5)}
+          src={Logo}
+          alt="Hamburger Logo"
+          className="md:hover:animate-wiggle"
+        />
       </Link>
       <img
         src={SchoolLogo}

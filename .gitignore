@@ -11,3 +11,4 @@ conf/.env
 buffet-app/tsconfig.app.tsbuildinfo
 buffet-app/tsconfig.node.tsbuildinfo
 /buffet-api/dist
+scripts/builder-image/php-image.tar

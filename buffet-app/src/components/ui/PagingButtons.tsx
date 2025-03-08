@@ -16,7 +16,7 @@ const PagingButtons = ({
           <button
             key={index}
             onClick={() => handlePage(index)}
-            className={`rounded-md border border-slate-900 px-3 py-2 ${
+            className={`w-10 rounded-md border border-slate-900 px-3 py-2 ${
               currentPage === index
                 ? "cursor-default bg-cyan-700 text-white"
                 : "cursor-pointer bg-cyan-500 text-white hover:bg-cyan-700"

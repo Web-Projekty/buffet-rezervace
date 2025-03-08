@@ -2,13 +2,10 @@ import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { Category, MenuItem as MenuItemType } from "../../../types";
 import ErrorComponent from "../../error/ErrorComponent";
 import Loading from "../../ui/Loading";
-import MenuItemAdd from "./MenuItemAdd";
-import MenuItemEdit from "./MenuItemEdit";
-import { Pen } from "lucide-react";
-import MenuCategoryAdd from "./MenuCategoryAdd";
 import useMenu from "../../../hooks/useMenu";
 import { Fallback } from "../../../main";
 import { AnimatePresence } from "framer-motion";
+import MenuEditCategories from "./MenuEditCategories";
 
 const MenuItemEditBar = lazy(() => import("./MenuItemEditBar"));
 const MenuCategoryEditBar = lazy(() => import("./MenuCategoryEditBar"));
@@ -36,13 +33,10 @@ const MenuEdit = () => {
 
   const handleCategoryBarOpen = useCallback(
     (id?: number) => {
-      if (id) {
-        setEditCategory(
-          categories.find((category) => category.id === id) || null,
-        );
-      } else {
-        setEditCategory(null);
-      }
+      setEditCategory(
+        id ? categories.find((category) => category.id === id) || null : null,
+      );
+
       setIsCategoryBarOpen((prev) => !prev);
       setIsItemBarOpen(false);
     },
@@ -90,55 +84,14 @@ const MenuEdit = () => {
             </Suspense>
           )}
         </AnimatePresence>
-        <div className="flex flex-col">
-          <MenuCategoryAdd
-            handleCategoryBarOpen={handleCategoryBarOpen}
-            isCategoryBarOpen={isCategoryBarOpen}
-          />
-          {categories?.map((category) => (
-            <div className="mt-5 flex flex-col gap-5" key={category.id}>
-              <div className="flex items-center justify-between">
-                <h1 className="text-4xl font-bold text-white">
-                  {category.name}
-                </h1>
-                <div className="flex gap-2">
-                  <div className="mr-5 text-white">{category.description}</div>
-
-                  <Pen
-                    className={`text-white ${isCategoryBarOpen ? "cursor-not-allowed opacity-75" : "cursor-pointer"}`}
-                    onClick={() =>
-                      !isCategoryBarOpen
-                        ? handleCategoryBarOpen(category.id)
-                        : undefined
-                    }
-                  />
-                </div>
-              </div>
-
-              <div
-                className={`grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-10 ${isItemBarOpen || isCategoryBarOpen ? "xl:grid-cols-2 2xl:grid-cols-3" : "xl:grid-cols-2 2xl:grid-cols-4"}`}
-              >
-                <MenuItemAdd
-                  handleBarOpen={handleBarOpen}
-                  isBarOpen={isItemBarOpen}
-                />
-                {menuItems
-                  ?.filter(
-                    (item) =>
-                      categories.length > 0 && item.category === category.id,
-                  )
-                  .map((item) => (
-                    <MenuItemEdit
-                      key={item.id}
-                      item={item}
-                      handleBarOpen={handleBarOpen}
-                      isBarOpen={isItemBarOpen}
-                    />
-                  ))}
-              </div>
-            </div>
-          ))}
-        </div>
+        <MenuEditCategories
+          categories={categories}
+          handleCategoryBarOpen={handleCategoryBarOpen}
+          isCategoryBarOpen={isCategoryBarOpen}
+          menuItems={menuItems}
+          handleBarOpen={handleBarOpen}
+          isItemBarOpen={isItemBarOpen}
+        />
       </div>
     </section>
   );

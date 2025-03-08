@@ -6,7 +6,7 @@ echo 'Installing npm packges:' && npm install && npm run build
 cd ..
 
 cd buffet-api
-echo 'Installing compooser packges:' && composer install
+echo 'Installing compooser packges:' && composer install --no-dev --optimize-autoloader
 cd ..
 
 rm -rf buffet-api/dist

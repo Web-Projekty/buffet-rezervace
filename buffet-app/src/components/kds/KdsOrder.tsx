@@ -62,7 +62,7 @@ const KdsOrder = ({ order, onStatusChange, items }: KdsOrderProps) => {
         <div
           className={`flex w-full flex-row items-center justify-between ${color} px-4 py-3 text-xl font-bold`}
         >
-          <p>{order && `#${order.pickUpId}`}</p>
+          <p>{order && `${order.pickUpId}`}</p>
           <p className="text-lg font-normal">
             {order && pickUpDate + " " + startTime + "-" + endTime}
           </p>

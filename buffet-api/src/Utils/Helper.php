@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace Buffet\Utils;
 
+use Buffet\Api\JWTApi;
+use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\Types\Success;
@@ -48,9 +50,26 @@ class Helper
 
         return UserModel::isAdmin($uid);*/
 
-        echo $response = HttpClient::post('http://localhost/api', json_encode(['requestType' => 'isAdmin', 'token' => $token]));
+        //$response = HttpClient::post('http://localhost/api', json_encode(['requestType' => 'isAdmin', 'token' => $token]));
 
-        return json_decode($response)->payload->isAdmin ?? false;
+        //return json_decode($response)->payload->isAdmin ?? false;
+
+        $response = new ApiResponse(["token" => $token]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return false;
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return false;
+        }
+        return true;
     }
 
     /**
