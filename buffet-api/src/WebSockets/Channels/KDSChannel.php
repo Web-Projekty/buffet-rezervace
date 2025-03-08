@@ -5,7 +5,6 @@ declare (strict_types = 1);
 namespace Buffet\WebSockets\Channels;
 
 use Buffet\Types\Error;
-use Buffet\Types\Success;
 use Buffet\Utils\Helper;
 use Buffet\Utils\HttpClient;
 use Buffet\WebSockets\Interfaces\MessageInterface;
@@ -77,12 +76,11 @@ class KDSChannel implements MessageInterface
                     }
                     break;
                 case "ping":
+                    error_log("ping... pong... \n");
                     $conn->send(json_encode(["msg" => "pong"]));
                     break;
                 default:
-                    echo "help plz: ";
-                    echo $msg;
-                    echo "\n";
+                    error_log("called default method: " . $msg . "\n");
 
                     $response = HttpClient::post('http://localhost/api', $msg);
 
