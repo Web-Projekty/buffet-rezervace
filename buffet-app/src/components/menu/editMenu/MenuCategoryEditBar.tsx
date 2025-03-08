@@ -12,11 +12,13 @@ import ImageInput from "../../ui/ImageInput";
 type MenuCategoryEditBarProps = {
   handleBarOpen: () => void;
   category: Category | null;
+  refetch: () => void;
 };
 
 const MenuCategoryEditBar = ({
   handleBarOpen,
   category,
+  refetch,
 }: MenuCategoryEditBarProps) => {
   const { token } = useUser();
   const [itemImage, setItemImage] = useState<Category["image"]>(
@@ -43,8 +45,8 @@ const MenuCategoryEditBar = ({
 
       if (error) {
         console.log("Error creating item");
-        return;
       }
+      refetch();
       return;
     }
 
@@ -55,8 +57,8 @@ const MenuCategoryEditBar = ({
 
     if (error) {
       console.log("Error updating item");
-      return;
     }
+    refetch();
   };
 
   const handleClose = () => {

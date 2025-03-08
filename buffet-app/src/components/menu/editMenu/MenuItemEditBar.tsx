@@ -16,12 +16,14 @@ type MenuItemEditBarProps = {
   handleBarOpen: () => void;
   menuItem: MenuItem | null;
   categories: Category[];
+  refetch: () => void;
 };
 
 const MenuItemEditBar = ({
   handleBarOpen,
   menuItem,
   categories,
+  refetch,
 }: MenuItemEditBarProps) => {
   const { token } = useUser();
 
@@ -72,8 +74,8 @@ const MenuItemEditBar = ({
 
       if (error) {
         console.log("Error creating item");
-        return;
       }
+      refetch();
       return;
     }
 
@@ -84,8 +86,8 @@ const MenuItemEditBar = ({
 
     if (error) {
       console.log("Error updating item");
-      return;
     }
+    refetch();
   };
 
   const handleClose = () => {
