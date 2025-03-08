@@ -18,6 +18,9 @@ export const useKdsOrders = () => {
     eventType?: "createOrder" | "updateOrder";
   }> | null>(null);
 
+  const maxSentOrders = 6;
+  const maxWaitingOrders = 10;
+
   useEffect(() => {
     wsRef.current = new WebSocketService("kds");
 
@@ -135,5 +138,7 @@ export const useKdsOrders = () => {
     error,
     delayedOrders,
     upToDateOrders,
+    maxSentOrders,
+    maxWaitingOrders,
   };
 };

@@ -15,13 +15,15 @@ const KdsOrders = () => {
     nextOrders,
     delayedOrders,
     upToDateOrders,
+    maxSentOrders,
+    maxWaitingOrders,
   } = useKdsOrders();
 
   const renderPendingOrders = () => {
     return (
       pendingOrders &&
       pendingOrders
-        .slice(0, 6)
+        .slice(0, maxSentOrders)
         .map((order) => (
           <KdsOrder
             key={order.id}
@@ -38,7 +40,7 @@ const KdsOrders = () => {
       <KdsStatusBar
         delayed={delayedOrders.length}
         uptodate={upToDateOrders.length}
-        current={nextOrders.length - 6}
+        current={nextOrders.length - maxSentOrders}
         waiting={waitingOrders?.length}
       />
 
@@ -54,7 +56,7 @@ const KdsOrders = () => {
           <div className="flex flex-col gap-2">
             {waitingOrders && waitingOrders.length > 0
               ? waitingOrders
-                  .slice(0, 10)
+                  .slice(0, maxWaitingOrders)
                   .map((order) => (
                     <KdsDeliveryOrder
                       key={order.id}
