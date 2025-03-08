@@ -6,6 +6,8 @@ import MenuItemEditInput from "./MenuItemEditInput";
 import { onImageChange } from "../../utils/utils";
 import { motion } from "framer-motion";
 import { slideInAnimation } from "../../../animations";
+import { createCategory, updateCategory } from "../../utils/api";
+import { useUser } from "../../../hooks/useUser";
 
 type MenuCategoryEditBarProps = {
   handleBarOpen: () => void;
@@ -16,14 +18,40 @@ const MenuCategoryEditBar = ({
   handleBarOpen,
   category,
 }: MenuCategoryEditBarProps) => {
+  const { token } = useUser();
   const [itemImage, setItemImage] = useState<string>(category?.image || "");
   const [itemName, setItemName] = useState<string>(category?.name || "");
   const [itemDescription, setItemDescription] = useState<string>(
     category?.description || "",
   );
 
-  const handleSave = () => {
+  const handleSave = async () => {
     handleClose();
+
+    if (!category) {
+      const { error } = await createCategory(token, {
+        name: itemName,
+        description: itemDescription,
+      });
+
+      if (error) {
+        console.log("Error creating item");
+        return;
+      }
+      return;
+    }
+
+    const { error } = await updateCategory(token, {
+      categoryId: category.id,
+      name: itemName,
+      description: itemDescription,
+      image: itemImage,
+    });
+
+    if (error) {
+      console.log("Error updating item");
+      return;
+    }
   };
 
   const handleClose = () => {
