@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace Buffet\WebSockets;
 
+use Buffet\Database\DatabaseManager;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\WebSockets\Channels\EmptyChannel;
@@ -95,6 +96,8 @@ class Router implements MessageComponentInterface
         //echo "New request from: " . $path . "\n";
         switch ($path) {
             case '/kds':
+                (new DatabaseManager(new ApiResponse))->setupConnection();
+                $_SERVER['HTTP_HOST'] = 'localhost';
                 return $this->kds;
             default:
                 $api = new ApiResponse;
