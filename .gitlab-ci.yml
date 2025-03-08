@@ -81,5 +81,5 @@ docker_build:
         - composer diagnose
         - sh docker_build_buffet.sh
         #   changed runner image
-    rules:
-        - if: '$CI_COMMIT_BRANCH == "main"'
+#    rules:
+#        - if: '$CI_COMMIT_BRANCH == "main"'
