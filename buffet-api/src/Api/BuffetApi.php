@@ -698,9 +698,10 @@ class BuffetApi
             "orderId" => $orderId,
             "payload" => $updatedOrder
         ];
-        error_log("we made it here". json_encode($ws));
+        //error_log(json_encode($ws));
         WebsocketClient::send("kds", json_encode($ws));
-        error_log("we didn't make it here though");
+        //error_log("we didn't make it here though");
+        //var_dump($response);
         return $response->setSuccess(Success::OrderUpdated);
     }
 

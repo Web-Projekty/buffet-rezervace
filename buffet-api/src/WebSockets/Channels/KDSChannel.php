@@ -76,7 +76,7 @@ class KDSChannel implements MessageInterface
                     }
                     break;
                 case "ping":
-                    error_log("ping... pong... \n");
+                    //error_log("ping... pong... \n");
                     $conn->send(json_encode(["msg" => "pong"]));
                     break;
                 default:
