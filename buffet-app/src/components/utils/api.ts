@@ -195,7 +195,7 @@ export const createMenuItem = async (
 
 export const updateMenuItem = async (
   token: string | null,
-  menuItem: Omit<MenuItem, "id" | "allergens"> & {
+  menuItem: Omit<MenuItem, "id" | "allergens" | "categoryName"> & {
     itemId: MenuItem["id"];
     allergens: Allergen["id"][];
   },
@@ -259,7 +259,7 @@ export const updateCategory = async (
 
 export const createCategory = async (
   token: string | null,
-  category: Omit<Category, "id" | "image">,
+  category: Omit<Category, "id">,
 ): Promise<{
   category: Category;
   error: boolean;
