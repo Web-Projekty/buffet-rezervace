@@ -39,7 +39,11 @@ const KdsOrders = () => {
       <KdsStatusBar
         delayed={delayedOrders.length}
         uptodate={upToDateOrders.length}
-        current={pendingOrders.length - maxSentOrders}
+        current={
+          pendingOrders.length <= maxSentOrders
+            ? 0
+            : pendingOrders.length - maxSentOrders
+        }
         waiting={waitingOrders?.length}
       />
 
@@ -64,7 +68,7 @@ const KdsOrders = () => {
                       items={items}
                     />
                   ))
-              : null}
+              : []}
           </div>
         </div>
       )}
