@@ -2,11 +2,11 @@
 # docker builder prune -f
 cd ..
 cd buffet-app
-#echo 'Installing npm packges:' && npm install && npm run build
+echo 'Installing npm packges:' && npm install && npm run build
 cd ..
 
 cd buffet-api
-#echo 'Installing compooser packges:' && composer install --no-dev --optimize-autoloader
+echo 'Installing compooser packges:' && composer install --no-dev --optimize-autoloader
 cd ..
 
 rm -rf buffet-api/dist
