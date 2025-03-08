@@ -70,7 +70,6 @@ docker_build:
         #DOCKER_HOST: "tcp://docker:2375"
     services:
         - name: docker:27.3.1-dind
-          #- name: docker:stable-dind
           alias: docker
           command: ["--tls=false"]
     script:
@@ -81,6 +80,5 @@ docker_build:
         - npm --version
         - composer diagnose
         - sh docker_build_buffet.sh
-        #   changed runner image
     rules:
         - if: '$CI_COMMIT_BRANCH == "main"'
