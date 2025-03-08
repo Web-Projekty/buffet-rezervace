@@ -76,6 +76,8 @@ docker_build:
     script:
         - docker version
         - docker info
+        - apk update && apk add tree
+        - tree /home
         - docker load -i /home/php-image.tar
         - cd scripts
         - npm --version
