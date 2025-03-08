@@ -9,6 +9,8 @@ import { onImageChange } from "../../utils/utils";
 import LazyImage from "../../ui/LazyImage";
 import { motion } from "framer-motion";
 import { slideInAnimation } from "../../../animations";
+import { createMenuItem, updateMenuItem } from "../../utils/api";
+import { useUser } from "../../../hooks/useUser";
 
 type MenuItemEditBarProps = {
   handleBarOpen: () => void;
@@ -21,6 +23,8 @@ const MenuItemEditBar = ({
   menuItem,
   categories,
 }: MenuItemEditBarProps) => {
+  const { token } = useUser();
+
   const [itemName, setItemName] = useState<string>(menuItem?.name || "");
   const [itemPrice, setItemPrice] = useState<string>(
     String(menuItem?.price ? menuItem.price / 100 : 0) || "0",
@@ -41,12 +45,50 @@ const MenuItemEditBar = ({
   const [cashPayment, setCashPayment] = useState<boolean>(false);
   const [cashVariants, setCashVariants] = useState<boolean>(false);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // Save item to backend
     handleClose();
     const formatPrice = (Number(itemPrice.replace(",", ".")) * 100).toFixed(0);
 
     console.log(formatPrice);
+
+    if (!menuItem) {
+      const { error } = await createMenuItem(token, {
+        name: itemName,
+        price: Number(formatPrice),
+        description: itemDescription,
+        image: "",
+        category: itemCategory,
+        allergens: [],
+        variants: [],
+      });
+
+      if (error) {
+        console.log("Error creating item");
+        return;
+      }
+      return;
+    }
+
+    const { error } = await updateMenuItem(token, {
+      itemId: menuItem.id,
+      name: itemName,
+      price: Number(formatPrice),
+      description: itemDescription,
+      image: itemImage,
+      category: itemCategory,
+      categoryName:
+        categories.find((category) => category.id === itemCategory)?.name || "",
+      allergens: [],
+      variants: itemVariants,
+      //cashPayment: true,
+      //cashVariants: cashVariants,
+    });
+
+    if (error) {
+      console.log("Error updating item");
+      return;
+    }
   };
 
   const handleClose = () => {
@@ -96,7 +138,7 @@ const MenuItemEditBar = ({
             {itemImage ? (
               <LazyImage image={itemImage} alt={itemName + "' image"} />
             ) : (
-              <div className="flex h-full w-full items-center justify-center border-2 border-gray-400">
+              <div className="flex h-full w-full items-center justify-center rounded-md border-2 border-gray-400">
                 <span>Upload Image</span>
               </div>
             )}
@@ -106,7 +148,7 @@ const MenuItemEditBar = ({
               id="itemImage"
               name="itemImage"
               onChange={handleImageChange}
-              inputClassName="hidden"
+              className="hidden"
               accept="image/*"
             />
           </label>
@@ -121,7 +163,7 @@ const MenuItemEditBar = ({
 
           <textarea
             id="itemDescription"
-            className="w-full rounded-md p-1 text-black focus:outline-none"
+            className="max-h-[3.5rem] min-h-[2rem] w-full rounded-md p-1 text-black focus:outline-none"
             value={itemDescription}
             onChange={(e) => setItemDescription(e.target.value)}
             placeholder="Popis"
