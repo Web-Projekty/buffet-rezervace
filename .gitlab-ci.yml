@@ -1,8 +1,8 @@
 stages:
+    - Docker Image Build
     - Tests
     - Code Coverage
     - Frontend Build Test
-    - Docker Image Build
 
 # Job to run PHPStan
 phpstan:
@@ -63,20 +63,23 @@ docker_build:
         pull_policy: always
     variables:
         DOCKER_DRIVER: overlay2
-        DOCKER_DIND: "docker:27.3.1-dind"
+        #DOCKER_DIND: "docker:27.3.1-dind"
+        #DOCKER_DIND: "docker:stable-dind"
         DOCKER_TLS_CERTDIR: ""
-        DOCKER_DIND: "docker:20.10.16-dind"
-        DOCKER_HOST: "tcp://docker:2375"
+        #DOCKER_DIND: "docker:20.10.16-dind"
+        #DOCKER_HOST: "tcp://docker:2375"
     services:
-        - name: docker:27.3.1-dind
+        #- name: docker:27.3.1-dind
+        - name: docker:stable-dind
           alias: docker
           command: ["--tls=false"]
     script:
         - docker version
+        - docker info
         - cd scripts
         - npm --version
         - composer -V
         - sh docker_build_buffet.sh
         #   changed runner image
-    rules:
-        - if: '$CI_COMMIT_BRANCH == "main"'
+#    rules:
+#        - if: '$CI_COMMIT_BRANCH == "main"'
