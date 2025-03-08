@@ -12,7 +12,7 @@ const KdsOrders = () => {
     onStatusChange,
     isLoading,
     items,
-    nextOrdersCount,
+    nextOrders,
     delayedOrders,
     upToDateOrders,
   } = useKdsOrders();
@@ -20,14 +20,16 @@ const KdsOrders = () => {
   const renderPendingOrders = () => {
     return (
       pendingOrders &&
-      pendingOrders.map((order) => (
-        <KdsOrder
-          key={order.id}
-          order={order}
-          onStatusChange={onStatusChange}
-          items={items}
-        />
-      ))
+      pendingOrders
+        .slice(0, 6)
+        .map((order) => (
+          <KdsOrder
+            key={order.id}
+            order={order}
+            onStatusChange={onStatusChange}
+            items={items}
+          />
+        ))
     );
   };
 
@@ -36,7 +38,7 @@ const KdsOrders = () => {
       <KdsStatusBar
         delayed={delayedOrders.length}
         uptodate={upToDateOrders.length}
-        current={nextOrdersCount}
+        current={nextOrders.length - 6}
         waiting={waitingOrders?.length}
       />
 
@@ -51,14 +53,16 @@ const KdsOrders = () => {
           </div>
           <div className="flex flex-col gap-2">
             {waitingOrders && waitingOrders.length > 0
-              ? waitingOrders.map((order) => (
-                  <KdsDeliveryOrder
-                    key={order.id}
-                    order={order}
-                    onStatusChange={onStatusChange}
-                    items={items}
-                  />
-                ))
+              ? waitingOrders
+                  .slice(0, 10)
+                  .map((order) => (
+                    <KdsDeliveryOrder
+                      key={order.id}
+                      order={order}
+                      onStatusChange={onStatusChange}
+                      items={items}
+                    />
+                  ))
               : null}
           </div>
         </div>

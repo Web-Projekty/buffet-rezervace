@@ -65,7 +65,6 @@ export const useKdsOrders = () => {
                 order.status === "preparing" || order.status === "sent",
             )
             .sort((a, b) => a.pickupDate.localeCompare(b.pickupDate))
-            .slice(0, 6)
         : [],
     [orders],
   );
@@ -76,25 +75,20 @@ export const useKdsOrders = () => {
         ? orders
             .filter((order) => order.status === "waiting")
             .sort((b, a) => a.pickupDate.localeCompare(b.pickupDate))
-            .slice(0, 10)
         : [],
     [orders],
   );
 
-  const nextOrdersCount: number = useMemo(
+  const nextOrders = useMemo(
     () =>
       orders && orders.length > 0
-        ? orders.filter(
-            (order) =>
-              order.status !== "cancelled" &&
-              order.status !== "storno" &&
-              order.status !== "done",
-          ).length -
-          orders.filter(
-            (order) => order.status === "preparing" || order.status === "sent",
-          ).length -
-          orders.filter((order) => order.status === "waiting").length
-        : 0,
+        ? orders
+            .filter(
+              (order) =>
+                order.status === "preparing" || order.status === "sent",
+            )
+            .sort((a, b) => a.pickupDate.localeCompare(b.pickupDate))
+        : [],
     [orders],
   );
 
@@ -134,7 +128,7 @@ export const useKdsOrders = () => {
   return {
     pendingOrders,
     waitingOrders,
-    nextOrdersCount,
+    nextOrders,
     items,
     onStatusChange,
     isLoading: !isConnected,
