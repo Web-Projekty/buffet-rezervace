@@ -63,12 +63,14 @@ docker_build:
         pull_policy: always
     variables:
         DOCKER_DRIVER: overlay2
-        DOCKER_DIND: "docker:27.3.1-dind"
+        #DOCKER_DIND: "docker:27.3.1-dind"
+        DOCKER_DIND: "docker:stable-dind"
         DOCKER_TLS_CERTDIR: ""
-        DOCKER_DIND: "docker:20.10.16-dind"
+        #DOCKER_DIND: "docker:20.10.16-dind"
         DOCKER_HOST: "tcp://docker:2375"
     services:
-        - name: docker:27.3.1-dind
+        #- name: docker:27.3.1-dind
+        - name: docker:stable-dind
           alias: docker
           command: ["--tls=false"]
     script:
