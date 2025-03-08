@@ -82,19 +82,6 @@ export const useKdsOrders = () => {
     [orders],
   );
 
-  const nextOrders = useMemo(
-    () =>
-      orders && orders.length > 0
-        ? orders
-            .filter(
-              (order) =>
-                order.status === "preparing" || order.status === "sent",
-            )
-            .sort((a, b) => a.pickupDate.localeCompare(b.pickupDate))
-        : [],
-    [orders],
-  );
-
   const delayedOrders = useMemo(
     () =>
       pendingOrders.filter((order) => {
@@ -108,15 +95,8 @@ export const useKdsOrders = () => {
   );
 
   const upToDateOrders = useMemo(
-    () =>
-      pendingOrders.filter((order) => {
-        const now = new Date().getTime();
-        const pickupDateTime = new Date(
-          `${order.pickupDate}T${order.startTime}`,
-        ).getTime();
-        return now < pickupDateTime;
-      }),
-    [pendingOrders],
+    () => pendingOrders.filter((order) => delayedOrders.indexOf(order) === -1),
+    [pendingOrders, delayedOrders],
   );
 
   const onStatusChange = (updatedOrder: Order) => {
@@ -131,7 +111,6 @@ export const useKdsOrders = () => {
   return {
     pendingOrders,
     waitingOrders,
-    nextOrders,
     items,
     onStatusChange,
     isLoading: !isConnected,

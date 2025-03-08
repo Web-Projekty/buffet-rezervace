@@ -12,7 +12,6 @@ const KdsOrders = () => {
     onStatusChange,
     isLoading,
     items,
-    nextOrders,
     delayedOrders,
     upToDateOrders,
     maxSentOrders,
@@ -40,7 +39,7 @@ const KdsOrders = () => {
       <KdsStatusBar
         delayed={delayedOrders.length}
         uptodate={upToDateOrders.length}
-        current={nextOrders.length - maxSentOrders}
+        current={pendingOrders.length - maxSentOrders}
         waiting={waitingOrders?.length}
       />
 
