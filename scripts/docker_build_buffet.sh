@@ -6,7 +6,7 @@ cd buffet-app
 cd ..
 
 cd buffet-api
-echo 'Installing compooser packges:' && composer install --no-dev --optimize-autoloader
+#echo 'Installing compooser packges:' && composer install --no-dev --optimize-autoloader
 cd ..
 
 rm -rf buffet-api/dist
