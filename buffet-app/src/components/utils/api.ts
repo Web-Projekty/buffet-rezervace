@@ -165,12 +165,12 @@ export const deleteOrder = async (
 };
 
 export const createMenuItem = async (
-  token: string,
-  menuItem: Omit<MenuItem, "id">,
+  token: string | null,
+  menuItem: Omit<MenuItem, "id" | "categoryName">,
 ): Promise<MenuItemApi> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
-      requestType: "updateItem",
+      requestType: "createItem",
       token: token,
       ...menuItem,
     });
@@ -185,8 +185,8 @@ export const createMenuItem = async (
 };
 
 export const updateMenuItem = async (
-  token: string,
-  menuItem: MenuItem,
+  token: string | null,
+  menuItem: Omit<MenuItem, "id"> & { itemId: number },
 ): Promise<MenuItemApi> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
@@ -219,6 +219,52 @@ export const deleteMenuItem = async (
     };
   } catch {
     throw new Error("Chyba při mazání položky menu.");
+  }
+};
+
+export const updateCategory = async (
+  token: string | null,
+  category: Omit<Category, "id"> & { categoryId: number },
+): Promise<{
+  category: Category;
+  error: boolean;
+}> => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "updateCategory",
+      token: token,
+      ...category,
+    });
+
+    return {
+      category: data.payload.data as Category,
+      error: data.status !== "success",
+    };
+  } catch {
+    throw new Error("Chyba při aktualizaci kategorie.");
+  }
+};
+
+export const createCategory = async (
+  token: string | null,
+  category: Omit<Category, "id" | "image">,
+): Promise<{
+  category: Category;
+  error: boolean;
+}> => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "createCategory",
+      token,
+      ...category,
+    });
+
+    return {
+      category: data.payload.data as Category,
+      error: data.status !== "success",
+    };
+  } catch {
+    throw new Error("Chyba při vytváření kategorie.");
   }
 };
 
