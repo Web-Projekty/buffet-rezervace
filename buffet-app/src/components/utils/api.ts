@@ -1,5 +1,12 @@
 import axios from "axios";
-import { Category, Date, MenuItem, Order, OrderStatus } from "../../types";
+import {
+  Allergen,
+  Category,
+  Date,
+  MenuItem,
+  Order,
+  OrderStatus,
+} from "../../types";
 import { FETCH_URL } from "../../constants";
 import { CartItem } from "../../store/CartStore";
 
@@ -166,7 +173,9 @@ export const deleteOrder = async (
 
 export const createMenuItem = async (
   token: string | null,
-  menuItem: Omit<MenuItem, "id" | "categoryName">,
+  menuItem: Omit<MenuItem, "id" | "categoryName" | "allergens"> & {
+    allergens: Allergen["id"][];
+  },
 ): Promise<MenuItemApi> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
@@ -186,7 +195,10 @@ export const createMenuItem = async (
 
 export const updateMenuItem = async (
   token: string | null,
-  menuItem: Omit<MenuItem, "id"> & { itemId: number },
+  menuItem: Omit<MenuItem, "id" | "allergens"> & {
+    itemId: MenuItem["id"];
+    allergens: Allergen["id"][];
+  },
 ): Promise<MenuItemApi> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
