@@ -33,6 +33,18 @@ export const useKdsOrders = () => {
         } else {
           if (message.eventType === "createOrder") {
             setOrders((prevOrders) => [...prevOrders, message.payload.data[0]]);
+          } else if (message.eventType === "updateOrder") {
+            setOrders((prevOrders) => {
+              const index = prevOrders.findIndex(
+                (order) => order.id === message.payload.data[0].id,
+              );
+              if (index === -1) return prevOrders;
+              return [
+                ...prevOrders.slice(0, index),
+                message.payload.data[0],
+                ...prevOrders.slice(index + 1),
+              ];
+            });
           }
         }
       },
@@ -67,7 +79,12 @@ export const useKdsOrders = () => {
               (order) =>
                 order.status === "preparing" || order.status === "sent",
             )
-            .sort((a, b) => a.pickupDate.localeCompare(b.pickupDate))
+            .sort((a, b) => {
+              if (a.status === "preparing" && b.status === "sent") return -1;
+              if (a.status === "sent" && b.status === "preparing") return 1;
+
+              return a.pickupDate.localeCompare(b.pickupDate);
+            })
         : [],
     [orders],
   );
@@ -101,10 +118,15 @@ export const useKdsOrders = () => {
 
   const onStatusChange = (updatedOrder: Order) => {
     setOrders((prevOrders) => {
-      const newOrders = prevOrders.map((order) =>
-        order.id === updatedOrder.id ? updatedOrder : order,
+      const index = prevOrders.findIndex(
+        (order) => order.id === updatedOrder.id,
       );
-      return [...newOrders];
+      if (index === -1) return prevOrders;
+      return [
+        ...prevOrders.slice(0, index),
+        updatedOrder,
+        ...prevOrders.slice(index + 1),
+      ];
     });
   };
 
