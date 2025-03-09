@@ -78,8 +78,8 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
     minute: "2-digit",
   });
   const pickUpDate = formatDate(order.pickupDate);
-  const startTime = order.startTime;
-  const endTime = order.endTime;
+  const startTime = order.startTime.split(":").slice(0, 2).join(":");
+  const endTime = order.endTime.split(":").slice(0, 2).join(":");
 
   useEffect(() => {
     if (
