@@ -28,7 +28,7 @@ const ImageInput = ({
         name="itemImage"
         onChange={handleImageChange}
         className="hidden"
-        accept="image/*"
+        accept="image/png, image/jpeg"
       />
     </label>
   );
