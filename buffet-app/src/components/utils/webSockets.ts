@@ -31,11 +31,9 @@ export class WebSocketService<T> {
 
     this.ws.onmessage = (event) => {
       try {
-        // Check if data is already an object
         const data =
           typeof event.data === "string" ? JSON.parse(event.data) : event.data;
 
-        // Validate the data structure before passing it to onMessage
         if (this.validateMessage(data)) {
           onMessage(data as T);
           console.log("WebSocket Message:", data);
@@ -59,21 +57,16 @@ export class WebSocketService<T> {
     };
   }
 
-  // Add a validation method to check message structure
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private validateMessage(message: any): boolean {
-    // Basic validation - message should be an object
     if (!message || typeof message !== "object") return false;
 
-    // For ping/pong messages, minimal validation is needed
     if (message.eventType === "ping" || message.eventType === "pong") {
       return true;
     }
 
-    // For other message types, validate payload structure
     if (!message.payload) return false;
 
-    // If it's an update/create order message, validate data array
     if (
       message.eventType === "createOrder" ||
       message.eventType === "updateOrder"
@@ -81,7 +74,6 @@ export class WebSocketService<T> {
       return message.payload.data !== undefined;
     }
 
-    // Default case - allow other message formats through
     return true;
   }
 
