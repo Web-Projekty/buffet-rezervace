@@ -7,15 +7,10 @@ import { ChevronLeft } from "lucide-react";
 
 type KdsDeliveryOrderProps = {
   order: Order;
-  onStatusChange: (order: Order) => void;
   items: OrderItem[];
 };
 
-const KdsDeliveryOrder = ({
-  order,
-  onStatusChange,
-  items,
-}: KdsDeliveryOrderProps) => {
+const KdsDeliveryOrder = ({ order, items }: KdsDeliveryOrderProps) => {
   const { token } = useUser();
   const { isOpen, toggleOpen, color, mappedItems, handleStatus } = useOrder(
     order,
@@ -24,15 +19,11 @@ const KdsDeliveryOrder = ({
   );
 
   const handleDoneOrder = () => {
-    handleStatus("done", token).then(() =>
-      onStatusChange({ ...order, status: "done" }),
-    );
+    handleStatus("done", token);
   };
 
   const handleCancelOrder = () => {
-    handleStatus("cancelled", token).then(() =>
-      onStatusChange({ ...order, status: "cancelled" }),
-    );
+    handleStatus("cancelled", token);
   };
 
   return (

@@ -1,4 +1,4 @@
-import { Order, OrderItem } from "../types";
+import { MenuItem, Order, OrderItem } from "../types";
 import { useUser } from "./useUser";
 import { useEffect, useState, useMemo, useRef } from "react";
 import { WebSocketService } from "../components/utils/webSockets";
@@ -12,7 +12,9 @@ export const useKdsOrders = () => {
   const wsRef = useRef<WebSocketService<{
     payload: {
       data: Order[];
-      items: OrderItem[];
+      items?: OrderItem[];
+      itemsCount?: number;
+      variants?: MenuItem["variants"];
     };
     status?: "success" | "error";
     eventType?: "createOrder" | "updateOrder";
@@ -27,25 +29,33 @@ export const useKdsOrders = () => {
     wsRef.current.connect(
       // onMessage
       (message) => {
-        if (message.status === "success") {
-          setOrders(message.payload.data);
-          setItems(message.payload.items);
+        if (message.eventType === "createOrder") {
+          const parseOrderItems =
+            typeof message.payload.data[0].items === "string"
+              ? JSON.parse(message.payload.data[0].items)
+              : message.payload.data[0].items;
+
+          message.payload.data[0].items = parseOrderItems;
+
+          setOrders((prevOrders) => [...prevOrders, ...message.payload.data]);
+        } else if (message.eventType === "updateOrder") {
+          setOrders((prevOrders) => {
+            if (!message.payload.data.length) return prevOrders;
+            const index = prevOrders.findIndex(
+              (order) => order.id === message.payload.data[0].id,
+            );
+            if (index === -1) return prevOrders;
+            return [
+              ...prevOrders.slice(0, index),
+              message.payload.data[0],
+              ...prevOrders.slice(index + 1),
+            ];
+          });
+          console.log("Order updated:", message.payload.data);
         } else {
-          if (message.eventType === "createOrder") {
-            setOrders((prevOrders) => [...prevOrders, message.payload.data[0]]);
-          } else if (message.eventType === "updateOrder") {
-            setOrders((prevOrders) => {
-              const index = prevOrders.findIndex(
-                (order) => order.id === message.payload.data[0].id,
-              );
-              if (index === -1) return prevOrders;
-              return [
-                ...prevOrders.slice(0, index),
-                message.payload.data[0],
-                ...prevOrders.slice(index + 1),
-              ];
-            });
-          }
+          setOrders(message.payload.data);
+          setItems(message.payload.items ? message.payload.items : []);
+          console.log("Set all new orders:", message.payload.data);
         }
       },
       // onOpen
@@ -116,25 +126,10 @@ export const useKdsOrders = () => {
     [pendingOrders, delayedOrders],
   );
 
-  const onStatusChange = (updatedOrder: Order) => {
-    setOrders((prevOrders) => {
-      const index = prevOrders.findIndex(
-        (order) => order.id === updatedOrder.id,
-      );
-      if (index === -1) return prevOrders;
-      return [
-        ...prevOrders.slice(0, index),
-        updatedOrder,
-        ...prevOrders.slice(index + 1),
-      ];
-    });
-  };
-
   return {
     pendingOrders,
     waitingOrders,
     items,
-    onStatusChange,
     isLoading: !isConnected,
     error,
     delayedOrders,
