@@ -696,7 +696,7 @@ class BuffetApi
             "token" => JWTApi::getAdminToken(),
             "eventType" => EventTypes::UpdateOrder,
             "orderId" => $orderId,
-            "payload" => $updatedOrder
+            "payload" => ["data" => [$updatedOrder]]
         ];
 
         WebsocketClient::send("kds", json_encode($ws));
