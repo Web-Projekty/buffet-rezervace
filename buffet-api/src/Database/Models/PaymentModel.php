@@ -78,7 +78,7 @@ class PaymentModel extends Model
         $paymentQuery->update(['paid' => 1]);
 
 
-        WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
+        WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => ["data"=> $order]]));
     }
 
     public static function getTableName(): string
