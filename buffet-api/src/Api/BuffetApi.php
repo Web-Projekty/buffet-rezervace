@@ -381,6 +381,7 @@ class BuffetApi
         $paymentTableName = PaymentModel::getTableName();
         $orderTableName = OrderModel::getTableName();
 
+        $isKDS = false;
         if ($isAdmin) {
             if ($response->getRequestByKey("isKDS")) {
                 $isKDS = (bool) $response->getRequestByKey("isKDS");
@@ -447,38 +448,58 @@ class BuffetApi
 
         $response->setPayload("data", $ordersArray);
 
-        $itemIds = array_unique($itemIds);
-        $variantIds = array_unique($variantIds);
+        if ($isKDS) {
 
-        try {
-            $items = ItemModel::getByIdArray($itemIds)->toArray();
-        } catch (Exception $e) {
-            if ($e->getCode() == 1) {
-                return $response->setError(Error::MissingItems);
-            }
-        }
+            $items = ItemModel::getAll()->toArray();
+            $variants = VariantModel::getAll()->toArray();
 
-        try {
-            if (!empty($variantIds)) {
-                $variants = VariantModel::getByIdArray($variantIds)->toArray();
+            if (sizeof($items) > 0) {
+                $response->setPayload("items", $items);
+            } else {
+                $response->setPayload("items", []);
             }
-        } catch (Exception $e) {
-            if ($e->getCode() == 2) {
-                return $response->setError(Error::InvalidVariant);
-            }
-        }
 
-        if (!empty($items)) {
-            $response->setPayload("items", $items);
+            if (sizeof($variants) > 0) {
+                $response->setPayload("variants", $variants);
+            } else {
+                $response->setPayload("variants", []);
+            }
         } else {
-            $response->setPayload("items", []);
+
+            $itemIds = array_unique($itemIds);
+            $variantIds = array_unique($variantIds);
+
+            try {
+                $items = ItemModel::getByIdArray($itemIds)->toArray();
+            } catch (Exception $e) {
+                if ($e->getCode() == 1) {
+                    return $response->setError(Error::MissingItems);
+                }
+            }
+
+            try {
+                if (!empty($variantIds)) {
+                    $variants = VariantModel::getByIdArray($variantIds)->toArray();
+                }
+            } catch (Exception $e) {
+                if ($e->getCode() == 2) {
+                    return $response->setError(Error::InvalidVariant);
+                }
+            }
+
+            if (!empty($items)) {
+                $response->setPayload("items", $items);
+            } else {
+                $response->setPayload("items", []);
+            }
+
+            if (!empty($variants)) {
+                $response->setPayload("variants", $variants);
+            } else {
+                $response->setPayload("variants", []);
+            }
         }
 
-        if (!empty($variants)) {
-            $response->setPayload("variants", $variants);
-        } else {
-            $response->setPayload("variants", []);
-        }
         $response->setStatus(true);
         return $response;
     }
