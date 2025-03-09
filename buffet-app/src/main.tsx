@@ -160,7 +160,7 @@ const router = createBrowserRouter([
     path: "/kds",
     element: (
       <RequireAuth requireAdmin={true}>
-        <ErrorBoundary>
+        <ErrorBoundary fullPage>
           <Suspense key="kds" fallback={<Fallback />}>
             <Kds />
           </Suspense>
