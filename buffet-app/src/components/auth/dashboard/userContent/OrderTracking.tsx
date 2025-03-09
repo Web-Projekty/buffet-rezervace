@@ -50,7 +50,10 @@ const OrderTracking = () => {
     ? latestOrder.status === "cancelled" || latestOrder.status === "storno"
     : false;
 
-  const mappedItems = mapItemsWithOrders(latestOrder?.items, items);
+  const mappedItems =
+    items && latestOrder?.items
+      ? mapItemsWithOrders(latestOrder?.items, items)
+      : [];
 
   const timeText = latestOrder
     ? new Date(latestOrder.pickupDate).toLocaleDateString() +

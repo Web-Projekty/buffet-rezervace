@@ -21,7 +21,7 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
   };
 
   const mappedItems = useMemo(
-    () => (items ? mapItemsWithOrders(order.items, items) : []),
+    () => (items && order.items ? mapItemsWithOrders(order.items, items) : []),
     [items, order.items],
   );
 
