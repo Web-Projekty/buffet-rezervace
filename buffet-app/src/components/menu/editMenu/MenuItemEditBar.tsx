@@ -134,6 +134,14 @@ const MenuItemEditBar = ({
     allergensInput.length !== menuItem?.allergens.length ||
     itemVariants.length !== menuItem?.variants.length;
 
+  const isEmpty =
+    !itemImage ||
+    !itemName ||
+    !itemDescription ||
+    !itemPrice ||
+    itemCategory === null ||
+    itemCategory === undefined;
+
   return (
     <motion.aside
       {...slideInAnimation(0.2)}
@@ -267,7 +275,11 @@ const MenuItemEditBar = ({
           >
             Zrušit
           </Button>
-          <Button className="m-auto" onClick={handleSave} disabled={!edited}>
+          <Button
+            className="m-auto"
+            onClick={handleSave}
+            disabled={!edited || isEmpty}
+          >
             Uložit
           </Button>
         </div>

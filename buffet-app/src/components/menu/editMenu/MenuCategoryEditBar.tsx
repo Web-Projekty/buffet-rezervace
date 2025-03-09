@@ -69,6 +69,13 @@ const MenuCategoryEditBar = ({
     onImageChange(e, setItemImage);
   };
 
+  const edited =
+    itemImage !== category?.image ||
+    itemName !== category?.name ||
+    itemDescription !== category?.description;
+
+  const isEmpty = !itemImage || !itemName || !itemDescription;
+
   return (
     <motion.aside
       {...slideInAnimation(0.2)}
@@ -106,7 +113,11 @@ const MenuCategoryEditBar = ({
           >
             Zrušit
           </Button>
-          <Button className="m-auto" onClick={handleSave}>
+          <Button
+            className="m-auto"
+            onClick={handleSave}
+            disabled={!edited || isEmpty}
+          >
             Uložit
           </Button>
         </div>
