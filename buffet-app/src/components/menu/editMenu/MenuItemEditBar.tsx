@@ -125,6 +125,15 @@ const MenuItemEditBar = ({
     );
   };
 
+  const edited =
+    itemName !== menuItem?.name ||
+    itemPrice !== String(menuItem?.price ? menuItem.price / 100 : 0) ||
+    itemDescription !== menuItem?.description ||
+    itemCategory !== menuItem?.category ||
+    itemImage !== menuItem?.image ||
+    allergensInput.length !== menuItem?.allergens.length ||
+    itemVariants.length !== menuItem?.variants.length;
+
   return (
     <motion.aside
       {...slideInAnimation(0.2)}
@@ -142,7 +151,9 @@ const MenuItemEditBar = ({
           <MenuItemEditInput
             label="Název"
             value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
+            onChange={(e) => {
+              setItemName(e.target.value);
+            }}
             id="itemName"
             type="text"
           />
@@ -256,7 +267,7 @@ const MenuItemEditBar = ({
           >
             Zrušit
           </Button>
-          <Button className="m-auto" onClick={handleSave}>
+          <Button className="m-auto" onClick={handleSave} disabled={!edited}>
             Uložit
           </Button>
         </div>
