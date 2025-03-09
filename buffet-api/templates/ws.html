@@ -10,8 +10,8 @@
 <body>
     <form id="myForm">
         <select name="requestType">
-            <option value="updateOrder">updateOrder</option>
             <option value="subscribe">subscribe</option>
+            <option value="updateOrder">updateOrder</option>
             <option value="getOrders">getOrders</option>
             <option value="getMenu">getMenu</option>
             <option value="isAdmin">isAdmin</option>
@@ -24,7 +24,7 @@
 
         <input type="text" name="username" placeholder="username" />
         <input type="text" name="password" placeholder="password" />
-        <input type="text" name="token" placeholder="token" />
+        <input type="text" name="token" id="token" placeholder="token" />
         <input type="text" name="page" placeholder="page" value="1" />
         <input type="text" name="itemsCount" placeholder="itemsCount" value="1" />
         <input type="text" name="items" placeholder="items" value="[2,5,10]" />
@@ -161,6 +161,22 @@
                     document.getElementById('userCount').innerHTML = "Connected user count: " + JSON.parse(data).userCount
                 }
             }
+            function fetchToken() {
+            fetch('api', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ requestType: "login", username: "admin", password: "admin" })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('token').value = data.payload.token || 'Failed to fetch token';
+                })
+                .catch(error => {
+                    console.error('Error fetching token:', error);
+                    document.getElementById('token').value = 'Error fetching token';
+                });
+        }
+        window.onload = fetchToken;
 
         </script>
     </div>
