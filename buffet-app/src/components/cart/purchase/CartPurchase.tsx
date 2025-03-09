@@ -103,13 +103,20 @@ const CartPurchase = () => {
 
   const handleSelectTime = useCallback(
     (day: DateType, hour: Hour, minute: Minute) => {
+      let endHour = hour.label.substring(0, 2);
+
+      if (minute.label.substring(7, 9) === "00") {
+        const nextHour = parseInt(endHour) + 1;
+        endHour = nextHour < 10 ? `0${nextHour}` : `${nextHour}`;
+      }
+
       const selectedTime =
         day.date +
         " " +
         hour.label.substring(0, 2) +
         minute.label.substring(0, 3) +
         "-" +
-        hour.label.substring(0, 2) +
+        endHour +
         minute.label.substring(6, 9);
       setSelectedTime(selectedTime);
     },
