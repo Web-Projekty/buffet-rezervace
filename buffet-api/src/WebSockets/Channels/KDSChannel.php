@@ -70,7 +70,7 @@ class KDSChannel implements MessageInterface
                         $decoded = json_decode($msg);
 
                         $newMsg["eventType"] = $decoded->eventType ?? "";
-                        $newMsg["data"] = $decoded->payload ?? "";
+                        $newMsg["payload"] = $decoded->payload ?? "";
 
                         $client->send(json_encode($newMsg));
                     }
