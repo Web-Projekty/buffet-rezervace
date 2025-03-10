@@ -83,6 +83,7 @@ export type MenuItem = {
 };
 
 export type Variant = {
+  id: number;
   name: string;
   quantity: number;
   price: number;
