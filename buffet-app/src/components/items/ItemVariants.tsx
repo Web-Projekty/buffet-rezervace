@@ -1,10 +1,9 @@
 import { CartItem, CartItems } from "../../store/CartStore";
-import { MenuItem } from "../../types";
 import ItemVariant from "./ItemVariant";
 
 type ItemVariantsProps = {
   id: CartItem["id"];
-  variants: MenuItem["variants"];
+  variants: CartItem["variants"];
   selectedVariants: CartItem["selectedVariants"];
   updateVariants: CartItems["updateVariants"];
   quantity: CartItem["quantity"];
