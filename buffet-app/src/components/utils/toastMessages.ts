@@ -46,5 +46,6 @@ export const toastMessages = {
     empty: "Košík je prázdný",
     added: "Položka byla přidána",
     removed: "Položka byla odebrána",
+    variants: "Vyberte varianty",
   },
 };

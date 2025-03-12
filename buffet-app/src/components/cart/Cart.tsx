@@ -37,6 +37,12 @@ const Cart = ({ modal, onClick }: CartProps) => {
     };
   }, [isOpen, handleCloseCart]);
 
+  const areSelectedVariants = () => {
+    return cartItems.every(
+      (item) => item.variants.length > 0 && item.selectedVariants.length > 0,
+    );
+  };
+
   return (
     <motion.div
       {...scaleUpAnimation(0.3)}
@@ -73,6 +79,10 @@ const Cart = ({ modal, onClick }: CartProps) => {
           onClick={() => {
             if (isCartEmpty()) {
               toast.error(toastMessages.cart.empty);
+              return;
+            }
+            if (!areSelectedVariants()) {
+              toast.error(toastMessages.cart.variants);
               return;
             }
             handleContinue();
