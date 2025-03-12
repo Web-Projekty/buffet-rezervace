@@ -6,7 +6,7 @@ import { useUser } from "../../../hooks/useUser";
 import { Date as DateType, Hour, Minute, PaymentMethod } from "../../../types";
 import { createOrder } from "../../utils/api";
 import { parseSelectedTime } from "../../utils/utils";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { toastMessages } from "../../utils/toastMessages";
 
@@ -30,6 +30,9 @@ const CartPurchase = () => {
   const [success, setSuccess] = useState<boolean>(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const fromCart = location.state?.fromCart || false;
 
   const selectedPaymentMethodsLengthWithoutCredits = useMemo(
     () =>
@@ -122,6 +125,10 @@ const CartPurchase = () => {
     },
     [],
   );
+
+  if (!fromCart) {
+    return <PageNotFound />;
+  }
 
   if (isAdmin) {
     return (
