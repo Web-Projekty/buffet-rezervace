@@ -22,7 +22,8 @@ const CartUserInformation = () => {
           Pro pokračování se prosím{" "}
           <Link
             to="/login?to=cart"
-            className="hover:text-interactiveHoverColor text-interactiveColor"
+            className="text-interactiveColor hover:text-interactiveHoverColor"
+            state={{ fromCart: true }}
           >
             přihlaste
           </Link>

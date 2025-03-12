@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FETCH_URL } from "../constants";
 import { setTokenExpiration } from "../components/utils/auth";
 import toast from "react-hot-toast";
@@ -32,6 +32,9 @@ export const useLogin = (loginData: LoginData): UseLoginReturn => {
   const [error, setError] = useState<string>("");
   const signIn = useSignIn<UserData>();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const fromCart = location.state?.fromCart || false;
 
   const login = async (url?: string) => {
     try {
@@ -56,7 +59,10 @@ export const useLogin = (loginData: LoginData): UseLoginReturn => {
         });
         setTokenExpiration(data.payload.token as string);
         toast.success(toastMessages.login.success);
-        navigate(url ? "/" + url : "/", { replace: true });
+        navigate(url ? "/" + url : "/", {
+          replace: true,
+          state: { fromCart: fromCart },
+        });
       } else {
         setError("Error occured");
         toast.error(toastMessages.login.error);
