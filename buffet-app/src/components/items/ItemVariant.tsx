@@ -7,6 +7,7 @@ type ItemVariantProps = {
   variant: Variant;
   selectedVariants: CartItem["selectedVariants"];
   updateVariants: CartItems["updateVariants"];
+  quantity: CartItem["quantity"];
 };
 
 const ItemVariant = ({
@@ -14,6 +15,7 @@ const ItemVariant = ({
   variant,
   selectedVariants,
   updateVariants,
+  quantity,
 }: ItemVariantProps) => {
   const { name, addedPrice, isExclusive } = variant;
 
@@ -54,7 +56,7 @@ const ItemVariant = ({
       <div className="flex w-full items-center justify-between">
         <p>{name}</p>
         <p className="line-clamp-3 overflow-hidden rounded-lg px-2 text-descriptionColor">
-          +{formatCurrency(addedPrice)}
+          +{formatCurrency(addedPrice * quantity)}
         </p>
       </div>
     </label>

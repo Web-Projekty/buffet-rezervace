@@ -7,6 +7,7 @@ type ItemVariantsProps = {
   variants: MenuItem["variants"];
   selectedVariants: CartItem["selectedVariants"];
   updateVariants: CartItems["updateVariants"];
+  quantity: CartItem["quantity"];
 };
 
 const ItemVariants = ({
@@ -14,6 +15,7 @@ const ItemVariants = ({
   selectedVariants,
   updateVariants,
   id,
+  quantity,
 }: ItemVariantsProps) => {
   return (
     <div className="flex flex-col gap-1">
@@ -26,6 +28,7 @@ const ItemVariants = ({
               selectedVariants={selectedVariants}
               updateVariants={updateVariants}
               id={id}
+              quantity={quantity}
             />
           );
         })}
