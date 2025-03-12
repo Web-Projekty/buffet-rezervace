@@ -25,11 +25,8 @@ const ItemPrice = ({
 
   return (
     <div className="flex items-center justify-between text-lg">
-      <div className="flex flex-row gap-3">
-        <p>Celkem</p>
-        <span>x {getItemQuantity(id)}</span>
-      </div>
-      <p className="font-bold">{formatCurrency(finalPrice)}</p>
+      <p>Celkem</p>
+      <p className="font-bol italic">{formatCurrency(finalPrice)}</p>
     </div>
   );
 };
