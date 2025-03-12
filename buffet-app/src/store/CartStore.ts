@@ -118,7 +118,6 @@ const useCart = create<CartItems>((set, get) => ({
         ? { ...cartItem, selectedVariants: updatedVariants }
         : cartItem,
     );
-    console.log(updatedVariants);
 
     set({ cartItems: updatedItems });
     setItem(CART_LOCAL_STORAGE_KEY, updatedItems);
