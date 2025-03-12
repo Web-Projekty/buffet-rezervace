@@ -21,7 +21,7 @@ const Cart = ({ modal, onClick }: CartProps) => {
 
   const handleContinue = () => {
     handleCloseCart();
-    navigate("/cart");
+    navigate("/cart", { state: { fromCart: true } });
   };
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const Cart = ({ modal, onClick }: CartProps) => {
 
   const areSelectedVariants = () => {
     return cartItems.every(
-      (item) => item.variants.length > 0 && item.selectedVariants.length > 0,
+      (item) => item.selectedVariants.length > 0 || item.variants.length === 0,
     );
   };
 
