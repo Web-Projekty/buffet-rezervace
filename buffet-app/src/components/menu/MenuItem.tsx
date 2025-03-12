@@ -15,7 +15,7 @@ const MenuItem = ({ item }: MenuItemProps) => {
   const { addToCart, isItemMaxQuantity, isCartFull } = useCart();
 
   const handleAddToCart = () => {
-    addToCart(item);
+    addToCart(item, []);
   };
 
   const canAddToCart = () => {
