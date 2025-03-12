@@ -139,7 +139,7 @@ const CartPurchase = () => {
   }
 
   return (
-    <div className="m-auto grid max-w-[25rem] grid-cols-1 gap-10 text-white transition-all duration-1000 ease-in-out md:max-w-[65rem] md:grid-cols-2">
+    <div className="m-auto grid max-w-[25rem] grid-cols-1 gap-5 text-white transition-all duration-1000 ease-in-out md:max-w-[65rem] md:grid-cols-2 md:gap-10">
       <div className="flex w-full flex-col gap-5">
         <div className="flex flex-col rounded-lg bg-slate-700 p-3 font-sans">
           <h2 className="text-2xl font-bold">Čas vyzvednutí</h2>
