@@ -75,7 +75,7 @@ const Cart = ({ modal, onClick }: CartProps) => {
           </Button>
         )}
         <Button
-          className={`w-32 ${isCartEmpty() ? "cursor-not-allowed hover:bg-interactiveColor" : ""}`}
+          className={`w-32 ${isCartEmpty() || !areSelectedVariants() ? "cursor-not-allowed hover:bg-interactiveColor" : ""}`}
           onClick={() => {
             if (isCartEmpty()) {
               toast.error(toastMessages.cart.empty);
