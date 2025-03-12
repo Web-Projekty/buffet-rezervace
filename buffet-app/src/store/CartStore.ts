@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { MenuItem } from "../types";
+import { MenuItem, Variant } from "../types";
 import {
   CART_LOCAL_STORAGE_KEY,
   MAX_ITEMS,
@@ -10,7 +10,10 @@ import toast from "react-hot-toast";
 import { toastMessages } from "../components/utils/toastMessages";
 import { showCartItemToast } from "../components/ui/CustomToasts";
 
-export type CartItem = MenuItem & { quantity: number };
+export type CartItem = MenuItem & {
+  quantity: number;
+  selectedVariants: Variant["id"][];
+};
 
 export type CartItems = {
   isOpen: boolean;
@@ -18,8 +21,12 @@ export type CartItems = {
   handleCloseCart: () => void;
   handleToggleCart: () => void;
   cartItems: CartItem[];
-  addToCart: (item: MenuItem) => void;
+  addToCart: (item: MenuItem, selectedVariants: Variant["id"][]) => void;
   removeFromCart: (item: MenuItem) => void;
+  updateVariants: (
+    id: CartItem["id"],
+    updatedVariants: Variant["id"][],
+  ) => void;
   clearCart: () => void;
   getCartTotal: () => number;
   getCartQuantity: () => number;
@@ -47,17 +54,22 @@ const updateCartItemQuantity = (
   cartItems: CartItem[],
   id: number,
   quantity: number,
+  selectedVariants: Variant["id"][] = [],
 ): CartItem[] => {
   return cartItems.map((cartItem) =>
     cartItem.id === id
-      ? { ...cartItem, quantity: cartItem.quantity + quantity }
+      ? {
+          ...cartItem,
+          quantity: cartItem.quantity + quantity,
+          selectedVariants,
+        }
       : cartItem,
   );
 };
 
 const useCart = create<CartItems>((set, get) => ({
   cartItems: loadCartItems(),
-  addToCart: (item: MenuItem) => {
+  addToCart: (item, selectedVariants = []) => {
     const cartItems = get().cartItems;
     const quantity = getItemQuantity(cartItems, item.id);
     if (get().getCartQuantity() >= MAX_ITEMS_CART) {
@@ -70,14 +82,17 @@ const useCart = create<CartItems>((set, get) => ({
     }
 
     const updatedItems = isItemInCart(cartItems, item.id)
-      ? updateCartItemQuantity(cartItems, item.id, 1)
-      : [...cartItems, { ...item, quantity: 1 }];
+      ? updateCartItemQuantity(cartItems, item.id, 1, selectedVariants)
+      : [
+          ...cartItems,
+          { ...item, quantity: 1, selectedVariants: selectedVariants },
+        ];
 
     set({ cartItems: updatedItems });
     setItem(CART_LOCAL_STORAGE_KEY, updatedItems);
     toast.success(toastMessages.cart.added);
   },
-  removeFromCart: (item: MenuItem) => {
+  removeFromCart: (item) => {
     const cartItems = get().cartItems;
     const { id } = item;
     if (!isItemInCart(cartItems, id)) return;
@@ -96,6 +111,18 @@ const useCart = create<CartItems>((set, get) => ({
       addToCart: get().addToCart,
     });
   },
+  updateVariants: (id, updatedVariants) => {
+    const cartItems = get().cartItems;
+    const updatedItems = cartItems.map((cartItem) =>
+      cartItem.id === id
+        ? { ...cartItem, selectedVariants: updatedVariants }
+        : cartItem,
+    );
+    console.log(updatedVariants);
+
+    set({ cartItems: updatedItems });
+    setItem(CART_LOCAL_STORAGE_KEY, updatedItems);
+  },
   clearCart: () => {
     set({ cartItems: [] });
     removeItem(CART_LOCAL_STORAGE_KEY);
@@ -109,13 +136,12 @@ const useCart = create<CartItems>((set, get) => ({
     get().cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0),
   isCartFull: () => get().getCartQuantity() >= MAX_ITEMS_CART,
   isCartEmpty: () => get().cartItems.length === 0,
-  isItemInCart: (id: number) =>
-    get().cartItems.some((cartItem) => cartItem.id === id),
-  getItemQuantity: (id: number) => {
+  isItemInCart: (id) => get().cartItems.some((cartItem) => cartItem.id === id),
+  getItemQuantity: (id) => {
     const cartItem = get().cartItems.find((cartItem) => cartItem.id === id);
     return cartItem?.quantity || 0;
   },
-  isItemMaxQuantity: (id: number) => get().getItemQuantity(id) >= MAX_ITEMS,
+  isItemMaxQuantity: (id) => get().getItemQuantity(id) >= MAX_ITEMS,
   isOpen: false,
   handleOpenCart: () => set({ isOpen: true }),
   handleCloseCart: () => set({ isOpen: false }),

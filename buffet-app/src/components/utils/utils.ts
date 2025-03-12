@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import { MappedOrderItem, OrderItem, OrderItems, Variant } from "../../types";
+import { MappedOrderItem, OrderItem, OrderItems } from "../../types";
 
 export const formatCurrency = (number: number): string => {
   return new Intl.NumberFormat("cs-CZ", {
@@ -86,21 +86,6 @@ export const mapItemsWithOrders = (
     console.error(error);
     return [];
   }
-};
-
-export const mapVariantsWithItems = (
-  itemVariants: number[],
-  variants: Variant[],
-) => {
-  if (!itemVariants || !variants) return {};
-  return itemVariants.map((variantId) => {
-    const variant = variants.find((v) => v.id === variantId);
-    return {
-      id: variant?.id ?? 0,
-      name: variant?.name ?? "Neznámá varianta",
-      price: variant?.price ?? 0,
-    };
-  });
 };
 
 export const onImageChange = (

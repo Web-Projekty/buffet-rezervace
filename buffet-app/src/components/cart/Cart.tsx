@@ -15,7 +15,8 @@ type CartProps = {
 };
 
 const Cart = ({ modal, onClick }: CartProps) => {
-  const { handleCloseCart, cartItems, isCartEmpty, isOpen } = useCart();
+  const { handleCloseCart, cartItems, isCartEmpty, isOpen, updateVariants } =
+    useCart();
   const navigate = useNavigate();
 
   const handleContinue = () => {
@@ -52,7 +53,13 @@ const Cart = ({ modal, onClick }: CartProps) => {
       >
         {isCartEmpty() && <EmptyCart />}
         {cartItems.map((item) => {
-          return <CartItem key={item.id} item={item} />;
+          return (
+            <CartItem
+              key={item.id}
+              item={item}
+              updateVariants={updateVariants}
+            />
+          );
         })}
       </div>
       <div className="flex h-16 w-full items-center justify-center gap-10 rounded-b-lg bg-slate-900 py-2 text-xl text-white">

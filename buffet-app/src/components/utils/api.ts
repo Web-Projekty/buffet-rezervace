@@ -93,7 +93,7 @@ export const createOrder = async (
   cartItems: {
     id: CartItem["id"];
     quantity: CartItem["quantity"];
-    variants: number[];
+    variants: CartItem["selectedVariants"];
   }[],
   startTime: Order["startTime"] | null,
   endTime: Order["endTime"] | null,
