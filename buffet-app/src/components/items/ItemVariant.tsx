@@ -28,14 +28,20 @@ const ItemVariant = ({
     }
   };
 
+  const handleExclusiveChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      updateVariants(id, [variant.id]);
+    }
+  };
+
   return (
     <label className="flex items-center gap-2">
       {isExclusive ? (
         <input
           type="radio"
-          name={"variant" + id}
+          name={String(id)}
           checked={selectedVariants.includes(variant.id)}
-          onChange={handleVariantChange}
+          onChange={handleExclusiveChange}
         />
       ) : (
         <input
