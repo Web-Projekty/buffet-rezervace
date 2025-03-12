@@ -18,7 +18,9 @@ const OrderItem = ({ item }: OrderItemProps) => {
         <h3>{item.name ? item.name : "Item name"}</h3>
       </div>
       <p className="italic">
-        {item.price ? formatCurrency(item.price) : formatCurrency(-1)}
+        {item.price
+          ? formatCurrency(item.price * item.quantity)
+          : formatCurrency(-1)}
       </p>
     </li>
   );
