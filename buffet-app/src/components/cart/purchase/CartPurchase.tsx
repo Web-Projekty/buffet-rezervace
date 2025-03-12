@@ -141,7 +141,7 @@ const CartPurchase = () => {
   return (
     <div className="m-auto grid max-w-[25rem] grid-cols-1 gap-10 text-white transition-all duration-1000 ease-in-out md:max-w-[65rem] md:grid-cols-2">
       <div className="flex w-full flex-col gap-5">
-        <div className="flex flex-col rounded-lg bg-slate-700 p-6 font-sans">
+        <div className="flex flex-col rounded-lg bg-slate-700 p-3 font-sans">
           <h2 className="text-2xl font-bold">Čas vyzvednutí</h2>
           <Suspense fallback={<Fallback />}>
             <CartReservationCalendar onTimeSelect={handleSelectTime} />
@@ -157,18 +157,22 @@ const CartPurchase = () => {
             />
           </Suspense>
         </div>
-        <div className="flex flex-col rounded-lg bg-slate-700 p-3">
-          <h2 className="text-2xl font-bold">Kontaktní údaje</h2>
-          <Suspense fallback={<Fallback />}>
-            <CartUserInformation />
-          </Suspense>
-        </div>
       </div>
       <div className="flex flex-col gap-5">
         <div className="flex flex-col rounded-lg bg-slate-700 p-3">
           <h2 className="text-2xl font-bold">Objednávka</h2>
           <Suspense fallback={<Fallback />}>
-            <OrderItems mappedItems={cartItems} />
+            <OrderItems
+              mappedItems={cartItems}
+              className="rounded-md bg-slate-800 p-3"
+            />
+          </Suspense>
+        </div>
+
+        <div className="flex flex-col rounded-lg bg-slate-700 p-3">
+          <h2 className="text-2xl font-bold">Kontaktní údaje</h2>
+          <Suspense fallback={<Fallback />}>
+            <CartUserInformation />
           </Suspense>
         </div>
 
