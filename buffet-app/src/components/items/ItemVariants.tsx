@@ -1,5 +1,4 @@
 import { CartItem, CartItems } from "../../store/CartStore";
-import { Variant } from "../../types";
 import ItemVariant from "./ItemVariant";
 
 type ItemVariantsProps = {
@@ -17,15 +16,9 @@ const ItemVariants = ({
   id,
   quantity,
 }: ItemVariantsProps) => {
-  const variantsArray: Variant[] = Array.isArray(variants)
-    ? variants
-    : variants
-      ? Object.values(variants)
-      : [];
-
   return (
     <div className="flex flex-col gap-1">
-      {variantsArray.map((item) => {
+      {variants?.map((item) => {
         return (
           <ItemVariant
             key={item.id}
