@@ -18,10 +18,10 @@ const ItemVariants = ({
   quantity,
 }: ItemVariantsProps) => {
   const variantsArray: Variant[] = Array.isArray(variants)
-    ? variants // Already an array
+    ? variants
     : variants
-      ? Object.values(variants) // Convert object to array
-      : []; // Default empty array if variants is null/undefined
+      ? Object.values(variants)
+      : [];
 
   return (
     <div className="flex flex-col gap-1">
