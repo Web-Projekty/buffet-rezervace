@@ -17,14 +17,8 @@ const ItemPrice = ({
 }: ItemPriceProps) => {
   const { getItemQuantity } = useCart();
 
-  const variantsArray: Variant[] = Array.isArray(variants)
-    ? variants // Already an array
-    : variants
-      ? Object.values(variants) // Convert object to array
-      : []; // Default empty array if variants is null/undefined
-
   const variantsPrice = selectedVariants.reduce((acc, variantId) => {
-    const variant = variantsArray.find((v) => v.id === variantId);
+    const variant = variants?.find((v) => v.id === variantId);
     return acc + (variant ? variant.addedPrice : 0);
   }, 0);
   const finalPrice =
