@@ -58,17 +58,17 @@ if (!$isProd) {
         $response->getBody()->write(ob_get_clean());
         return $response;
     });
-    
+
     $app->get('/wstest', function (Request $request, Response $response, $args) {
         $connector = new Ratchet\Client\Connector();
-    
+
         $connector('ws://localhost:8069/ok') // Specify the WebSocket server address
             ->then(function ($conn) {
                 echo "Connected to WebSocket server\n";
-    
+
                 // Send a message
                 $conn->send('Hello, WebSocket Server!');
-    
+
                 // Close the connection after sending the message
                 $conn->close();
             }, function ($e) {
@@ -111,6 +111,10 @@ $app->get('/api/notification', [BuffetApi::class, 'handleThePayNotification']);
 $app->any('/image/{path:.*}', [ImageProvider::class, 'main']);
 
 $app->map(["GET"], "{routes:.+}", function (Request $request, Response $response, $args) {
+
+    if (!file_exists(__DIR__ . "/dist/") || !file_exists(__DIR__ . "/dist/index.html")) {
+        throw new HttpNotFoundException(ServerRequestFactory::createFromGlobals(), 1);
+    }
 
     $requestPath = $request->getUri()->getPath();
 
