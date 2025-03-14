@@ -5,8 +5,6 @@ export default {
     extend: {
       fontFamily: {
         FiraSans: ["Fira Sans", "sans-serif"],
-        SourGummy: ["Sour Gummy", "IBM Plex Mono", "Lato", "sans-serif"],
-        SansSerif: ["sans-serif", "IBM Plex Mono", "Lato"],
       },
       animation: {
         fadeIn: "fadeIn 0.5s ease-in-out",
@@ -14,6 +12,7 @@ export default {
         "one-spin": "spin 0.5s ease-in-out",
         wiggle: "wiggle 0.5s ease-in-out infinite",
         slowWiggle: "wiggle 1s ease-in-out infinite",
+        durationLine: "durationLine 5s linear",
       },
       keyframes: {
         fadeIn: {
@@ -28,6 +27,11 @@ export default {
           "0%, 100%": { transform: "rotate(-3deg)" },
           "50%": { transform: "rotate(3deg)" },
         },
+        durationLine: {
+          "0%": { width: "100%" },
+          "50%": { width: "50%" },
+          "100%": { width: "0%" },
+        },
       },
       colors: {
         primary: "#14ce9c",
@@ -35,6 +39,7 @@ export default {
         transparentBlack: "rgba(0, 0, 0, 0.5)",
         descriptionColor: "#9ca3af",
         interactiveColor: "#06b6d4",
+        interactiveHoverColor: "#0891b2",
         backgroundColor: "#1e293b",
       },
     },

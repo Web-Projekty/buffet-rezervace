@@ -1,58 +1,27 @@
-import { useEffect, useState } from "react";
-import { useFetch } from "./useFetch";
 import { useUser } from "./useUser";
-import { Order, OrdersData } from "../types";
-import { FETCH_URL } from "../constants";
+import { useQuery } from "@tanstack/react-query";
+import { getOrders, OrdersApi } from "../components/utils/api";
 
 const useOrders = (itemsCount: "all" | number, page?: number) => {
   const { token } = useUser();
-  const [orders, setOrders] = useState<Order[] | null>(null);
-  const [latestOrder, setLatestOrder] = useState<Order | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
   const {
-    data: fetchedOrders,
-    isLoading: fetchLoading,
-    error: fetchError,
-  } = useFetch<OrdersData>(
-    FETCH_URL,
-    {
-      requestType: "getOrders",
-      token: token,
-      page: page ? page : undefined,
-      itemsCount: itemsCount === "all" ? undefined : itemsCount,
-    },
-    { data: [], itemsCount: 0, items: [] },
-    [token],
-  );
-
-  useEffect(() => {
-    if (fetchedOrders && fetchedOrders.data) {
-      // const sortedOrders = [...fetchedOrders.data].sort((a, b) => {
-      //   return (
-      //     new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime()
-      //   );
-      // });
-
-      if (
-        !orders ||
-        JSON.stringify(orders) !== JSON.stringify(fetchedOrders.data)
-      ) {
-        setOrders(fetchedOrders.data);
-        setLatestOrder(fetchedOrders.data[0]);
-      }
-    }
-    setIsLoading(fetchLoading);
-    setError(fetchError);
-  }, [fetchedOrders, fetchLoading, fetchError]);
+    isPending: isLoading,
+    error,
+    data,
+    refetch,
+  } = useQuery<OrdersApi>({
+    queryKey: ["orders"],
+    queryFn: () => getOrders(token, itemsCount, page),
+  });
 
   return {
-    orders,
-    latestOrder,
+    orders: data?.orders,
+    latestOrder: data?.orders ? data.orders[0] : null,
+    items: data?.items,
     error,
     isLoading,
-    fetchedItems: fetchedOrders?.items,
+    refetch,
   };
 };
 

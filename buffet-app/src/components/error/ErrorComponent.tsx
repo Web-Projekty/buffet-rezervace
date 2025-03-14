@@ -3,6 +3,7 @@ import Button from "../ui/Button";
 import Logo from "../../assets/images/logo.svg";
 import { motion } from "framer-motion";
 import { fadeInAnimation } from "../../animations";
+import { twMerge } from "tailwind-merge";
 
 type Error = {
   title: string;
@@ -19,9 +20,16 @@ const ErrorComponent = ({
   linkTo,
   className,
 }: Error) => {
+  const tryAgain = () => {
+    window.location.reload();
+  };
+
   return (
     <div
-      className={`flex flex-col items-center justify-center gap-5 overflow-x-hidden bg-slate-800 font-sans text-white ${className}`}
+      className={twMerge(
+        "flex flex-col items-center justify-center gap-5 overflow-x-hidden bg-slate-800 font-sans text-white",
+        className,
+      )}
     >
       <motion.img
         {...fadeInAnimation(0.5)}
@@ -34,9 +42,12 @@ const ErrorComponent = ({
         <h1 className="text-2xl">{title}</h1>
         <span className="text-4xl">{subtitle}</span>
       </div>
-      <Link to={linkTo ? linkTo : "/"} onClick={onBack}>
-        <Button>Zpět na hlavní stránku</Button>
-      </Link>
+      <div className="flex flex-col gap-2">
+        <Button onClick={tryAgain}>Zkusit znovu</Button>
+        <Link to={linkTo ? linkTo : "/"} onClick={onBack}>
+          <Button>Zpět na hlavní stránku</Button>
+        </Link>
+      </div>
     </div>
   );
 };

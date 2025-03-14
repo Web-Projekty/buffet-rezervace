@@ -3,34 +3,38 @@ import { motion } from "framer-motion";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import { useLogin } from "../../../hooks/useLogin";
-import Loading from "../../ui/Loading";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useSearchParams } from "react-router-dom";
+import { useUser } from "../../../hooks/useUser";
+import { slideInRightAnimation } from "../../../animations";
 
 type LoginFormData = {
   username: string;
   password: string;
 };
 
-const loginShowAnimation = {
-  initial: { opacity: 0, x: 50 },
-  animate: { opacity: 1, x: 0 },
-  transition: { duration: 0.5 },
-};
-
 const Login = () => {
+  const { user } = useUser();
+
   const [formData, setFormData] = useState<LoginFormData>({
     username: "user4",
     password: "u",
   });
+
+  const [searchParams] = useSearchParams();
+  const to = searchParams.get("to") as string;
 
   const { loading, error, setError, login } = useLogin({
     requestType: "login",
     ...formData,
   });
 
+  if (user) {
+    return <Navigate to={to ? to : "/account"} />;
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    login();
+    login(to);
   };
 
   const handleResetLogin = () => {
@@ -44,7 +48,7 @@ const Login = () => {
 
   return (
     <motion.section
-      {...loginShowAnimation}
+      {...slideInRightAnimation()}
       className="mt-14 flex flex-col items-center justify-center gap-5 text-white md:mt-16 xl:mt-20"
     >
       <h1 className="text-2xl">Přihlášení</h1>
@@ -84,13 +88,10 @@ const Login = () => {
             Registruje se
           </Link>
         </div>
-        {loading ? (
-          <Loading />
-        ) : (
-          <Button type="submit" className="w-full">
-            Přihlásit se
-          </Button>
-        )}
+
+        <Button type="submit" className="w-full" loading={loading}>
+          Přihlásit se
+        </Button>
       </form>
     </motion.section>
   );

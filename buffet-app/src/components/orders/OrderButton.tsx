@@ -1,99 +1,61 @@
-import { X } from "lucide-react";
 import { OrderStatus } from "../../types";
 import Button from "../ui/Button";
 import { useUser } from "../../hooks/useUser";
-import { ReactNode, useState } from "react";
 import { HandleStatusReturn } from "../../hooks/useOrder";
 
-type OrderButtonsProps = {
-  handleStatus: (
+type OrderButtonProps = {
+  buttonText: string;
+  handleStatus?: (
     status: OrderStatus,
     token: string | null,
   ) => Promise<HandleStatusReturn>;
-  status: OrderStatus;
+  status?: OrderStatus;
   loading: boolean;
+  payURL?: string;
 };
 
-type OrderButton = {
-  name: string;
-  icon: JSX.Element;
-  disabledStatus: OrderStatus[];
-};
-
-const Buttons: OrderButton[] = [
-  {
-    name: "Zrušit",
-    icon: <X />,
-    disabledStatus: ["storno", "cancelled", "done"],
-  },
-];
-
-const OrderButton = ({ handleStatus, status, loading }: OrderButtonsProps) => {
+const OrderButton = ({
+  handleStatus,
+  status,
+  loading,
+  payURL,
+  buttonText,
+}: OrderButtonProps) => {
   const { token } = useUser();
-  const [error, setError] = useState<string>("");
 
-  const cancelOrder = async () => {
+  const handleCancel = async () => {
     try {
-      const { error } = await handleStatus("storno", token);
-      if (error) {
-        setError("Chyba při zrušení objednávky.");
+      if (handleStatus) {
+        await handleStatus("storno", token);
       }
     } catch {
-      setError("Chyba při zrušení objednávky.");
+      //console.error("Failed to cancel the order:", error);
     }
   };
 
-  const renderButtonContent = (
-    name: string,
-    isCanceled: boolean,
-  ): ReactNode => {
-    if (isCanceled) {
-      return "Zrušeno";
-    }
+  const isDisabled = ["storno", "cancelled", "done"].includes(
+    status ? status : "",
+  );
 
-    if (error) {
-      return error;
-    }
-
-    return name;
-  };
-
-  const renderIcon = (icon: JSX.Element, isDisabled: boolean): ReactNode => {
-    if (isDisabled) {
-      return null;
-    }
-
-    if (loading) {
-      return null;
-    }
-
-    if (error) {
-      return null;
-    }
-
-    return icon;
-  };
-
-  return Buttons.map(({ name, icon, disabledStatus }) => {
-    const isDisabled = disabledStatus.includes(status);
-
-    if (status === "done") {
-      return null;
-    }
-
-    return (
-      <Button
-        key={name}
-        className={`flex w-full flex-row items-center justify-center gap-1 ${isDisabled ? "gray-400 border-gray-500 bg-gray-500 hover:border-gray-500 hover:bg-gray-500" : "border-red-400 bg-red-400 hover:border-red-500 hover:bg-red-500"}`}
-        onClick={cancelOrder}
-        disabled={isDisabled || loading}
-        loading={loading}
-      >
-        {renderButtonContent(name, isDisabled)}
-        {renderIcon(icon, isDisabled)}
-      </Button>
-    );
-  });
+  return (
+    <Button
+      className={`flex w-full flex-row items-center justify-center gap-1 ${
+        isDisabled
+          ? "gray-400 border-gray-500 bg-gray-500 hover:border-gray-500 hover:bg-gray-500"
+          : payURL
+            ? "border-green-400 bg-green-400 hover:border-green-500 hover:bg-green-500"
+            : "border-red-400 bg-red-400 hover:border-red-500 hover:bg-red-500"
+      }`}
+      onClick={() =>
+        payURL ? (window.location.href = payURL) : handleCancel()
+      }
+      disabled={isDisabled || loading}
+      loading={loading}
+    >
+      {buttonText}
+      {/*showIcon && <X />*/}
+    </Button>
+  );
 };
 
 export default OrderButton;

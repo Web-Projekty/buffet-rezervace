@@ -1,30 +1,85 @@
-import useWebSocket, { ReadyState } from "react-use-websocket";
-import { Order, OrderItem } from "../types";
+import { MenuItem, Order, OrderItem } from "../types";
 import { useUser } from "./useUser";
-import { WEBSOCKET_URL } from "../constants";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { WebSocketService } from "../components/utils/webSockets";
 
 export const useKdsOrders = () => {
   const { token } = useUser();
   const [orders, setOrders] = useState<Order[]>([]);
   const [items, setItems] = useState<OrderItem[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const wsRef = useRef<WebSocketService<{
+    payload: {
+      data: Order[];
+      items?: OrderItem[];
+      itemsCount?: number;
+      variants?: MenuItem["variants"];
+    };
+    status?: "success" | "error";
+    eventType?: "createOrder" | "updateOrder";
+  }> | null>(null);
 
-  const { sendMessage, lastJsonMessage, readyState } = useWebSocket(
-    WEBSOCKET_URL("kds"),
-    {
-      onOpen: () => {
-        if (token) {
-          sendMessage(JSON.stringify({ requestType: "subscribe", token }));
+  const maxSentOrders = 6;
+  const maxWaitingOrders = 10;
+
+  useEffect(() => {
+    wsRef.current = new WebSocketService("kds");
+
+    wsRef.current.connect(
+      // onMessage
+      (message) => {
+        if (message.eventType === "createOrder") {
+          const parseOrderItems =
+            typeof message.payload.data[0].items === "string"
+              ? JSON.parse(message.payload.data[0].items)
+              : message.payload.data[0].items;
+
+          message.payload.data[0].items = parseOrderItems;
+
+          setOrders((prevOrders) => [...prevOrders, ...message.payload.data]);
+        } else if (message.eventType === "updateOrder") {
+          setOrders((prevOrders) => {
+            if (!message.payload.data.length) return prevOrders;
+            const index = prevOrders.findIndex(
+              (order) => order.id === message.payload.data[0].id,
+            );
+            if (index === -1) return prevOrders;
+            return [
+              ...prevOrders.slice(0, index),
+              message.payload.data[0],
+              ...prevOrders.slice(index + 1),
+            ];
+          });
+          console.log("Order updated:", message.payload.data);
+        } else {
+          setOrders(message.payload.data);
+          setItems(message.payload.items ? message.payload.items : []);
+          console.log("Set all new orders:", message.payload.data);
         }
       },
-      shouldReconnect: () => true,
-      // reconnectInterval: 5000,
-      /*onError: () => {
+      // onOpen
+      () => {
+        setIsConnected(true);
+        if (token) {
+          wsRef.current?.send({ requestType: "subscribe", token });
+        }
+      },
+      // onClose
+      () => {
+        setIsConnected(false);
+        setError("Připojení bylo přerušeno.");
+      },
+      // onError
+      () => {
         setError("Chyba v komunikaci se serverem.");
-      },*/
-    },
-  );
+      },
+    );
+
+    return () => {
+      wsRef.current?.disconnect();
+    };
+  }, [token]);
 
   const pendingOrders = useMemo(
     () =>
@@ -34,8 +89,12 @@ export const useKdsOrders = () => {
               (order) =>
                 order.status === "preparing" || order.status === "sent",
             )
-            .sort((a, b) => a.pickupDate.localeCompare(b.pickupDate))
-            .slice(0, 6)
+            .sort((a, b) => {
+              if (a.status === "preparing" && b.status === "sent") return -1;
+              if (a.status === "sent" && b.status === "preparing") return 1;
+
+              return a.pickupDate.localeCompare(b.pickupDate);
+            })
         : [],
     [orders],
   );
@@ -46,59 +105,36 @@ export const useKdsOrders = () => {
         ? orders
             .filter((order) => order.status === "waiting")
             .sort((b, a) => a.pickupDate.localeCompare(b.pickupDate))
-            .slice(0, 10)
         : [],
     [orders],
   );
 
-  const nextOrdersCount: number = useMemo(
+  const delayedOrders = useMemo(
     () =>
-      orders && orders.length > 0
-        ? orders.filter(
-            (order) =>
-              order.status !== "cancelled" &&
-              order.status !== "storno" &&
-              order.status !== "done",
-          ).length -
-          orders.filter(
-            (order) => order.status === "preparing" || order.status === "sent",
-          ).length -
-          orders.filter((order) => order.status === "waiting").length
-        : 0,
-    [orders],
+      pendingOrders.filter((order) => {
+        const now = new Date().getTime();
+        const pickupDateTime = new Date(
+          `${order.pickupDate}T${order.startTime}`,
+        ).getTime();
+        return now > pickupDateTime;
+      }),
+    [pendingOrders],
   );
 
-  const onStatusChange = (updatedOrder: Order) => {
-    setOrders((prevOrders) => {
-      const newOrders = prevOrders.map((order) =>
-        order.id === updatedOrder.id ? updatedOrder : order,
-      );
-      return [...newOrders];
-    });
-  };
-
-  const isLoading: boolean = readyState === ReadyState.CONNECTING;
-
-  useEffect(() => {
-    if (lastJsonMessage?.payload.data && lastJsonMessage?.payload.items) {
-      try {
-        const { data, items } = lastJsonMessage.payload;
-        setOrders((prev) => (prev === data ? prev : (data as Order[])));
-        setItems(items as OrderItem[]);
-        console.log(lastJsonMessage.payload);
-      } catch {
-        setError("Chyba v komunikaci se serverem.");
-      }
-    }
-  }, [lastJsonMessage]);
+  const upToDateOrders = useMemo(
+    () => pendingOrders.filter((order) => delayedOrders.indexOf(order) === -1),
+    [pendingOrders, delayedOrders],
+  );
 
   return {
     pendingOrders,
     waitingOrders,
-    nextOrdersCount,
     items,
-    onStatusChange,
-    isLoading,
+    isLoading: !isConnected,
     error,
+    delayedOrders,
+    upToDateOrders,
+    maxSentOrders,
+    maxWaitingOrders,
   };
 };

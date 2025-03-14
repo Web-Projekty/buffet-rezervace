@@ -21,7 +21,7 @@ export type OrderStatus =
 export type OrderItems = {
   id: number;
   quantity: number;
-  variants: number[];
+  variants: Variant[];
 };
 
 export type MappedOrderItem = {
@@ -32,7 +32,7 @@ export type MappedOrderItem = {
   image: string | undefined;
   allergens: Allergen[];
   category: number;
-  variants: number[];
+  variants: Variant[];
   quantity: number;
 };
 
@@ -56,11 +56,12 @@ export type Order = {
   endTime: string;
   items: OrderItems[];
   pickUpId: string;
-  type: "thePay" | "cash";
+  //type: "thePay" | "cash";
   thePayDetailsUrl: string;
   totalAmount: number;
-  useCredits: boolean;
-  creditsAmount: number;
+  //useCredits: boolean;
+  //creditsAmount: number;
+  paid: boolean;
 };
 
 export type OrdersData = {
@@ -78,13 +79,14 @@ export type MenuItem = {
   allergens: Allergen[];
   category: number;
   categoryName: string;
-  variants: number[];
+  variants: Variant[];
 };
 
 export type Variant = {
+  id: number;
   name: string;
-  quantity: number;
-  price: number;
+  addedPrice: number;
+  isExclusive: boolean;
 };
 
 export type Allergen = {
@@ -100,11 +102,6 @@ export type Category = {
   name: string;
   image: string;
   description: string;
-};
-
-export type MenuData = {
-  categoryList: Category[];
-  data: MenuItem[];
 };
 
 export type RequestData = {

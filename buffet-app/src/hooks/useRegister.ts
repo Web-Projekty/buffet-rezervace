@@ -6,13 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { UserData } from "./useLogin";
 import toast from "react-hot-toast";
 import { toastMessages } from "../components/utils/toastMessages";
-
-type UseRegisterReturn = {
-  loading: boolean;
-  error: string;
-  setError: (error: string) => void;
-  register: () => void;
-};
+import { registerSchema } from "../components/utils/validation";
+import { z } from "zod";
 
 export type RegisterData = {
   fullName: string;
@@ -23,15 +18,20 @@ export type RegisterData = {
   [key: string]: string;
 };
 
-export const useRegister = (registerData: RegisterData): UseRegisterReturn => {
+type RegisterError = Record<string, string>;
+
+export const useRegister = (registerData: RegisterData) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<RegisterError>();
   const signIn = useSignIn<UserData>();
   const navigate = useNavigate();
 
   const register = async () => {
     try {
       setLoading(true);
+
+      await registerSchema.parseAsync(registerData);
+
       const { data } = await axios.post(FETCH_URL, {
         requestType: "register",
         ...registerData,
@@ -50,14 +50,24 @@ export const useRegister = (registerData: RegisterData): UseRegisterReturn => {
           },
         });
         toast.success(toastMessages.register.success);
+        setError({});
         navigate("/login", { replace: true });
       } else {
-        setError("Error occured");
+        setError({
+          register: toastMessages.register.error,
+        });
         toast.error(toastMessages.register.error);
       }
-    } catch {
-      setError("Error occured");
-      toast.error(toastMessages.register.error);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        const fieldErrors = err.flatten().fieldErrors;
+        setError(fieldErrors as unknown as Record<string, string>);
+      } else {
+        setError({
+          register: toastMessages.register.error,
+        });
+        toast.error(toastMessages.register.error);
+      }
     } finally {
       setLoading(false);
     }

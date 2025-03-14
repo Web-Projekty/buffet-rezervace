@@ -1,6 +1,14 @@
 import axios from "axios";
-import { Date, MenuItem, Order, OrderStatus } from "../../types";
+import {
+  Allergen,
+  Category,
+  Date,
+  MenuItem,
+  Order,
+  OrderStatus,
+} from "../../types";
 import { FETCH_URL } from "../../constants";
+import { CartItem } from "../../store/CartStore";
 
 type OrderApiReturn = {
   order: Order | null;
@@ -8,28 +16,88 @@ type OrderApiReturn = {
   paywallUrl: string;
 };
 
-type UpdateOrderApiReturn = {
+type UpdateOrderApi = {
   eventType: string;
   payload: Order;
   error: boolean;
 };
 
-type MenuItemApiReturn = {
+type MenuItemApi = {
   menuItem: MenuItem | null;
   error: boolean;
 };
 
-type TimeSlotsApiReturn = {
+export type TimeSlotsApi = {
   timeslots: Date[];
   error: boolean;
 };
 
+export type MenuApi = {
+  menu: MenuItem[];
+  categoryList: Category[];
+  itemsCount: number;
+  status: "success" | "error";
+};
+
+export type OrdersApi = {
+  orders: Order[];
+  items: MenuItem[];
+  itemsCount: number;
+  status: "success" | "error";
+};
+
+export const getMenu = async (): Promise<MenuApi> => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "getMenu",
+    });
+
+    return {
+      menu: data.payload.data as MenuItem[],
+      categoryList: data.payload.categoryList as Category[],
+      itemsCount: data.payload.itemsCount as number,
+      status: data.status as "success" | "error",
+    };
+  } catch {
+    throw new Error("Chyba při načítání menu.");
+  }
+};
+
+export const getOrders = async (
+  token: string | null,
+  itemsCount: number | "all",
+  page?: number | undefined,
+): Promise<OrdersApi> => {
+  if (!token) throw new Error("Chyba při načítání objednávek.");
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "getOrders",
+      token: token,
+      page: page ? page : undefined,
+      itemsCount: itemsCount === "all" ? undefined : itemsCount,
+    });
+
+    return {
+      orders: data.payload.data as Order[],
+      items: data.payload.items as MenuItem[],
+      itemsCount: data.payload.itemsCount as number,
+      status: data.status,
+    };
+  } catch {
+    throw new Error("Chyba při načítání objednávek.");
+  }
+};
+
 export const createOrder = async (
   token: string | null,
-  cartItems: { id: number; quantity: number; variants: number[] }[],
-  startTime: string | null,
-  endTime: string | null,
-  date: string | null,
+  cartItems: {
+    id: CartItem["id"];
+    quantity: CartItem["quantity"];
+    variants: CartItem["selectedVariants"];
+  }[],
+  startTime: Order["startTime"] | null,
+  endTime: Order["endTime"] | null,
+  date: Order["pickupDate"] | null,
   // paymentMethod: PaymentMethod[],
 ): Promise<OrderApiReturn> => {
   if (!token) throw new Error("Chyba při vytváření objednávky.");
@@ -47,7 +115,7 @@ export const createOrder = async (
       paymentMethod: "thePay",
     });
 
-    console.log(data);
+    // console.log(data);
 
     return {
       order: data.payload.data as Order,
@@ -55,11 +123,7 @@ export const createOrder = async (
       paywallUrl: data.payload.url,
     };
   } catch {
-    return {
-      order: null,
-      error: true,
-      paywallUrl: "",
-    };
+    throw new Error("Chyba při vytváření objednávky.");
   }
 };
 
@@ -67,7 +131,7 @@ export const updateOrder = async (
   token: string | null,
   orderId: number | null,
   status: OrderStatus,
-): Promise<UpdateOrderApiReturn> => {
+): Promise<UpdateOrderApi> => {
   if (!token || !orderId) throw new Error("Chyba při aktualizaci objednávky.");
   try {
     const { data } = await axios.post(FETCH_URL, {
@@ -108,15 +172,18 @@ export const deleteOrder = async (
 };
 
 export const createMenuItem = async (
-  token: string,
-  menuItem: MenuItem,
-): Promise<MenuItemApiReturn> => {
+  token: string | null,
+  menuItem: Omit<MenuItem, "id" | "categoryName" | "allergens"> & {
+    allergens: Allergen["id"][];
+  },
+): Promise<MenuItemApi> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
-      requestType: "createMenuItemEvent",
+      requestType: "createItem",
       token: token,
       ...menuItem,
     });
+    // console.log(data);
     return {
       menuItem: data.payload.data as MenuItem,
       error: data.status !== "success",
@@ -127,12 +194,15 @@ export const createMenuItem = async (
 };
 
 export const updateMenuItem = async (
-  token: string,
-  menuItem: MenuItem,
-): Promise<MenuItemApiReturn> => {
+  token: string | null,
+  menuItem: Omit<MenuItem, "id" | "allergens" | "categoryName"> & {
+    itemId: MenuItem["id"];
+    allergens: Allergen["id"][];
+  },
+): Promise<MenuItemApi> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
-      requestType: "updateMenuItemEvent",
+      requestType: "updateItem",
       token: token,
       ...menuItem,
     });
@@ -148,7 +218,7 @@ export const updateMenuItem = async (
 export const deleteMenuItem = async (
   token: string,
   menuItemId: number,
-): Promise<MenuItemApiReturn> => {
+): Promise<MenuItemApi> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "deleteMenuItemEvent",
@@ -164,13 +234,59 @@ export const deleteMenuItem = async (
   }
 };
 
-export const getTimeSlots = async (): Promise<TimeSlotsApiReturn> => {
+export const updateCategory = async (
+  token: string | null,
+  category: Omit<Category, "id"> & { categoryId: number },
+): Promise<{
+  category: Category;
+  error: boolean;
+}> => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "updateCategory",
+      token: token,
+      ...category,
+    });
+
+    return {
+      category: data.payload.data as Category,
+      error: data.status !== "success",
+    };
+  } catch {
+    throw new Error("Chyba při aktualizaci kategorie.");
+  }
+};
+
+export const createCategory = async (
+  token: string | null,
+  category: Omit<Category, "id">,
+): Promise<{
+  category: Category;
+  error: boolean;
+}> => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "createCategory",
+      token,
+      ...category,
+    });
+
+    return {
+      category: data.payload.data as Category,
+      error: data.status !== "success",
+    };
+  } catch {
+    throw new Error("Chyba při vytváření kategorie.");
+  }
+};
+
+export const getTimeSlots = async (): Promise<TimeSlotsApi> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "getOrderTimeTable",
     });
 
-    console.log(data);
+    // console.log(data);
 
     const { status, payload } = data;
 
@@ -179,10 +295,7 @@ export const getTimeSlots = async (): Promise<TimeSlotsApiReturn> => {
       error: status !== "success",
     };
   } catch {
-    return {
-      timeslots: [],
-      error: true,
-    };
+    throw new Error("Chyba při načítání časových slotů.");
   }
 };
 
@@ -200,17 +313,14 @@ export const updateUserData = async (
     const { data } = await axios.post(FETCH_URL, {
       requestType: "updateUser",
       token,
-      "fullName - optional": fullName,
-      "tel - optional": tel,
-      "email - optional": email,
+      fullName,
+      email,
+      tel: tel,
     });
 
     return data;
   } catch {
-    return {
-      status: "failed",
-      payload: { msg: "Chyba při aktualizaci dat." },
-    };
+    throw new Error("Chyba při aktualizaci uživatelských dat.");
   }
 };
 
@@ -223,10 +333,7 @@ export const getUserData = async (token: string) => {
 
     return data;
   } catch {
-    return {
-      status: "failed",
-      payload: { msg: "Chyba při získávání dat." },
-    };
+    throw new Error("Chyba při načítání uživatelských dat.");
   }
 };
 
@@ -256,9 +363,6 @@ export const updateUserPassword = async (
 
     return data;
   } catch {
-    return {
-      status: "failed",
-      payload: { msg: "Chyba při změně hesla." },
-    };
+    throw new Error("Chyba při aktualizaci hesla.");
   }
 };
