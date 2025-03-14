@@ -64,13 +64,13 @@ class PaymentModel extends Model
     {
         $paymentQuery = PaymentModel::query()->where('thePayId', $thePayId);
 
-        ob_start();
+        //ob_start();
         #var_dump($paymentId);
         $paymentId = $paymentQuery->first()->toArray();
 
         $order = OrderModel::query()->where("paymentId", "=", $paymentId)->get()->toArray();
         
-        error_log(ob_get_clean());
+        //error_log(ob_get_clean());
         #error_log($orderId);
         if ($paymentQuery->get()->count() === 0) {
             throw new \Exception("Payment not found", 1);
@@ -78,7 +78,7 @@ class PaymentModel extends Model
         $paymentQuery->update(['paid' => 1]);
 
 
-        WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
+        WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => ["data"=> $order]]));
     }
 
     public static function getTableName(): string

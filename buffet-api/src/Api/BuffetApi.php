@@ -100,7 +100,7 @@ class BuffetApi
         error_log(HttpClient::post("http://localhost/api", json_encode($msg)));
 
         /*foreach ($request->getQueryParams() as $key => $param) {
-        error_log("Key: " . $key . "Param: " . $param);
+        //error_log("Key: " . $key . "Param: " . $param);
         }*/
         return $html;
     }
@@ -330,7 +330,7 @@ class BuffetApi
 
             $array[$i]["variants"] = [];
             if (!$variants->where("itemId", "=", $id)->isEmpty()) {
-                $array[$i]["variants"] = $variants->where("itemId", "=", $id)->toArray();
+                $array[$i]["variants"] = array_merge($array[$i]["variants"], $variants->where("itemId", "=", $id)->toArray());
             }
             // parse allergens
             $alergenList = [];
@@ -381,6 +381,7 @@ class BuffetApi
         $paymentTableName = PaymentModel::getTableName();
         $orderTableName = OrderModel::getTableName();
 
+        $isKDS = false;
         if ($isAdmin) {
             if ($response->getRequestByKey("isKDS")) {
                 $isKDS = (bool) $response->getRequestByKey("isKDS");
@@ -388,8 +389,8 @@ class BuffetApi
                 $isKDS = false;
             }
             if ($isKDS) {
-                $orders = OrderModel::query()->where("paid", "=", 1)->where("status", "=", OrderStatus::Sent->value)->orWhere("status", "=", OrderStatus::Preparing->value)->orWhere("status", "=", OrderStatus::Waiting->value);
-                error_log($orders->toSql());
+                $orders = OrderModel::getAll()->where("paid", "=", 1)->where("status", "=", OrderStatus::Sent->value)->orWhere("status", "=", OrderStatus::Preparing->value)->orWhere("status", "=", OrderStatus::Waiting->value);
+                //error_log($orders->toSql());
             } else {
                 $orders = OrderModel::getAll();
             }
@@ -409,7 +410,7 @@ class BuffetApi
                 return $response->setError(Error::QueryFailed);
             }
         } else {
-            $response->setPayload("itemsCount", $orders->count());
+            $response->setPayload("itemsCount", $orders->count($orderTableName . ".id"));
             $ordersArray = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl"])->get()->toArray();
         }
 
@@ -447,38 +448,58 @@ class BuffetApi
 
         $response->setPayload("data", $ordersArray);
 
-        $itemIds = array_unique($itemIds);
-        $variantIds = array_unique($variantIds);
+        if ($isKDS) {
 
-        try {
-            $items = ItemModel::getByIdArray($itemIds)->toArray();
-        } catch (Exception $e) {
-            if ($e->getCode() == 1) {
-                return $response->setError(Error::MissingItems);
-            }
-        }
+            $items = ItemModel::getAll()->toArray();
+            $variants = VariantModel::getAll()->toArray();
 
-        try {
-            if (!empty($variantIds)) {
-                $variants = VariantModel::getByIdArray($variantIds)->toArray();
+            if (sizeof($items) > 0) {
+                $response->setPayload("items", $items);
+            } else {
+                $response->setPayload("items", []);
             }
-        } catch (Exception $e) {
-            if ($e->getCode() == 2) {
-                return $response->setError(Error::InvalidVariant);
-            }
-        }
 
-        if (!empty($items)) {
-            $response->setPayload("items", $items);
+            if (sizeof($variants) > 0) {
+                $response->setPayload("variants", $variants);
+            } else {
+                $response->setPayload("variants", []);
+            }
         } else {
-            $response->setPayload("items", []);
+
+            $itemIds = array_unique($itemIds);
+            $variantIds = array_unique($variantIds);
+
+            try {
+                $items = ItemModel::getByIdArray($itemIds)->toArray();
+            } catch (Exception $e) {
+                if ($e->getCode() == 1) {
+                    return $response->setError(Error::MissingItems);
+                }
+            }
+
+            try {
+                if (!empty($variantIds)) {
+                    $variants = VariantModel::getByIdArray($variantIds)->toArray();
+                }
+            } catch (Exception $e) {
+                if ($e->getCode() == 2) {
+                    return $response->setError(Error::InvalidVariant);
+                }
+            }
+
+            if (!empty($items)) {
+                $response->setPayload("items", $items);
+            } else {
+                $response->setPayload("items", []);
+            }
+
+            if (!empty($variants)) {
+                $response->setPayload("variants", $variants);
+            } else {
+                $response->setPayload("variants", []);
+            }
         }
 
-        if (!empty($variants)) {
-            $response->setPayload("variants", $variants);
-        } else {
-            $response->setPayload("variants", []);
-        }
         $response->setStatus(true);
         return $response;
     }
@@ -577,7 +598,7 @@ class BuffetApi
             } catch (OutOfOrderIdsException $e) {
                 return $response->setError(Error::OutOfOrderIds);
             } catch (RuntimeException $e) {
-                error_log($e->getMessage());
+                //error_log($e->getMessage());
                 return $response->setError(Error::ThePayError);
             } catch (PaymentCreationException $e) {
                 return $response->setError(Error::PaymentCreationError);
@@ -607,7 +628,7 @@ class BuffetApi
         $order["items"] = json_decode($order["items"]);
 
         if ($paymentMethod == PaymentMethods::Cash->value) {
-            WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => $order]));
+            WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => ["data" => $order]]));
         }
 
         return $response->setStatus(true)->setSuccess(Success::OrderCreated);
@@ -696,10 +717,11 @@ class BuffetApi
             "token" => JWTApi::getAdminToken(),
             "eventType" => EventTypes::UpdateOrder,
             "orderId" => $orderId,
-            "payload" => $updatedOrder
+            "payload" => ["data" => [$updatedOrder]]
         ];
 
         WebsocketClient::send("kds", json_encode($ws));
+
         return $response->setSuccess(Success::OrderUpdated);
     }
 
