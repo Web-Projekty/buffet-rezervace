@@ -27,7 +27,7 @@ const ItemButtons = ({ item }: ItemButtonsProps) => {
   const { id } = item;
 
   const handleAddToCart = () => {
-    addToCart(item);
+    addToCart(item, []);
   };
 
   const handleRemoveFromCart = () => {

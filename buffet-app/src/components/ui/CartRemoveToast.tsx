@@ -17,7 +17,7 @@ export const CartItemToast = ({ item, addToCart }: CartItemToastProps) => (
     </div>
 
     <button
-      onClick={() => addToCart(item)}
+      onClick={() => addToCart(item, [])}
       className="relative rounded-lg bg-primary p-2 font-bold text-white"
     >
       <Undo />

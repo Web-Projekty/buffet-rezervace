@@ -231,7 +231,7 @@ const MenuItemEditBar = ({
           <div className="flex flex-col gap-2">
             <h2>Varianty</h2>
             {itemVariants.map((index) => (
-              <div key={index} className="flex items-center gap-2">
+              <div key={index.id} className="flex items-center gap-2">
                 <Input
                   id={`variantName-${index}`}
                   name={`variantName-${index}`}
@@ -257,7 +257,7 @@ const MenuItemEditBar = ({
                 />
                 <Button
                   className="px-3 py-1"
-                  onClick={() => handleRemoveVariant(index)}
+                  onClick={() => handleRemoveVariant(index.id)}
                 >
                   X
                 </Button>
