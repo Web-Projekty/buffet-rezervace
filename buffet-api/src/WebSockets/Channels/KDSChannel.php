@@ -5,7 +5,6 @@ declare (strict_types = 1);
 namespace Buffet\WebSockets\Channels;
 
 use Buffet\Types\Error;
-use Buffet\Types\Success;
 use Buffet\Utils\Helper;
 use Buffet\Utils\HttpClient;
 use Buffet\WebSockets\Interfaces\MessageInterface;
@@ -29,7 +28,7 @@ class KDSChannel implements MessageInterface
      */
     public function onOpen(StaticConnectionInterface $conn): void
     {
-        $conn->send(Helper::getSuccessResponse(Success::ChannelConnected));
+        //$conn->send(Helper::getSuccessResponse(Success::ChannelConnected));
     }
 
     /**
@@ -59,7 +58,7 @@ class KDSChannel implements MessageInterface
                         Helper::attachClient($conn, $this->authenticatedClients);
                         //$conn->send(Helper::getErrorResponse(Error::AlreadySubscribed));
                     }
-                    $conn->send(Helper::getSuccessResponse(Success::Subscribed));
+                    //$conn->send(Helper::getSuccessResponse(Success::Subscribed));
                     $conn->send(HttpClient::post('http://localhost/api', json_encode(['requestType' => 'getOrders', 'token' => $token, "isKDS" => true])));
                     break;
                 case "publish":
@@ -76,11 +75,12 @@ class KDSChannel implements MessageInterface
                         $client->send(json_encode($newMsg));
                     }
                     break;
-
+                case "ping":
+                    //error_log("ping... pong... \n");
+                    $conn->send(json_encode(["msg" => "pong"]));
+                    break;
                 default:
-                    echo "help plz: ";
-                    echo $msg;
-                    echo "\n";
+                    error_log("called default method: " . $msg . "\n");
 
                     $response = HttpClient::post('http://localhost/api', $msg);
 
