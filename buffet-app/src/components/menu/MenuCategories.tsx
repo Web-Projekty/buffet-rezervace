@@ -1,24 +1,17 @@
-import { UseFilterReturn } from "../../hooks/useFilter";
 import { Category } from "../../types";
 import HorizontalPaging from "../ui/HorizontalPaging";
 import MenuCategory from "./MenuCategory";
 
 type MenuCategoriesProps = {
   categories: Category[];
-  onFilter: UseFilterReturn<Category>["handleFilter"];
+  onFilter: (categoryId: number) => void;
 };
 
 const MenuCategories = ({ categories, onFilter }: MenuCategoriesProps) => {
-  const AllCategory: Category = {
-    id: 0,
-    name: "Vše",
-    image: "",
-    description: "Zobrazit všechny položky",
-  };
-
   return (
-    <HorizontalPaging className="w-[25rem] transition-all duration-1000 ease-in-out sm:w-[30rem] md:w-[35rem] lg:w-[40rem] xl:w-[48rem] 2xl:w-[51rem]">
-      <MenuCategory category={AllCategory} onClick={onFilter} />
+    <HorizontalPaging
+      className={`h-[4rem] w-[25rem] transition-all duration-1000 ease-in-out sm:w-[30rem] md:w-[35rem] lg:w-[40rem] xl:w-[48rem] 2xl:w-[51rem] ${categories.length < 4 ? "justify-center" : "justify-start"}`}
+    >
       {categories.map((category) => (
         <MenuCategory
           key={category.id}

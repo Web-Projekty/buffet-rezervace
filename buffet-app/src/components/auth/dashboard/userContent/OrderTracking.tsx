@@ -1,10 +1,11 @@
-import { lazy, Suspense, useMemo } from "react";
+import { lazy, Suspense, useEffect, useMemo } from "react";
 import { Order } from "../../../../types";
 import useOrders from "../../../../hooks/useOrders";
 import Loading from "../../../ui/Loading";
 import { Fallback } from "../../../../main";
 import OrderItems from "../../../orders/OrderItems";
 import { mapItemsWithOrders } from "../../../utils/utils";
+import FetchError from "../../../error/FetchError";
 
 const ProgressTracker = lazy(() => import("./OrderProgressTracker"));
 
@@ -38,7 +39,7 @@ const getCurrentStep = (order: Order | null): number => {
 };
 
 const OrderTracking = () => {
-  const { latestOrder, isLoading, error, fetchedItems } = useOrders(1, 1);
+  const { latestOrder, isLoading, items, error, refetch } = useOrders(1, 1);
 
   const currentStep: number = useMemo(
     () => (latestOrder ? getCurrentStep(latestOrder) : -1),
@@ -49,7 +50,10 @@ const OrderTracking = () => {
     ? latestOrder.status === "cancelled" || latestOrder.status === "storno"
     : false;
 
-  const mappedItems = mapItemsWithOrders(latestOrder?.items, fetchedItems);
+  const mappedItems =
+    items && latestOrder?.items
+      ? mapItemsWithOrders(latestOrder?.items, items)
+      : [];
 
   const timeText = latestOrder
     ? new Date(latestOrder.pickupDate).toLocaleDateString() +
@@ -59,14 +63,32 @@ const OrderTracking = () => {
       latestOrder.endTime
     : "";
 
+  useEffect(() => {
+    if (
+      latestOrder?.status !== "done" &&
+      latestOrder?.status !== "cancelled" &&
+      latestOrder?.status !== "storno"
+    ) {
+      const interval = setInterval(() => {
+        refetch();
+      }, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [latestOrder?.status]);
+
   return (
-    <section className="flex h-full w-full flex-col gap-2 rounded-lg text-white">
+    <section
+      className="flex h-full w-full flex-col gap-2 rounded-lg text-white"
+      key={latestOrder?.status}
+    >
       <h1 className="text-2xl font-bold">Aktuální objednávka</h1>
-      {!isLoading ? (
-        error ? (
-          <div className="text-white">{error}</div>
+      <div className="flex h-full min-h-[25rem] w-full flex-col items-center justify-center gap-16 rounded-lg bg-backgroundColor p-6 shadow-md">
+        {isLoading ? (
+          <Loading />
+        ) : error ? (
+          <FetchError refetch={refetch} />
         ) : (
-          <div className="flex h-full w-full flex-col items-center justify-center gap-16 rounded-lg bg-backgroundColor p-6">
+          <>
             <Suspense fallback={<Fallback />}>
               <ProgressTracker
                 currentStep={currentStep}
@@ -79,9 +101,7 @@ const OrderTracking = () => {
               {latestOrder && !isCancelled ? (
                 <div className="flex flex-col gap-5">
                   <div className="flex flex-col items-center gap-2">
-                    <p className="text-center">
-                      Vaše objednávka bude k vyzvednutí pod číslem
-                    </p>
+                    <p className="text-center">Bude k vyzvednutí pod číslem</p>
                     <h3 className="text-2xl font-bold">
                       {latestOrder.pickUpId}
                     </h3>
@@ -91,11 +111,9 @@ const OrderTracking = () => {
                 </div>
               ) : null}
             </div>
-          </div>
-        )
-      ) : (
-        <Loading size={30} />
-      )}
+          </>
+        )}
+      </div>
     </section>
   );
 };

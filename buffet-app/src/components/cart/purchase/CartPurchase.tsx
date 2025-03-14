@@ -6,12 +6,13 @@ import { useUser } from "../../../hooks/useUser";
 import { Date as DateType, Hour, Minute, PaymentMethod } from "../../../types";
 import { createOrder } from "../../utils/api";
 import { parseSelectedTime } from "../../utils/utils";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { toastMessages } from "../../utils/toastMessages";
 
 const CartReservationCalendar = lazy(() => import("./CartReservationCalendar"));
 const CartPurchaseMethods = lazy(() => import("./CartPurchaseMethods"));
-const CartPurchaseItems = lazy(() => import("./CartPurchaseItems"));
+const OrderItems = lazy(() => import("../../orders/OrderItems"));
 const CartUserInformation = lazy(() => import("./CartUserInformation"));
 const CartPurchaseSelectedMethods = lazy(
   () => import("./CartPurchaseSelectedMethods"),
@@ -20,16 +21,18 @@ const PageNotFound = lazy(() => import("../../error/PageNotFound"));
 
 const CartPurchase = () => {
   const { token, isAdmin } = useUser();
-  const { cartItems, isCartEmpty } = useCart();
+  const { cartItems, isCartEmpty, clearCart } = useCart();
   const [selectedPaymentMethods, setSelectedPaymentMethods] = useState<
     PaymentMethod[]
   >([]);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const fromCart = location.state?.fromCart || false;
 
   const selectedPaymentMethodsLengthWithoutCredits = useMemo(
     () =>
@@ -53,12 +56,14 @@ const CartPurchase = () => {
   );
 
   const handleSubmit = useCallback(async () => {
-    if (isDisabled) return;
+    if (isDisabled) {
+      toast.error(toastMessages.order.fillForm);
+      return;
+    }
     if (isSubmitting) return;
     if (success) return;
 
     setIsSubmitting(true);
-    setError(null);
 
     try {
       //console.log(selectedTime);
@@ -67,10 +72,10 @@ const CartPurchase = () => {
 
       const { order, error, paywallUrl } = await createOrder(
         token,
-        cartItems.map(({ id, quantity }) => ({
+        cartItems.map(({ id, quantity, selectedVariants }) => ({
           id,
           quantity,
-          variants: [],
+          variants: selectedVariants,
         })),
         startTime,
         endTime,
@@ -78,11 +83,11 @@ const CartPurchase = () => {
       );
 
       if (error) {
-        setError("Chyba při vytváření objednávky.");
-        toast.error("Chyba při vytváření objednávky.");
+        toast.error(toastMessages.order.error);
       } else {
         setSuccess(true);
-        toast.success("Objednávka byla úspěšně vytvořena.");
+        toast.success(toastMessages.order.success);
+        clearCart();
         if (paywallUrl) {
           window.location.href = paywallUrl;
         } else {
@@ -93,7 +98,7 @@ const CartPurchase = () => {
         }
       }
     } catch {
-      setError("Chyba při vytváření objednávky.");
+      toast.error(toastMessages.order.error);
     } finally {
       setIsSubmitting(false);
     }
@@ -101,25 +106,29 @@ const CartPurchase = () => {
 
   const handleSelectTime = useCallback(
     (day: DateType, hour: Hour, minute: Minute) => {
+      let endHour = hour.label.substring(0, 2);
+
+      if (minute.label.substring(7, 9) === "00") {
+        const nextHour = parseInt(endHour) + 1;
+        endHour = nextHour < 10 ? `0${nextHour}` : `${nextHour}`;
+      }
+
       const selectedTime =
         day.date +
         " " +
         hour.label.substring(0, 2) +
         minute.label.substring(0, 3) +
         "-" +
-        hour.label.substring(0, 2) +
+        endHour +
         minute.label.substring(6, 9);
       setSelectedTime(selectedTime);
     },
     [],
   );
 
-  // if (cartItems.length <= 0)
-  //   return (
-  //     <Suspense fallback={<Fallback />}>
-  //       <PageNotFound />
-  //     </Suspense>
-  //   );
+  if (!fromCart) {
+    return <PageNotFound />;
+  }
 
   if (isAdmin) {
     return (
@@ -130,9 +139,9 @@ const CartPurchase = () => {
   }
 
   return (
-    <div className="m-auto grid w-[95%] grid-cols-1 gap-10 text-white md:w-[75%] md:grid-cols-2 2xl:w-[60%]">
+    <div className="m-auto grid max-w-[25rem] grid-cols-1 gap-5 text-white transition-all duration-1000 ease-in-out md:max-w-[65rem] md:grid-cols-2 md:gap-10">
       <div className="flex w-full flex-col gap-5">
-        <div className="flex flex-col rounded-lg bg-slate-700 p-6 font-sans">
+        <div className="flex flex-col rounded-lg bg-slate-700 p-3 font-sans">
           <h2 className="text-2xl font-bold">Čas vyzvednutí</h2>
           <Suspense fallback={<Fallback />}>
             <CartReservationCalendar onTimeSelect={handleSelectTime} />
@@ -148,24 +157,28 @@ const CartPurchase = () => {
             />
           </Suspense>
         </div>
+      </div>
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-col rounded-lg bg-slate-700 p-3">
+          <h2 className="text-2xl font-bold">Objednávka</h2>
+          <Suspense fallback={<Fallback />}>
+            <OrderItems
+              mappedItems={cartItems}
+              className="rounded-md bg-slate-800 p-3"
+            />
+          </Suspense>
+        </div>
+
         <div className="flex flex-col rounded-lg bg-slate-700 p-3">
           <h2 className="text-2xl font-bold">Kontaktní údaje</h2>
           <Suspense fallback={<Fallback />}>
             <CartUserInformation />
           </Suspense>
         </div>
-      </div>
-      <div className="flex flex-col gap-5">
-        <div className="flex flex-col rounded-lg bg-slate-700 p-3">
-          <h2 className="text-2xl font-bold">Objednávka</h2>
-          <Suspense fallback={<Fallback />}>
-            <CartPurchaseItems cartItems={cartItems} />
-          </Suspense>
-        </div>
 
         <div className="flex flex-row items-center justify-between rounded-lg bg-slate-700 p-3">
           <h2 className="text-2xl font-bold">Čas vyzvednutí</h2>{" "}
-          <p>{selectedTime ? selectedTime : "Není vybrán žádný čas"}</p>
+          <p>{selectedTime ? selectedTime : "Nebyl vybrán žádný čas"}</p>
         </div>
 
         <div className="flex flex-row items-start justify-between rounded-lg bg-slate-700 p-3">
@@ -178,11 +191,12 @@ const CartPurchase = () => {
         </div>
         <div className="flex flex-col rounded-lg bg-slate-700 p-3">
           <Button
-            disabled={isDisabled || isSubmitting || success}
+            disabled={isSubmitting || success}
             onClick={handleSubmit}
             loading={isSubmitting}
+            className={`${isDisabled ? "cursor-not-allowed hover:bg-interactiveColor" : ""}`}
           >
-            {error ? error : "Potvrdit objednávku"}
+            Potvrdit objednávku
           </Button>
           <p className="text-center text-xs text-descriptionColor">
             Potvrzením objednávky uživatel souhlasí se všeobecnými obchodními

@@ -1,7 +1,17 @@
 import ErrorComponent from "./ErrorComponent";
 
-const PageNotFound = () => {
-  return <ErrorComponent title="Tato stránka neexistuje." subtitle="🕵️‍♂️🔎" />;
+type PageNotFoundProps = {
+  className?: string;
+};
+
+const PageNotFound = ({ className }: PageNotFoundProps) => {
+  return (
+    <ErrorComponent
+      title="Tato stránka neexistuje."
+      subtitle="🕵️‍♂️🔎"
+      className={className}
+    />
+  );
 };
 
 export default PageNotFound;

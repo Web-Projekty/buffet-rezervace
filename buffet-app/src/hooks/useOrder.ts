@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Order, OrderItem, OrderStatus } from "../types";
 import { updateOrder } from "../components/utils/api";
-import { mapItemsWithOrders } from "../components/utils/utils";
+import { formatDate, mapItemsWithOrders } from "../components/utils/utils";
 import toast from "react-hot-toast";
+import { toastMessages } from "../components/utils/toastMessages";
 
 export type HandleStatusReturn = {
   order: Order;
@@ -20,7 +21,7 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
   };
 
   const mappedItems = useMemo(
-    () => (items ? mapItemsWithOrders(order.items, items) : []),
+    () => (items && order.items ? mapItemsWithOrders(order.items, items) : []),
     [items, order.items],
   );
 
@@ -34,9 +35,9 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
         const { payload, error } = await updateOrder(token, order.id, status);
 
         if (error) {
-          toast.error("Chyba při aktualizaci objednávky.");
+          toast.error(toastMessages.updateOrder.error);
         } else {
-          toast.success("Objednávka byla aktualizována.");
+          toast.success(toastMessages.updateOrder.success);
           setStatus(status);
         }
 
@@ -61,7 +62,7 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
         `${order.pickupDate}T${order.startTime}`,
       ).getTime();
 
-      console.log(order.pickUpId + ", " + now, pickupDateTime);
+      // console.log(order.pickUpId + ", " + now, pickupDateTime);
 
       setDelayed(now > pickupDateTime);
     }
@@ -69,10 +70,16 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
 
   const color = delayed ? "bg-red-400" : getColorByStatus(status);
   const statusText = getTextByStatus(status);
-  const dateCreated = new Date(order.dateCreated).toLocaleString();
-  const pickUpDate = new Date(order.pickupDate).toLocaleDateString();
-  const startTime = order.startTime;
-  const endTime = order.endTime;
+  const dateCreated = formatDate(order.dateCreated, {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const pickUpDate = formatDate(order.pickupDate);
+  const startTime = order.startTime.split(":").slice(0, 2).join(":");
+  const endTime = order.endTime.split(":").slice(0, 2).join(":");
 
   useEffect(() => {
     if (

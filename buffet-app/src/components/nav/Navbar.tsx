@@ -22,7 +22,7 @@ export type NavLinks = {
 
 const NavLinks: NavLinks[] = [
   { id: 1, name: "Menu", path: "/" },
-  { id: 2, name: "Alergeny", path: "/alergeny" },
+  { id: 2, name: "Alergeny", path: "/allergens" },
   { id: 3, name: "KDS", path: "/kds", requireAdmin: true },
 ];
 
@@ -30,7 +30,7 @@ const Navbar = ({ isOpen, toggleMobileMenu }: NavbarProps) => {
   const { user, isAdmin } = useUser();
 
   return (
-    <nav className="relative">
+    <nav className="relative" key={user?.id}>
       <div className="hidden flex-row md:flex">
         <ul className="relative flex w-auto flex-row items-center justify-between gap-5 text-xl text-black">
           {NavLinks.map(({ id, path, name, requireAdmin }) => {

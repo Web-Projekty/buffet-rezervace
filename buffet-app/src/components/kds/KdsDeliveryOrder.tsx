@@ -7,15 +7,10 @@ import { ChevronLeft } from "lucide-react";
 
 type KdsDeliveryOrderProps = {
   order: Order;
-  onStatusChange: (order: Order) => void;
   items: OrderItem[];
 };
 
-const KdsDeliveryOrder = ({
-  order,
-  onStatusChange,
-  items,
-}: KdsDeliveryOrderProps) => {
+const KdsDeliveryOrder = ({ order, items }: KdsDeliveryOrderProps) => {
   const { token } = useUser();
   const { isOpen, toggleOpen, color, mappedItems, handleStatus } = useOrder(
     order,
@@ -24,19 +19,15 @@ const KdsDeliveryOrder = ({
   );
 
   const handleDoneOrder = () => {
-    handleStatus("done", token).then(() =>
-      onStatusChange({ ...order, status: "done" }),
-    );
+    handleStatus("done", token);
   };
 
   const handleCancelOrder = () => {
-    handleStatus("cancelled", token).then(() =>
-      onStatusChange({ ...order, status: "cancelled" }),
-    );
+    handleStatus("cancelled", token);
   };
 
   return (
-    <article className="relative flex h-auto w-full flex-col bg-white sm:w-[10rem] md:w-[22rem]">
+    <article className="relative flex h-auto w-full max-w-[18rem] flex-col bg-white">
       <div className={`absolute h-[52px] w-2 ${color}`}></div>
       <div className="flex w-full items-center justify-between bg-white px-4 py-3 text-xl font-bold">
         <div className="flex flex-row items-center gap-5">

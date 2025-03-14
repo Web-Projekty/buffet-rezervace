@@ -5,6 +5,7 @@ import Link from "./Link";
 import { NavLinks } from "./Navbar";
 import AccountButton from "../auth/AccountButton";
 import Cart from "../cart/Cart";
+import { useEffect } from "react";
 
 type MobileNavbarProps = {
   isOpen: boolean;
@@ -19,6 +20,18 @@ const MobileNavbar = ({
   isAdmin,
   links,
 }: MobileNavbarProps) => {
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && isOpen) {
+        handleOpenMobileMenu();
+      }
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isOpen, handleOpenMobileMenu]);
   return (
     <motion.ul
       initial="closed"
@@ -53,7 +66,7 @@ const MobileNavbar = ({
             />
           );
         })}
-        {!isAdmin && <Cart type="menu" onClick={handleOpenMobileMenu} />}
+        {!isAdmin && <Cart onClick={handleOpenMobileMenu} />}
         <AccountButton type="menu" onClick={handleOpenMobileMenu} />
       </div>
     </motion.ul>

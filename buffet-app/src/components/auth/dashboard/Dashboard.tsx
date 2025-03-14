@@ -1,12 +1,10 @@
 import { lazy, Suspense, useMemo } from "react";
 import { Fallback } from "../../../main";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import Button from "../../ui/Button";
-import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { removeDiacritics } from "../../utils/utils";
 import { useUser } from "../../../hooks/useUser";
 import DashboardContent from "./DashboardContent";
-import { removeTokenExpiration } from "../../utils/auth";
 
 const AccountInformation = lazy(() => import("./AccountInformation"));
 const DashboardButtons = lazy(() => import("./DashboardButtons"));
@@ -20,17 +18,18 @@ export type Page =
   | "Databáze"
   | "Provoz"
   | "Platby"
-  | "Účetnictví"
-  | undefined;
+  | "Účetnictví";
 
 const Dashboard = () => {
-  const logout = useSignOut();
-  const navigate = useNavigate();
-  const { isAdmin } = useUser();
+  const { isAdmin, logout } = useUser();
   const [searchParams, setSearchParams] = useSearchParams("Přehled");
 
   const handlePageChange = (page: Page) => {
     setSearchParams({ page: removeDiacritics(page) });
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   const page = useMemo(() => {
@@ -57,13 +56,6 @@ const Dashboard = () => {
         return "Účetnictví";
     }
   }, [searchParams]);
-
-  const handleLogout = () => {
-    logout();
-    removeTokenExpiration();
-    navigate("/login", { replace: true });
-    window.location.reload();
-  };
 
   return (
     <section className="grid w-full grid-cols-1 items-start gap-2 md:m-auto md:w-[75rem] md:grid-cols-3">

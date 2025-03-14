@@ -37,3 +37,17 @@ export const slideInLeftAnimation = (duration: number = 0.5) => ({
   exit: { x: -50, opacity: 0 },
   transition: { duration },
 });
+
+export const slideInRightAnimation = (duration: number = 0.5) => ({
+  initial: { x: 50, opacity: 0 },
+  animate: { x: 0, opacity: 1 },
+  exit: { x: 50, opacity: 0 },
+  transition: { duration },
+});
+
+export const scrollToTopShowAnimation = (duration: number = 0.5) => ({
+  initial: { y: 20, opacity: 0 },
+  animate: { y: -5, opacity: 1 },
+  exit: { y: 20, opacity: 0 },
+  transition: { duration },
+});

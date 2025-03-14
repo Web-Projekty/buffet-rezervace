@@ -1,16 +1,32 @@
 import ErrorComponent from "../error/ErrorComponent";
 import Loading from "../ui/Loading";
 import useMenu from "../../hooks/useMenu";
-import { useFilter } from "../../hooks/useFilter";
 import MenuCategories from "./MenuCategories";
 import MenuSections from "./MenuSections";
+import { useCallback, useMemo, useRef } from "react";
 
 const UserMenu = () => {
   const { menuItems, error, isLoading, categories } = useMenu();
-  const { data: filteredCategories, handleFilter } = useFilter(
-    "name",
-    "category",
-    categories,
+  const categoryRefs = useRef<{ [key: number]: HTMLElement | null }>({});
+
+  const handleFilter = useCallback((categoryId: number) => {
+    const element = categoryRefs.current[categoryId];
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, []);
+
+  const filteredCategories = useMemo(
+    () =>
+      categories.filter((category) =>
+        menuItems?.some((item) => item.category === category.id),
+      ),
+    [categories, menuItems],
   );
 
   if (error) {
@@ -24,11 +40,14 @@ const UserMenu = () => {
       <h1 className="text-3xl font-bold text-white">Naše menu</h1>
       {!isLoading ? (
         <>
-          <MenuCategories categories={categories} onFilter={handleFilter} />
+          <MenuCategories
+            categories={filteredCategories}
+            onFilter={handleFilter}
+          />
           <MenuSections
-            filteredCategories={filteredCategories}
             menuItems={menuItems}
-            categories={categories}
+            categories={filteredCategories}
+            refs={categoryRefs}
           />
         </>
       ) : (

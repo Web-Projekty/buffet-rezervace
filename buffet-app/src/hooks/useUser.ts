@@ -5,6 +5,11 @@ import { User } from "../types";
 import { toastMessages } from "../components/utils/toastMessages";
 import { updateUserData, updateUserPassword } from "../components/utils/api";
 import { ProfileFormDataType } from "../components/auth/dashboard/Profile";
+import { removeTokenExpiration } from "../components/utils/auth";
+import useSignOut from "react-auth-kit/hooks/useSignOut";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 type UseUserReturn = {
   user: User | null;
@@ -17,12 +22,17 @@ type UseUserReturn = {
   credits: string | null;
   handleSavePassword: (formData: ProfileFormDataType) => void;
   handleSaveInfo: (formData: ProfileFormDataType) => void;
+  logout: () => void;
+  loading: boolean;
 };
 
 export const useUser = (): UseUserReturn => {
   const header: string | null = useAuthHeader();
   const user: User | null = useAuthUser();
   const token: string | null = extractToken(header);
+  const signOut = useSignOut();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const isAdmin: boolean = user?.isAdmin || false;
   const fullName: string | null = user?.fullName || null;
@@ -33,31 +43,50 @@ export const useUser = (): UseUserReturn => {
 
   const handleSavePassword = async (formData: ProfileFormDataType) => {
     const { password, newPassword, newPasswordConfirmation } = formData;
+    try {
+      setLoading(true);
+      const response = await updateUserPassword(
+        token,
+        password,
+        newPassword,
+        newPasswordConfirmation,
+      );
 
-    const response = await updateUserPassword(
-      token,
-      password,
-      newPassword,
-      newPasswordConfirmation,
-    );
-
-    handleResponse(
-      response.status,
-      toastMessages.passwordChange.success,
-      toastMessages.passwordChange.error,
-    );
+      handleResponse(
+        response.status,
+        toastMessages.passwordChange.success,
+        toastMessages.passwordChange.error,
+      );
+    } catch {
+      toast.error(toastMessages.passwordChange.error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSaveInfo = async (formData: ProfileFormDataType) => {
     const { name, email, tel } = formData;
 
-    const response = await updateUserData(token, name, tel, email);
+    try {
+      setLoading(true);
+      const response = await updateUserData(token, name, tel, email);
+      handleResponse(
+        response.status,
+        toastMessages.profileChange.success,
+        toastMessages.profileChange.error,
+      );
+    } catch {
+      toast.error(toastMessages.profileChange.error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    handleResponse(
-      response.status,
-      toastMessages.profileChange.success,
-      toastMessages.profileChange.error,
-    );
+  const logout = async () => {
+    signOut();
+    removeTokenExpiration();
+    toast.success(toastMessages.logout.success);
+    navigate("/login", { replace: true });
   };
 
   return {
@@ -71,5 +100,7 @@ export const useUser = (): UseUserReturn => {
     credits,
     handleSavePassword,
     handleSaveInfo,
+    logout,
+    loading,
   };
 };

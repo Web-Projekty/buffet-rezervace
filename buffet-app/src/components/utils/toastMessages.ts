@@ -3,6 +3,10 @@ export const toastMessages = {
     success: "Přihlášení proběhlo úspěšně",
     error: "Chyba při přihlášení",
   },
+  logout: {
+    success: "Odhlášení proběhlo úspěšně",
+    error: "Chyba při odhlášení",
+  },
   register: {
     success: "Registrace proběhla úspěšně",
     error: "Chyba při registraci",
@@ -32,14 +36,16 @@ export const toastMessages = {
     error: "Chyba při změně profilu",
   },
   order: {
-    success: "Objednávka byla odeslána",
-    error: "Chyba při odesílání objednávky",
+    success: "Objednávka byla uspěšně vytvořena",
+    error: "Chyba při vytváření objednávky",
+    fillForm: "Vyplňte všechny údaje",
   },
   cart: {
     full: "Košík je plný",
     fullItem: "Maximální počet této položky",
     empty: "Košík je prázdný",
-    added: "Položka byla přidána do košíku",
-    removed: "Položka byla odebrána z košíku",
+    added: "Položka byla přidána",
+    removed: "Položka byla odebrána",
+    variants: "Vyberte varianty",
   },
 };

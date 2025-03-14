@@ -1,19 +1,62 @@
+import { CartItem, CartItems } from "../../store/CartStore";
 import { Variant } from "../../types";
 import { formatCurrency } from "../utils/utils";
 
 type ItemVariantProps = {
-  name: Variant["name"];
-  price: Variant["price"];
+  id: CartItem["id"];
+  variant: Variant;
+  selectedVariants: CartItem["selectedVariants"];
+  updateVariants: CartItems["updateVariants"];
+  quantity: CartItem["quantity"];
 };
 
-const ItemVariant = ({ name, price }: ItemVariantProps) => {
+const ItemVariant = ({
+  id,
+  variant,
+  selectedVariants,
+  updateVariants,
+  quantity,
+}: ItemVariantProps) => {
+  const { name, addedPrice, isExclusive } = variant;
+
+  const handleVariantChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      updateVariants(id, [...selectedVariants, variant.id]);
+    } else {
+      updateVariants(
+        id,
+        selectedVariants.filter((v) => v !== variant.id),
+      );
+    }
+  };
+
+  const handleExclusiveChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      updateVariants(id, [variant.id]);
+    }
+  };
+
   return (
     <label className="flex items-center gap-2">
-      <input type="checkbox" />
+      {isExclusive ? (
+        <input
+          type="radio"
+          name={String(id)}
+          checked={selectedVariants.includes(variant.id)}
+          onChange={handleExclusiveChange}
+        />
+      ) : (
+        <input
+          type="checkbox"
+          checked={selectedVariants.includes(variant.id)}
+          onChange={handleVariantChange}
+        />
+      )}
+
       <div className="flex w-full items-center justify-between">
         <p>{name}</p>
         <p className="line-clamp-3 overflow-hidden rounded-lg px-2 text-descriptionColor">
-          +{formatCurrency(price)}
+          +{formatCurrency(addedPrice * quantity)}
         </p>
       </div>
     </label>
