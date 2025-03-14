@@ -1,5 +1,4 @@
 import useCart, { CartItem } from "../../store/CartStore";
-import { Variant } from "../../types";
 import { formatCurrency } from "../utils/utils";
 
 type ItemPriceProps = {
