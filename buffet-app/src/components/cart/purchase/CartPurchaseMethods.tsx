@@ -28,6 +28,7 @@ const CartPurchaseMethods = ({
   return (
     <div className="flex flex-col gap-2 rounded-lg bg-backgroundColor p-3">
       {paymentMethods.map((method) => {
+        if (!method.enabled) return null;
         return (
           <CartPurchaseMethod
             key={method.name}
