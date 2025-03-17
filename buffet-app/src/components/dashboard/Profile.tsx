@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useUser } from "../../../hooks/useUser";
-import Button from "../../ui/Button";
-import Input from "../../ui/Input";
+import { useUser } from "../../hooks/useUser";
+import Button from "../ui/Button";
+import Input from "../ui/Input";
 
 export type ProfileFormDataType = {
   name: string;

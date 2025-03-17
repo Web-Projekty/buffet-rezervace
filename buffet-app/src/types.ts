@@ -113,6 +113,7 @@ export type PaymentMethod = {
   name: string;
   input: "checkbox" | "radio";
   image: PaymentMethodImage[];
+  enabled: boolean;
 };
 
 type PaymentMethodImage = {

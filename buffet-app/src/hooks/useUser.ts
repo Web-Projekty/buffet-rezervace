@@ -4,7 +4,7 @@ import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { User } from "../types";
 import { toastMessages } from "../components/utils/toastMessages";
 import { updateUserData, updateUserPassword } from "../components/utils/api";
-import { ProfileFormDataType } from "../components/auth/dashboard/Profile";
+import { ProfileFormDataType } from "../components/dashboard/Profile";
 import { removeTokenExpiration } from "../components/utils/auth";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { useNavigate } from "react-router-dom";

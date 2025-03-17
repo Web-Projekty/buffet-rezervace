@@ -1,11 +1,11 @@
 import { lazy, Suspense, useEffect, useMemo } from "react";
-import { Order } from "../../../../types";
-import useOrders from "../../../../hooks/useOrders";
-import Loading from "../../../ui/Loading";
-import { Fallback } from "../../../../main";
-import OrderItems from "../../../orders/OrderItems";
-import { mapItemsWithOrders } from "../../../utils/utils";
-import FetchError from "../../../error/FetchError";
+import { Order } from "../../../types";
+import useOrders from "../../../hooks/useOrders";
+import Loading from "../../ui/Loading";
+import { Fallback } from "../../../main";
+import OrderItems from "../../orders/OrderItems";
+import { mapItemsWithOrders } from "../../utils/utils";
+import FetchError from "../../error/FetchError";
 
 const ProgressTracker = lazy(() => import("./OrderProgressTracker"));
 
