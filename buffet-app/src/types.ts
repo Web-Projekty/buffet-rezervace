@@ -1,3 +1,5 @@
+import { CartItem } from "./store/CartStore";
+
 export type User = {
   id: number;
   username: string;
@@ -34,6 +36,7 @@ export type MappedOrderItem = {
   category: number;
   variants: Variant[];
   quantity: number;
+  selectedVariants: CartItem["selectedVariants"];
 };
 
 export type OrderItem = {
