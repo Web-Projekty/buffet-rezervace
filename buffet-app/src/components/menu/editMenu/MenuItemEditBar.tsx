@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Allergen, Category, MenuItem } from "../../../types";
+import { Allergen, Category, MenuItem, Variant } from "../../../types";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import MenuItemEditInput from "./MenuItemEditInput";
@@ -45,8 +45,13 @@ const MenuItemEditBar = ({
   const [itemCategory, setItemCategory] = useState<MenuItem["category"]>(
     menuItem?.category || 0,
   );
-  const [itemVariants, setItemVariants] = useState<MenuItem["variants"]>(
-    menuItem?.variants || [],
+  const [itemVariants, setItemVariants] = useState<Variant[]>(
+    menuItem?.variants.map((variant) => {
+      return {
+        ...variant,
+        addedPrice: variant.addedPrice / 100,
+      };
+    }) || [],
   );
   const [cashPayment, setCashPayment] = useState<boolean>(false);
   const [cashVariants, setCashVariants] = useState<boolean>(false);
@@ -55,8 +60,6 @@ const MenuItemEditBar = ({
     handleClose();
     const formatPrice = (Number(itemPrice.replace(",", ".")) * 100).toFixed(0);
 
-    console.log(formatPrice);
-
     const data = {
       name: itemName,
       price: Number(formatPrice),
@@ -64,7 +67,15 @@ const MenuItemEditBar = ({
       image: itemImage,
       category: itemCategory,
       allergens: allergensInput,
-      variants: itemVariants,
+      variants: itemVariants.map((variant) => ({
+        ...variant,
+        addedPrice: Number(
+          (Number(String(variant.addedPrice).replace(",", ".")) * 100).toFixed(
+            0,
+          ),
+        ),
+        isExclusive: Boolean(variant.isExclusive),
+      })),
     };
 
     if (!menuItem) {
@@ -78,6 +89,8 @@ const MenuItemEditBar = ({
       refetch();
       return;
     }
+
+    console.log("updating item");
 
     const { error } = await updateMenuItem(token, {
       itemId: menuItem.id,
@@ -94,22 +107,27 @@ const MenuItemEditBar = ({
     handleBarOpen();
   };
 
-  // const handleVariantChange = (
-  //   index: number,
-  //   field: keyof Variant,
-  //   value: string,
-  // ) => {
-  // const newVariants = [...itemVariants];
-  // newVariants[index] = { ...newVariants[index], [field]: value };
-  // setItemVariants(newVariants);
-  // };
+  const handleVariantChange = (
+    index: number,
+    field: keyof Variant,
+    value: string,
+  ) => {
+    setItemVariants((prev) =>
+      prev.map((variant) =>
+        variant.id === index ? { ...variant, [field]: value } : variant,
+      ),
+    );
+  };
 
   const handleAddVariant = () => {
-    // setItemVariants([...itemVariants, { name: "", quantity: 0, price: 0 }]);
+    setItemVariants([
+      ...itemVariants,
+      { name: "", addedPrice: 0, isExclusive: false, id: itemVariants.length },
+    ]);
   };
 
   const handleRemoveVariant = (index: number) => {
-    const newVariants = itemVariants.filter((_, i) => i !== index);
+    const newVariants = itemVariants.filter((variant) => variant.id !== index);
     setItemVariants(newVariants);
   };
 
@@ -230,34 +248,48 @@ const MenuItemEditBar = ({
 
           <div className="flex flex-col gap-2">
             <h2>Varianty</h2>
-            {itemVariants.map((index) => (
-              <div key={index.id} className="flex items-center gap-2">
+            {itemVariants.map((variant) => (
+              <div key={variant.id} className="flex items-center gap-2">
                 <Input
-                  id={`variantName-${index}`}
-                  name={`variantName-${index}`}
+                  id={`variantName-${variant}`}
+                  name={`variantName-${variant}`}
                   type="text"
                   inputClassName="rounded-md p-1 text-black"
-                  // value={variant.name}
-                  // onChange={(e) =>
-                  // handleVariantChange(index, "name", e.target.value)
-                  // }
+                  value={variant.name}
+                  onChange={(e) =>
+                    handleVariantChange(variant.id, "name", e.target.value)
+                  }
                   placeholder="Název varianty"
                 />
                 <Input
-                  id={`variantPrice-${index}`}
-                  name={`variantPrice-${index}`}
-                  type="number"
+                  id={`variantPrice-${variant}`}
+                  name={`variantPrice-${variant}`}
+                  type="text"
                   inputClassName="rounded-md p-1 text-black w-40"
-                  // value={variant.price}
-                  // onChange={(e) =>
-                  //   handleVariantChange(index, "price", e.target.value)
-                  // }
+                  value={variant.addedPrice}
+                  onChange={(e) =>
+                    handleVariantChange(
+                      variant.id,
+                      "addedPrice",
+                      e.target.value,
+                    )
+                  }
                   placeholder="Cena varianty"
                   min={0}
                 />
+
+                <select
+                  className="h-10 rounded-md p-1 text-black"
+                  name="isExclusive"
+                  value={variant.isExclusive ? 1 : 0}
+                >
+                  <option value={1}>Exkluzivní</option>
+                  <option value={0}>Neexkluzivní</option>
+                </select>
+
                 <Button
                   className="px-3 py-1"
-                  onClick={() => handleRemoveVariant(index.id)}
+                  onClick={() => handleRemoveVariant(variant.id)}
                 >
                   X
                 </Button>
