@@ -3,10 +3,6 @@
 use Buffet\Api\BuffetApi;
 use Buffet\Api\ImageProvider;
 use Buffet\Api\ImageUploader;
-use Buffet\Api\PaymentApi;
-use Buffet\Database\DatabaseManager;
-use Buffet\Database\Models\PaymentModel;
-use Buffet\Types\ApiResponse;
 use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\Settings;
 use Buffet\Utils\EnvReader;
@@ -87,14 +83,14 @@ if (!$isProd) {
 }
 ### I have no idea what I wanted to do with this
 /*$app->get('/pay', function (Request $request, Response $response, $args) {
-    $response = new ApiResponse();
-    $dbMan = new DatabaseManager($response);
-    $dbMan->setupConnection();
-    $paymetns = PaymentModel::query()->where('paid', 0)->get()->toArray();
-    foreach ($paymetns as $payment) {
-        $paymentApi = new PaymentApi();
-        $paymentApi->getPaymentInfo($payment['thePayId']);
-    }
+$response = new ApiResponse();
+$dbMan = new DatabaseManager($response);
+$dbMan->setupConnection();
+$paymetns = PaymentModel::query()->where('paid', 0)->get()->toArray();
+foreach ($paymetns as $payment) {
+$paymentApi = new PaymentApi();
+$paymentApi->getPaymentInfo($payment['thePayId']);
+}
 });*/
 
 /**
