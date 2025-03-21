@@ -85,8 +85,8 @@ if (!$isProd) {
         return $response;
     });
 }
-
-$app->get('/pay', function (Request $request, Response $response, $args) {
+### I have no idea what I wanted to do with this
+/*$app->get('/pay', function (Request $request, Response $response, $args) {
     $response = new ApiResponse();
     $dbMan = new DatabaseManager($response);
     $dbMan->setupConnection();
@@ -95,7 +95,7 @@ $app->get('/pay', function (Request $request, Response $response, $args) {
         $paymentApi = new PaymentApi();
         $paymentApi->getPaymentInfo($payment['thePayId']);
     }
-});
+});*/
 
 /**
  * @todo remove
