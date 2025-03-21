@@ -6,6 +6,8 @@ import { Fallback } from "../../../main";
 import OrderItems from "../../orders/OrderItems";
 import { mapItemsWithOrders } from "../../utils/utils";
 import FetchError from "../../error/FetchError";
+import { Link } from "react-router-dom";
+import Button from "../../ui/Button";
 
 const ProgressTracker = lazy(() => import("./OrderProgressTracker"));
 
@@ -49,8 +51,6 @@ const OrderTracking = () => {
   const isCancelled = latestOrder
     ? latestOrder.status === "cancelled" || latestOrder.status === "storno"
     : false;
-
-  console.log("latestOrder", latestOrder);
 
   const mappedItems =
     items && latestOrder?.items
@@ -104,7 +104,7 @@ const OrderTracking = () => {
             <div className="flex flex-col items-center gap-3">
               <p className="text-center">{getTextBySteps(currentStep)}</p>
 
-              {latestOrder && !isCancelled ? (
+              {!latestOrder && !isCancelled ? (
                 <div className="flex flex-col gap-5">
                   <div className="flex flex-col items-center gap-2">
                     <p className="text-center">Bude k vyzvednutí pod číslem</p>
@@ -115,7 +115,11 @@ const OrderTracking = () => {
                   </div>
                   <OrderItems mappedItems={mappedItems} />
                 </div>
-              ) : null}
+              ) : (
+                <Link to="/" className="text-center">
+                  <Button>Vytvořit</Button>
+                </Link>
+              )}
             </div>
           </>
         )}
