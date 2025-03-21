@@ -65,7 +65,8 @@ export const parseSelectedTime = (selectedTime: string | null) => {
 export const mapItemsWithOrders = (
   orderItems: OrderItems[],
   items: OrderItem[],
-): Omit<MappedOrderItem, "selectedVariants">[] => {
+  variants: Variant[],
+): MappedOrderItem[] => {
   try {
     if (!orderItems || !items) return [];
     return orderItems.map((orderItem) => {
@@ -79,8 +80,11 @@ export const mapItemsWithOrders = (
         image: item?.image,
         allergens: item?.allergens ?? [],
         category: item?.category ?? 0,
-        variants: orderItem.variants ?? [],
+        variants: variants ?? [],
         quantity: orderItem.quantity ?? 0,
+        selectedVariants: variants
+          .filter((variant) => variant.itemId === orderItem.id)
+          .map((variant) => variant.id),
       };
     });
   } catch (error) {
@@ -95,7 +99,7 @@ export const getVariantsPrice = (
   quantity: CartItem["quantity"],
 ) => {
   if (!Array.isArray(selectedVariants) || !Array.isArray(variants)) return 0;
-  console.log(selectedVariants, variants);
+  //console.log(selectedVariants, variants);
   const filteredVariants = variants
     .map((variant) => (selectedVariants.includes(variant.id) ? variant : null))
     .filter((variant) => variant !== null);

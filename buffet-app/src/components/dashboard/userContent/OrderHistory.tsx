@@ -28,6 +28,8 @@ const OrderHistory = () => {
     "orders",
   );
 
+  console.log(dataList?.variants);
+
   const renderPagingButtons = useCallback(() => {
     return (
       <Suspense fallback={<Fallback />}>
@@ -68,6 +70,7 @@ const OrderHistory = () => {
                   key={order.pickUpId + "" + order.userId}
                   order={order}
                   items={dataList?.items}
+                  variants={dataList?.variants}
                 />
               ))}
             </ul>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Order, OrderItem, OrderStatus } from "../types";
+import { Order, OrderItem, OrderStatus, Variant } from "../types";
 import { updateOrder } from "../components/utils/api";
 import { formatDate, mapItemsWithOrders } from "../components/utils/utils";
 import toast from "react-hot-toast";
@@ -10,7 +10,12 @@ export type HandleStatusReturn = {
   error: boolean;
 };
 
-export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
+export const useOrder = (
+  order: Order,
+  kds?: boolean,
+  items?: OrderItem[],
+  variants?: Variant[],
+) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [status, setStatus] = useState<OrderStatus>(order.status);
   const [loading, setLoading] = useState<boolean>(false);
@@ -21,7 +26,10 @@ export const useOrder = (order: Order, kds?: boolean, items?: OrderItem[]) => {
   };
 
   const mappedItems = useMemo(
-    () => (items && order.items ? mapItemsWithOrders(order.items, items) : []),
+    () =>
+      items && order.items
+        ? mapItemsWithOrders(order.items, items, variants ? variants : [])
+        : [],
     [items, order.items],
   );
 

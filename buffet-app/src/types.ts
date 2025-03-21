@@ -71,6 +71,7 @@ export type OrdersData = {
   data: Order[];
   itemsCount: number;
   items: OrderItem[];
+  variants: Variant[];
 };
 
 export type MenuItem = {
@@ -90,6 +91,7 @@ export type Variant = {
   name: string;
   addedPrice: number;
   isExclusive: boolean;
+  itemId: OrderItem["id"];
 };
 
 export type Allergen = {

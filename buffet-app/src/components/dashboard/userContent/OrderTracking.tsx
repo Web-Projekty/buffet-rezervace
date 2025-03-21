@@ -50,9 +50,15 @@ const OrderTracking = () => {
     ? latestOrder.status === "cancelled" || latestOrder.status === "storno"
     : false;
 
+  console.log("latestOrder", latestOrder);
+
   const mappedItems =
     items && latestOrder?.items
-      ? mapItemsWithOrders(latestOrder?.items, items)
+      ? mapItemsWithOrders(
+          latestOrder?.items,
+          items,
+          latestOrder.items.map((item) => item.variants).flat(),
+        )
       : [];
 
   const timeText = latestOrder
