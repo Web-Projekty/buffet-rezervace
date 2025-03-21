@@ -104,7 +104,7 @@ const OrderTracking = () => {
             <div className="flex flex-col items-center gap-3">
               <p className="text-center">{getTextBySteps(currentStep)}</p>
 
-              {!latestOrder && !isCancelled ? (
+              {latestOrder && !isCancelled ? (
                 <div className="flex flex-col gap-5">
                   <div className="flex flex-col items-center gap-2">
                     <p className="text-center">Bude k vyzvednutí pod číslem</p>
