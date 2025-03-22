@@ -24,6 +24,8 @@ services:
                 ./src/WebSockets/supervisor.conf && usermod -a -G root www-data && chown -R www-data:www-data
                 /var/www/html/conf && apache2-foreground",
             ]
+        networks:
+            - buffet-network
 
     # MariaDB Database Service
     db:
@@ -39,6 +41,8 @@ services:
             - ../sql:/docker-entrypoint-initdb.d/
         ports:
           - "3306:3306"
+        networks:
+            - buffet-network
 
     # phpMyAdmin for managing MariaDB
     phpmyadmin:
@@ -51,6 +55,8 @@ services:
             - "8081:80" # Access phpMyAdmin via http://localhost:8081
         depends_on:
             - db
+        networks:
+            - buffet-network
 
     # Node.js for React.js development (optional)
     frontend:
@@ -64,6 +70,10 @@ services:
         command: ["bash", "-c", "npm install && npm run dev"] # Runs `npm dev start` to serve the React app
         depends_on:
             - web
+
+networks:
+    buffet-network:
+        driver: bridge
 
 volumes:
     db_data_dev:
