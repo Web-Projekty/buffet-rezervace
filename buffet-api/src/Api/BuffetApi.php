@@ -319,7 +319,7 @@ class BuffetApi
                 return $response->setError(Error::QueryFailed);
             }
         } else {
-            if (!$queryResult = ItemModel::getAll()) {
+            if (!$queryResult = ItemModel::query()->where("removed", "=", 0)->get()) {
                 return $response->setError(Error::QueryFailed);
             }
         }
