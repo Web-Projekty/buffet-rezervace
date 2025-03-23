@@ -40,8 +40,8 @@ export const useUser = (): UseUserReturn => {
   const [loading, setLoading] = useState(false);
 
   const isAdmin: boolean = user?.isAdmin || false;
-  const fullName: string | null = user?.fullName || null;
-  const email: string | null = user?.email || null;
+  const fullName: string = user?.fullName || "";
+  const email: string = user?.email || "";
   const classTitle: string | null = user?.class || null;
   const tel: string = user?.tel || "";
   const credits: string | null = user?.credits || null;
@@ -89,7 +89,13 @@ export const useUser = (): UseUserReturn => {
     try {
       setLoading(true);
 
-      await changeUserDataSchema.parseAsync({ fullName: name, tel, email });
+      const userData = {
+        fullName: name,
+        tel,
+        email,
+      };
+
+      await changeUserDataSchema.parseAsync(userData);
 
       const response = await updateUserData(token, name, tel, email);
       handleResponse(
