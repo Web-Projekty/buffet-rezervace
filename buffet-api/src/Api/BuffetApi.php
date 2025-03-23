@@ -33,6 +33,7 @@ use Carbon\Carbon;
 use Carbon\CarbonTimeZone;
 use DateException;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
@@ -963,7 +964,12 @@ class BuffetApi
             }
         }
         if (!empty($itemParameters)) {
-            ItemModel::query()->where("id", $itemId)->update($itemParameters);
+            try {
+                ItemModel::query()->where("id", $itemId)->update($itemParameters);
+            } catch (QueryException $e) {
+                return $response->setError(Error::ItemUpdateFailed);
+            }
+
         }
 
         return $response->setSuccess(Success::ItemUpdated);
