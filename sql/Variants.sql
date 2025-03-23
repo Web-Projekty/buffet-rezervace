@@ -1,10 +1,10 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Mar 23, 2025 at 03:13 PM
--- Server version: 10.5.28-MariaDB-0+deb11u1
+-- Host: db
+-- Generation Time: Mar 23, 2025 at 04:04 PM
+-- Server version: 11.7.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -32,21 +32,22 @@ CREATE TABLE `Variants` (
   `itemId` int(11) NOT NULL,
   `name` varchar(256) NOT NULL,
   `addedPrice` int(11) NOT NULL,
-  `isExclusive` bit(1) NOT NULL
+  `isExclusive` bit(1) NOT NULL,
+  `removed` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `Variants`
 --
 
-INSERT INTO `Variants` (`id`, `itemId`, `name`, `addedPrice`, `isExclusive`) VALUES
-(1, 2, 'random2/1', 157, b'1'),
-(2, 2, 'random', 500, b'1'),
-(3, 17, 'ketchup', 500, b'1'),
-(4, 17, 'mustard', 500, b'1'),
-(5, 17, 'mustard2.. idk what to call this', 500, b'0'),
-(6, 23, 'super secret variant', 321654987, b'0'),
-(7, 2, 'test', 750, b'0');
+INSERT INTO `Variants` (`id`, `itemId`, `name`, `addedPrice`, `isExclusive`, `removed`) VALUES
+(1, 2, '<<<><><><><><><><><.', 213516565, b'1', 1),
+(2, 2, 'random', 500, b'1', 0),
+(3, 17, 'ketchup', 500, b'1', 0),
+(4, 17, 'mustard', 500, b'1', 0),
+(5, 17, 'mustard2.. idk what to call this', 500, b'0', 0),
+(6, 23, 'super secret variant', 321654987, b'0', 0),
+(7, 2, 'test', 750, b'0', 0);
 
 --
 -- Indexes for dumped tables

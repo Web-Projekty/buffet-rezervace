@@ -1184,7 +1184,7 @@ class BuffetApi
             return $response->setError(Error::VariantNotFound);
         }
 
-        VariantModel::query()->where("id", $variantId)->delete();
+        VariantModel::query()->where("id", $variantId)->update(["removed" => true]);
 
         return $response->setSuccess(Success::VaraintRemoved);
     }
