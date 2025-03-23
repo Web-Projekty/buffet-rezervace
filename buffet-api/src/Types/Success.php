@@ -53,6 +53,9 @@ enum Success: string {
 
     ############################ ThePay ############################
     case PaymentUpdated = 'Payment created successfully';
+
+    ############################ Images ############################
+    case ImageUploaded = 'Image uploaded successfully';
     /**
      * @return string
      */

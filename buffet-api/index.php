@@ -2,10 +2,7 @@
 
 use Buffet\Api\BuffetApi;
 use Buffet\Api\ImageProvider;
-use Buffet\Api\PaymentApi;
-use Buffet\Database\DatabaseManager;
-use Buffet\Database\Models\PaymentModel;
-use Buffet\Types\ApiResponse;
+use Buffet\Api\ImageUploader;
 use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\Settings;
 use Buffet\Utils\EnvReader;
@@ -76,18 +73,25 @@ if (!$isProd) {
             });
         return $response;
     });
-}
 
-$app->get('/pay', function (Request $request, Response $response, $args) {
-    $response = new ApiResponse();
-    $dbMan = new DatabaseManager($response);
-    $dbMan->setupConnection();
-    $paymetns = PaymentModel::query()->where('paid', 0)->get()->toArray();
-    foreach ($paymetns as $payment) {
-        $paymentApi = new PaymentApi();
-        $paymentApi->getPaymentInfo($payment['thePayId']);
-    }
-});
+    $app->any('/imgup', function (Request $request, Response $response, $args) {
+        ob_start();
+        include __DIR__ . "/templates/img.html";
+        $response->getBody()->write(ob_get_clean());
+        return $response;
+    });
+}
+### I have no idea what I wanted to do with this
+/*$app->get('/pay', function (Request $request, Response $response, $args) {
+$response = new ApiResponse();
+$dbMan = new DatabaseManager($response);
+$dbMan->setupConnection();
+$paymetns = PaymentModel::query()->where('paid', 0)->get()->toArray();
+foreach ($paymetns as $payment) {
+$paymentApi = new PaymentApi();
+$paymentApi->getPaymentInfo($payment['thePayId']);
+}
+});*/
 
 /**
  * @todo remove
@@ -107,6 +111,7 @@ $app->add($corsMiddleware);
 
 $app->post('/api', [BuffetApi::class, 'main']);
 $app->get('/api/notification', [BuffetApi::class, 'handleThePayNotification']);
+$app->post('/api/upload', [ImageUploader::class, 'uploadImage']);
 
 $app->any('/image/{path:.*}', [ImageProvider::class, 'main']);
 
