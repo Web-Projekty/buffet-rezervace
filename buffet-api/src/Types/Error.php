@@ -73,6 +73,7 @@ enum Error: string {
     case ItemIdNotFound = 'Item id not found';
     case MissingItemId = 'Item id is missing';
     case ItemNotFound = 'Item not found';
+    case ItemUpdateFailed = 'Item update failed';
 
     ############################ Variants ############################
     case VariantCreationFailed = 'Variant creation failed';
