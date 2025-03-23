@@ -346,7 +346,7 @@ class BuffetApi
 
             $array[$i]["variants"] = [];
             if (!$variants->where("itemId", "=", $id)->isEmpty()) {
-                $array[$i]["variants"] = array_merge($array[$i]["variants"], $variants->where("itemId", "=", $id)->toArray());
+                $array[$i]["variants"] = array_merge($array[$i]["variants"], $variants->where("itemId", "=", $id)->where("removed", "=", 0)->toArray());
             }
             // parse allergens
             $alergenList = [];
