@@ -39,8 +39,8 @@ services:
         volumes:
             - db_data_dev:/var/lib/mysql
             - ../sql:/docker-entrypoint-initdb.d/
-        ports:
-          - "3306:3306"
+        #ports:
+        #  - "3306:3306"
         networks:
             - buffet-network
 
