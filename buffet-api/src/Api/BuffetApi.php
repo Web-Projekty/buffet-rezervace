@@ -1006,7 +1006,7 @@ class BuffetApi
             return $response->setError(Error::ItemNotFound);
         }
 
-        ItemModel::query()->where("id", $itemId)->delete();
+        ItemModel::query()->where("id", $itemId)->update(["removed" => true]);
 
         return $response->setSuccess(Success::ItemRemoved);
     }
