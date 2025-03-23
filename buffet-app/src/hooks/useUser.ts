@@ -10,6 +10,11 @@ import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import {
+  changePasswordSchema,
+  changeUserDataSchema,
+} from "../components/utils/validation";
+import { z } from "zod";
 
 type UseUserReturn = {
   user: User | null;
@@ -38,13 +43,22 @@ export const useUser = (): UseUserReturn => {
   const fullName: string | null = user?.fullName || null;
   const email: string | null = user?.email || null;
   const classTitle: string | null = user?.class || null;
-  const tel: string | null = user?.tel || null;
+  const tel: string = user?.tel || "";
   const credits: string | null = user?.credits || null;
 
   const handleSavePassword = async (formData: ProfileFormDataType) => {
     const { password, newPassword, newPasswordConfirmation } = formData;
     try {
       setLoading(true);
+
+      const passwordData = {
+        oldPassword: password,
+        newPassword,
+        confirmPassword: newPasswordConfirmation,
+      };
+
+      await changePasswordSchema.parseAsync(passwordData);
+
       const response = await updateUserPassword(
         token,
         password,
@@ -57,8 +71,13 @@ export const useUser = (): UseUserReturn => {
         toastMessages.passwordChange.success,
         toastMessages.passwordChange.error,
       );
-    } catch {
-      toast.error(toastMessages.passwordChange.error);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        const fieldErrors = err.flatten().fieldErrors;
+        toast.error(Object.values(fieldErrors).join("\n"));
+      } else {
+        toast.error(toastMessages.passwordChange.error);
+      }
     } finally {
       setLoading(false);
     }
@@ -69,14 +88,22 @@ export const useUser = (): UseUserReturn => {
 
     try {
       setLoading(true);
+
+      await changeUserDataSchema.parseAsync({ fullName: name, tel, email });
+
       const response = await updateUserData(token, name, tel, email);
       handleResponse(
         response.status,
         toastMessages.profileChange.success,
         toastMessages.profileChange.error,
       );
-    } catch {
-      toast.error(toastMessages.profileChange.error);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        const fieldErrors = err.flatten().fieldErrors;
+        toast.error(Object.values(fieldErrors).join("\n"));
+      } else {
+        toast.error(toastMessages.register.error);
+      }
     } finally {
       setLoading(false);
     }

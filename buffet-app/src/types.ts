@@ -23,7 +23,7 @@ export type OrderStatus =
 export type OrderItems = {
   id: number;
   quantity: number;
-  variants: Variant[];
+  variants: Variant["id"][];
 };
 
 export type MappedOrderItem = {
