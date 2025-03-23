@@ -369,16 +369,11 @@ export const updateUserPassword = async (
 
 export const verifyPassword = async (token: string, password: string) => {
   try {
-    const { data, status } = await axios.post(FETCH_URL, {
+    const { data } = await axios.post(FETCH_URL, {
       requestType: "verifyPassword",
       token,
       password,
     });
-
-    if (status !== 200)
-      return {
-        validPassword: false,
-      };
 
     return {
       validPassword: data.status === "success",

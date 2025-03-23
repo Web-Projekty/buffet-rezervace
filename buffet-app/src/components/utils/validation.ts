@@ -36,8 +36,14 @@ export const changePasswordSchema = (token: string) =>
         .string({
           message: "Pro změnu hesla je potřeba zadat staré heslo",
         })
-        .refine((oldPassword) => verifyPassword(token, oldPassword), {
-          message: "Špatné heslo",
+        .superRefine(async (oldPassword, ctx) => {
+          const isValid = await verifyPassword(token, oldPassword);
+          if (!isValid.validPassword) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Špatné heslo",
+            });
+          }
         }),
       newPassword: z
         .string({

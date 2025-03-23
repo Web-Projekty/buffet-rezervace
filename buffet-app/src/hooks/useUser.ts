@@ -57,7 +57,7 @@ export const useUser = (): UseUserReturn => {
         confirmPassword: newPasswordConfirmation,
       };
 
-      await changePasswordSchema.parseAsync(passwordData);
+      await changePasswordSchema(token).parseAsync(passwordData);
 
       const response = await updateUserPassword(
         token,
@@ -75,8 +75,6 @@ export const useUser = (): UseUserReturn => {
       if (err instanceof z.ZodError) {
         const fieldErrors = err.flatten().fieldErrors;
         toast.error(Object.values(fieldErrors).join("\n"));
-      } else {
-        toast.error(toastMessages.passwordChange.error);
       }
     } finally {
       setLoading(false);
