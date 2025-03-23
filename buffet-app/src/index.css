@@ -27,6 +27,12 @@
 
   * {
     scrollbar-width: none;
-    scrollbar-color: #888 #1e293b;
+    -ms-overflow-style: none;
+  }
+}
+
+@layer utilities {
+  .pause-animation {
+    animation-play-state: paused;
   }
 }

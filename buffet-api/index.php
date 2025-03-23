@@ -117,6 +117,10 @@ $app->any('/image/{path:.*}', [ImageProvider::class, 'main']);
 
 $app->map(["GET"], "{routes:.+}", function (Request $request, Response $response, $args) {
 
+    if (!file_exists(__DIR__ . "/dist/") || !file_exists(__DIR__ . "/dist/index.html")) {
+        throw new HttpNotFoundException(ServerRequestFactory::createFromGlobals(), 1);
+    }
+
     $requestPath = $request->getUri()->getPath();
 
     if (isset(explode(".", $requestPath)[1])) {

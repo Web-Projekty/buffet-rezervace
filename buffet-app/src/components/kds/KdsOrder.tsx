@@ -6,11 +6,10 @@ import { useUser } from "../../hooks/useUser";
 
 type KdsOrderProps = {
   order: Order;
-  onStatusChange: (order: Order) => void;
   items: OrderItem[];
 };
 
-const KdsOrder = ({ order, onStatusChange, items }: KdsOrderProps) => {
+const KdsOrder = ({ order, items }: KdsOrderProps) => {
   const { token } = useUser();
   const {
     color,
@@ -23,15 +22,11 @@ const KdsOrder = ({ order, onStatusChange, items }: KdsOrderProps) => {
   } = useOrder(order, true, items);
 
   const handleDoneOrder = () => {
-    handleStatus("waiting", token).then(() =>
-      onStatusChange({ ...order, status: "waiting" }),
-    );
+    handleStatus("waiting", token);
   };
 
   const handlePrepareOrder = () => {
-    handleStatus("preparing", token).then(() =>
-      onStatusChange({ ...order, status: "preparing" }),
-    );
+    handleStatus("preparing", token);
   };
 
   const renderButtons = () => {
@@ -57,7 +52,7 @@ const KdsOrder = ({ order, onStatusChange, items }: KdsOrderProps) => {
   };
 
   return (
-    <article className="flex h-auto w-full flex-col justify-between bg-white sm:w-[15rem] md:w-[302px]">
+    <article className="flex h-auto w-full flex-col justify-between bg-white sm:max-w-[17rem]">
       <div className="flex w-full flex-col gap-2">
         <div
           className={`flex w-full flex-row items-center justify-between ${color} px-4 py-3 text-xl font-bold`}

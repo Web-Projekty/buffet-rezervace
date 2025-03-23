@@ -9,6 +9,7 @@ import { UserData } from "./hooks/useLogin.ts";
 import Loading from "./components/ui/Loading.tsx";
 import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
 import RequireAuth from "./components/auth/RequireAuth.tsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const Menu = lazy(() => import("./components/menu/Menu.tsx"));
 const MenuEdit = lazy(() => import("./components/menu/editMenu/MenuEdit.tsx"));
@@ -56,6 +57,7 @@ const router = createBrowserRouter([
         </Suspense>
       </ErrorBoundary>
     ),
+    errorElement: <PageNotFound />,
     children: [
       {
         path: "/",
@@ -81,7 +83,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/alergeny",
+        path: "/allergens",
         element: (
           <ErrorBoundary>
             <Suspense fallback={<Fallback />}>
@@ -152,23 +154,13 @@ const router = createBrowserRouter([
           </ErrorBoundary>
         ),
       },
-      {
-        path: "/page-not-found",
-        element: (
-          <ErrorBoundary>
-            <Suspense fallback={<Fallback />}>
-              <PageNotFound />
-            </Suspense>
-          </ErrorBoundary>
-        ),
-      },
     ],
   },
   {
     path: "/kds",
     element: (
       <RequireAuth requireAdmin={true}>
-        <ErrorBoundary>
+        <ErrorBoundary fullPage>
           <Suspense key="kds" fallback={<Fallback />}>
             <Kds />
           </Suspense>
@@ -177,16 +169,21 @@ const router = createBrowserRouter([
     ),
   },
 ]);
+
 const container = document.getElementById("root");
 if (!container) {
   throw new Error("Container not found");
 }
+
+const queryClient = new QueryClient();
 const root = createRoot(container);
 
 root.render(
   <StrictMode>
     <AuthProvider store={store}>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </AuthProvider>
   </StrictMode>,
 );

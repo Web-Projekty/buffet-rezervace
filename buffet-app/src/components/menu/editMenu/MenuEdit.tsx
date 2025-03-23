@@ -11,7 +11,7 @@ const MenuItemEditBar = lazy(() => import("./MenuItemEditBar"));
 const MenuCategoryEditBar = lazy(() => import("./MenuCategoryEditBar"));
 
 const MenuEdit = () => {
-  const { menuItems, error, isLoading, categories } = useMenu();
+  const { menuItems, error, isLoading, categories, refetch } = useMenu();
 
   const [isItemBarOpen, setIsItemBarOpen] = useState<boolean>(false);
   const [editItem, setEditItem] = useState<MenuItemType | null>(null);
@@ -70,6 +70,7 @@ const MenuEdit = () => {
                 handleBarOpen={handleBarOpen}
                 menuItem={editItem}
                 categories={categories}
+                refetch={refetch}
               />
             </Suspense>
           )}
@@ -80,6 +81,7 @@ const MenuEdit = () => {
                 key={editCategory?.id}
                 handleBarOpen={handleCategoryBarOpen}
                 category={editCategory}
+                refetch={refetch}
               />
             </Suspense>
           )}

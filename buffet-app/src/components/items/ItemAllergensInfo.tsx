@@ -11,7 +11,7 @@ const ItemAllergensInfo = ({ allergens }: ItemAllergensInfoProps) => {
       <ul className="flex flex-col">
         {allergens.map((allergen) => (
           <li key={allergen.id} className="list-disc">
-            {AllergensList.find((a) => a.id === allergen.id)?.description}
+            {AllergensList.find((a) => a.id === allergen.id)?.name}
           </li>
         ))}
       </ul>

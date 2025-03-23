@@ -23,18 +23,15 @@ export const useFetch = <T>(
   const [itemsCount, setItemsCount] = useState<number>(0);
 
   useEffect(() => {
-    setIsLoading(true);
-
-    // console.log("useFetch", url, requestData);
-
     async function fetchData() {
+      setIsLoading(true);
       try {
         const { data } = await axios.post(url, requestData);
         setData(data.payload);
         setItemsCount(data.payload.itemsCount as number);
-        console.log("useFetch data", data);
-      } catch (e) {
-        console.log(e);
+        // console.log("useFetch data", data);
+      } catch {
+        // console.log(e);
         setError("Chyba načítání dat ze serveru.");
         setData(null);
       } finally {

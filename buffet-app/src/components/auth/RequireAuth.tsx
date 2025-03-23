@@ -20,7 +20,7 @@ const RequireAuth = ({
   const logout = useSignOut();
 
   if (!user) {
-    console.log("User not authenticated");
+    // console.log("User not authenticated");
     return fallbackPath ? (
       <Navigate to={fallbackPath} />
     ) : (
@@ -29,12 +29,12 @@ const RequireAuth = ({
   }
 
   if (isTokenExpired()) {
-    console.log("Token expired");
+    // console.log("Token expired");
     logout();
     return <Navigate to={fallbackPath ? fallbackPath : "/login"} />;
   }
 
-  console.log("User authenticated", user);
+  // console.log("User authenticated", user);
 
   if (requireAdmin && !user.isAdmin) {
     return <Navigate to="/page-not-found" />;

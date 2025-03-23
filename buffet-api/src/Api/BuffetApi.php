@@ -33,6 +33,7 @@ use Carbon\Carbon;
 use Carbon\CarbonTimeZone;
 use DateException;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -188,6 +189,9 @@ class BuffetApi
             case "updatePassword":
                 return $this->handleUpdatePassword($response);
 
+            case "verifyPassword":
+                return $this->handleVerifyPassword($response);
+
             case "updateSetting":
                 return $this->handleUpdateSetting($response);
 
@@ -307,9 +311,12 @@ class BuffetApi
         $response->setPayloadKeys(["data"]);
 
         $queryResult = null;
-        $categories = CategoryModel::getAll()->toArray();
+        $categories = CategoryModel::getAll();
+        $removedCategories = $categories->where("removed", "=", 1)->pluck("id")->toArray();
+
         $backendUrl = EnvReader::getEnvProperty(Settings::UrlBackend);
 
+        $categories = $categories->where("removed", "=", 0)->toArray();
         foreach ($categories as &$category) {
             $category["image"] = $backendUrl . "/image/categories/" . $category["id"];
         }
@@ -322,7 +329,12 @@ class BuffetApi
                 return $response->setError(Error::QueryFailed);
             }
         } else {
-            if (!$queryResult = ItemModel::getAll()) {
+            try {
+                $queryResult = ItemModel::query()->where("removed", "=", 0)->get();
+            } catch (\Exception $e) {
+                return $response->setError(Error::QueryFailed);
+            }
+            if ($queryResult->isEmpty()) {
                 return $response->setError(Error::QueryFailed);
             }
         }
@@ -333,14 +345,18 @@ class BuffetApi
 
         $response->addPayload("categoryList", $categories);
 
+        $queryResult = $queryResult->filter(
+            function ($item) use ($removedCategories) {return !in_array($item["category"], $removedCategories);}, );
+        //var_dump($queryResult->toArray());
+
         $array = $queryResult->toArray();
 
-        for ($i = 0; $i < sizeof($array); $i++) {
+        foreach ($array as $i => $value) {
             $id = $array[$i]["id"];
 
             $array[$i]["variants"] = [];
             if (!$variants->where("itemId", "=", $id)->isEmpty()) {
-                $array[$i]["variants"] = $variants->where("itemId", "=", $id)->toArray();
+                $array[$i]["variants"] = array_merge($array[$i]["variants"], $variants->where("itemId", "=", $id)->where("removed", "=", 0)->toArray());
             }
             // parse allergens
             $alergenList = [];
@@ -356,7 +372,7 @@ class BuffetApi
 
         }
 
-        $response->setPayload("data", $array);
+        $response->setPayload("data", array_values($array));
 
         // paging info
 
@@ -856,6 +872,32 @@ class BuffetApi
     }
 
     /**
+     * @param ApiResponse $response
+     */
+    function handleVerifyPassword(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["password", "token"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $password = $response->getRequestByKey("password");
+
+        if (!password_verify($password, UserModel::getPasswordById($uid))) {
+            return $response->setError(Error::WrongPassword);
+        }
+
+        return $response->setSuccess(Success::PasswordVerified);
+    }
+
+    /**
      * @param  ApiResponse   $response
      * @return ApiResponse
      */
@@ -937,7 +979,12 @@ class BuffetApi
             }
         }
         if (!empty($itemParameters)) {
-            ItemModel::query()->where("id", $itemId)->update($itemParameters);
+            try {
+                ItemModel::query()->where("id", $itemId)->update($itemParameters);
+            } catch (QueryException $e) {
+                return $response->setError(Error::ItemUpdateFailed);
+            }
+
         }
 
         return $response->setSuccess(Success::ItemUpdated);
@@ -974,7 +1021,7 @@ class BuffetApi
             return $response->setError(Error::ItemNotFound);
         }
 
-        ItemModel::query()->where("id", $itemId)->delete();
+        ItemModel::query()->where("id", $itemId)->update(["removed" => true]);
 
         return $response->setSuccess(Success::ItemRemoved);
     }
@@ -1007,6 +1054,11 @@ class BuffetApi
         $itemParameters = [];
         foreach (ItemModel::getColumns() as $column) {
             if ($response->hasRequestByKey($column)) {
+                if ($column == "allergens") {
+                    if (!json_validate($response->getRequestByKey($column)) || !is_array(json_decode($response->getRequestByKey($column)))) {
+                        return $response->setError(Error::InvalidJson);
+                    }
+                }
                 $itemParameters["$column"] = $response->getRequestByKey($column);
             } else {
                 return $response;
@@ -1142,7 +1194,7 @@ class BuffetApi
             return $response->setError(Error::VariantNotFound);
         }
 
-        VariantModel::query()->where("id", $variantId)->delete();
+        VariantModel::query()->where("id", $variantId)->update(["removed" => true]);
 
         return $response->setSuccess(Success::VaraintRemoved);
     }

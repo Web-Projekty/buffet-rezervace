@@ -34,7 +34,7 @@ const adminButtons: DashboardButton[] = [
 ];
 
 type DashboardButtonsProps = {
-  page: Page;
+  page: Page | undefined;
   handlePageChange: (page: Page) => void;
   isAdmin: boolean;
 };

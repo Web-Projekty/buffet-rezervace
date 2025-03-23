@@ -1,19 +1,39 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { RequestData } from "../types";
-import { useFetch } from "./useFetch";
 import { FETCH_URL } from "../constants";
 import { useUser } from "./useUser";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 type BackendPagingReturn<T> = {
   isLoading: boolean;
-  error: string | null;
+  error: string | undefined;
   currentPage: number;
   totalPagesCount: number;
-  dataList: T | null;
+  dataList: T | undefined;
   arrayOfPages: number[];
   handlePage: (page: number) => void;
-  fetchedData: T | null;
+  refetch: () => void;
+};
+
+const fetchPagedData = async (
+  requestType: RequestData["requestType"],
+  token: string | undefined,
+  page: number,
+  itemsCount: number,
+) => {
+  const response = await axios.post(FETCH_URL, {
+    requestType,
+    token,
+    page,
+    itemsCount,
+  });
+
+  return {
+    data: response.data.payload,
+    itemsCount: response.data.payload.itemsCount,
+  };
 };
 
 export const useBackendPaging = <T>(
@@ -21,48 +41,52 @@ export const useBackendPaging = <T>(
   itemsPerPage: number,
   useToken?: boolean,
   paramsName: string = "page",
+  key: string = "pagedData",
 ): BackendPagingReturn<T> => {
   const [searchParams, setSearchParams] = useSearchParams("");
   const { token } = useUser();
 
   const currentPage: number = parseInt(searchParams.get(paramsName) || "1", 10);
 
-  const { data, error, isLoading, itemsCount } = useFetch<T>(
-    FETCH_URL,
-    {
-      requestType,
-      token: useToken ? token : undefined,
-      page: currentPage,
-      itemsCount: itemsPerPage,
-    },
-    null,
-    [currentPage],
-  );
+  const { data, error, isLoading, refetch } = useQuery<{
+    data: T;
+    itemsCount: number;
+  }>({
+    queryKey: [key + currentPage],
+    queryFn: () =>
+      fetchPagedData(
+        requestType,
+        useToken ? (token ?? undefined) : undefined,
+        currentPage,
+        itemsPerPage,
+      ),
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [currentPage]);
 
-  const totalPagesCount: number = itemsCount
-    ? Math.ceil(itemsCount / itemsPerPage)
+  const totalPagesCount: number = data?.itemsCount
+    ? Math.ceil(data.itemsCount / itemsPerPage)
     : 0;
 
   const handlePage = (page: number): void => {
     searchParams.set(paramsName ? paramsName : "page", page.toString());
     setSearchParams(searchParams);
+    refetch();
   };
 
   return {
-    dataList: data,
+    dataList: data?.data,
     arrayOfPages: Array.from(
       { length: totalPagesCount },
       (_, index) => index + 1,
     ),
     isLoading,
-    error,
+    error: error?.message,
     currentPage,
     totalPagesCount,
     handlePage,
-    fetchedData: data,
+    refetch,
   };
 };

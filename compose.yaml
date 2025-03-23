@@ -11,6 +11,8 @@ services:
             - "8080:80" # Access Apache via http://localhost:8080
         depends_on:
             - db
+        networks:
+            - buffet-network
         #command: ["bash", "-c", "mkdir -p ./logs && cp ./src/WebSockets/apache.conf /etc/apache2/sites-available/000-default.conf && composer install && supervisord -c ./src/WebSockets/supervisor.conf && usermod -a -G root www-data && chown -R www-data:www-data /var/www/html/conf && apache2-foreground"]
 
     # MariaDB Database Service
@@ -27,6 +29,8 @@ services:
             - ./sql:/docker-entrypoint-initdb.d/
         #ports:
         #  - "3306:3306"
+        networks:
+            - buffet-network
 
     # phpMyAdmin for managing MariaDB
     phpmyadmin:
@@ -39,5 +43,12 @@ services:
             - "8081:80" # Access phpMyAdmin via http://localhost:8081
         depends_on:
             - db
+        networks:
+            - buffet-network
+
+networks:
+    buffet-network:
+        driver: bridge
+
 volumes:
     db_data:

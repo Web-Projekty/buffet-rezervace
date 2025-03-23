@@ -47,7 +47,7 @@ export const allergens: Allergen[] = [
     id: 8,
     name: "Sója",
     description: "Tento produkt obsahuje sóju",
-    icon: "🫛",
+    icon: "",
   },
   {
     id: 9,

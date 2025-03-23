@@ -1,47 +1,93 @@
 import { useState } from "react";
-import { Category, MenuItem } from "../../../types";
+import { Allergen, Category, MenuItem } from "../../../types";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import MenuItemEditInput from "./MenuItemEditInput";
 import { allergens } from "../../../allergens";
 import ToggleSwitch from "../../ui/ToggleSwitch";
 import { onImageChange } from "../../utils/utils";
-import LazyImage from "../../ui/LazyImage";
 import { motion } from "framer-motion";
 import { slideInAnimation } from "../../../animations";
+import { createMenuItem, updateMenuItem } from "../../utils/api";
+import { useUser } from "../../../hooks/useUser";
+import ImageInput from "../../ui/ImageInput";
 
 type MenuItemEditBarProps = {
   handleBarOpen: () => void;
   menuItem: MenuItem | null;
   categories: Category[];
+  refetch: () => void;
 };
 
 const MenuItemEditBar = ({
   handleBarOpen,
   menuItem,
   categories,
+  refetch,
 }: MenuItemEditBarProps) => {
-  const [itemName, setItemName] = useState<string>(menuItem?.name || "");
-  const [itemPrice, setItemPrice] = useState<number>(menuItem?.price || 0);
-  const [itemDescription, setItemDescription] = useState<string>(
-    menuItem?.description || "",
+  const { token } = useUser();
+
+  const [itemName, setItemName] = useState<MenuItem["name"]>(
+    menuItem?.name || "",
   );
-  const [allergensInput, setAllergensInput] = useState<number[]>(
+  const [itemPrice, setItemPrice] = useState<string>(
+    String(menuItem?.price ? menuItem.price / 100 : 0) || "0",
+  );
+  const [itemDescription, setItemDescription] = useState<
+    MenuItem["description"]
+  >(menuItem?.description || "");
+  const [allergensInput, setAllergensInput] = useState<Allergen["id"][]>(
     menuItem?.allergens.map((allergen) => allergen.id) || [],
   );
-  const [itemImage, setItemImage] = useState<string>(menuItem?.image || "");
-  const [itemCategory, setItemCategory] = useState<Category["id"]>(
+  const [itemImage, setItemImage] = useState<MenuItem["image"]>(
+    menuItem?.image || "",
+  );
+  const [itemCategory, setItemCategory] = useState<MenuItem["category"]>(
     menuItem?.category || 0,
   );
-  const [itemVariants, setItemVariants] = useState<number[]>(
+  const [itemVariants, setItemVariants] = useState<MenuItem["variants"]>(
     menuItem?.variants || [],
   );
   const [cashPayment, setCashPayment] = useState<boolean>(false);
   const [cashVariants, setCashVariants] = useState<boolean>(false);
 
-  const handleSave = () => {
-    // Save item to backend
+  const handleSave = async () => {
     handleClose();
+    const formatPrice = (Number(itemPrice.replace(",", ".")) * 100).toFixed(0);
+
+    console.log(formatPrice);
+
+    const data = {
+      name: itemName,
+      price: Number(formatPrice),
+      description: itemDescription,
+      image: itemImage,
+      category: itemCategory,
+      allergens: allergensInput,
+      variants: itemVariants,
+    };
+
+    if (!menuItem) {
+      const { error } = await createMenuItem(token, {
+        ...data,
+      });
+
+      if (error) {
+        console.log("Error creating item");
+      }
+      refetch();
+      return;
+    }
+
+    const { error } = await updateMenuItem(token, {
+      itemId: menuItem.id,
+      ...data,
+    });
+
+    if (error) {
+      console.log("Error updating item");
+    }
+    refetch();
   };
 
   const handleClose = () => {
@@ -79,44 +125,50 @@ const MenuItemEditBar = ({
     );
   };
 
+  const edited =
+    itemName !== menuItem?.name ||
+    itemPrice !== String(menuItem?.price ? menuItem.price / 100 : 0) ||
+    itemDescription !== menuItem?.description ||
+    itemCategory !== menuItem?.category ||
+    itemImage !== menuItem?.image ||
+    allergensInput.length !== menuItem?.allergens.length ||
+    itemVariants.length !== menuItem?.variants.length;
+
+  const isEmpty =
+    !itemImage ||
+    !itemName ||
+    !itemDescription ||
+    !itemPrice ||
+    itemCategory === null ||
+    itemCategory === undefined;
+
   return (
     <motion.aside
       {...slideInAnimation(0.2)}
       className="sticky top-0 h-screen flex-shrink-0"
     >
       <div className="sticky right-3 top-0 z-10 flex w-[28rem] flex-col gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black">
-        <h1 className="text-center">Úprava itemu</h1>
+        <h1 className="text-center text-xl font-bold">Úprava itemu</h1>
         <div className="flex w-full flex-col gap-4">
-          <label htmlFor="itemImage" className="m-auto w-48 cursor-pointer">
-            {itemImage ? (
-              <LazyImage image={itemImage} alt={itemName + "' image"} />
-            ) : (
-              <div className="flex h-full w-full items-center justify-center border-2 border-gray-400">
-                <span>Upload Image</span>
-              </div>
-            )}
-
-            <Input
-              type="file"
-              id="itemImage"
-              name="itemImage"
-              onChange={handleImageChange}
-              inputClassName="hidden"
-              accept="image/*"
-            />
-          </label>
+          <ImageInput
+            itemImage={itemImage}
+            itemName={itemName}
+            handleImageChange={handleImageChange}
+          />
 
           <MenuItemEditInput
             label="Název"
             value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
+            onChange={(e) => {
+              setItemName(e.target.value);
+            }}
             id="itemName"
             type="text"
           />
 
           <textarea
             id="itemDescription"
-            className="w-full rounded-md p-1 text-black"
+            className="max-h-[3.5rem] min-h-[2rem] w-full rounded-md p-1 text-black focus:outline-none"
             value={itemDescription}
             onChange={(e) => setItemDescription(e.target.value)}
             placeholder="Popis"
@@ -125,9 +177,9 @@ const MenuItemEditBar = ({
           <MenuItemEditInput
             label="Cena"
             value={itemPrice}
-            onChange={(e) => setItemPrice(Number(e.target.value))}
+            onChange={(e) => setItemPrice(e.target.value)}
             id="itemPrice"
-            type="number"
+            type="string"
           />
 
           <div className="flex flex-row justify-between gap-2">
@@ -166,10 +218,11 @@ const MenuItemEditBar = ({
                 <div key={allergen.id} className="flex items-center gap-2">
                   <input
                     type="checkbox"
+                    id={allergen.name}
                     checked={allergensInput.includes(allergen.id)}
                     onChange={() => handleAllergenChange(allergen.id)}
                   />
-                  {allergen.name}
+                  <label htmlFor={allergen.name}>{allergen.name}</label>
                 </div>
               ))}
             </div>
@@ -178,7 +231,7 @@ const MenuItemEditBar = ({
           <div className="flex flex-col gap-2">
             <h2>Varianty</h2>
             {itemVariants.map((index) => (
-              <div key={index} className="flex items-center gap-2">
+              <div key={index.id} className="flex items-center gap-2">
                 <Input
                   id={`variantName-${index}`}
                   name={`variantName-${index}`}
@@ -204,7 +257,7 @@ const MenuItemEditBar = ({
                 />
                 <Button
                   className="px-3 py-1"
-                  onClick={() => handleRemoveVariant(index)}
+                  onClick={() => handleRemoveVariant(index.id)}
                 >
                   X
                 </Button>
@@ -222,7 +275,11 @@ const MenuItemEditBar = ({
           >
             Zrušit
           </Button>
-          <Button className="m-auto" onClick={handleSave}>
+          <Button
+            className="m-auto"
+            onClick={handleSave}
+            disabled={!edited || isEmpty}
+          >
             Uložit
           </Button>
         </div>

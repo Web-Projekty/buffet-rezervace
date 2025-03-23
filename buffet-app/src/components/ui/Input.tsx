@@ -1,4 +1,5 @@
 import React from "react";
+import { twMerge } from "tailwind-merge";
 
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
@@ -28,6 +29,9 @@ const Input = ({
   displayStar,
   basic,
 }: InputProps) => {
+  const inputBaseClass =
+    "rounded-lg p-1 text-black focus:outline-none focus:ring-0 focus:border-transparent disabled:bg-gray-200 disabled:text-gray-500 h-10";
+
   if (basic) {
     return (
       <input
@@ -37,7 +41,7 @@ const Input = ({
         value={value}
         required={required}
         onChange={onChange}
-        className={"rounded-lg p-1 text-black " + className}
+        className={twMerge(inputBaseClass, inputClassName)}
         placeholder={placeholder}
         autoComplete={autoComplete}
         disabled={disabled}
@@ -61,7 +65,7 @@ const Input = ({
           value={value}
           required={required}
           onChange={onChange}
-          className={inputClassName}
+          className={twMerge(inputBaseClass, inputClassName)}
           placeholder={placeholder}
           autoComplete={autoComplete}
           disabled={disabled}
@@ -75,7 +79,7 @@ const Input = ({
 
   if (required && displayStar) {
     return (
-      <div className={"relative w-full " + className}>
+      <div className={twMerge("relative w-full", className)}>
         <span className="absolute right-1 text-xl text-red-500" title="Povinné">
           *
         </span>
@@ -86,7 +90,7 @@ const Input = ({
           value={value}
           required={required}
           onChange={onChange}
-          className={"rounded-lg p-1 text-black" + inputClassName}
+          className={twMerge(inputBaseClass, inputClassName)}
           placeholder={placeholder}
           autoComplete={autoComplete}
           disabled={disabled}
@@ -106,7 +110,7 @@ const Input = ({
       value={value}
       required={required}
       onChange={onChange}
-      className={"rounded-lg p-1 text-black " + className}
+      className={twMerge(inputBaseClass, className)}
       placeholder={placeholder}
       autoComplete={autoComplete}
       disabled={disabled}

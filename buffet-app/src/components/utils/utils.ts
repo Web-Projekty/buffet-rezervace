@@ -21,9 +21,12 @@ export const extractToken = (header: string | null): string => {
   return header ? header.split(" ")[1] : "";
 };
 
-export const formatDate = (date: string): string => {
+export const formatDate = (
+  date: string,
+  options?: Intl.DateTimeFormatOptions,
+): string => {
   const dateObject = new Date(date);
-  return dateObject.toLocaleDateString("cs-CZ");
+  return dateObject.toLocaleDateString("cs-CZ", options);
 };
 
 export const parseSelectedTime = (selectedTime: string | null) => {
@@ -59,25 +62,30 @@ export const parseSelectedTime = (selectedTime: string | null) => {
 };
 
 export const mapItemsWithOrders = (
-  orderItems: OrderItems[] | undefined,
-  items: OrderItem[] | undefined,
+  orderItems: OrderItems[],
+  items: OrderItem[],
 ): MappedOrderItem[] => {
-  if (!orderItems || !items) return [];
-  return orderItems.map((orderItem) => {
-    const item = items.find((i) => i.id === orderItem.id);
+  try {
+    if (!orderItems || !items) return [];
+    return orderItems.map((orderItem) => {
+      const item = items.find((i) => i.id === orderItem.id);
 
-    return {
-      ...orderItem,
-      name: item?.name ?? "Neznámá položka",
-      price: item?.price,
-      description: item?.description,
-      image: item?.image,
-      allergens: item?.allergens ?? [],
-      category: item?.category ?? 0,
-      variants: orderItem.variants ?? [],
-      quantity: orderItem.quantity ?? 0,
-    };
-  });
+      return {
+        ...orderItem,
+        name: item?.name ?? "Neznámá položka",
+        price: item?.price,
+        description: item?.description,
+        image: item?.image,
+        allergens: item?.allergens ?? [],
+        category: item?.category ?? 0,
+        variants: orderItem.variants ?? [],
+        quantity: orderItem.quantity ?? 0,
+      };
+    });
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 };
 
 export const onImageChange = (
