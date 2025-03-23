@@ -182,6 +182,9 @@ class BuffetApi
             case "updatePassword":
                 return $this->handleUpdatePassword($response);
 
+            case "verifyPassword":
+                return $this->handleVerifyPassword($response);
+
             case "updateSetting":
                 return $this->handleUpdateSetting($response);
 
@@ -843,6 +846,32 @@ class BuffetApi
         }
 
         return $response->setStatus(true)->setSuccess(Success::PasswordUpdated);
+    }
+
+    /**
+     * @param ApiResponse $response
+     */
+    function handleVerifyPassword(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["password", "token"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $password = $response->getRequestByKey("password");
+
+        if (!password_verify($password, UserModel::getPasswordById($uid))) {
+            return $response->setError(Error::WrongPassword);
+        }
+
+        return $response->setSuccess(Success::PasswordVerified);
     }
 
     /**
