@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 23, 2025 at 03:39 PM
+-- Generation Time: Mar 23, 2025 at 03:53 PM
 -- Server version: 11.7.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -43,7 +43,7 @@ CREATE TABLE `Items` (
 --
 
 INSERT INTO `Items` (`id`, `name`, `price`, `description`, `image`, `allergens`, `category`, `removed`) VALUES
-(1, 'Plněná bageta sýr-šunka', 14990, 'Bageta plněná šunkou a sýrem.', 'img/items/baguette_chicken.png', '[1,2,3]', 1, 0),
+(1, 'Plněná bageta sýr-šunka', 14990, 'Bageta plněná šunkou a sýrem.', 'img/items/baguette_chicken.png', '[1,2,3]', 1, 1),
 (2, 'Bageta s kuřecím masem a salátem', 8990, 'Bageta plněná grilovaným kuřecím masem a zeleninou.', 'img/items/baguette_chicken.png', '[1,7,14,11]', 1, 0),
 (3, 'Sekaná v housce', 6900, 'Domácí sekaná podávaná v čerstvé housce.', 'img/items/meatloaf_bun.png', '[1,2]', 1, 0),
 (4, 'Bageta Caprese', 8500, 'Bageta s mozzarellou, rajčaty a bazalkovým pestem.', 'img/items/baguette_caprese.png', '[1,7]', 1, 0),
@@ -65,7 +65,8 @@ INSERT INTO `Items` (`id`, `name`, `price`, `description`, `image`, `allergens`,
 (20, 'Bageta se salámem', 9500, 'Bageta plněná pikantním salámem a čerstvou paprikou.', 'img/items/baguette_spicy_salami.png', '[1,7]', 1, 0),
 (21, 'Sýrový mlsoun', 8900, 'Sýr Camembert a eidam s plátky vajec a pikantním dresinkem', 'img/items/default.png', '[1]', 2, 0),
 (22, 'Chlebíčkový labužník', 9900, 'Chuť lahůdkových chlebíčků s výběrem salámů na bramborovém salátu', 'img/items/default.png', '[2]', 2, 0),
-(23, 'test', 79000, 'hello', 'img/items/default.png', '[1,7]', 2, 0);
+(23, 'test', 79000, 'hello', 'img/items/default.png', '[1,7]', 2, 0),
+(32, '1', 1, '1', 'img/items/default.png', '[1]', 1, 1);
 
 --
 -- Indexes for dumped tables
@@ -86,7 +87,7 @@ ALTER TABLE `Items`
 -- AUTO_INCREMENT for table `Items`
 --
 ALTER TABLE `Items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- Constraints for dumped tables
