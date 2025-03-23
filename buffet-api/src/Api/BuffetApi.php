@@ -1039,6 +1039,11 @@ class BuffetApi
         $itemParameters = [];
         foreach (ItemModel::getColumns() as $column) {
             if ($response->hasRequestByKey($column)) {
+                if ($column == "allergens") {
+                    if (!json_validate($response->getRequestByKey($column)) || !is_array(json_decode($response->getRequestByKey($column)))) {
+                        return $response->setError(Error::InvalidJson);
+                    }
+                }
                 $itemParameters["$column"] = $response->getRequestByKey($column);
             } else {
                 return $response;
