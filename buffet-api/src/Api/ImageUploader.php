@@ -58,7 +58,7 @@ class ImageUploader
         }
 
         $filename = strval($imageId) . '.webp';
-        $tempFilename = $tempFileName = 'temp_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $extension;
+        $tempFileName = $tempFileName = 'temp_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $extension;
 
         $tempPath = "/var" . DIRECTORY_SEPARATOR . "tmp" . DIRECTORY_SEPARATOR . $tempFileName;
         $targetPath = $directory . DIRECTORY_SEPARATOR . $filename;
