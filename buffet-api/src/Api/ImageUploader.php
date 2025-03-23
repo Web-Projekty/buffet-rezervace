@@ -53,14 +53,14 @@ class ImageUploader
     {
         $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
 
-        if (!file_exists($baseDirectory . DIRECTORY_SEPARATOR . "tmp")) {
-            mkdir($baseDirectory . DIRECTORY_SEPARATOR . "tmp");
+        if (!file_exists("/var" . DIRECTORY_SEPARATOR . "tmp")) {
+            mkdir("/var" . DIRECTORY_SEPARATOR . "tmp");
         }
 
         $filename = strval($imageId) . '.webp';
         $tempFilename = $tempFileName = 'temp_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $extension;
 
-        $tempPath = $baseDirectory . DIRECTORY_SEPARATOR . "tmp" . DIRECTORY_SEPARATOR . $tempFileName;
+        $tempPath = "/var" . DIRECTORY_SEPARATOR . "tmp" . DIRECTORY_SEPARATOR . $tempFileName;
         $targetPath = $directory . DIRECTORY_SEPARATOR . $filename;
 
         if ($this->isImage($uploadedFile)) {
