@@ -306,7 +306,7 @@ class BuffetApi
 
         $backendUrl = EnvReader::getEnvProperty(Settings::UrlBackend);
 
-        $categories = $categories->toArray();
+        $categories = $categories->where("removed", "=", 0)->toArray();
         foreach ($categories as &$category) {
             $category["image"] = $backendUrl . "/image/categories/" . $category["id"];
         }
