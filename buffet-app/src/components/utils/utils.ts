@@ -72,6 +72,10 @@ export const mapItemsWithOrders = (
     return orderItems.map((orderItem) => {
       const item = items.find((i) => i.id === orderItem.id);
 
+      const selectedVariants = variants
+        .map((variant) => variant.id)
+        .filter((id) => orderItem.variants.includes(id));
+
       return {
         ...orderItem,
         name: item?.name ?? "Neznámá položka",
@@ -82,9 +86,7 @@ export const mapItemsWithOrders = (
         category: item?.category ?? 0,
         variants: variants ?? [],
         quantity: orderItem.quantity ?? 0,
-        selectedVariants: variants
-          .filter((variant) => variant.itemId === orderItem.id)
-          .map((variant) => variant.id),
+        selectedVariants: selectedVariants,
       };
     });
   } catch (error) {

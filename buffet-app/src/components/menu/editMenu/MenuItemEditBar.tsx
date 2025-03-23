@@ -122,7 +122,13 @@ const MenuItemEditBar = ({
   const handleAddVariant = () => {
     setItemVariants([
       ...itemVariants,
-      { name: "", addedPrice: 0, isExclusive: false, id: itemVariants.length },
+      {
+        name: "",
+        addedPrice: 0,
+        isExclusive: false,
+        id: itemVariants.length,
+        itemId: menuItem?.id || 0,
+      },
     ]);
   };
 

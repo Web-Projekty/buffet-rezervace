@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo } from "react";
-import { Order } from "../../../types";
+import { Order, Variant } from "../../../types";
 import useOrders from "../../../hooks/useOrders";
 import Loading from "../../ui/Loading";
 import { Fallback } from "../../../main";
@@ -54,11 +54,7 @@ const OrderTracking = () => {
 
   const mappedItems =
     items && latestOrder?.items
-      ? mapItemsWithOrders(
-          latestOrder?.items,
-          items,
-          latestOrder.items.map((item) => item.variants).flat(),
-        )
+      ? mapItemsWithOrders(latestOrder?.items, items, [] as Variant[])
       : [];
 
   const timeText = latestOrder
