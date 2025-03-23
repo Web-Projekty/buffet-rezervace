@@ -300,9 +300,12 @@ class BuffetApi
         $response->setPayloadKeys(["data"]);
 
         $queryResult = null;
-        $categories = CategoryModel::getAll()->toArray();
+        $categories = CategoryModel::getAll();
+        $removedCategories = $categories->where("removed", "=", 1)->pluck("id")->toArray();
+
         $backendUrl = EnvReader::getEnvProperty(Settings::UrlBackend);
 
+        $categories = $categories->toArray();
         foreach ($categories as &$category) {
             $category["image"] = $backendUrl . "/image/categories/" . $category["id"];
         }
@@ -326,9 +329,13 @@ class BuffetApi
 
         $response->addPayload("categoryList", $categories);
 
+        $queryResult = $queryResult->filter(
+            function ($item) use ($removedCategories) {return !in_array($item["category"], $removedCategories);}, );
+        //var_dump($queryResult->toArray());
+
         $array = $queryResult->toArray();
 
-        for ($i = 0; $i < sizeof($array); $i++) {
+        foreach ($array as $i => $value) {
             $id = $array[$i]["id"];
 
             $array[$i]["variants"] = [];
@@ -349,7 +356,7 @@ class BuffetApi
 
         }
 
-        $response->setPayload("data", $array);
+        $response->setPayload("data", array_values($array));
 
         // paging info
 
