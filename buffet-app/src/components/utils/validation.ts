@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { verifyPassword } from "./api";
 
 export const registerSchema = z
   .object({
@@ -28,21 +29,26 @@ export const changeUserDataSchema = z.object({
   email: z.string().email("Neplatný email"),
 });
 
-export const changePasswordSchema = z
-  .object({
-    oldPassword: z.string({
-      message: "Pro změnu hesla je potřeba zadat staré heslo",
-    }),
-    newPassword: z
-      .string({
-        message: "Pro změnu hesla je potřeba zadat nové heslo",
-      })
-      .min(6, "Nové heslo musí mít alespoň 6 znaků"),
-    confirmPassword: z.string({
-      message: "Pro změnu hesla je potřeba zadat potvrzení nového hesla",
-    }),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Hesla se neshodují",
-    path: ["confirmPassword"],
-  });
+export const changePasswordSchema = (token: string) =>
+  z
+    .object({
+      oldPassword: z
+        .string({
+          message: "Pro změnu hesla je potřeba zadat staré heslo",
+        })
+        .refine((oldPassword) => verifyPassword(token, oldPassword), {
+          message: "Špatné heslo",
+        }),
+      newPassword: z
+        .string({
+          message: "Pro změnu hesla je potřeba zadat nové heslo",
+        })
+        .min(6, "Nové heslo musí mít alespoň 6 znaků"),
+      confirmPassword: z.string({
+        message: "Pro změnu hesla je potřeba zadat potvrzení nového hesla",
+      }),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      message: "Hesla se neshodují",
+      path: ["confirmPassword"],
+    });

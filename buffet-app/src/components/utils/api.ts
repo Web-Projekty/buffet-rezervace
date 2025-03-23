@@ -366,3 +366,24 @@ export const updateUserPassword = async (
     throw new Error("Chyba při aktualizaci hesla.");
   }
 };
+
+export const verifyPassword = async (token: string, password: string) => {
+  try {
+    const { data, status } = await axios.post(FETCH_URL, {
+      requestType: "verifyPassword",
+      token,
+      password,
+    });
+
+    if (status !== 200)
+      return {
+        validPassword: false,
+      };
+
+    return {
+      validPassword: data.status === "success",
+    };
+  } catch {
+    throw new Error("Chyba při ověřování hesla.");
+  }
+};
