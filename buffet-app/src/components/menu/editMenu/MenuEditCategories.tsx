@@ -33,7 +33,6 @@ const MenuEditCategories = ({
             isCategoryBarOpen={isCategoryBarOpen}
             handleCategoryBarOpen={handleCategoryBarOpen}
           />
-
           <MenuEditItems
             menuItems={menuItems}
             categories={categories}
