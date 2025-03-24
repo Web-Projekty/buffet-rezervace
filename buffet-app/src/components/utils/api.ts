@@ -181,7 +181,12 @@ export const createMenuItem = async (
     const { data } = await axios.post(FETCH_URL, {
       requestType: "createItem",
       token: token,
-      ...menuItem,
+      name: menuItem.name,
+      description: menuItem.description,
+      price: menuItem.price,
+      category: menuItem.category,
+      image: menuItem.image,
+      allergens: menuItem.allergens,
     });
     // console.log(data);
     return {
@@ -268,7 +273,8 @@ export const createCategory = async (
     const { data } = await axios.post(FETCH_URL, {
       requestType: "createCategory",
       token,
-      ...category,
+      name: category.name,
+      description: category.description,
     });
 
     return {
