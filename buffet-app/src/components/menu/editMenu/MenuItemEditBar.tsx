@@ -112,6 +112,7 @@ const MenuItemEditBar = ({
     field: keyof Variant,
     value: string,
   ) => {
+    console.log(index, field, value);
     setItemVariants((prev) =>
       prev.map((variant) =>
         variant.id === index ? { ...variant, [field]: value } : variant,
@@ -155,8 +156,8 @@ const MenuItemEditBar = ({
     itemDescription !== menuItem?.description ||
     itemCategory !== menuItem?.category ||
     itemImage !== menuItem?.image ||
-    allergensInput.length !== menuItem?.allergens.length ||
-    itemVariants.length !== menuItem?.variants.length;
+    JSON.stringify(allergensInput).match(JSON.stringify(menuItem?.allergens)) ||
+    JSON.stringify(itemVariants).match(JSON.stringify(menuItem?.variants));
 
   const isEmpty =
     !itemImage ||
@@ -288,9 +289,16 @@ const MenuItemEditBar = ({
                   className="h-10 rounded-md p-1 text-black"
                   name="isExclusive"
                   value={variant.isExclusive ? 1 : 0}
+                  onChange={(e) =>
+                    handleVariantChange(
+                      variant.id,
+                      "isExclusive",
+                      e.target.value,
+                    )
+                  }
                 >
-                  <option value={1}>Exkluzivní</option>
                   <option value={0}>Neexkluzivní</option>
+                  <option value={1}>Exkluzivní</option>
                 </select>
 
                 <Button
@@ -313,11 +321,7 @@ const MenuItemEditBar = ({
           >
             Zrušit
           </Button>
-          <Button
-            className="m-auto"
-            onClick={handleSave}
-            disabled={!edited || isEmpty}
-          >
+          <Button className="m-auto" onClick={handleSave}>
             Uložit
           </Button>
         </div>
