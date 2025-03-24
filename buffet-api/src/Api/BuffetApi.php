@@ -1531,7 +1531,7 @@ class BuffetApi
         if ($request->getUploadedFiles()) {
             $data = $request->getParsedBody();
         } else {
-            $data = (array) json_decode($request->getBody()->getContents());
+            $data = (array) json_decode($request->getBody()->getContents(), true);
         }
         /**
          * @deprecated legacy code
