@@ -9,6 +9,11 @@ import {
 } from "../../types";
 import { FETCH_URL } from "../../constants";
 import { CartItem } from "../../store/CartStore";
+import {
+  CloseTimeDay,
+  TimeSlots,
+} from "../dashboard/adminContent/AdminService";
+import { PaymentForm } from "../dashboard/adminContent/AdminPayments";
 
 type OrderApiReturn = {
   order: Order | null;
@@ -386,5 +391,110 @@ export const verifyPassword = async (token: string, password: string) => {
     };
   } catch {
     throw new Error("Chyba při ověřování hesla.");
+  }
+};
+
+export const saveSystemSettings = async (
+  token: string,
+  ldap: {
+    host: string;
+    port: string;
+    base: string;
+    user: string;
+    password: string;
+  },
+  mysql: boolean,
+  emailServer: {
+    host: string;
+    port: string;
+    user: string;
+    password: string;
+    senderAddress: string;
+    senderName: string;
+  },
+) => {
+  const { host, port, base, user, password } = ldap;
+  const {
+    host: emailHost,
+    port: emailPort,
+    user: emailUser,
+    password: emailPassword,
+    senderAddress,
+    senderName,
+  } = emailServer;
+
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "saveSystemSettings",
+      token,
+      ldap: {
+        host,
+        port,
+        base,
+        user,
+        password,
+      },
+      mysql,
+      emailServer: {
+        host: emailHost,
+        port: emailPort,
+        user: emailUser,
+        password: emailPassword,
+        senderAddress,
+        senderName,
+      },
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při ukládání systémových nastavení.");
+  }
+};
+
+export const saveOpenTime = async (
+  token: string,
+  closeTime: CloseTimeDay[],
+) => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "saveOpenTime",
+      token,
+      closeTime,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při ukládání otevírací doby.");
+  }
+};
+
+export const saveTimeSlots = async (token: string, timeSlots: TimeSlots) => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "saveTimeSlots",
+      token,
+      timeSlots,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při ukládání časových slotů.");
+  }
+};
+
+export const savePaymentMethods = async (
+  token: string,
+  paymentSettings: PaymentForm,
+) => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "savePaymentMethods",
+      token,
+      paymentSettings,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při ukládání platebních metod.");
   }
 };
