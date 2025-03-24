@@ -49,8 +49,8 @@ const Profile = () => {
     tel === formData.tel;
 
   const nothingPasswordChanged =
-    formData.newPassword === "" &&
-    formData.newPasswordConfirmation === "" &&
+    formData.newPassword === "" ||
+    formData.newPasswordConfirmation === "" ||
     formData.password === "";
 
   return (
