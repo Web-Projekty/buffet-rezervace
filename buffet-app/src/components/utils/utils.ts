@@ -163,3 +163,7 @@ export const handleResponse = (
 
   return { success: successMessage };
 };
+
+export const parseObjectToArray = <T>(object: { [key: string]: T }) => {
+  return Object.keys(object).map((key) => object[key]);
+};
