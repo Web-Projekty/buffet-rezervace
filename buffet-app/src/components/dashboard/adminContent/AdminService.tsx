@@ -1,14 +1,14 @@
 import { useCallback, useState } from "react";
 import Button from "../../ui/Button";
 
-type CloseTimeDay = {
+export type CloseTimeDay = {
   label: string;
   availableDay: boolean;
   open: string;
   close: string;
 };
 
-type TimeSlots = {
+export type TimeSlots = {
   interval: number;
   maxOrdersPerInterval: number;
   minDays: number;
