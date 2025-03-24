@@ -343,7 +343,7 @@ class BuffetApi
 
         // adding category list
 
-        $response->addPayload("categoryList", $categories);
+        $response->addPayload("categoryList", array_values($categories));
 
         $queryResult = $queryResult->filter(
             function ($item) use ($removedCategories) {return !in_array($item["category"], $removedCategories);}, );
