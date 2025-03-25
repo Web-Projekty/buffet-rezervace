@@ -226,16 +226,17 @@ export const updateMenuItem = async (
   }
 };
 
-export const deleteMenuItem = async (
-  token: string,
-  menuItemId: number,
+export const removeMenuItem = async (
+  token: string | null,
+  itemId: number,
 ): Promise<MenuItemApi> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
-      requestType: "deleteMenuItemEvent",
+      requestType: "removeItem",
       token: token,
-      menuItemId: menuItemId,
+      itemId: itemId,
     });
+
     return {
       menuItem: data.payload.data as MenuItem,
       error: data.status !== "success",
@@ -292,6 +293,36 @@ export const createCategory = async (
   }
 };
 
+export const removeCategory = async (
+  token: string | null,
+  categoryId: number,
+) => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "removeCategory",
+      token,
+      categoryId,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při mazání kategorie.");
+  }
+};
+
+export const uploadImage = async (token: string) => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "uploadImage",
+      token,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při nahrávání obrázku.");
+  }
+};
+
 export const getTimeSlots = async (): Promise<TimeSlotsApi> => {
   try {
     const { data } = await axios.post(FETCH_URL, {
@@ -336,7 +367,7 @@ export const updateUserData = async (
   }
 };
 
-export const getUserData = async (token: string) => {
+export const getUserData = async (token: string | null) => {
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "getUser",
@@ -379,7 +410,10 @@ export const updateUserPassword = async (
   }
 };
 
-export const verifyPassword = async (token: string, password: string) => {
+export const verifyPassword = async (
+  token: string | null,
+  password: string,
+) => {
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "verifyPassword",
@@ -395,8 +429,21 @@ export const verifyPassword = async (token: string, password: string) => {
   }
 };
 
+export const getSystemSettings = async (token: string | null) => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "getSystemSettings",
+      token,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při načítání systémových nastavení.");
+  }
+};
+
 export const saveSystemSettings = async (
-  token: string,
+  token: string | null,
   ldap: {
     host: string;
     port: string;
@@ -453,7 +500,7 @@ export const saveSystemSettings = async (
 };
 
 export const saveOpenTime = async (
-  token: string,
+  token: string | null,
   closeTime: CloseTimeDay[],
 ) => {
   try {
@@ -469,7 +516,23 @@ export const saveOpenTime = async (
   }
 };
 
-export const saveTimeSlots = async (token: string, timeSlots: TimeSlots) => {
+export const getTimeSettings = async (token: string | null) => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "getTimeSlots",
+      token,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při načítání časových slotů.");
+  }
+};
+
+export const saveTimeSettings = async (
+  token: string | null,
+  timeSlots: TimeSlots,
+) => {
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "saveTimeSlots",
@@ -483,8 +546,21 @@ export const saveTimeSlots = async (token: string, timeSlots: TimeSlots) => {
   }
 };
 
-export const savePaymentMethods = async (
-  token: string,
+export const getPaymentSettings = async (token: string | null) => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "getPaymentMethods",
+      token,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při načítání platebních metod.");
+  }
+};
+
+export const savePaymentSettings = async (
+  token: string | null,
   paymentSettings: PaymentForm,
 ) => {
   try {
