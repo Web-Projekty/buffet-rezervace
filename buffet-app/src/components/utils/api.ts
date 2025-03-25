@@ -182,6 +182,7 @@ export const createMenuItem = async (
     allergens: Allergen["id"][];
   },
 ): Promise<MenuItemApi> => {
+  console.log(menuItem.allergens);
   try {
     const { data } = await axios.post(FETCH_URL, {
       requestType: "createItem",
@@ -190,7 +191,7 @@ export const createMenuItem = async (
       description: menuItem.description,
       price: menuItem.price,
       category: menuItem.category,
-      image: menuItem.image,
+      //image: menuItem.image,
       allergens: menuItem.allergens,
     });
     // console.log(data);

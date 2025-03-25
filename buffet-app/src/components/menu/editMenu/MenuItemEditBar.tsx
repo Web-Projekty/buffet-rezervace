@@ -43,7 +43,7 @@ const MenuItemEditBar = ({
     menuItem?.image || "",
   );
   const [itemCategory, setItemCategory] = useState<MenuItem["category"]>(
-    menuItem?.category || 0,
+    menuItem?.category || 1,
   );
   const [itemVariants, setItemVariants] = useState<Variant[]>(
     menuItem?.variants.map((variant) => {
