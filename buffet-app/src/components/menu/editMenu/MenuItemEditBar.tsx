@@ -8,7 +8,11 @@ import ToggleSwitch from "../../ui/ToggleSwitch";
 import { onImageChange } from "../../utils/utils";
 import { motion } from "framer-motion";
 import { slideInAnimation } from "../../../animations";
-import { createMenuItem, updateMenuItem } from "../../utils/api";
+import {
+  createMenuItem,
+  removeMenuItem,
+  updateMenuItem,
+} from "../../utils/api";
 import { useUser } from "../../../hooks/useUser";
 import ImageInput from "../../ui/ImageInput";
 
@@ -55,6 +59,7 @@ const MenuItemEditBar = ({
   );
   const [cashPayment, setCashPayment] = useState<boolean>(false);
   const [cashVariants, setCashVariants] = useState<boolean>(false);
+  const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
 
   const handleSave = async () => {
     handleClose();
@@ -103,8 +108,24 @@ const MenuItemEditBar = ({
     refetch();
   };
 
+  const handleRemove = async () => {
+    if (!menuItem) return;
+    handleClose();
+
+    const { error } = await removeMenuItem(token, menuItem.id);
+
+    if (error) {
+      console.log("Error deleting item");
+    }
+    refetch();
+  };
+
   const handleClose = () => {
     handleBarOpen();
+  };
+
+  const handleConfirmDelete = () => {
+    setConfirmDelete(true);
   };
 
   const handleVariantChange = (
@@ -174,7 +195,7 @@ const MenuItemEditBar = ({
     >
       <div className="sticky right-3 top-0 z-10 flex w-[28rem] flex-col gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black">
         <h1 className="text-center text-xl font-bold">Úprava itemu</h1>
-        <div className="flex w-full flex-col gap-4">
+        <div className="relative flex w-full flex-col gap-4">
           <ImageInput
             itemImage={itemImage}
             itemName={itemName}
@@ -320,6 +341,12 @@ const MenuItemEditBar = ({
             onClick={handleClose}
           >
             Zrušit
+          </Button>
+          <Button
+            className="m-auto border-red-400 bg-red-400 hover:bg-red-500"
+            onClick={confirmDelete ? handleRemove : handleConfirmDelete}
+          >
+            {confirmDelete ? "Opravdu smazat?" : "Smazat"}
           </Button>
           <Button className="m-auto" onClick={handleSave}>
             Uložit
