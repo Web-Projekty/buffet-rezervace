@@ -1059,7 +1059,7 @@ class BuffetApi
                         return $response->setError(Error::InvalidJson);
                     }
                 }
-                $itemParameters["$column"] = $response->getRequestByKey($column);
+                $itemParameters[$column] = $response->getRequestByKey($column);
             } else {
                 return $response;
             }

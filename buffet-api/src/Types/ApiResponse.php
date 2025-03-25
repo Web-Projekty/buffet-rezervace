@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace Buffet\Types;
 
+use Exception;
+
 class ApiResponse
 {
     private ApiStatus $status = ApiStatus::Pending;
@@ -214,7 +216,8 @@ class ApiResponse
     {
         foreach ($this->requestKeys as $key) {
             if (!isset($this->request[$key]) || empty($this->request[$key])) {
-                return false;
+                throw new Exception("Missing key: " . $key);
+                //return false;
             }
         }
         return true;
