@@ -6,6 +6,7 @@ import {
   MenuItem,
   Order,
   OrderStatus,
+  Variant,
 } from "../../types";
 import { FETCH_URL } from "../../constants";
 import { CartItem } from "../../store/CartStore";
@@ -255,9 +256,14 @@ export const removeMenuItem = async (
   }
 };
 
-export const createVariant = async (token: string | null) => {
+export const createVariant = async (
+  token: string | null,
+  itemId: MenuItem["id"] | null,
+  variant: Omit<Variant, "id">,
+) => {
   try {
     if (!token) throw new Error("Chybějící token.");
+    if (!itemId) throw new Error("Chybějící id.");
 
     const { data } = await axios.post(FETCH_URL, {
       requestType: "createVariant",

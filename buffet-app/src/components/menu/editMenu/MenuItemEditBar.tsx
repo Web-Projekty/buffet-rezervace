@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { slideInAnimation } from "../../../animations";
 import {
   createMenuItem,
+  createVariant,
   removeMenuItem,
   updateMenuItem,
 } from "../../utils/api";
@@ -87,6 +88,14 @@ const MenuItemEditBar = ({
       const { error } = await createMenuItem(token, {
         ...data,
       });
+
+      // This inefficient loop is due to backend not supporting multiple variant creation at once
+      // Tento neefektivní loop je zde kvůli backendu, který neumí vytvořit více variant najednou
+      /*data.variants.forEach(async (variant) => {
+        const { error } = await createVariant(token, menuItem?.id, {
+          ...variant,
+        });
+      });*/
 
       if (error) {
         console.log("Error creating item");
