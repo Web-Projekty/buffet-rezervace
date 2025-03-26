@@ -73,8 +73,9 @@ export const getOrders = async (
   itemsCount: number | "all",
   page?: number | undefined,
 ): Promise<OrdersApi> => {
-  if (!token) throw new Error("Chyba při načítání objednávek.");
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "getOrders",
       token: token,
@@ -105,11 +106,9 @@ export const createOrder = async (
   date: Order["pickupDate"] | null,
   // paymentMethod: PaymentMethod[],
 ): Promise<OrderApiReturn> => {
-  if (!token) throw new Error("Chyba při vytváření objednávky.");
-
-  // console.log(cartItems);
-
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "createOrder",
       token: token,
@@ -139,6 +138,8 @@ export const updateOrder = async (
 ): Promise<UpdateOrderApi> => {
   if (!token || !orderId) throw new Error("Chyba při aktualizaci objednávky.");
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "updateOrder",
       token: token,
@@ -161,6 +162,8 @@ export const deleteOrder = async (
   orderId: string,
 ): Promise<OrderApiReturn> => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "deleteOrderEvent",
       token: token,
@@ -184,6 +187,8 @@ export const createMenuItem = async (
 ): Promise<MenuItemApi> => {
   console.log(menuItem.allergens);
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "createItem",
       token: token,
@@ -212,6 +217,8 @@ export const updateMenuItem = async (
   },
 ): Promise<MenuItemApi> => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "updateItem",
       token: token,
@@ -231,6 +238,8 @@ export const removeMenuItem = async (
   itemId: number,
 ): Promise<MenuItemApi> => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "removeItem",
       token: token,
@@ -243,6 +252,21 @@ export const removeMenuItem = async (
     };
   } catch {
     throw new Error("Chyba při mazání položky menu.");
+  }
+};
+
+export const createVariant = async (token: string | null) => {
+  try {
+    if (!token) throw new Error("Chybějící token.");
+
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "createVariant",
+      token,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při vytváření variant.");
   }
 };
 
@@ -353,6 +377,7 @@ export const updateUserData = async (
 }> => {
   try {
     if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "updateUser",
       token,
@@ -369,6 +394,8 @@ export const updateUserData = async (
 
 export const getUserData = async (token: string | null) => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "getUser",
       token,
@@ -390,6 +417,8 @@ export const updateUserPassword = async (
   payload: { msg: string };
 }> => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     if (newPassword !== newPasswordConfirm) {
       return {
         status: "failed",
@@ -415,6 +444,8 @@ export const verifyPassword = async (
   password: string,
 ) => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "verifyPassword",
       token,
@@ -431,6 +462,8 @@ export const verifyPassword = async (
 
 export const getSystemSettings = async (token: string | null) => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "getSystemSettings",
       token,
@@ -472,6 +505,8 @@ export const saveSystemSettings = async (
   } = emailServer;
 
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "saveSystemSettings",
       token,
@@ -504,6 +539,8 @@ export const saveOpenTime = async (
   closeTime: CloseTimeDay[],
 ) => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "saveOpenTime",
       token,
@@ -518,6 +555,8 @@ export const saveOpenTime = async (
 
 export const getTimeSettings = async (token: string | null) => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "getTimeSlots",
       token,
@@ -534,6 +573,8 @@ export const saveTimeSettings = async (
   timeSlots: TimeSlots,
 ) => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "saveTimeSlots",
       token,
@@ -548,6 +589,8 @@ export const saveTimeSettings = async (
 
 export const getPaymentSettings = async (token: string | null) => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "getPaymentMethods",
       token,
@@ -564,6 +607,8 @@ export const savePaymentSettings = async (
   paymentSettings: PaymentForm,
 ) => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "savePaymentMethods",
       token,
