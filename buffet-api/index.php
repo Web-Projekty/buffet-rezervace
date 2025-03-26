@@ -110,6 +110,8 @@ $corsMiddleware = function ($request, $handler) {
 $app->add($corsMiddleware);
 
 $app->post('/api', [BuffetApi::class, 'main']);
+$app->post('/api/', [BuffetApi::class, 'main']);
+
 $app->get('/api/notification', [BuffetApi::class, 'handleThePayNotification']);
 $app->post('/api/upload', [ImageUploader::class, 'uploadImage']);
 
