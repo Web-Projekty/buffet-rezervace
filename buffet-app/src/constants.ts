@@ -16,7 +16,7 @@ export const ORDERS_PER_PAGE: number = 5;
 
 export const CART_LOCAL_STORAGE_KEY: string = "cartItems";
 
-export const FETCH_URL: string = "https://wlczak.vlastas.cc/backend/api";
+export const FETCH_URL: string = window.location.protocol + "//" + window.location.host + "/api/";
 
 export const WEBSOCKET_URL = (channel: string): string =>
   window.location.protocol === "https:"
