@@ -4,6 +4,9 @@ declare (strict_types = 1);
 
 namespace Buffet\Types;
 
+use Buffet\Utils\EnvReader;
+use Exception;
+
 class ApiResponse
 {
     private ApiStatus $status = ApiStatus::Pending;
@@ -214,6 +217,9 @@ class ApiResponse
     {
         foreach ($this->requestKeys as $key) {
             if (!isset($this->request[$key]) || empty($this->request[$key])) {
+                if (!EnvReader::getEnvProperty(Settings::IsProd)) {
+                    throw new Exception("Missing key: " . $key);
+                }
                 return false;
             }
         }
