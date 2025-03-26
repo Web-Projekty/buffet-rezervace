@@ -49,7 +49,17 @@ const OrderHistory = () => {
       <h1 className="flex items-center gap-2 text-2xl font-bold">
         Tvá historie objednávek
         <span className="flex items-center gap-2">
-          ({dataList ? dataList.itemsCount : <Loading size={20} />})
+          (
+          {dataList ? (
+            dataList.itemsCount > 0 ? (
+              dataList.itemsCount
+            ) : (
+              0
+            )
+          ) : (
+            <Loading size={20} />
+          )}
+          )
         </span>
       </h1>
       <div className="flex min-h-[27rem] flex-col items-center gap-4">
