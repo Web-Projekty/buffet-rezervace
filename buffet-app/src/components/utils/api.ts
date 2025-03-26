@@ -268,6 +268,7 @@ export const createVariant = async (
     const { data } = await axios.post(FETCH_URL, {
       requestType: "createVariant",
       token,
+      variant,
     });
 
     return data;
