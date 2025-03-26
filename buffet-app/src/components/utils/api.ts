@@ -192,7 +192,7 @@ export const createMenuItem = async (
       price: menuItem.price,
       category: menuItem.category,
       //image: menuItem.image,
-      allergens: menuItem.allergens,
+      allergens: "[" + menuItem.allergens.toString() + "]",
     });
     // console.log(data);
     return {

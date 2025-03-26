@@ -129,14 +129,22 @@ const MenuItemEditBar = ({
   };
 
   const handleVariantChange = (
-    index: number,
+    variantId: number,
     field: keyof Variant,
     value: string,
   ) => {
-    console.log(index, field, value);
+    console.log(variantId, field, value);
     setItemVariants((prev) =>
       prev.map((variant) =>
-        variant.id === index ? { ...variant, [field]: value } : variant,
+        variant.id === variantId ? { ...variant, [field]: value } : variant,
+      ),
+    );
+  };
+
+  const handleVariantExlusiveChange = (variantId: number, value: boolean) => {
+    setItemVariants((prev) =>
+      prev.map((variant) =>
+        variant.id === variantId ? { ...variant, isExclusive: value } : variant,
       ),
     );
   };
@@ -311,10 +319,9 @@ const MenuItemEditBar = ({
                   name="isExclusive"
                   value={variant.isExclusive ? 1 : 0}
                   onChange={(e) =>
-                    handleVariantChange(
+                    handleVariantExlusiveChange(
                       variant.id,
-                      "isExclusive",
-                      e.target.value,
+                      Boolean(Number(e.target.value)),
                     )
                   }
                 >
