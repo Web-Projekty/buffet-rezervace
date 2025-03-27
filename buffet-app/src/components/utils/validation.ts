@@ -58,3 +58,21 @@ export const changePasswordSchema = (token: string) =>
       message: "Hesla se neshodují",
       path: ["confirmPassword"],
     });
+
+const variantSchema = z.object({
+  name: z.string().min(1, "Název varianty je povinný"),
+  addedPrice: z.number().min(0, "Cena varianty musí být větší nebo rovna 0"),
+  isExclusive: z.boolean(),
+});
+
+export const itemSchema = z.object({
+  name: z.string().min(1, "Název položky je povinný"),
+  description: z.string().optional(),
+  price: z
+    .number({ message: "Cena musí být číslo" })
+    .min(0.01, "Cena musí být větší než 0"),
+  image: z.string().optional(),
+  category: z.number(),
+  allergens: z.number().array().optional(),
+  variants: z.array(variantSchema).optional(),
+});
