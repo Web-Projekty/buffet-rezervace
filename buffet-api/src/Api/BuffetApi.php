@@ -1075,7 +1075,9 @@ class BuffetApi
             }
         }
 
-        ItemModel::query()->create($itemParameters);
+        $newItem = ItemModel::query()->create($itemParameters);
+
+        $response->setPayload("newId", $newItem->getAttribute("id"));
 
         return $response->setSuccess(Success::ItemCreated);
     }
