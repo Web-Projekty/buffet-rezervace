@@ -13,6 +13,7 @@ import {
   createVariant,
   removeMenuItem,
   updateMenuItem,
+  updateVariant,
 } from "../../utils/api";
 import { useUser } from "../../../hooks/useUser";
 import ImageInput from "../../ui/ImageInput";
@@ -85,17 +86,24 @@ const MenuItemEditBar = ({
     };
 
     if (!menuItem) {
-      const { error } = await createMenuItem(token, {
+      const { menuItem, error } = await createMenuItem(token, {
         ...data,
       });
 
-      // This inefficient loop is due to backend not supporting multiple variant creation at once
-      // Tento neefektivní loop je zde kvůli backendu, který neumí vytvořit více variant najednou
-      /*data.variants.forEach(async (variant) => {
-        const { error } = await createVariant(token, menuItem?.id, {
+      // This inefficient fetch loop is here because of the backend, which I didn't work on, which can't create multiple variants at once
+      // Tento neefektivní fetch loop je zde kvůli backendu, na kterém jsem nepracoval já, který neumí vytvořit více variant najednou
+      data.variants.forEach(async (variant) => {
+        const { error } = await createVariant(token, menuItem?.id ?? null, {
           ...variant,
+          addedPrice: Number(
+            (Number(itemPrice.replace(",", ".")) * 100).toFixed(0),
+          ),
         });
-      });*/
+
+        if (error) {
+          console.log("Error creating variant");
+        }
+      });
 
       if (error) {
         console.log("Error creating item");
@@ -104,11 +112,22 @@ const MenuItemEditBar = ({
       return;
     }
 
-    console.log("updating item");
-
     const { error } = await updateMenuItem(token, {
       itemId: menuItem.id,
       ...data,
+    });
+
+    data.variants.forEach(async (variant) => {
+      const { error } = await updateVariant(token, {
+        ...variant,
+        addedPrice: Number(
+          (Number(itemPrice.replace(",", ".")) * 100).toFixed(0),
+        ),
+      });
+
+      if (error) {
+        console.log("Error creating variant");
+      }
     });
 
     if (error) {

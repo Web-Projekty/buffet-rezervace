@@ -200,7 +200,7 @@ export const createMenuItem = async (
       //image: menuItem.image,
       allergens: "[" + menuItem.allergens.toString() + "]",
     });
-    // console.log(data);
+    console.log(data);
     return {
       menuItem: data.payload.data as MenuItem,
       error: data.status !== "success",
@@ -274,6 +274,47 @@ export const createVariant = async (
     return data;
   } catch {
     throw new Error("Chyba při vytváření variant.");
+  }
+};
+
+export const updateVariant = async (token: string | null, variant: Variant) => {
+  try {
+    if (!token) throw new Error("Chybějící token.");
+    if (!variant.id) throw new Error("Chybějící id.");
+
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "updateVariant",
+      token,
+      name: variant.name,
+      itemId: variant.itemId,
+      variantId: variant.id,
+      addedPrice: variant.addedPrice,
+      isExclusive: variant.isExclusive,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při aktualizaci variant.");
+  }
+};
+
+export const removeVariant = async (
+  token: string | null,
+  variantId: number,
+) => {
+  try {
+    if (!token) throw new Error("Chybějící token.");
+    if (!variantId) throw new Error("Chybějící id.");
+
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "removeVariant",
+      token,
+      variantId,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při mazání variant.");
   }
 };
 
