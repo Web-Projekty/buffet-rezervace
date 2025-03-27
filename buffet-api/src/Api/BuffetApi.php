@@ -984,7 +984,34 @@ class BuffetApi
             } catch (QueryException $e) {
                 return $response->setError(Error::ItemUpdateFailed);
             }
+        }
 
+        if ($response->hasRequestByKey("variants")) {
+            /**
+             * @var array{array{name:string,itemId:int,addedPrice:int,isExclusive:bool}}
+             */
+            $variants = $response->getRequestByKey("variants");
+
+            foreach ($variants as $variant) {
+                // @phpstan-ignore function.alreadyNarrowedType
+                if (empty($variant["name"]) || empty($variant["addedPrice"]) || !is_bool($variant["isExclusive"])) {
+                    return $response->setError(Error::InvalidVariant);
+                }
+            }
+            VariantModel::query()->where("itemId", $itemId)->update(["removed" => true]);
+            foreach ($variants as $variant) {
+                $removedVariant = VariantModel::query()->where("itemId", $itemId)->where("name", $variant["name"])->where("addedPrice", $variant["addedPrice"])->where("isExclusive", $variant["isExclusive"]);
+                if ($removedVariant->exists()) {
+                    $removedVariant->update(["removed" => false]);
+                } else {
+                    VariantModel::query()->insert([
+                        "name" => $variant["name"],
+                        "itemId" => $itemId,
+                        "addedPrice" => $variant["addedPrice"],
+                        "isExclusive" => $variant["isExclusive"]
+                    ]);
+                }
+            }
         }
 
         return $response->setSuccess(Success::ItemUpdated);
