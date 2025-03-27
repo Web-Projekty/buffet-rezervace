@@ -10,13 +10,14 @@ import { motion } from "framer-motion";
 import { slideInAnimation } from "../../../animations";
 import {
   createMenuItem,
-  createVariant,
   removeMenuItem,
   updateMenuItem,
-  updateVariant,
 } from "../../utils/api";
 import { useUser } from "../../../hooks/useUser";
 import ImageInput from "../../ui/ImageInput";
+import { itemSchema } from "../../utils/validation";
+import { z } from "zod";
+import toast from "react-hot-toast";
 
 type MenuItemEditBarProps = {
   handleBarOpen: () => void;
@@ -51,7 +52,7 @@ const MenuItemEditBar = ({
   const [itemCategory, setItemCategory] = useState<MenuItem["category"]>(
     menuItem?.category || 1,
   );
-  const [itemVariants, setItemVariants] = useState<Variant[]>(
+  const [itemVariants, setItemVariants] = useState<MenuItem["variants"]>(
     menuItem?.variants.map((variant) => {
       return {
         ...variant,
@@ -65,90 +66,60 @@ const MenuItemEditBar = ({
 
   const handleSave = async () => {
     handleClose();
-    const formatPrice = (value: string) =>
-      Number((Number(value.replace(",", ".")) * 100).toFixed(0));
+    try {
+      const formatPrice = (value: string) =>
+        Number((Number(value.replace(",", ".")) * 100).toFixed(0));
 
-    const data = {
-      name: itemName,
-      price: Number(formatPrice),
-      description: itemDescription,
-      image: itemImage,
-      category: itemCategory,
-      allergens: allergensInput,
-      variants: itemVariants.map((variant) => ({
-        ...variant,
-        addedPrice: formatPrice(variant.addedPrice.toString()),
-        isExclusive: Boolean(variant.isExclusive),
-      })),
-    };
+      const data = {
+        name: itemName,
+        price: formatPrice(itemPrice),
+        description: itemDescription,
+        image: itemImage,
+        category: itemCategory,
+        allergens: allergensInput,
+        variants: itemVariants.map((variant) => ({
+          name: variant.name,
+          addedPrice: formatPrice(variant.addedPrice.toString()),
+          isExclusive: Boolean(variant.isExclusive),
+        })),
+      };
 
-    if (!menuItem) {
-      const { menuItem, error } = await createMenuItem(token, {
+      await itemSchema.parseAsync(data);
+
+      if (!menuItem) {
+        const { error } = await createMenuItem(token, {
+          ...data,
+        });
+
+        if (error) {
+          console.log("Error creating item");
+          return;
+        }
+        toast.success("Položka byla úspěšně vytvořena");
+        refetch();
+        return;
+      }
+
+      const { error } = await updateMenuItem(token, {
+        itemId: menuItem.id,
         ...data,
       });
 
-      // This inefficient fetch loop is here because of the backend, which I didn't work on, which can't create multiple variants at once
-      // Tento neefektivní fetch loop je zde kvůli backendu, na kterém jsem nepracoval já, který neumí vytvořit více variant najednou
-      data.variants.forEach(async (variant) => {
-        const { error } = await createVariant(token, menuItem?.id ?? null, {
-          ...variant,
-          addedPrice: Number(
-            (Number(itemPrice.replace(",", ".")) * 100).toFixed(0),
-          ),
-        });
-
-        if (error) {
-          console.log("Error creating variant");
-        }
-      });
-
       if (error) {
-        console.log("Error creating item");
+        console.log("Error updating item");
+        return;
       }
+      toast.success("Položka byla úspěšně upravena");
       refetch();
-      return;
-    }
-
-    const { error } = await updateMenuItem(token, {
-      itemId: menuItem.id,
-      ...data,
-    });
-
-    /*if (
-      menuItem.variants.every((variant) =>
-        itemVariants.some((v) => v.id === variant.id),
-      )
-    ) {
-      data.variants.forEach(async (variant) => {
-        const { error } = await updateVariant(token, {
-          ...variant,
-          addedPrice: formatPrice(variant.addedPrice.toString()),
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        error.errors.forEach((err) => {
+          toast.error(err.message);
         });
-
-        if (error) {
-          console.log("Error creating variant");
-        }
-      });
-    } else {
-      const newVariants = itemVariants.filter(
-        (variant) => !menuItem.variants.some((v) => v.id === variant.id),
-      );
-      newVariants.forEach(async (variant) => {
-        const { error } = await createVariant(token, menuItem.id, {
-          ...variant,
-          addedPrice: formatPrice(variant.addedPrice.toString()),
-        });
-
-        if (error) {
-          console.log("Error creating variant");
-        }
-      });
-    }*/
-
-    if (error) {
-      console.log("Error updating item");
+        return;
+      }
+      toast.error("Nastala chyba při ukládání položky");
     }
-    refetch();
   };
 
   const handleRemove = async () => {
