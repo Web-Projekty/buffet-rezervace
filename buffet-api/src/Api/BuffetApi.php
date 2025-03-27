@@ -1032,7 +1032,7 @@ class BuffetApi
      */
     function handleCreateItem(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(array_merge(["token"], ItemModel::getColumns()));
+        $response->setRequestKeys(array_merge(["token", "variants"], ItemModel::getColumns()));
 
         if (!$response->hasRequestKeys()) {
             return $response;
@@ -1064,6 +1064,17 @@ class BuffetApi
                 return $response;
             }
         }
+//,"name":"string","itemId":"number","addedPrice":"number","isExclusive":"boolean"}
+/**
+ * @var array{array{name:string,itemId:int,addedPrice:int,isExclusive:bool}}
+ */
+        $variants = $response->getRequestByKey("variants");
+        foreach ($variants as $variant) {
+            if (empty($variant["name"]) || empty($variant["addedPrice"]) || empty($variant["isExclusive"])) {
+                return $response->setError(Error::InvalidVariant);
+            }
+        }
+
         ItemModel::query()->create($itemParameters);
 
         return $response->setSuccess(Success::ItemCreated);
