@@ -28,6 +28,14 @@ type UpdateOrderApi = {
   error: boolean;
 };
 
+type MenuItemApiProp = Omit<
+  MenuItem,
+  "id" | "categoryName" | "allergens" | "variants"
+> & {
+  allergens: Allergen["id"][];
+  variants: Omit<Variant, "id" | "itemId">[];
+};
+
 type MenuItemApi = {
   menuItem: MenuItem | null;
   error: boolean;
@@ -182,9 +190,7 @@ export const deleteOrder = async (
 
 export const createMenuItem = async (
   token: string | null,
-  menuItem: Omit<MenuItem, "id" | "categoryName" | "allergens"> & {
-    allergens: Allergen["id"][];
-  },
+  menuItem: MenuItemApiProp,
 ): Promise<MenuItemApi> => {
   console.log(menuItem.allergens);
   try {
@@ -199,6 +205,7 @@ export const createMenuItem = async (
       category: menuItem.category,
       //image: menuItem.image,
       allergens: "[" + menuItem.allergens.toString() + "]",
+      variants: menuItem.variants,
     });
     console.log(data);
     return {
@@ -212,10 +219,7 @@ export const createMenuItem = async (
 
 export const updateMenuItem = async (
   token: string | null,
-  menuItem: Omit<MenuItem, "id" | "allergens" | "categoryName"> & {
-    itemId: MenuItem["id"];
-    allergens: Allergen["id"][];
-  },
+  menuItem: MenuItemApiProp & { itemId: number },
 ): Promise<MenuItemApi> => {
   try {
     if (!token) throw new Error("Chybějící token.");
@@ -256,67 +260,67 @@ export const removeMenuItem = async (
   }
 };
 
-export const createVariant = async (
-  token: string | null,
-  itemId: MenuItem["id"] | null,
-  variant: Omit<Variant, "id">,
-) => {
-  try {
-    if (!token) throw new Error("Chybějící token.");
-    if (!itemId) throw new Error("Chybějící id.");
+// export const createVariant = async (
+//   token: string | null,
+//   itemId: MenuItem["id"] | null,
+//   variant: Omit<Variant, "id">,
+// ) => {
+//   try {
+//     if (!token) throw new Error("Chybějící token.");
+//     if (!itemId) throw new Error("Chybějící id.");
 
-    const { data } = await axios.post(FETCH_URL, {
-      requestType: "createVariant",
-      token,
-      variant,
-    });
+//     const { data } = await axios.post(FETCH_URL, {
+//       requestType: "createVariant",
+//       token,
+//       variant,
+//     });
 
-    return data;
-  } catch {
-    throw new Error("Chyba při vytváření variant.");
-  }
-};
+//     return data;
+//   } catch {
+//     throw new Error("Chyba při vytváření variant.");
+//   }
+// };
 
-export const updateVariant = async (token: string | null, variant: Variant) => {
-  try {
-    if (!token) throw new Error("Chybějící token.");
-    if (!variant.id) throw new Error("Chybějící id.");
+// export const updateVariant = async (token: string | null, variant: Variant) => {
+//   try {
+//     if (!token) throw new Error("Chybějící token.");
+//     if (!variant.id) throw new Error("Chybějící id.");
 
-    const { data } = await axios.post(FETCH_URL, {
-      requestType: "updateVariant",
-      token,
-      name: variant.name,
-      itemId: variant.itemId,
-      variantId: variant.id,
-      addedPrice: variant.addedPrice,
-      isExclusive: variant.isExclusive,
-    });
+//     const { data } = await axios.post(FETCH_URL, {
+//       requestType: "updateVariant",
+//       token,
+//       name: variant.name,
+//       itemId: variant.itemId,
+//       variantId: variant.id,
+//       addedPrice: variant.addedPrice,
+//       isExclusive: variant.isExclusive,
+//     });
 
-    return data;
-  } catch {
-    throw new Error("Chyba při aktualizaci variant.");
-  }
-};
+//     return data;
+//   } catch {
+//     throw new Error("Chyba při aktualizaci variant.");
+//   }
+// };
 
-export const removeVariant = async (
-  token: string | null,
-  variantId: number,
-) => {
-  try {
-    if (!token) throw new Error("Chybějící token.");
-    if (!variantId) throw new Error("Chybějící id.");
+// export const removeVariant = async (
+//   token: string | null,
+//   variantId: number,
+// ) => {
+//   try {
+//     if (!token) throw new Error("Chybějící token.");
+//     if (!variantId) throw new Error("Chybějící id.");
 
-    const { data } = await axios.post(FETCH_URL, {
-      requestType: "removeVariant",
-      token,
-      variantId,
-    });
+//     const { data } = await axios.post(FETCH_URL, {
+//       requestType: "removeVariant",
+//       token,
+//       variantId,
+//     });
 
-    return data;
-  } catch {
-    throw new Error("Chyba při mazání variant.");
-  }
-};
+//     return data;
+//   } catch {
+//     throw new Error("Chyba při mazání variant.");
+//   }
+// };
 
 export const updateCategory = async (
   token: string | null,
