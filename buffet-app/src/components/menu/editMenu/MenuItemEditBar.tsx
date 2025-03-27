@@ -65,7 +65,8 @@ const MenuItemEditBar = ({
 
   const handleSave = async () => {
     handleClose();
-    const formatPrice = (Number(itemPrice.replace(",", ".")) * 100).toFixed(0);
+    const formatPrice = (value: string) =>
+      Number((Number(value.replace(",", ".")) * 100).toFixed(0));
 
     const data = {
       name: itemName,
@@ -76,11 +77,7 @@ const MenuItemEditBar = ({
       allergens: allergensInput,
       variants: itemVariants.map((variant) => ({
         ...variant,
-        addedPrice: Number(
-          (Number(String(variant.addedPrice).replace(",", ".")) * 100).toFixed(
-            0,
-          ),
-        ),
+        addedPrice: formatPrice(variant.addedPrice.toString()),
         isExclusive: Boolean(variant.isExclusive),
       })),
     };
@@ -117,18 +114,36 @@ const MenuItemEditBar = ({
       ...data,
     });
 
-    data.variants.forEach(async (variant) => {
-      const { error } = await updateVariant(token, {
-        ...variant,
-        addedPrice: Number(
-          (Number(itemPrice.replace(",", ".")) * 100).toFixed(0),
-        ),
-      });
+    /*if (
+      menuItem.variants.every((variant) =>
+        itemVariants.some((v) => v.id === variant.id),
+      )
+    ) {
+      data.variants.forEach(async (variant) => {
+        const { error } = await updateVariant(token, {
+          ...variant,
+          addedPrice: formatPrice(variant.addedPrice.toString()),
+        });
 
-      if (error) {
-        console.log("Error creating variant");
-      }
-    });
+        if (error) {
+          console.log("Error creating variant");
+        }
+      });
+    } else {
+      const newVariants = itemVariants.filter(
+        (variant) => !menuItem.variants.some((v) => v.id === variant.id),
+      );
+      newVariants.forEach(async (variant) => {
+        const { error } = await createVariant(token, menuItem.id, {
+          ...variant,
+          addedPrice: formatPrice(variant.addedPrice.toString()),
+        });
+
+        if (error) {
+          console.log("Error creating variant");
+        }
+      });
+    }*/
 
     if (error) {
       console.log("Error updating item");
