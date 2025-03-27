@@ -984,7 +984,34 @@ class BuffetApi
             } catch (QueryException $e) {
                 return $response->setError(Error::ItemUpdateFailed);
             }
+        }
 
+        if ($response->hasRequestByKey("variants")) {
+            /**
+             * @var array{array{name:string,itemId:int,addedPrice:int,isExclusive:bool}}
+             */
+            $variants = $response->getRequestByKey("variants");
+
+            foreach ($variants as $variant) {
+                // @phpstan-ignore function.alreadyNarrowedType
+                if (empty($variant["name"]) || empty($variant["addedPrice"]) || !is_bool($variant["isExclusive"])) {
+                    return $response->setError(Error::InvalidVariant);
+                }
+            }
+            VariantModel::query()->where("itemId", $itemId)->update(["removed" => true]);
+            foreach ($variants as $variant) {
+                $removedVariant = VariantModel::query()->where("itemId", $itemId)->where("name", $variant["name"])->where("addedPrice", $variant["addedPrice"])->where("isExclusive", $variant["isExclusive"]);
+                if ($removedVariant->exists()) {
+                    $removedVariant->update(["removed" => false]);
+                } else {
+                    VariantModel::query()->insert([
+                        "name" => $variant["name"],
+                        "itemId" => $itemId,
+                        "addedPrice" => $variant["addedPrice"],
+                        "isExclusive" => $variant["isExclusive"]
+                    ]);
+                }
+            }
         }
 
         return $response->setSuccess(Success::ItemUpdated);
@@ -1022,6 +1049,7 @@ class BuffetApi
         }
 
         ItemModel::query()->where("id", $itemId)->update(["removed" => true]);
+        VariantModel::query()->where("itemId", $itemId)->update(["removed" => true]);
 
         return $response->setSuccess(Success::ItemRemoved);
     }
@@ -1032,7 +1060,7 @@ class BuffetApi
      */
     function handleCreateItem(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(array_merge(["token"], ItemModel::getColumns()));
+        $response->setRequestKeys(array_merge(["token", "variants"], ItemModel::getColumns()));
 
         if (!$response->hasRequestKeys()) {
             return $response;
@@ -1064,9 +1092,28 @@ class BuffetApi
                 return $response;
             }
         }
+
+        /**
+         * @var array{array{name:string,itemId:int,addedPrice:int,isExclusive:bool}}
+         */
+        $variants = $response->getRequestByKey("variants");
+        foreach ($variants as $variant) {
+            // @phpstan-ignore function.alreadyNarrowedType
+            if (empty($variant["name"]) || empty($variant["addedPrice"]) || !is_bool($variant["isExclusive"])) {
+                return $response->setError(Error::InvalidVariant);
+            }
+        }
+
         $newItem = ItemModel::query()->create($itemParameters);
 
-        $response->setPayload("newId", $newItem->getAttribute("id"));
+        $newId = $newItem->getAttribute("id");
+
+        $response->setPayload("newId", $newId);
+
+        foreach ($variants as $variant) {
+            $variant["itemId"] = $newId;
+            VariantModel::query()->create($variant);
+        }
 
         return $response->setSuccess(Success::ItemCreated);
     }
