@@ -1064,20 +1064,28 @@ class BuffetApi
                 return $response;
             }
         }
-//,"name":"string","itemId":"number","addedPrice":"number","isExclusive":"boolean"}
-/**
- * @var array{array{name:string,itemId:int,addedPrice:int,isExclusive:bool}}
- */
+
+        /**
+         * @var array{array{name:string,itemId:int,addedPrice:int,isExclusive:bool}}
+         */
         $variants = $response->getRequestByKey("variants");
         foreach ($variants as $variant) {
-            if (empty($variant["name"]) || empty($variant["addedPrice"]) || empty($variant["isExclusive"])) {
+            // @phpstan-ignore function.alreadyNarrowedType
+            if (empty($variant["name"]) || empty($variant["addedPrice"]) || !is_bool($variant["isExclusive"])) {
                 return $response->setError(Error::InvalidVariant);
             }
         }
 
         $newItem = ItemModel::query()->create($itemParameters);
 
-        $response->setPayload("newId", $newItem->getAttribute("id"));
+        $newId = $newItem->getAttribute("id");
+
+        $response->setPayload("newId", $newId);
+
+        foreach ($variants as $variant) {
+            $variant["itemId"] = $newId;
+            VariantModel::query()->create($variant);
+        }
 
         return $response->setSuccess(Success::ItemCreated);
     }
