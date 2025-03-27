@@ -28,7 +28,7 @@ class VariantModel extends Model
     /**
      * @var bool
      */
-    public $timestamps = false;
+    public $timestamps = true;
 
     public static function getAll(): \Illuminate\Database\Eloquent\Collection  | bool
     {
