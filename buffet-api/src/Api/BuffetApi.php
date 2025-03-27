@@ -1022,6 +1022,7 @@ class BuffetApi
         }
 
         ItemModel::query()->where("id", $itemId)->update(["removed" => true]);
+        VariantModel::query()->where("itemId", $itemId)->update(["removed" => true]);
 
         return $response->setSuccess(Success::ItemRemoved);
     }
