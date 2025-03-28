@@ -193,7 +193,7 @@ const MenuItemEditBar = ({
     );
   };
 
-  const edited =
+  /*const edited =
     itemName !== menuItem?.name ||
     itemPrice !== String(menuItem?.price ? menuItem.price / 100 : 0) ||
     itemDescription !== menuItem?.description ||
@@ -208,7 +208,7 @@ const MenuItemEditBar = ({
     !itemDescription ||
     !itemPrice ||
     itemCategory === null ||
-    itemCategory === undefined;
+    itemCategory === undefined;*/
 
   return (
     <motion.aside
