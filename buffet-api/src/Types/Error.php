@@ -51,6 +51,7 @@ enum Error: string {
     ############################ Database ############################
     case QueryFailed = 'Query from database has failed';
     case OrderIdNotFound = 'Order id not found';
+    case DatabaseConnectionFailed = 'Database connection failed';
 
     ############################ Ws Channels ############################
     case NonexistentChannel = 'Channel doesn\'t exist';
