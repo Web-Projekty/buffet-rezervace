@@ -8,6 +8,7 @@ services:
         volumes:
             - ./../buffet-api:/var/www/html/:rw
             - ./../conf/:/var/www/html/conf/:rw
+            - ./../.git:/var/www/html/.git/:rw
 
         ports:
             - "8080:80" # Access Apache via http://localhost:8080
