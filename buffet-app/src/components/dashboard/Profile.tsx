@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useUser } from "../../../hooks/useUser";
-import Button from "../../ui/Button";
-import Input from "../../ui/Input";
+import { useUser } from "../../hooks/useUser";
+import Button from "../ui/Button";
+import Input from "../ui/Input";
 
 export type ProfileFormDataType = {
   name: string;
@@ -42,6 +42,16 @@ const Profile = () => {
   const handleSavePassword = () => {
     savePassword(formData);
   };
+
+  const nothingUserChanged =
+    fullName === formData.name &&
+    email === formData.email &&
+    tel === formData.tel;
+
+  const nothingPasswordChanged =
+    formData.newPassword === "" ||
+    formData.newPasswordConfirmation === "" ||
+    formData.password === "";
 
   return (
     <div className="flex w-full flex-col gap-4">
@@ -84,7 +94,11 @@ const Profile = () => {
               onChange={handleInputChange}
             />
           </div>
-          <Button onClick={handleSaveInfo} loading={loading}>
+          <Button
+            onClick={handleSaveInfo}
+            loading={loading}
+            disabled={nothingUserChanged}
+          >
             Uložit změny
           </Button>
         </div>
@@ -126,7 +140,11 @@ const Profile = () => {
               onChange={handleInputChange}
             />
           </div>
-          <Button onClick={handleSavePassword} loading={loading}>
+          <Button
+            onClick={handleSavePassword}
+            loading={loading}
+            disabled={nothingPasswordChanged}
+          >
             Uložit změny
           </Button>
         </div>

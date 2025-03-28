@@ -15,6 +15,7 @@ const KdsOrders = () => {
     upToDateOrders,
     maxSentOrders,
     maxWaitingOrders,
+    variants,
   } = useKdsOrders();
 
   const renderPendingOrders = () => {
@@ -22,7 +23,14 @@ const KdsOrders = () => {
       pendingOrders &&
       pendingOrders
         .slice(0, maxSentOrders)
-        .map((order) => <KdsOrder key={order.id} order={order} items={items} />)
+        .map((order) => (
+          <KdsOrder
+            key={order.id}
+            order={order}
+            items={items}
+            variants={variants}
+          />
+        ))
     );
   };
 

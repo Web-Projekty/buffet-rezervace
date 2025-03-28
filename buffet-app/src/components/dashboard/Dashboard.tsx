@@ -1,9 +1,9 @@
 import { lazy, Suspense, useMemo } from "react";
-import { Fallback } from "../../../main";
+import { Fallback } from "../../main";
 import { useSearchParams } from "react-router-dom";
-import Button from "../../ui/Button";
-import { removeDiacritics } from "../../utils/utils";
-import { useUser } from "../../../hooks/useUser";
+import Button from "../ui/Button";
+import { removeDiacritics } from "../utils/utils";
+import { useUser } from "../../hooks/useUser";
 import DashboardContent from "./DashboardContent";
 
 const AccountInformation = lazy(() => import("./AccountInformation"));

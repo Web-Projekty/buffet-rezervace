@@ -1,15 +1,15 @@
 import { AnimatePresence } from "framer-motion";
 import { lazy, Suspense, useCallback } from "react";
-import { ORDERS_PER_PAGE } from "../../../../constants";
-import { useBackendPaging } from "../../../../hooks/useBackendPaging";
-import { Fallback } from "../../../../main";
-import { OrdersData } from "../../../../types";
-import Order from "../../../orders/Order";
-import Loading from "../../../ui/Loading";
-import PagingButtons from "../../../ui/PagingButtons";
-import FetchError from "../../../error/FetchError";
+import { ORDERS_PER_PAGE } from "../../../constants";
+import { useBackendPaging } from "../../../hooks/useBackendPaging";
+import { Fallback } from "../../../main";
+import { OrdersData } from "../../../types";
+import Order from "../../orders/Order";
+import Loading from "../../ui/Loading";
+import PagingButtons from "../../ui/PagingButtons";
+import FetchError from "../../error/FetchError";
 
-const HorizontalPaging = lazy(() => import("../../../ui/HorizontalPaging"));
+const HorizontalPaging = lazy(() => import("../../ui/HorizontalPaging"));
 
 const OrderHistory = () => {
   const {
@@ -27,6 +27,8 @@ const OrderHistory = () => {
     "orderPage",
     "orders",
   );
+
+  console.log(dataList?.variants);
 
   const renderPagingButtons = useCallback(() => {
     return (
@@ -47,7 +49,17 @@ const OrderHistory = () => {
       <h1 className="flex items-center gap-2 text-2xl font-bold">
         Tvá historie objednávek
         <span className="flex items-center gap-2">
-          ({dataList ? dataList.itemsCount : <Loading size={20} />})
+          (
+          {dataList ? (
+            dataList.itemsCount > 0 ? (
+              dataList.itemsCount
+            ) : (
+              0
+            )
+          ) : (
+            <Loading size={20} />
+          )}
+          )
         </span>
       </h1>
       <div className="flex min-h-[27rem] flex-col items-center gap-4">
@@ -68,6 +80,7 @@ const OrderHistory = () => {
                   key={order.pickUpId + "" + order.userId}
                   order={order}
                   items={dataList?.items}
+                  variants={dataList?.variants}
                 />
               ))}
             </ul>

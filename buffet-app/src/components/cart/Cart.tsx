@@ -39,7 +39,10 @@ const Cart = ({ modal, onClick }: CartProps) => {
 
   const areSelectedVariants = () => {
     return cartItems.every(
-      (item) => item.selectedVariants.length > 0 || item.variants.length === 0,
+      (item) =>
+        item.selectedVariants.length > 0 ||
+        item.variants.length === 0 ||
+        !item.variants.some((variant) => variant.isExclusive),
     );
   };
 

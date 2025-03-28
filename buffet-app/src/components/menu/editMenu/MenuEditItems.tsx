@@ -19,7 +19,7 @@ const MenuEditItems = ({
 }: MenuEditItemsProps) => {
   return (
     <div
-      className={`grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-10`}
+      className={`grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:gap-10`}
     >
       <MenuItemAdd handleBarOpen={handleBarOpen} isBarOpen={isItemBarOpen} />
       {menuItems

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { scaleUpAnimation } from "../../../animations";
-import { useUser } from "../../../hooks/useUser";
+import { scaleUpAnimation } from "../../animations";
+import { useUser } from "../../hooks/useUser";
 
 const AccountInformation = () => {
   const { fullName, email, classTitle, credits } = useUser();

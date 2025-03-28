@@ -4,12 +4,17 @@ import useAuthUser from "react-auth-kit/hooks/useAuthUser";
 import { User } from "../types";
 import { toastMessages } from "../components/utils/toastMessages";
 import { updateUserData, updateUserPassword } from "../components/utils/api";
-import { ProfileFormDataType } from "../components/auth/dashboard/Profile";
+import { ProfileFormDataType } from "../components/dashboard/Profile";
 import { removeTokenExpiration } from "../components/utils/auth";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import {
+  changePasswordSchema,
+  changeUserDataSchema,
+} from "../components/utils/validation";
+import { z } from "zod";
 
 type UseUserReturn = {
   user: User | null;
@@ -35,16 +40,25 @@ export const useUser = (): UseUserReturn => {
   const [loading, setLoading] = useState(false);
 
   const isAdmin: boolean = user?.isAdmin || false;
-  const fullName: string | null = user?.fullName || null;
-  const email: string | null = user?.email || null;
+  const fullName: string = user?.fullName || "";
+  const email: string = user?.email || "";
   const classTitle: string | null = user?.class || null;
-  const tel: string | null = user?.tel || null;
+  const tel: string = user?.tel || "";
   const credits: string | null = user?.credits || null;
 
   const handleSavePassword = async (formData: ProfileFormDataType) => {
     const { password, newPassword, newPasswordConfirmation } = formData;
     try {
       setLoading(true);
+
+      const passwordData = {
+        oldPassword: password,
+        newPassword,
+        confirmPassword: newPasswordConfirmation,
+      };
+
+      await changePasswordSchema(token).parseAsync(passwordData);
+
       const response = await updateUserPassword(
         token,
         password,
@@ -57,8 +71,11 @@ export const useUser = (): UseUserReturn => {
         toastMessages.passwordChange.success,
         toastMessages.passwordChange.error,
       );
-    } catch {
-      toast.error(toastMessages.passwordChange.error);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        const fieldErrors = err.flatten().fieldErrors;
+        toast.error(Object.values(fieldErrors).join("\n"));
+      }
     } finally {
       setLoading(false);
     }
@@ -69,14 +86,28 @@ export const useUser = (): UseUserReturn => {
 
     try {
       setLoading(true);
+
+      const userData = {
+        fullName: name,
+        tel,
+        email,
+      };
+
+      await changeUserDataSchema.parseAsync(userData);
+
       const response = await updateUserData(token, name, tel, email);
       handleResponse(
         response.status,
         toastMessages.profileChange.success,
         toastMessages.profileChange.error,
       );
-    } catch {
-      toast.error(toastMessages.profileChange.error);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        const fieldErrors = err.flatten().fieldErrors;
+        toast.error(Object.values(fieldErrors).join("\n"));
+      } else {
+        toast.error(toastMessages.register.error);
+      }
     } finally {
       setLoading(false);
     }

@@ -11,12 +11,18 @@ const CartPurchaseMethod = ({
   handlePaymentMethodChange,
   method,
 }: CartPurchaseMethodsProps) => {
-  const { name, image } = method;
+  const { name, image, enabled, input } = method;
+
+  const handlePaymentMethod = (method: PaymentMethod): void => {
+    if (!enabled) return;
+    handlePaymentMethodChange(method);
+  };
+
   return (
     <div
       key={name}
-      className="flex flex-row items-center justify-between rounded-lg border border-white p-2"
-      onClick={() => handlePaymentMethodChange(method)}
+      className={`flex flex-row items-center justify-between rounded-lg border border-white p-2 ${!enabled ? "opacity-50" : ""}`}
+      onClick={() => handlePaymentMethod(method)}
     >
       <div className="flex flex-row items-center justify-center gap-2">
         {image.map((image) => (
@@ -33,16 +39,17 @@ const CartPurchaseMethod = ({
         ))}
       </div>
 
-      <label htmlFor={method.name} className="mx-1 ml-auto text-sm">
-        {method.name}
+      <label htmlFor={name} className="mx-1 ml-auto text-sm">
+        {name}
       </label>
       <input
-        type={method.input}
-        name={method.input === "radio" ? "payment" : undefined}
-        id={method.name}
+        type={input}
+        name={input === "radio" ? "payment" : undefined}
+        id={name}
         checked={selectedPaymentMethods.includes(method)}
-        onChange={() => handlePaymentMethodChange(method)}
+        onChange={() => handlePaymentMethod(method)}
         className="pointer-events-none"
+        disabled={!enabled}
       />
     </div>
   );
