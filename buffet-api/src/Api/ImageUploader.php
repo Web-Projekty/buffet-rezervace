@@ -39,6 +39,10 @@ class ImageUploader
         $uploadedFile = $uploadedFiles['image'];
 
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+            $imageProvider = new ImageProvider;
+            if ($path = $imageProvider->getFilePath("image/" . $directory . "/" . $imageId, null) != null) {
+                var_dump($path);
+            }
             $filename = $this->moveUploadedFile($baseDirectory, $fileDirectory, $uploadedFile, $imageId);
         } else {
             $this->apiResponse->setError(Error::ImageUploadFailed);
