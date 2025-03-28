@@ -80,7 +80,7 @@ class BuffetApi
 
         var_dump($HEAD = explode(" ", $HEAD));
         var_dump(shell_exec("cat .git/" . $HEAD[1] . " && pwd"));
-        var_dump("cat .git/" . $HEAD[1] . " && pwd");
+       // var_dump("cat .git/" . $HEAD[1] . " && pwd");
         return $html->withHeader('Content-type', 'application/json')->withAddedHeader("Test", "Test");
     }
 
