@@ -37,7 +37,7 @@ type MenuItemApiProp = Omit<
 };
 
 type MenuItemApi = {
-  menuItem: MenuItem | null;
+  menuItemId?: MenuItem["id"];
   error: boolean;
 };
 
@@ -209,7 +209,7 @@ export const createMenuItem = async (
     });
     console.log(data);
     return {
-      menuItem: data.payload.data as MenuItem,
+      menuItemId: data.payload.newId as MenuItem["id"],
       error: data.status !== "success",
     };
   } catch {
@@ -230,7 +230,6 @@ export const updateMenuItem = async (
       ...menuItem,
     });
     return {
-      menuItem: data.payload.data as MenuItem,
       error: data.status !== "success",
     };
   } catch {
@@ -252,7 +251,6 @@ export const removeMenuItem = async (
     });
 
     return {
-      menuItem: data.payload.data as MenuItem,
       error: data.status !== "success",
     };
   } catch {
@@ -324,7 +322,7 @@ export const removeMenuItem = async (
 
 export const updateCategory = async (
   token: string | null,
-  category: Omit<Category, "id"> & { categoryId: number },
+  category: Omit<Category, "id" | "image"> & { categoryId: number },
 ): Promise<{
   category: Category;
   error: boolean;
@@ -347,9 +345,9 @@ export const updateCategory = async (
 
 export const createCategory = async (
   token: string | null,
-  category: Omit<Category, "id">,
+  category: Omit<Category, "id" | "image">,
 ): Promise<{
-  category: Category;
+  categoryId: Category["id"];
   error: boolean;
 }> => {
   try {
@@ -361,7 +359,7 @@ export const createCategory = async (
     });
 
     return {
-      category: data.payload.data as Category,
+      categoryId: data.payload.newId as Category["id"],
       error: data.status !== "success",
     };
   } catch {
@@ -388,7 +386,7 @@ export const removeCategory = async (
 
 export const uploadImage = async (
   token: string | null,
-  itemId: MenuItem["id"],
+  itemId: MenuItem["id"] | undefined,
   directory: "items" | "categories",
   file: File | null,
 ) => {
