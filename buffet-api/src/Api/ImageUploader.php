@@ -44,7 +44,6 @@ class ImageUploader
             while (($path = $imageProvider->getFilePath($directory . "/" . $imageId, null)) != "") {
                 $i++;
                 unlink($path);
-                var_dump($path);
                 if ($i > 30) {die;}
             }
             $filename = $this->moveUploadedFile($baseDirectory, $fileDirectory, $uploadedFile, $imageId);

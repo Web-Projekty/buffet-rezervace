@@ -89,8 +89,8 @@ class PaymentApi
     public function getPaymentInfo(int $paymentId): void
     {
         $result = $this->thePayClient->getPayment(strval($paymentId));
-        var_dump($result->getState());
-        var_dump($result);
+        //var_dump($result->getState());
+        //var_dump($result);
     }
 
     /**
