@@ -116,13 +116,16 @@ export const getVariantsPrice = (
 export const onImageChange = (
   e: React.ChangeEvent<HTMLInputElement>,
   setImage: (image: string) => void,
+  setImageFile: (imageFile: File) => void,
 ) => {
-  if (e.target.files && e.target.files[0]) {
+  const file = e.target.files?.[0];
+  if (file) {
     const reader = new FileReader();
-    reader.onload = (event) => {
-      setImage(event.target?.result as string);
+    reader.onloadend = () => {
+      setImage(reader.result as string);
     };
-    reader.readAsDataURL(e.target.files[0]);
+    reader.readAsDataURL(file);
+    setImageFile(file);
   }
 };
 

@@ -12,6 +12,7 @@ import {
   createMenuItem,
   removeMenuItem,
   updateMenuItem,
+  uploadImage,
 } from "../../utils/api";
 import { useUser } from "../../../hooks/useUser";
 import ImageInput from "../../ui/ImageInput";
@@ -49,6 +50,7 @@ const MenuItemEditBar = ({
   const [itemImage, setItemImage] = useState<MenuItem["image"]>(
     menuItem?.image || "",
   );
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [itemCategory, setItemCategory] = useState<MenuItem["category"]>(
     menuItem?.category || 1,
   );
@@ -104,6 +106,8 @@ const MenuItemEditBar = ({
         itemId: menuItem.id,
         ...data,
       });
+
+      await uploadImage(token, menuItem.id, "items", imageFile);
 
       if (error) {
         console.log("Error updating item");
@@ -182,7 +186,7 @@ const MenuItemEditBar = ({
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onImageChange(e, setItemImage);
+    onImageChange(e, setItemImage, setImageFile);
   };
 
   const handleAllergenChange = (id: number) => {

@@ -30,7 +30,7 @@ type UpdateOrderApi = {
 
 type MenuItemApiProp = Omit<
   MenuItem,
-  "id" | "categoryName" | "allergens" | "variants"
+  "id" | "categoryName" | "allergens" | "variants" | "image"
 > & {
   allergens: Allergen["id"][];
   variants: Omit<Variant, "id" | "itemId">[];
@@ -386,11 +386,29 @@ export const removeCategory = async (
   }
 };
 
-export const uploadImage = async (token: string) => {
+export const uploadImage = async (
+  token: string | null,
+  itemId: MenuItem["id"],
+  directory: "items" | "categories",
+  file: File | null,
+) => {
   try {
-    const { data } = await axios.post(FETCH_URL, {
-      requestType: "uploadImage",
-      token,
+    if (!token) throw new Error("Chybějící token.");
+    if (!itemId) throw new Error("Chybějící id.");
+    if (!file) throw new Error("Chybějící soubor.");
+    if (!directory) throw new Error("Chybějící adresář.");
+
+    const formData = new FormData();
+    formData.append("requestType", "uploadImage");
+    formData.append("token", token);
+    formData.append("imageId", itemId.toString());
+    formData.append("directory", directory);
+    formData.append("image", file);
+
+    const { data } = await axios.post(FETCH_URL, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
 
     return data;
