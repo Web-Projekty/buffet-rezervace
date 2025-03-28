@@ -26,9 +26,9 @@ class CredentialsManager
      *
      * @deprecated - poor return value design use custom class factory instead
      *
-     * @return array<mixed> Schema here: https://github.com/Web-Projekty/buffet-rezervace/wiki/getCredentials()
+     * @return array{db_host:string,db_user:string,db_pass:string,db_name:string,success:bool}|array{success:false}
      */
-    function getCredentials(): array
+    function getEncryptedCredentials(): array
     {
         $key = EnvReader::getEnvProperty(Settings::DecryptKey);
         $cipher = "aes-256-ecb";
@@ -73,14 +73,13 @@ class CredentialsManager
 
     /**
      * Takes two parameters, encrypts them and saves them to a json file
-     *
      * Uses openssl encryption
-     *
+     * @deprecated
      * @param  string $username   Username to encrypt.
      * @param  string $password   Password to encrypt.
      * @return void   Description of the return value.
      */
-    function createCredentials(string $username, string $password): void
+    function createEncryptedCredentials(string $username, string $password): void
     {
         $host = EnvReader::getEnvProperty(Settings::DBHost);
 
@@ -113,5 +112,18 @@ class CredentialsManager
             return false;
         }
         return true;
+    }
+
+    /**
+     * @return array{db_host:string,db_port:string,db_user:string,db_pass:string,db_name:string,success:bool}|array{success:false}
+     */
+    public function getCredentials()
+    {
+        return ["db_host" => EnvReader::getEnvProperty(Settings::DBHost),
+            "db_port" => EnvReader::getEnvProperty(Settings::DBPort, true) ?? "3306",
+            "db_user" => EnvReader::getEnvProperty(Settings::DBUser),
+            "db_pass" => EnvReader::getEnvProperty(Settings::DBPass),
+            "db_name" => EnvReader::getEnvProperty(Settings::DBName),
+            "success" => true];
     }
 }

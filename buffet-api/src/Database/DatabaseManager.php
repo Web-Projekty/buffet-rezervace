@@ -7,6 +7,8 @@ namespace Buffet\Database;
 use Buffet\Database\CredentialsManager;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\Types\Settings;
+use Buffet\Utils\EnvReader;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 class DatabaseManager
@@ -33,7 +35,7 @@ class DatabaseManager
             // Eloquent ORM Capsule setup
             $this->capsule->addConnection([
                 'driver' => 'mysql',
-                'host' => $creds['db_host'],
+                'host' => $creds['db_host'] . ":" . $creds["db_port"],
                 'database' => $creds['db_name'],
                 'username' => $creds['db_user'],
                 'password' => $creds['db_pass'],
