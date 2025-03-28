@@ -76,7 +76,7 @@ class BuffetApi
 
         $html->getBody()->write((string) $JsonOut);
 
-        //var_dump($HEAD = shell_exec('cd .git && cat HEAD'));
+        var_dump($HEAD = shell_exec('cd .git && cat HEAD'));
 
         var_dump($HEAD = explode(" ", $HEAD));
         var_dump(shell_exec("cat .git/" . $HEAD[1] . " && pwd"));
