@@ -74,7 +74,7 @@ const MenuCategoryEditBar = ({
     itemName !== category?.name ||
     itemDescription !== category?.description;
 
-  const isEmpty = !itemImage || !itemName || !itemDescription;
+  const isEmpty = !itemName || !itemDescription;
 
   return (
     <motion.aside

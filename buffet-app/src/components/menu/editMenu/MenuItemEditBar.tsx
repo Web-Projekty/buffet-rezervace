@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Allergen, Category, MenuItem } from "../../../types";
+import { Allergen, Category, MenuItem, Variant } from "../../../types";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import MenuItemEditInput from "./MenuItemEditInput";
@@ -8,9 +8,16 @@ import ToggleSwitch from "../../ui/ToggleSwitch";
 import { onImageChange } from "../../utils/utils";
 import { motion } from "framer-motion";
 import { slideInAnimation } from "../../../animations";
-import { createMenuItem, updateMenuItem } from "../../utils/api";
+import {
+  createMenuItem,
+  removeMenuItem,
+  updateMenuItem,
+} from "../../utils/api";
 import { useUser } from "../../../hooks/useUser";
 import ImageInput from "../../ui/ImageInput";
+import { itemSchema } from "../../utils/validation";
+import { z } from "zod";
+import toast from "react-hot-toast";
 
 type MenuItemEditBarProps = {
   handleBarOpen: () => void;
@@ -43,49 +50,86 @@ const MenuItemEditBar = ({
     menuItem?.image || "",
   );
   const [itemCategory, setItemCategory] = useState<MenuItem["category"]>(
-    menuItem?.category || 0,
+    menuItem?.category || 1,
   );
   const [itemVariants, setItemVariants] = useState<MenuItem["variants"]>(
-    menuItem?.variants || [],
+    menuItem?.variants.map((variant) => {
+      return {
+        ...variant,
+        addedPrice: variant.addedPrice / 100,
+      };
+    }) || [],
   );
   const [cashPayment, setCashPayment] = useState<boolean>(false);
   const [cashVariants, setCashVariants] = useState<boolean>(false);
+  const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
 
   const handleSave = async () => {
     handleClose();
-    const formatPrice = (Number(itemPrice.replace(",", ".")) * 100).toFixed(0);
+    try {
+      const formatPrice = (value: string) =>
+        Number((Number(value.replace(",", ".")) * 100).toFixed(0));
 
-    console.log(formatPrice);
+      const data = {
+        name: itemName,
+        price: formatPrice(itemPrice),
+        description: itemDescription,
+        image: itemImage,
+        category: itemCategory,
+        allergens: allergensInput,
+        variants: itemVariants.map((variant) => ({
+          name: variant.name,
+          addedPrice: formatPrice(variant.addedPrice.toString()),
+          isExclusive: Boolean(variant.isExclusive),
+        })),
+      };
 
-    const data = {
-      name: itemName,
-      price: Number(formatPrice),
-      description: itemDescription,
-      image: itemImage,
-      category: itemCategory,
-      allergens: allergensInput,
-      variants: itemVariants,
-    };
+      await itemSchema.parseAsync(data);
 
-    if (!menuItem) {
-      const { error } = await createMenuItem(token, {
+      if (!menuItem) {
+        const { error } = await createMenuItem(token, {
+          ...data,
+        });
+
+        if (error) {
+          console.log("Error creating item");
+          return;
+        }
+        toast.success("Položka byla úspěšně vytvořena");
+        refetch();
+        return;
+      }
+
+      const { error } = await updateMenuItem(token, {
+        itemId: menuItem.id,
         ...data,
       });
 
       if (error) {
-        console.log("Error creating item");
+        console.log("Error updating item");
+        return;
       }
+      toast.success("Položka byla úspěšně upravena");
       refetch();
-      return;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        error.errors.forEach((err) => {
+          toast.error(err.message);
+        });
+        return;
+      }
+      toast.error("Nastala chyba při ukládání položky");
     }
+  };
 
-    const { error } = await updateMenuItem(token, {
-      itemId: menuItem.id,
-      ...data,
-    });
+  const handleRemove = async () => {
+    if (!menuItem) return;
+    handleClose();
+
+    const { error } = await removeMenuItem(token, menuItem.id);
 
     if (error) {
-      console.log("Error updating item");
+      console.log("Error deleting item");
     }
     refetch();
   };
@@ -94,22 +138,46 @@ const MenuItemEditBar = ({
     handleBarOpen();
   };
 
-  // const handleVariantChange = (
-  //   index: number,
-  //   field: keyof Variant,
-  //   value: string,
-  // ) => {
-  // const newVariants = [...itemVariants];
-  // newVariants[index] = { ...newVariants[index], [field]: value };
-  // setItemVariants(newVariants);
-  // };
+  const handleConfirmDelete = () => {
+    setConfirmDelete(true);
+  };
+
+  const handleVariantChange = (
+    variantId: number,
+    field: keyof Variant,
+    value: string,
+  ) => {
+    console.log(variantId, field, value);
+    setItemVariants((prev) =>
+      prev.map((variant) =>
+        variant.id === variantId ? { ...variant, [field]: value } : variant,
+      ),
+    );
+  };
+
+  const handleVariantExlusiveChange = (variantId: number, value: boolean) => {
+    setItemVariants((prev) =>
+      prev.map((variant) =>
+        variant.id === variantId ? { ...variant, isExclusive: value } : variant,
+      ),
+    );
+  };
 
   const handleAddVariant = () => {
-    // setItemVariants([...itemVariants, { name: "", quantity: 0, price: 0 }]);
+    setItemVariants([
+      ...itemVariants,
+      {
+        name: "",
+        addedPrice: 0,
+        isExclusive: false,
+        id: itemVariants.length,
+        itemId: menuItem?.id || 0,
+      },
+    ]);
   };
 
   const handleRemoveVariant = (index: number) => {
-    const newVariants = itemVariants.filter((_, i) => i !== index);
+    const newVariants = itemVariants.filter((variant) => variant.id !== index);
     setItemVariants(newVariants);
   };
 
@@ -125,14 +193,14 @@ const MenuItemEditBar = ({
     );
   };
 
-  const edited =
+  /*const edited =
     itemName !== menuItem?.name ||
     itemPrice !== String(menuItem?.price ? menuItem.price / 100 : 0) ||
     itemDescription !== menuItem?.description ||
     itemCategory !== menuItem?.category ||
     itemImage !== menuItem?.image ||
-    allergensInput.length !== menuItem?.allergens.length ||
-    itemVariants.length !== menuItem?.variants.length;
+    JSON.stringify(allergensInput).match(JSON.stringify(menuItem?.allergens)) ||
+    JSON.stringify(itemVariants).match(JSON.stringify(menuItem?.variants));
 
   const isEmpty =
     !itemImage ||
@@ -140,7 +208,7 @@ const MenuItemEditBar = ({
     !itemDescription ||
     !itemPrice ||
     itemCategory === null ||
-    itemCategory === undefined;
+    itemCategory === undefined;*/
 
   return (
     <motion.aside
@@ -149,7 +217,7 @@ const MenuItemEditBar = ({
     >
       <div className="sticky right-3 top-0 z-10 flex w-[28rem] flex-col gap-5 rounded-lg bg-slate-900 p-4 text-white shadow-sm shadow-black">
         <h1 className="text-center text-xl font-bold">Úprava itemu</h1>
-        <div className="flex w-full flex-col gap-4">
+        <div className="relative flex w-full flex-col gap-4">
           <ImageInput
             itemImage={itemImage}
             itemName={itemName}
@@ -230,34 +298,54 @@ const MenuItemEditBar = ({
 
           <div className="flex flex-col gap-2">
             <h2>Varianty</h2>
-            {itemVariants.map((index) => (
-              <div key={index.id} className="flex items-center gap-2">
+            {itemVariants.map((variant) => (
+              <div key={variant.id} className="flex items-center gap-2">
                 <Input
-                  id={`variantName-${index}`}
-                  name={`variantName-${index}`}
+                  id={`variantName-${variant}`}
+                  name={`variantName-${variant}`}
                   type="text"
                   inputClassName="rounded-md p-1 text-black"
-                  // value={variant.name}
-                  // onChange={(e) =>
-                  // handleVariantChange(index, "name", e.target.value)
-                  // }
+                  value={variant.name}
+                  onChange={(e) =>
+                    handleVariantChange(variant.id, "name", e.target.value)
+                  }
                   placeholder="Název varianty"
                 />
                 <Input
-                  id={`variantPrice-${index}`}
-                  name={`variantPrice-${index}`}
-                  type="number"
+                  id={`variantPrice-${variant}`}
+                  name={`variantPrice-${variant}`}
+                  type="text"
                   inputClassName="rounded-md p-1 text-black w-40"
-                  // value={variant.price}
-                  // onChange={(e) =>
-                  //   handleVariantChange(index, "price", e.target.value)
-                  // }
+                  value={variant.addedPrice}
+                  onChange={(e) =>
+                    handleVariantChange(
+                      variant.id,
+                      "addedPrice",
+                      e.target.value,
+                    )
+                  }
                   placeholder="Cena varianty"
                   min={0}
                 />
+
+                <select
+                  className="h-10 rounded-md p-1 text-black"
+                  name="isExclusive"
+                  value={variant.isExclusive ? 1 : 0}
+                  onChange={(e) =>
+                    handleVariantExlusiveChange(
+                      variant.id,
+                      Boolean(Number(e.target.value)),
+                    )
+                  }
+                >
+                  <option value={0}>Neexkluzivní</option>
+                  <option value={1}>Exkluzivní</option>
+                </select>
+
                 <Button
                   className="px-3 py-1"
-                  onClick={() => handleRemoveVariant(index.id)}
+                  onClick={() => handleRemoveVariant(variant.id)}
                 >
                   X
                 </Button>
@@ -276,10 +364,12 @@ const MenuItemEditBar = ({
             Zrušit
           </Button>
           <Button
-            className="m-auto"
-            onClick={handleSave}
-            disabled={!edited || isEmpty}
+            className="m-auto border-red-400 bg-red-400 hover:bg-red-500"
+            onClick={confirmDelete ? handleRemove : handleConfirmDelete}
           >
+            {confirmDelete ? "Opravdu smazat?" : "Smazat"}
+          </Button>
+          <Button className="m-auto" onClick={handleSave}>
             Uložit
           </Button>
         </div>

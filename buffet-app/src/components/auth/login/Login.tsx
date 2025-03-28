@@ -16,8 +16,8 @@ const Login = () => {
   const { user } = useUser();
 
   const [formData, setFormData] = useState<LoginFormData>({
-    username: "user4",
-    password: "u",
+    username: "",
+    password: "",
   });
 
   const [searchParams] = useSearchParams();

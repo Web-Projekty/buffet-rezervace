@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Button from "../../../ui/Button";
+import Button from "../../ui/Button";
 
-type PaymentForm = {
+export type PaymentForm = {
   thePay: boolean;
   thePayApi: string;
   thePayPass: string;
@@ -28,7 +28,7 @@ const AdminPayments = () => {
 
   return (
     <section className="flex w-full flex-col justify-between gap-5">
-      <h1 className="text-2xl font-bold">Nastavení provozu</h1>
+      <h1 className="text-2xl font-bold">Nastavení plateb</h1>
       <div className="flex w-full flex-col justify-center gap-2 rounded-lg bg-backgroundColor p-2">
         <h2 className="text-xl font-bold">Platební brána ThePay</h2>
         <div className="flex flex-col gap-2">

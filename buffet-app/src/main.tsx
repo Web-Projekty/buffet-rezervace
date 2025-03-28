@@ -15,9 +15,7 @@ const Menu = lazy(() => import("./components/menu/Menu.tsx"));
 const MenuEdit = lazy(() => import("./components/menu/editMenu/MenuEdit.tsx"));
 const Login = lazy(() => import("./components/auth/login/Login.tsx"));
 const Register = lazy(() => import("./components/auth/register/Register.tsx"));
-const Dashboard = lazy(
-  () => import("./components/auth/dashboard/Dashboard.tsx"),
-);
+const Dashboard = lazy(() => import("./components/dashboard/Dashboard.tsx"));
 const Allergens = lazy(() => import("./components/allergens/Allergens.tsx"));
 const CartPurchase = lazy(
   () => import("./components/cart/purchase/CartPurchase.tsx"),
@@ -52,9 +50,7 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <ErrorBoundary fullPage>
-        <Suspense fallback={<Fallback />}>
-          <App />
-        </Suspense>
+        <App />
       </ErrorBoundary>
     ),
     errorElement: <PageNotFound />,
@@ -63,95 +59,77 @@ const router = createBrowserRouter([
         path: "/",
         index: true,
         element: (
-          <ErrorBoundary>
-            <Suspense fallback={<Fallback />}>
-              <Menu />
-            </Suspense>
-          </ErrorBoundary>
+          <Suspense fallback={<Fallback />}>
+            <Menu />
+          </Suspense>
         ),
       },
       {
         path: "/menu/edit",
         element: (
           <RequireAuth requireAdmin={true}>
-            <ErrorBoundary>
-              <Suspense fallback={<Fallback />}>
-                <MenuEdit />
-              </Suspense>
-            </ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
+              <MenuEdit />
+            </Suspense>
           </RequireAuth>
         ),
       },
       {
         path: "/allergens",
         element: (
-          <ErrorBoundary>
-            <Suspense fallback={<Fallback />}>
-              <Allergens />
-            </Suspense>
-          </ErrorBoundary>
+          <Suspense fallback={<Fallback />}>
+            <Allergens />
+          </Suspense>
         ),
       },
       {
         path: "/account",
         element: (
           <RequireAuth requireAdmin={false} fallbackPath="/login">
-            <ErrorBoundary>
-              <Suspense fallback={<Fallback />}>
-                <Dashboard />
-              </Suspense>
-            </ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
+              <Dashboard />
+            </Suspense>
           </RequireAuth>
         ),
       },
       {
         path: "/login",
         element: (
-          <ErrorBoundary>
-            <Suspense fallback={<Fallback />}>
-              <Login />
-            </Suspense>
-          </ErrorBoundary>
+          <Suspense fallback={<Fallback />}>
+            <Login />
+          </Suspense>
         ),
       },
       {
         path: "/register",
         element: (
-          <ErrorBoundary>
-            <Suspense fallback={<Fallback />}>
-              <Register />
-            </Suspense>
-          </ErrorBoundary>
+          <Suspense fallback={<Fallback />}>
+            <Register />
+          </Suspense>
         ),
       },
       {
         path: "/cart",
         element: (
-          <ErrorBoundary>
-            <Suspense fallback={<Fallback />}>
-              <CartPurchase />
-            </Suspense>
-          </ErrorBoundary>
+          <Suspense fallback={<Fallback />}>
+            <CartPurchase />
+          </Suspense>
         ),
       },
       {
         path: "/return",
         element: (
-          <ErrorBoundary>
-            <Suspense fallback={<Fallback />}>
-              <SuccessOrder />
-            </Suspense>
-          </ErrorBoundary>
+          <Suspense fallback={<Fallback />}>
+            <SuccessOrder />
+          </Suspense>
         ),
       },
       {
         path: "/*",
         element: (
-          <ErrorBoundary>
-            <Suspense fallback={<Fallback />}>
-              <PageNotFound />
-            </Suspense>
-          </ErrorBoundary>
+          <Suspense fallback={<Fallback />}>
+            <PageNotFound />
+          </Suspense>
         ),
       },
     ],
