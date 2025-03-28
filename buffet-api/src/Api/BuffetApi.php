@@ -1255,6 +1255,7 @@ class BuffetApi
     function handleCreateCategory(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "name", "description"]);
+        $response->setPayloadKeys(["newId"]);
 
         $jwt = new JWTApi;
 
@@ -1277,7 +1278,9 @@ class BuffetApi
         $category["name"] = $response->getRequestByKey("name");
         $category["description"] = $response->getRequestByKey("description");
 
-        CategoryModel::query()->create($category);
+        $newCategory = CategoryModel::query()->create($category);
+
+        $response->setPayload("newId", $newCategory->getAttribute("id"));
 
         return $response->setSuccess(Success::CategoryCreated);
     }
