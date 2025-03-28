@@ -154,6 +154,7 @@ class OrderModel extends Model
         $order = OrderModel::query()->create([
             'userId' => $userId,
             'status' => $status->value,
+            'type' => $paymentMethod,
             'pickupDate' => $pickupDate,
             'items' => json_encode($items),
             'paymentId' => $paymentId,
