@@ -1,47 +1,32 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { ReactNode } from "react";
+import { Check } from "lucide-react";
+import PageNotFound from "../error/PageNotFound";
 
 const SuccessOrder = () => {
   const [searchParams] = useSearchParams();
-  const id = searchParams.get("id");
 
-  /*if (!order) {
+  if (
+    searchParams.get("payment_uid") === null ||
+    searchParams.get("project_id") === null
+  ) {
     return <PageNotFound />;
-  }*/
-
-  const renderSvg = (): ReactNode => {
-    return (
-      <div className="flex h-28 w-28 items-center justify-center rounded-full border-2 border-none bg-slate-700 shadow-md shadow-black">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-20 w-20 text-cyan-500"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M5 13l4 4L19 7"
-          />
-        </svg>
-      </div>
-    );
-  };
+  }
 
   return (
     <article className="flex flex-col items-center justify-center gap-5 text-white">
-      {renderSvg()}
-      <div className="flex flex-col items-center">
-        <h1 className="text-center text-2xl font-bold">
-          Objednávka <span className="text-cyan-500">{id ? id : 256}</span>
+      <div className="flex h-28 w-28 items-center justify-center rounded-full border-2 border-none bg-slate-700 shadow-md shadow-black">
+        <Check size={64} className="text-cyan-500" />
+      </div>
+      <div className="flex flex-col items-center gap-5">
+        <h1 className="max-w-[22rem] text-center text-2xl font-bold">
+          Vaše objednávka byla úspěšně vytvořena
         </h1>
         <h2 className="text-xl">
           Můžete ji sledovat{" "}
           <Link
             to="/account?page=prehled"
-            className="italic text-cyan-500 hover:text-cyan-600"
+            className="italic text-interactiveColor hover:text-interactiveHoverColor"
+            replace
           >
             zde
           </Link>
