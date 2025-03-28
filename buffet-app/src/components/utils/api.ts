@@ -6,9 +6,15 @@ import {
   MenuItem,
   Order,
   OrderStatus,
+  Variant,
 } from "../../types";
 import { FETCH_URL } from "../../constants";
 import { CartItem } from "../../store/CartStore";
+import {
+  CloseTimeDay,
+  TimeSlots,
+} from "../dashboard/adminContent/AdminService";
+import { PaymentForm } from "../dashboard/adminContent/AdminPayments";
 
 type OrderApiReturn = {
   order: Order | null;
@@ -20,6 +26,14 @@ type UpdateOrderApi = {
   eventType: string;
   payload: Order;
   error: boolean;
+};
+
+type MenuItemApiProp = Omit<
+  MenuItem,
+  "id" | "categoryName" | "allergens" | "variants"
+> & {
+  allergens: Allergen["id"][];
+  variants: Omit<Variant, "id" | "itemId">[];
 };
 
 type MenuItemApi = {
@@ -68,8 +82,9 @@ export const getOrders = async (
   itemsCount: number | "all",
   page?: number | undefined,
 ): Promise<OrdersApi> => {
-  if (!token) throw new Error("Chyba při načítání objednávek.");
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "getOrders",
       token: token,
@@ -100,11 +115,9 @@ export const createOrder = async (
   date: Order["pickupDate"] | null,
   // paymentMethod: PaymentMethod[],
 ): Promise<OrderApiReturn> => {
-  if (!token) throw new Error("Chyba při vytváření objednávky.");
-
-  // console.log(cartItems);
-
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "createOrder",
       token: token,
@@ -134,6 +147,8 @@ export const updateOrder = async (
 ): Promise<UpdateOrderApi> => {
   if (!token || !orderId) throw new Error("Chyba při aktualizaci objednávky.");
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "updateOrder",
       token: token,
@@ -156,6 +171,8 @@ export const deleteOrder = async (
   orderId: string,
 ): Promise<OrderApiReturn> => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "deleteOrderEvent",
       token: token,
@@ -173,17 +190,24 @@ export const deleteOrder = async (
 
 export const createMenuItem = async (
   token: string | null,
-  menuItem: Omit<MenuItem, "id" | "categoryName" | "allergens"> & {
-    allergens: Allergen["id"][];
-  },
+  menuItem: MenuItemApiProp,
 ): Promise<MenuItemApi> => {
+  console.log(menuItem.allergens);
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "createItem",
       token: token,
-      ...menuItem,
+      name: menuItem.name,
+      description: menuItem.description,
+      price: menuItem.price,
+      category: menuItem.category,
+      //image: menuItem.image,
+      allergens: "[" + menuItem.allergens.toString() + "]",
+      variants: menuItem.variants,
     });
-    // console.log(data);
+    console.log(data);
     return {
       menuItem: data.payload.data as MenuItem,
       error: data.status !== "success",
@@ -195,12 +219,11 @@ export const createMenuItem = async (
 
 export const updateMenuItem = async (
   token: string | null,
-  menuItem: Omit<MenuItem, "id" | "allergens" | "categoryName"> & {
-    itemId: MenuItem["id"];
-    allergens: Allergen["id"][];
-  },
+  menuItem: MenuItemApiProp & { itemId: number },
 ): Promise<MenuItemApi> => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "updateItem",
       token: token,
@@ -215,16 +238,19 @@ export const updateMenuItem = async (
   }
 };
 
-export const deleteMenuItem = async (
-  token: string,
-  menuItemId: number,
+export const removeMenuItem = async (
+  token: string | null,
+  itemId: number,
 ): Promise<MenuItemApi> => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
-      requestType: "deleteMenuItemEvent",
+      requestType: "removeItem",
       token: token,
-      menuItemId: menuItemId,
+      itemId: itemId,
     });
+
     return {
       menuItem: data.payload.data as MenuItem,
       error: data.status !== "success",
@@ -233,6 +259,68 @@ export const deleteMenuItem = async (
     throw new Error("Chyba při mazání položky menu.");
   }
 };
+
+// export const createVariant = async (
+//   token: string | null,
+//   itemId: MenuItem["id"] | null,
+//   variant: Omit<Variant, "id">,
+// ) => {
+//   try {
+//     if (!token) throw new Error("Chybějící token.");
+//     if (!itemId) throw new Error("Chybějící id.");
+
+//     const { data } = await axios.post(FETCH_URL, {
+//       requestType: "createVariant",
+//       token,
+//       variant,
+//     });
+
+//     return data;
+//   } catch {
+//     throw new Error("Chyba při vytváření variant.");
+//   }
+// };
+
+// export const updateVariant = async (token: string | null, variant: Variant) => {
+//   try {
+//     if (!token) throw new Error("Chybějící token.");
+//     if (!variant.id) throw new Error("Chybějící id.");
+
+//     const { data } = await axios.post(FETCH_URL, {
+//       requestType: "updateVariant",
+//       token,
+//       name: variant.name,
+//       itemId: variant.itemId,
+//       variantId: variant.id,
+//       addedPrice: variant.addedPrice,
+//       isExclusive: variant.isExclusive,
+//     });
+
+//     return data;
+//   } catch {
+//     throw new Error("Chyba při aktualizaci variant.");
+//   }
+// };
+
+// export const removeVariant = async (
+//   token: string | null,
+//   variantId: number,
+// ) => {
+//   try {
+//     if (!token) throw new Error("Chybějící token.");
+//     if (!variantId) throw new Error("Chybějící id.");
+
+//     const { data } = await axios.post(FETCH_URL, {
+//       requestType: "removeVariant",
+//       token,
+//       variantId,
+//     });
+
+//     return data;
+//   } catch {
+//     throw new Error("Chyba při mazání variant.");
+//   }
+// };
 
 export const updateCategory = async (
   token: string | null,
@@ -268,7 +356,8 @@ export const createCategory = async (
     const { data } = await axios.post(FETCH_URL, {
       requestType: "createCategory",
       token,
-      ...category,
+      name: category.name,
+      description: category.description,
     });
 
     return {
@@ -277,6 +366,36 @@ export const createCategory = async (
     };
   } catch {
     throw new Error("Chyba při vytváření kategorie.");
+  }
+};
+
+export const removeCategory = async (
+  token: string | null,
+  categoryId: number,
+) => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "removeCategory",
+      token,
+      categoryId,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při mazání kategorie.");
+  }
+};
+
+export const uploadImage = async (token: string) => {
+  try {
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "uploadImage",
+      token,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při nahrávání obrázku.");
   }
 };
 
@@ -310,6 +429,7 @@ export const updateUserData = async (
 }> => {
   try {
     if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "updateUser",
       token,
@@ -324,8 +444,10 @@ export const updateUserData = async (
   }
 };
 
-export const getUserData = async (token: string) => {
+export const getUserData = async (token: string | null) => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     const { data } = await axios.post(FETCH_URL, {
       requestType: "getUser",
       token,
@@ -347,6 +469,8 @@ export const updateUserPassword = async (
   payload: { msg: string };
 }> => {
   try {
+    if (!token) throw new Error("Chybějící token.");
+
     if (newPassword !== newPasswordConfirm) {
       return {
         status: "failed",
@@ -364,5 +488,187 @@ export const updateUserPassword = async (
     return data;
   } catch {
     throw new Error("Chyba při aktualizaci hesla.");
+  }
+};
+
+export const verifyPassword = async (
+  token: string | null,
+  password: string,
+) => {
+  try {
+    if (!token) throw new Error("Chybějící token.");
+
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "verifyPassword",
+      token,
+      password,
+    });
+
+    return {
+      validPassword: data.status === "success",
+    };
+  } catch {
+    throw new Error("Chyba při ověřování hesla.");
+  }
+};
+
+export const getSystemSettings = async (token: string | null) => {
+  try {
+    if (!token) throw new Error("Chybějící token.");
+
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "getSystemSettings",
+      token,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při načítání systémových nastavení.");
+  }
+};
+
+export const saveSystemSettings = async (
+  token: string | null,
+  ldap: {
+    host: string;
+    port: string;
+    base: string;
+    user: string;
+    password: string;
+  },
+  mysql: boolean,
+  emailServer: {
+    host: string;
+    port: string;
+    user: string;
+    password: string;
+    senderAddress: string;
+    senderName: string;
+  },
+) => {
+  const { host, port, base, user, password } = ldap;
+  const {
+    host: emailHost,
+    port: emailPort,
+    user: emailUser,
+    password: emailPassword,
+    senderAddress,
+    senderName,
+  } = emailServer;
+
+  try {
+    if (!token) throw new Error("Chybějící token.");
+
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "saveSystemSettings",
+      token,
+      ldap: {
+        host,
+        port,
+        base,
+        user,
+        password,
+      },
+      mysql,
+      emailServer: {
+        host: emailHost,
+        port: emailPort,
+        user: emailUser,
+        password: emailPassword,
+        senderAddress,
+        senderName,
+      },
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při ukládání systémových nastavení.");
+  }
+};
+
+export const saveOpenTime = async (
+  token: string | null,
+  closeTime: CloseTimeDay[],
+) => {
+  try {
+    if (!token) throw new Error("Chybějící token.");
+
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "saveOpenTime",
+      token,
+      closeTime,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při ukládání otevírací doby.");
+  }
+};
+
+export const getTimeSettings = async (token: string | null) => {
+  try {
+    if (!token) throw new Error("Chybějící token.");
+
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "getTimeSlots",
+      token,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při načítání časových slotů.");
+  }
+};
+
+export const saveTimeSettings = async (
+  token: string | null,
+  timeSlots: TimeSlots,
+) => {
+  try {
+    if (!token) throw new Error("Chybějící token.");
+
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "saveTimeSlots",
+      token,
+      timeSlots,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při ukládání časových slotů.");
+  }
+};
+
+export const getPaymentSettings = async (token: string | null) => {
+  try {
+    if (!token) throw new Error("Chybějící token.");
+
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "getPaymentMethods",
+      token,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při načítání platebních metod.");
+  }
+};
+
+export const savePaymentSettings = async (
+  token: string | null,
+  paymentSettings: PaymentForm,
+) => {
+  try {
+    if (!token) throw new Error("Chybějící token.");
+
+    const { data } = await axios.post(FETCH_URL, {
+      requestType: "savePaymentMethods",
+      token,
+      paymentSettings,
+    });
+
+    return data;
+  } catch {
+    throw new Error("Chyba při ukládání platebních metod.");
   }
 };

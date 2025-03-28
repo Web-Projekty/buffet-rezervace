@@ -1,11 +1,13 @@
 import { lazy, Suspense, useEffect, useMemo } from "react";
-import { Order } from "../../../../types";
-import useOrders from "../../../../hooks/useOrders";
-import Loading from "../../../ui/Loading";
-import { Fallback } from "../../../../main";
-import OrderItems from "../../../orders/OrderItems";
-import { mapItemsWithOrders } from "../../../utils/utils";
-import FetchError from "../../../error/FetchError";
+import { Order, Variant } from "../../../types";
+import useOrders from "../../../hooks/useOrders";
+import Loading from "../../ui/Loading";
+import { Fallback } from "../../../main";
+import OrderItems from "../../orders/OrderItems";
+import { mapItemsWithOrders } from "../../utils/utils";
+import FetchError from "../../error/FetchError";
+import { Link } from "react-router-dom";
+import Button from "../../ui/Button";
 
 const ProgressTracker = lazy(() => import("./OrderProgressTracker"));
 
@@ -52,7 +54,7 @@ const OrderTracking = () => {
 
   const mappedItems =
     items && latestOrder?.items
-      ? mapItemsWithOrders(latestOrder?.items, items)
+      ? mapItemsWithOrders(latestOrder?.items, items, [] as Variant[])
       : [];
 
   const timeText = latestOrder
@@ -98,7 +100,11 @@ const OrderTracking = () => {
             <div className="flex flex-col items-center gap-3">
               <p className="text-center">{getTextBySteps(currentStep)}</p>
 
-              {latestOrder && !isCancelled ? (
+              {latestOrder &&
+              !isCancelled &&
+              currentStep !== -1 &&
+              currentStep !== 3 &&
+              currentStep !== 4 ? (
                 <div className="flex flex-col gap-5">
                   <div className="flex flex-col items-center gap-2">
                     <p className="text-center">Bude k vyzvednutí pod číslem</p>
@@ -109,7 +115,11 @@ const OrderTracking = () => {
                   </div>
                   <OrderItems mappedItems={mappedItems} />
                 </div>
-              ) : null}
+              ) : (
+                <Link to="/" className="text-center">
+                  <Button>Vytvořit objednávku</Button>
+                </Link>
+              )}
             </div>
           </>
         )}

@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Fallback } from "../../../main";
+import { Fallback } from "../../main";
 import { Page } from "./Dashboard";
 
 const Profile = lazy(() => import("./Profile"));
@@ -12,7 +12,7 @@ const AdminDatabase = lazy(() => import("./adminContent/AdminDatabase"));
 const AdminService = lazy(() => import("./adminContent/AdminService"));
 const AdminPayments = lazy(() => import("./adminContent/AdminPayments"));
 const AdminAccounting = lazy(() => import("./adminContent/AdminAccounting"));
-const PageNotFound = lazy(() => import("../../error/PageNotFound"));
+const PageNotFound = lazy(() => import("../error/PageNotFound"));
 
 type DashboardContentProps = {
   page: Page | undefined;

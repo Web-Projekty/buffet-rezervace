@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { OrderItem, Order as OrderType } from "../../types";
+import { OrderItem, Order as OrderType, Variant } from "../../types";
 import { ChevronLeft } from "lucide-react";
 import { useOrder } from "../../hooks/useOrder";
 import OrderDetails from "./OrderDetails";
@@ -7,9 +7,10 @@ import OrderDetails from "./OrderDetails";
 type OrderProps = {
   order: OrderType;
   items: OrderItem[];
+  variants: Variant[];
 };
 
-const Order = ({ order, items }: OrderProps) => {
+const Order = ({ order, items, variants }: OrderProps) => {
   const {
     color,
     isOpen,
@@ -23,7 +24,7 @@ const Order = ({ order, items }: OrderProps) => {
     loading,
     dateCreated,
     handleStatus,
-  } = useOrder(order, false, items);
+  } = useOrder(order, false, items, variants);
 
   const handleOpen = () => {
     toggleOpen();

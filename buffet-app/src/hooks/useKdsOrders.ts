@@ -1,4 +1,4 @@
-import { MenuItem, Order, OrderItem } from "../types";
+import { MenuItem, Order, OrderItem, Variant } from "../types";
 import { useUser } from "./useUser";
 import { useEffect, useState, useMemo, useRef } from "react";
 import { WebSocketService } from "../components/utils/webSockets";
@@ -7,6 +7,7 @@ export const useKdsOrders = () => {
   const { token } = useUser();
   const [orders, setOrders] = useState<Order[]>([]);
   const [items, setItems] = useState<OrderItem[]>([]);
+  const [variants, setVariants] = useState<Variant[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const wsRef = useRef<WebSocketService<{
@@ -55,7 +56,8 @@ export const useKdsOrders = () => {
         } else {
           setOrders(message.payload.data);
           setItems(message.payload.items ? message.payload.items : []);
-          console.log("Set all new orders:", message.payload.data);
+          setVariants(message.payload.variants ? message.payload.variants : []);
+          console.log("Set all new orders:", message.payload);
         }
       },
       // onOpen
@@ -136,5 +138,6 @@ export const useKdsOrders = () => {
     upToDateOrders,
     maxSentOrders,
     maxWaitingOrders,
+    variants,
   };
 };

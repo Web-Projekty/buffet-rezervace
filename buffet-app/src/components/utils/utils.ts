@@ -1,5 +1,6 @@
 import toast from "react-hot-toast";
-import { MappedOrderItem, OrderItem, OrderItems } from "../../types";
+import { MappedOrderItem, OrderItem, OrderItems, Variant } from "../../types";
+import { CartItem } from "../../store/CartStore";
 
 export const formatCurrency = (number: number): string => {
   return new Intl.NumberFormat("cs-CZ", {
@@ -64,11 +65,16 @@ export const parseSelectedTime = (selectedTime: string | null) => {
 export const mapItemsWithOrders = (
   orderItems: OrderItems[],
   items: OrderItem[],
+  variants: Variant[],
 ): MappedOrderItem[] => {
   try {
     if (!orderItems || !items) return [];
     return orderItems.map((orderItem) => {
       const item = items.find((i) => i.id === orderItem.id);
+
+      const selectedVariants = variants
+        .map((variant) => variant.id)
+        .filter((id) => orderItem.variants.includes(id));
 
       return {
         ...orderItem,
@@ -78,14 +84,33 @@ export const mapItemsWithOrders = (
         image: item?.image,
         allergens: item?.allergens ?? [],
         category: item?.category ?? 0,
-        variants: orderItem.variants ?? [],
+        variants: variants ?? [],
         quantity: orderItem.quantity ?? 0,
+        selectedVariants: selectedVariants,
       };
     });
   } catch (error) {
     console.error(error);
     return [];
   }
+};
+
+export const getVariantsPrice = (
+  selectedVariants: CartItem["selectedVariants"],
+  variants: Variant[],
+  quantity: CartItem["quantity"],
+) => {
+  if (!Array.isArray(selectedVariants) || !Array.isArray(variants)) return 0;
+  //console.log(selectedVariants, variants);
+  const filteredVariants = variants
+    .map((variant) => (selectedVariants.includes(variant.id) ? variant : null))
+    .filter((variant) => variant !== null);
+
+  return (
+    filteredVariants
+      .map((variant) => variant?.addedPrice)
+      .reduce((acc, price) => acc + price, 0) * quantity
+  );
 };
 
 export const onImageChange = (
@@ -137,4 +162,8 @@ export const handleResponse = (
   }
 
   return { success: successMessage };
+};
+
+export const parseObjectToArray = <T>(object: { [key: string]: T }) => {
+  return Object.keys(object).map((key) => object[key]);
 };

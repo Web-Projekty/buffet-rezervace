@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "../../../ui/Button";
+import Button from "../../ui/Button";
 import LDAPSettings, { LDAPForm } from "./systemSettings/LDAPSettings";
 import EmailServerSettings, {
   EmailServerForm,

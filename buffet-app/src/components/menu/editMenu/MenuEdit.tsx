@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useState } from "react";
 import { Category, MenuItem as MenuItemType } from "../../../types";
 import ErrorComponent from "../../error/ErrorComponent";
 import Loading from "../../ui/Loading";
@@ -6,6 +6,7 @@ import useMenu from "../../../hooks/useMenu";
 import { Fallback } from "../../../main";
 import { AnimatePresence } from "framer-motion";
 import MenuEditCategories from "./MenuEditCategories";
+import Modal from "../../ui/Modal";
 
 const MenuItemEditBar = lazy(() => import("./MenuItemEditBar"));
 const MenuCategoryEditBar = lazy(() => import("./MenuCategoryEditBar"));
@@ -43,11 +44,6 @@ const MenuEdit = () => {
     [categories],
   );
 
-  useEffect(() => {
-    if (isItemBarOpen || isCategoryBarOpen)
-      window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [isItemBarOpen, isCategoryBarOpen]);
-
   if (isLoading) {
     return <Loading size={30} />;
   }
@@ -64,26 +60,40 @@ const MenuEdit = () => {
       <div className="relative flex flex-row-reverse items-start gap-5">
         <AnimatePresence>
           {isItemBarOpen && (
-            <Suspense fallback={<Fallback />}>
-              <MenuItemEditBar
-                key={editItem?.id}
-                handleBarOpen={handleBarOpen}
-                menuItem={editItem}
-                categories={categories}
-                refetch={refetch}
-              />
-            </Suspense>
+            <Modal
+              isOpen={isItemBarOpen}
+              darkBackground
+              handleContainerClick={handleBarOpen}
+              className="overflow-auto"
+            >
+              <Suspense fallback={<Fallback />}>
+                <MenuItemEditBar
+                  key={editItem?.id}
+                  handleBarOpen={handleBarOpen}
+                  menuItem={editItem}
+                  categories={categories}
+                  refetch={refetch}
+                />
+              </Suspense>
+            </Modal>
           )}
 
           {isCategoryBarOpen && (
-            <Suspense fallback={<Fallback />}>
-              <MenuCategoryEditBar
-                key={editCategory?.id}
-                handleBarOpen={handleCategoryBarOpen}
-                category={editCategory}
-                refetch={refetch}
-              />
-            </Suspense>
+            <Modal
+              isOpen={isCategoryBarOpen}
+              darkBackground
+              handleContainerClick={handleCategoryBarOpen}
+              className="overflow-auto"
+            >
+              <Suspense fallback={<Fallback />}>
+                <MenuCategoryEditBar
+                  key={editCategory?.id}
+                  handleBarOpen={handleCategoryBarOpen}
+                  category={editCategory}
+                  refetch={refetch}
+                />
+              </Suspense>
+            </Modal>
           )}
         </AnimatePresence>
         <MenuEditCategories

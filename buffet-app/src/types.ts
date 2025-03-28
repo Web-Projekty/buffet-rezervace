@@ -1,3 +1,5 @@
+import { CartItem } from "./store/CartStore";
+
 export type User = {
   id: number;
   username: string;
@@ -21,7 +23,7 @@ export type OrderStatus =
 export type OrderItems = {
   id: number;
   quantity: number;
-  variants: Variant[];
+  variants: Variant["id"][];
 };
 
 export type MappedOrderItem = {
@@ -34,6 +36,7 @@ export type MappedOrderItem = {
   category: number;
   variants: Variant[];
   quantity: number;
+  selectedVariants: CartItem["selectedVariants"];
 };
 
 export type OrderItem = {
@@ -68,6 +71,7 @@ export type OrdersData = {
   data: Order[];
   itemsCount: number;
   items: OrderItem[];
+  variants: Variant[];
 };
 
 export type MenuItem = {
@@ -87,6 +91,7 @@ export type Variant = {
   name: string;
   addedPrice: number;
   isExclusive: boolean;
+  itemId: OrderItem["id"];
 };
 
 export type Allergen = {
@@ -113,6 +118,7 @@ export type PaymentMethod = {
   name: string;
   input: "checkbox" | "radio";
   image: PaymentMethodImage[];
+  enabled: boolean;
 };
 
 type PaymentMethodImage = {

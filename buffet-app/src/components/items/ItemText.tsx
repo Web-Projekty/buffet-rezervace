@@ -11,7 +11,9 @@ const ItemText = ({ name, description }: ItemTextProps) => {
         <h1 className="w-full rounded-lg text-xl">{name}</h1>
       </div>
       <hr />
-      <p className="rounded-lg px-2 text-descriptionColor">{description}</p>
+      <p className="line-clamp-2 overflow-hidden text-ellipsis rounded-lg px-2 text-base font-normal text-descriptionColor">
+        {description}
+      </p>
     </div>
   );
 };

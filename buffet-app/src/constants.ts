@@ -14,6 +14,8 @@ export const ADMIN_ORDERS_PER_PAGE: number = 10;
 
 export const ORDERS_PER_PAGE: number = 5;
 
+export const CREDITS_ENABLED = false;
+
 export const CART_LOCAL_STORAGE_KEY: string = "cartItems";
 
 export const FETCH_URL: string = window.location.protocol + "//" + window.location.host + "/api/";
@@ -28,6 +30,7 @@ export const paymentMethods: PaymentMethod[] = [
     name: "Předplacené kredity",
     input: "checkbox",
     image: [{ src: coins, alt: "Předplacené kredity", width: 50, height: 50 }],
+    enabled: CREDITS_ENABLED,
   },
   {
     name: "Platba kartou, Google Pay, Apple Pay a další",
@@ -35,6 +38,7 @@ export const paymentMethods: PaymentMethod[] = [
     image: [
       { src: thePay, alt: "The Pay (platební brána)", width: 50, height: 50 },
     ],
+    enabled: true,
   },
   {
     name: "Platba na pokladně",
@@ -43,5 +47,6 @@ export const paymentMethods: PaymentMethod[] = [
       { src: creditCart, alt: "Kreditní/debetní karta", width: 50, height: 50 },
       { src: wallet, alt: "Hotovost", width: 50, height: 50 },
     ],
+    enabled: true,
   },
 ];

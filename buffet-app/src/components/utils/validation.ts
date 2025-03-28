@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { verifyPassword } from "./api";
 
 export const registerSchema = z
   .object({
@@ -18,3 +19,60 @@ export const registerSchema = z
     message: "Hesla se neshodují",
     path: ["confirmPassword"],
   });
+
+export const changeUserDataSchema = z.object({
+  fullName: z
+    .string()
+    .min(3, "Jméno a příjmení musí mít alespoň 3 znaky")
+    .max(16, "Jméno a příjmení může mít maximálně 16 znaků"),
+  tel: z.string().nullable(),
+  email: z.string().email("Neplatný email"),
+});
+
+export const changePasswordSchema = (token: string) =>
+  z
+    .object({
+      oldPassword: z
+        .string({
+          message: "Pro změnu hesla je potřeba zadat staré heslo",
+        })
+        .superRefine(async (oldPassword, ctx) => {
+          const isValid = await verifyPassword(token, oldPassword);
+          if (!isValid.validPassword) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Špatné heslo",
+            });
+          }
+        }),
+      newPassword: z
+        .string({
+          message: "Pro změnu hesla je potřeba zadat nové heslo",
+        })
+        .min(6, "Nové heslo musí mít alespoň 6 znaků"),
+      confirmPassword: z.string({
+        message: "Pro změnu hesla je potřeba zadat potvrzení nového hesla",
+      }),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      message: "Hesla se neshodují",
+      path: ["confirmPassword"],
+    });
+
+const variantSchema = z.object({
+  name: z.string().min(1, "Název varianty je povinný"),
+  addedPrice: z.number().min(0, "Cena varianty musí být větší nebo rovna 0"),
+  isExclusive: z.boolean(),
+});
+
+export const itemSchema = z.object({
+  name: z.string().min(1, "Název položky je povinný"),
+  description: z.string().optional(),
+  price: z
+    .number({ message: "Cena musí být číslo" })
+    .min(0.01, "Cena musí být větší než 0"),
+  image: z.string().optional(),
+  category: z.number(),
+  allergens: z.number().array().optional(),
+  variants: z.array(variantSchema).optional(),
+});

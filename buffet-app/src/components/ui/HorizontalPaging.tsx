@@ -19,6 +19,10 @@ const HorizontalPaging = ({
   const [canScrollLeft, setCanScrollLeft] = useState<boolean>(false);
   const [canScrollRight, setCanScrollRight] = useState<boolean>(false);
 
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [startX, setStartX] = useState<number>(0);
+  const [scrollStartPosition, setScrollStartPosition] = useState<number>(0);
+
   const updateScrollButtons = () => {
     if (scrollContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } =
@@ -41,6 +45,30 @@ const HorizontalPaging = ({
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({ left: 300, behavior: "smooth" });
     }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartX(e.pageX);
+    setScrollStartPosition(scrollContainerRef.current?.scrollLeft || 0);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !scrollContainerRef.current) return;
+
+    const x = e.pageX;
+    const walk = startX - x;
+
+    scrollContainerRef.current.scrollLeft = scrollStartPosition + walk;
+    e.preventDefault();
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
   };
 
   const getBackgroundColor = (side: "left" | "right") => {
@@ -85,12 +113,12 @@ const HorizontalPaging = ({
         {canScrollLeft && (
           <motion.div
             {...fadeInAnimation(0.2)}
-            className={`absolute -left-2 z-20 flex h-full items-center rounded-lg ${getBackgroundColor("left")} px-2 pr-10`}
+            className={`pointer-events-none absolute -left-2 z-20 flex h-full items-center rounded-lg ${getBackgroundColor("left")} px-2 pr-10`}
           >
             <ChevronLeft
               size={30}
               onClick={scrollLeft}
-              className="cursor-pointer text-white"
+              className="pointer-events-auto cursor-pointer text-white"
             />
           </motion.div>
         )}
@@ -99,9 +127,14 @@ const HorizontalPaging = ({
       <div
         className={twMerge(
           `flex items-center gap-3 overflow-x-auto overflow-y-hidden`,
+          isDragging ? "cursor-grabbing" : "cursor-grab",
           className,
         )}
         ref={scrollContainerRef}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
       >
         {children}
       </div>
@@ -110,12 +143,12 @@ const HorizontalPaging = ({
         {canScrollRight && (
           <motion.div
             {...fadeInAnimation(0.2)}
-            className={`absolute -right-2 z-20 flex h-full items-center rounded-lg ${getBackgroundColor("right")} px-2 pl-10`}
+            className={`pointer-events-none absolute -right-2 z-20 flex h-full items-center rounded-lg ${getBackgroundColor("right")} px-2 pl-10`}
           >
             <ChevronRight
               size={30}
               onClick={scrollRight}
-              className="cursor-pointer text-white"
+              className="pointer-events-auto cursor-pointer text-white"
             />
           </motion.div>
         )}

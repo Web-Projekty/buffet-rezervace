@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
+import { twMerge } from "tailwind-merge";
 
 type ModalProps = {
   children: React.ReactNode;
   isOpen: boolean;
   darkBackground?: boolean;
   handleContainerClick?: () => void;
+  className?: string;
 };
 
 const modalShowAnimation = {
@@ -20,6 +22,7 @@ const Modal = ({
   isOpen,
   darkBackground,
   handleContainerClick,
+  className,
 }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -38,7 +41,10 @@ const Modal = ({
   return (
     <motion.div
       {...modalShowAnimation}
-      className={`fixed left-[50%] top-[50%] z-[60] h-screen w-screen -translate-x-1/2 -translate-y-1/2 transform ${darkBackground ? "bg-transparentBlack" : "bg-transparent"}`}
+      className={twMerge(
+        `fixed left-[50%] top-[50%] z-[60] h-screen w-screen -translate-x-1/2 -translate-y-1/2 transform ${darkBackground ? "bg-transparentBlack" : "bg-transparent"}`,
+        className,
+      )}
       onClick={() => (handleContainerClick ? handleContainerClick() : null)}
       ref={modalRef}
     >

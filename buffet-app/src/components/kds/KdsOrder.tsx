@@ -1,4 +1,4 @@
-import { Order, OrderItem } from "../../types";
+import { Order, OrderItem, Variant } from "../../types";
 import Button from "../ui/Button";
 import { useOrder } from "../../hooks/useOrder";
 import OrderItems from "../orders/OrderItems";
@@ -7,9 +7,10 @@ import { useUser } from "../../hooks/useUser";
 type KdsOrderProps = {
   order: Order;
   items: OrderItem[];
+  variants: Variant[];
 };
 
-const KdsOrder = ({ order, items }: KdsOrderProps) => {
+const KdsOrder = ({ order, items, variants }: KdsOrderProps) => {
   const { token } = useUser();
   const {
     color,
@@ -19,7 +20,7 @@ const KdsOrder = ({ order, items }: KdsOrderProps) => {
     startTime,
     endTime,
     handleStatus,
-  } = useOrder(order, true, items);
+  } = useOrder(order, true, items, variants);
 
   const handleDoneOrder = () => {
     handleStatus("waiting", token);
