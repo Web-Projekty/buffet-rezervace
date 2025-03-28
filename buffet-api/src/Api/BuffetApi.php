@@ -76,7 +76,12 @@ class BuffetApi
 
         $html->getBody()->write((string) $JsonOut);
 
-        return $html->withHeader('Content-type', 'application/json');
+        var_dump($HEAD = shell_exec('cd .git && cat HEAD'));
+
+        var_dump($HEAD = explode(" ", $HEAD));
+        var_dump(shell_exec("cat .git/" . $HEAD[1] . " && pwd"));
+        var_dump("cat .git/" . $HEAD[1] . " && pwd");
+        return $html->withHeader('Content-type', 'application/json')->withAddedHeader("Test", "Test");
     }
 
     /**
