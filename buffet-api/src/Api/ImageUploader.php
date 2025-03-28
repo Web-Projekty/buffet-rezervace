@@ -40,8 +40,12 @@ class ImageUploader
 
         if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
             $imageProvider = new ImageProvider;
-            if ($path = $imageProvider->getFilePath("image/" . $directory . "/" . $imageId, null) != null) {
+            $i = 0;
+            while (($path = $imageProvider->getFilePath($directory . "/" . $imageId, null)) != "") {
+                $i++;
+                unlink($path);
                 var_dump($path);
+                if ($i > 30) {die;}
             }
             $filename = $this->moveUploadedFile($baseDirectory, $fileDirectory, $uploadedFile, $imageId);
         } else {
