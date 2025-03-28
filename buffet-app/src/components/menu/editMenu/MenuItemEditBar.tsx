@@ -89,14 +89,19 @@ const MenuItemEditBar = ({
       await itemSchema.parseAsync(data);
 
       if (!menuItem) {
-        const { error } = await createMenuItem(token, {
+        const { menuItemId, error } = await createMenuItem(token, {
           ...data,
         });
 
         if (error) {
-          console.log("Error creating item");
+          toast.error("Položku se nepodařilo vytvořit");
           return;
         }
+
+        if (imageFile) {
+          await uploadImage(token, menuItemId, "items", imageFile);
+        }
+
         toast.success("Položka byla úspěšně vytvořena");
         refetch();
         return;
@@ -107,12 +112,15 @@ const MenuItemEditBar = ({
         ...data,
       });
 
-      await uploadImage(token, menuItem.id, "items", imageFile);
-
       if (error) {
-        console.log("Error updating item");
+        toast.error("Položku se nepodařilo upravit");
         return;
       }
+
+      if (imageFile) {
+        await uploadImage(token, menuItem.id, "items", imageFile);
+      }
+
       toast.success("Položka byla úspěšně upravena");
       refetch();
     } catch (error) {
