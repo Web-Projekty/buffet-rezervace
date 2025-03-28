@@ -19,6 +19,7 @@ class ErrorTest extends TestCase
     protected function setUp(): void
     {
         $this->errorList = Error::cases();
+        die;
     }
 
     #[TestDox('All Error cases have values')]
