@@ -5,9 +5,10 @@ import MenuItemEditInput from "./MenuItemEditInput";
 import { onImageChange } from "../../utils/utils";
 import { motion } from "framer-motion";
 import { slideInAnimation } from "../../../animations";
-import { createCategory, updateCategory } from "../../utils/api";
+import { createCategory, updateCategory, uploadImage } from "../../utils/api";
 import { useUser } from "../../../hooks/useUser";
 import ImageInput from "../../ui/ImageInput";
+import toast from "react-hot-toast";
 
 type MenuCategoryEditBarProps = {
   handleBarOpen: () => void;
@@ -24,6 +25,7 @@ const MenuCategoryEditBar = ({
   const [itemImage, setItemImage] = useState<Category["image"]>(
     category?.image || "",
   );
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [itemName, setItemName] = useState<Category["name"]>(
     category?.name || "",
   );
@@ -37,15 +39,21 @@ const MenuCategoryEditBar = ({
     const data = {
       name: itemName,
       description: itemDescription,
-      image: itemImage,
     };
 
     if (!category) {
-      const { error } = await createCategory(token, data);
+      const { categoryId, error } = await createCategory(token, data);
 
       if (error) {
-        console.log("Error creating item");
+        toast.error("Kategorie se nepodařilo vytvořit");
+        return;
       }
+
+      if (imageFile) {
+        await uploadImage(token, categoryId, "categories", imageFile);
+      }
+
+      toast.success("Kategorie byla úspěšně vytvořena");
       refetch();
       return;
     }
@@ -56,8 +64,15 @@ const MenuCategoryEditBar = ({
     });
 
     if (error) {
-      console.log("Error updating item");
+      toast.error("Kategorie se nepodařilo upravit");
+      return;
     }
+
+    if (imageFile) {
+      await uploadImage(token, category.id, "categories", imageFile);
+    }
+
+    toast.success("Kategorie byla úspěšně upravena");
     refetch();
   };
 
@@ -66,7 +81,7 @@ const MenuCategoryEditBar = ({
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onImageChange(e, setItemImage);
+    onImageChange(e, setItemImage, setImageFile);
   };
 
   const edited =
