@@ -12,6 +12,7 @@ import {
   createMenuItem,
   removeMenuItem,
   updateMenuItem,
+  uploadImage,
 } from "../../utils/api";
 import { useUser } from "../../../hooks/useUser";
 import ImageInput from "../../ui/ImageInput";
@@ -49,6 +50,7 @@ const MenuItemEditBar = ({
   const [itemImage, setItemImage] = useState<MenuItem["image"]>(
     menuItem?.image || "",
   );
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [itemCategory, setItemCategory] = useState<MenuItem["category"]>(
     menuItem?.category || 1,
   );
@@ -87,14 +89,19 @@ const MenuItemEditBar = ({
       await itemSchema.parseAsync(data);
 
       if (!menuItem) {
-        const { error } = await createMenuItem(token, {
+        const { menuItemId, error } = await createMenuItem(token, {
           ...data,
         });
 
         if (error) {
-          console.log("Error creating item");
+          toast.error("Položku se nepodařilo vytvořit");
           return;
         }
+
+        if (imageFile) {
+          await uploadImage(token, menuItemId, "items", imageFile);
+        }
+
         toast.success("Položka byla úspěšně vytvořena");
         refetch();
         return;
@@ -106,9 +113,14 @@ const MenuItemEditBar = ({
       });
 
       if (error) {
-        console.log("Error updating item");
+        toast.error("Položku se nepodařilo upravit");
         return;
       }
+
+      if (imageFile) {
+        await uploadImage(token, menuItem.id, "items", imageFile);
+      }
+
       toast.success("Položka byla úspěšně upravena");
       refetch();
     } catch (error) {
@@ -182,7 +194,7 @@ const MenuItemEditBar = ({
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onImageChange(e, setItemImage);
+    onImageChange(e, setItemImage, setImageFile);
   };
 
   const handleAllergenChange = (id: number) => {
