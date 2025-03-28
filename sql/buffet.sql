@@ -1,10 +1,10 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Mar 18, 2025 at 06:22 PM
--- Server version: 10.5.28-MariaDB-0+deb11u1
+-- Host: db
+-- Generation Time: Mar 27, 2025 at 05:01 PM
+-- Server version: 11.7.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -45,7 +45,7 @@ CREATE TABLE `Categories` (
   `name` varchar(256) NOT NULL,
   `image` varchar(256) NOT NULL DEFAULT '',
   `description` varchar(1024) NOT NULL,
-  `removed` tinyint(1) NOT NULL
+  `removed` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -69,38 +69,40 @@ CREATE TABLE `Items` (
   `description` varchar(1024) NOT NULL,
   `image` varchar(256) NOT NULL DEFAULT 'img/items/default.png',
   `allergens` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `category` int(11) NOT NULL
+  `category` int(11) NOT NULL,
+  `removed` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `Items`
 --
 
-INSERT INTO `Items` (`id`, `name`, `price`, `description`, `image`, `allergens`, `category`) VALUES
-(1, 'Plněná bageta sýr-šunka', 14990, 'Bageta plněná šunkou a sýrem.', 'img/items/baguette_chicken.png', '[1,2,3]', 1),
-(2, 'Bageta s kuřecím masem a salátem', 8990, 'Bageta plněná grilovaným kuřecím masem a zeleninou.', 'img/items/baguette_chicken.png', '[1,7,14]', 1),
-(3, 'Sekaná v housce', 6900, 'Domácí sekaná podávaná v čerstvé housce.', 'img/items/meatloaf_bun.png', '[1,2]', 1),
-(4, 'Bageta Caprese', 8500, 'Bageta s mozzarellou, rajčaty a bazalkovým pestem.', 'img/items/baguette_caprese.png', '[1,7]', 1),
-(5, 'Tortilla s tuňákem', 9900, 'Plněná tortilla s tuňákem, majonézou a zeleninou.', 'img/items/tuna_tortilla.png', '[1,2]', 1),
-(6, 'Bageta s trhaným vepřovým', 10900, 'Bageta s trhaným vepřovým masem a BBQ omáčkou.', 'img/items/baguette_pulled_pork.png', '[1,7]', 1),
-(7, 'Vegetariánská bageta', 7500, 'Bageta s grilovanou zeleninou a hummusem.', 'img/items/baguette_veg.png', '[1]', 2),
-(8, 'Klobása v housce', 5900, 'Grilovaná klobása podávaná v křupavé housce.', 'img/items/sausage_bun.png', '[1,3]', 1),
-(9, 'Bageta s vejcem a slaninou', 8900, 'Bageta plněná vařeným vejcem, slaninou a dresinkem.', 'img/items/baguette_egg_bacon.png', '[1]', 1),
-(10, 'Klasický burger', 12900, 'Šťavnatý hovězí burger s čerstvou zeleninou a omáčkou.', 'img/items/burger_classic.png', '[1,3,7]', 1),
-(11, 'Vegetariánský burger', 11900, 'Burger s grilovaným portobello houbou a zeleninou.', 'img/items/burger_veg.png', '[1]', 1),
-(12, 'Sendvič s krůtím masem', 8900, 'Sendvič s plátky krůtího masa, salátem a majonézou.', 'img/items/turkey_sandwich.png', '[1,7]', 1),
-(13, 'Plněná bageta s lososem', 9900, 'Bageta s uzeným lososem a sýrem.', 'img/items/baguette_salmon.png', '[1,4,7]', 1),
-(14, 'Toast se šunkou a sýrem', 6900, 'Grilovaný toast se šunkou a sýrem.', 'img/items/toast_ham_cheese.png', '[1,7]', 1),
-(15, 'Bageta s avokádem', 8500, 'Bageta s avokádem, rajčaty a limetkovou majonézou.', 'img/items/baguette_avocado_tomato.png', '[1,7]', 2),
-(16, 'Falafel wrap', 8900, 'Wrap s falafelem, hummusem a čerstvou zeleninou.', 'img/items/falafel_wrap.png', '[1]', 1),
-(17, 'Párky v rohlíku', 4900, 'Tradiční párek v rohlíku s hořčicí a kečupem.', 'img/items/hotdog.png', '[1,3]', 1),
-(18, 'Bageta s hovězím roastbeefem', 11500, 'Bageta s tenkými plátky roastbeefu a dijonskou omáčkou.', 'img/items/baguette_roastbeef.png', '[1,7]', 1),
-(19, 'Tortilla s grilovaným sýrem', 8900, 'Tortilla plněná grilovaným sýrem a zeleninou.', 'img/items/grilled_cheese_tortilla.png', '[1,7]', 2),
-(20, 'Bageta se salámem', 9500, 'Bageta plněná pikantním salámem a čerstvou paprikou.', 'img/items/baguette_spicy_salami.png', '[1,7]', 1),
-(21, 'Sýrový mlsoun', 8900, 'Sýr Camembert a eidam s plátky vajec a pikantním dresinkem', 'img/items/default.png', '[1]', 2),
-(22, 'Chlebíčkový labužník', 9900, 'Chuť lahůdkových chlebíčků s výběrem salámů na bramborovém salátu', 'img/items/default.png', '[2]', 2),
-(23, 'test', 79000, 'hello', 'img/items/default.png', '[1,7]', 2),
-(26, 'super secret testing item', 987654321, 'well hello there', 'img/items/default.png', '[1,13]', 2);
+INSERT INTO `Items` (`id`, `name`, `price`, `description`, `image`, `allergens`, `category`, `removed`, `created_at`, `updated_at`) VALUES
+(1, 'Plněná bageta sýr-šunka', 14990, 'Bageta plněná šunkou a sýrem.', 'img/items/baguette_chicken.png', '[1,2,3]', 1, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(2, 'Bageta s kuřecím masem a salátem', 8990, 'Bageta plněná grilovaným kuřecím masem a zeleninou.', 'img/items/baguette_chicken.png', '[1,7,14,11]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(3, 'Sekaná v housce', 6900, 'Domácí sekaná podávaná v čerstvé housce.', 'img/items/meatloaf_bun.png', '[1,2]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(4, 'Bageta Caprese', 8500, 'Bageta s mozzarellou, rajčaty a bazalkovým pestem.', 'img/items/baguette_caprese.png', '[1,7]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(5, 'Tortilla s tuňákem', 9900, 'Plněná tortilla s tuňákem, majonézou a zeleninou.', 'img/items/tuna_tortilla.png', '[1,2]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(6, 'Bageta s trhaným vepřovým', 10900, 'Bageta s trhaným vepřovým masem a BBQ omáčkou.', 'img/items/baguette_pulled_pork.png', '[1,7]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(7, 'Vegetariánská bageta', 7500, 'Bageta s grilovanou zeleninou a hummusem.', 'img/items/baguette_veg.png', '[1]', 2, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(8, 'Klobása v housce', 5900, 'Grilovaná klobása podávaná v křupavé housce.', 'img/items/sausage_bun.png', '[1,3]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(9, 'Bageta s vejcem a slaninou', 8900, 'Bageta plněná vařeným vejcem, slaninou a dresinkem.', 'img/items/baguette_egg_bacon.png', '[1]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(10, 'Klasický burger', 12900, 'Šťavnatý hovězí burger s čerstvou zeleninou a omáčkou.', 'img/items/burger_classic.png', '[1,3,7]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(11, 'Vegetariánský burger', 11900, 'Burger s grilovaným portobello houbou a zeleninou.', 'img/items/burger_veg.png', '[1]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(12, 'Sendvič s krůtím masem', 8900, 'Sendvič s plátky krůtího masa, salátem a majonézou.', 'img/items/turkey_sandwich.png', '[1,7]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(13, 'Plněná bageta s lososem', 9900, 'Bageta s uzeným lososem a sýrem.', 'img/items/baguette_salmon.png', '[1,4,7]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(14, 'Toast se šunkou a sýrem', 6900, 'Grilovaný toast se šunkou a sýrem.', 'img/items/toast_ham_cheese.png', '[1,7]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(15, 'Bageta s avokádem', 8500, 'Bageta s avokádem, rajčaty a limetkovou majonézou.', 'img/items/baguette_avocado_tomato.png', '[1,7]', 2, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(16, 'Falafel wrap', 8900, 'Wrap s falafelem, hummusem a čerstvou zeleninou.', 'img/items/falafel_wrap.png', '[1]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(17, 'Párky v rohlíku', 4900, 'Tradiční párek v rohlíku s hořčicí a kečupem.', 'img/items/hotdog.png', '[1,3]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(18, 'Bageta s hovězím roastbeefem', 11500, 'Bageta s tenkými plátky roastbeefu a dijonskou omáčkou.', 'img/items/baguette_roastbeef.png', '[1,7]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(19, 'Tortilla s grilovaným sýrem', 8900, 'Tortilla plněná grilovaným sýrem a zeleninou.', 'img/items/grilled_cheese_tortilla.png', '[1,7]', 2, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(20, 'Bageta se salámem', 9500, 'Bageta plněná pikantním salámem a čerstvou paprikou.', 'img/items/baguette_spicy_salami.png', '[1,7]', 1, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(21, 'Sýrový mlsoun', 8900, 'Sýr Camembert a eidam s plátky vajec a pikantním dresinkem', 'img/items/default.png', '[1]', 2, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(22, 'Chlebíčkový labužník', 9900, 'Chuť lahůdkových chlebíčků s výběrem salámů na bramborovém salátu', 'img/items/default.png', '[2]', 2, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(23, 'test', 79000, 'hello', 'img/items/default.png', '[1,7]', 2, 0, '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -126,7 +128,7 @@ CREATE TABLE `Orders` (
 --
 
 INSERT INTO `Orders` (`id`, `userId`, `status`, `dateCreated`, `pickupDate`, `items`, `startTime`, `endTime`, `pickUpId`, `paymentId`) VALUES
-(4213, 6, 'sent', '2025-01-16 18:29:33', '2025-01-16', '[{\"id\":7,\"quantity\":2,\"variants\":[]},{\"id\":15,\"quantity\":3,\"variants\":[]},{\"id\":4,\"quantity\":1,\"variants\":[]},{\"id\":19,\"quantity\":1,\"variants\":[]}]', '09:40:00', '09:45:00', '730', 105),
+(4213, 6, 'waiting', '2025-01-16 18:29:33', '2025-01-16', '[{\"id\":7,\"quantity\":2,\"variants\":[]},{\"id\":15,\"quantity\":3,\"variants\":[]},{\"id\":4,\"quantity\":1,\"variants\":[]},{\"id\":19,\"quantity\":1,\"variants\":[]}]', '09:40:00', '09:45:00', '730', 105),
 (4223, 6, 'storno', '2025-01-16 19:50:23', '2025-01-16', '[{\"id\":7,\"quantity\":2,\"variants\":[]},{\"id\":15,\"quantity\":3,\"variants\":[]},{\"id\":4,\"quantity\":1,\"variants\":[]},{\"id\":19,\"quantity\":1,\"variants\":[]}]', '09:20:00', '09:25:00', '839', 115),
 (4224, 6, 'storno', '2025-01-16 20:27:40', '2025-01-16', '[{\"id\":1,\"quantity\":1,\"variants\":[]},{\"id\":2,\"quantity\":1,\"variants\":[]},{\"id\":3,\"quantity\":1,\"variants\":[]}]', '11:25:00', '11:30:00', '907', 116),
 (4225, 6, 'storno', '2025-01-16 20:27:42', '2025-01-16', '[{\"id\":7,\"quantity\":2,\"variants\":[]},{\"id\":15,\"quantity\":3,\"variants\":[]},{\"id\":4,\"quantity\":1,\"variants\":[]},{\"id\":19,\"quantity\":1,\"variants\":[]}]', '09:30:00', '09:35:00', '854', 117),
@@ -321,14 +323,15 @@ INSERT INTO `Orders` (`id`, `userId`, `status`, `dateCreated`, `pickupDate`, `it
 (4502, 6, 'waiting', '2025-03-09 12:17:35', '2025-03-09', '[{\"id\":5,\"quantity\":1,\"variants\":[]},{\"id\":4,\"quantity\":1,\"variants\":[]},{\"id\":3,\"quantity\":1,\"variants\":[]},{\"id\":2,\"quantity\":1,\"variants\":[]},{\"id\":1,\"quantity\":1,\"variants\":[]}]', '13:55:00', '14:00:00', '819', 411),
 (4503, 6, 'waiting', '2025-03-09 18:22:29', '2025-03-09', '[{\"id\":1,\"quantity\":4,\"variants\":[]},{\"id\":2,\"quantity\":3,\"variants\":[]},{\"id\":3,\"quantity\":1,\"variants\":[]},{\"id\":4,\"quantity\":1,\"variants\":[]}]', '13:55:00', '14:00:00', '349', 412),
 (4504, 6, 'waiting', '2025-03-09 18:26:37', '2025-03-09', '[{\"id\":23,\"quantity\":3,\"variants\":[]}]', '13:55:00', '14:00:00', '039', 413),
-(4505, 6, 'sent', '2025-03-12 08:17:54', '2025-03-12', '[{\"id\":2,\"quantity\":3,\"variants\":[]}]', '09:45:00', '09:50:00', '388', 414),
-(4506, 6, 'waiting', '2025-03-12 08:22:27', '2025-03-12', '[{\"id\":2,\"quantity\":2,\"variants\":[2]}]', '13:30:00', '13:35:00', '224', 415),
+(4505, 6, 'waiting', '2025-03-12 08:17:54', '2025-03-12', '[{\"id\":2,\"quantity\":3,\"variants\":[]}]', '09:45:00', '09:50:00', '388', 414),
+(4506, 6, 'done', '2025-03-12 08:22:27', '2025-03-12', '[{\"id\":2,\"quantity\":2,\"variants\":[2]}]', '13:30:00', '13:35:00', '224', 415),
 (4507, 6, 'sent', '2025-03-12 08:25:15', '2025-03-12', '[{\"id\":2,\"quantity\":4,\"variants\":[2]}]', '09:05:00', '09:10:00', '868', 416),
 (4508, 6, 'sent', '2025-03-12 11:45:55', '2025-03-12', '[{\"id\":2,\"quantity\":1,\"variants\":[1]}]', '11:30:00', '11:35:00', '242', 417),
 (4509, 6, 'sent', '2025-03-12 12:47:12', '2025-03-12', '[{\"id\":3,\"quantity\":1,\"variants\":[]},{\"id\":4,\"quantity\":1,\"variants\":[]},{\"id\":2,\"quantity\":2,\"variants\":[2]},{\"id\":1,\"quantity\":1,\"variants\":[]}]', '11:25:00', '11:30:00', '909', 418),
 (4510, 6, 'sent', '2025-03-12 12:47:40', '2025-03-12', '[{\"id\":2,\"quantity\":2,\"variants\":[2]}]', '11:55:00', '12:00:00', '148', 419),
 (4511, 6, 'sent', '2025-03-14 08:02:57', '2025-03-15', '[{\"id\":15,\"quantity\":1,\"variants\":[]},{\"id\":21,\"quantity\":1,\"variants\":[]},{\"id\":5,\"quantity\":2,\"variants\":[]},{\"id\":4,\"quantity\":2,\"variants\":[]},{\"id\":19,\"quantity\":2,\"variants\":[]}]', '11:45:00', '11:50:00', '502', 420),
-(4512, 6, 'sent', '2025-03-17 13:15:31', '2025-03-17', '[{\"id\":2,\"quantity\":1,\"variants\":[2]}]', '11:15:00', '11:20:00', '717', 421);
+(4512, 6, 'sent', '2025-03-17 13:15:31', '2025-03-17', '[{\"id\":2,\"quantity\":1,\"variants\":[2]}]', '11:15:00', '11:20:00', '717', 421),
+(4513, 6, 'done', '2025-03-21 09:58:26', '2025-03-21', '[{\"id\":2,\"quantity\":3,\"variants\":[2,7]}]', '10:25:00', '10:30:00', '951', 422);
 
 -- --------------------------------------------------------
 
@@ -675,7 +678,8 @@ INSERT INTO `Payments` (`id`, `thePayId`, `type`, `useCredits`, `totalAmount`, `
 (418, 1076668031, 'thePay', b'0', 49380, 0, b'1', 'https://demo.gate.thepay.cz/b53e46045f76a38e2a61fc1f188f16d90b1ccb5af80c254cd433465f187c1f25/pay', 'https://demo.gate.thepay.cz/b53e46045f76a38e2a61fc1f188f16d90b1ccb5af80c254cd433465f187c1f25/state', '2025-03-12 12:47:12'),
 (419, 1829296905, 'thePay', b'0', 18980, 0, b'1', 'https://demo.gate.thepay.cz/204ad3f7bd7c3ea58be9939bfefb32bddbb093c191528da5fd5e87a23e2ee2b1/pay', 'https://demo.gate.thepay.cz/204ad3f7bd7c3ea58be9939bfefb32bddbb093c191528da5fd5e87a23e2ee2b1/state', '2025-03-12 12:47:40'),
 (420, 926506862, 'thePay', b'0', 72000, 0, b'1', 'https://demo.gate.thepay.cz/9fa8b8cb1c6944b6485974db55f868898df9c54d0cb90a09fed2d16a83e2b707/pay', 'https://demo.gate.thepay.cz/9fa8b8cb1c6944b6485974db55f868898df9c54d0cb90a09fed2d16a83e2b707/state', '2025-03-14 08:02:56'),
-(421, 242584483, 'thePay', b'0', 9490, 0, b'0', 'https://demo.gate.thepay.cz/7d2a18667eb0e6c6019df43b0e005a00d70e1bf74352134b2c7fd98927289f5d/pay', 'https://demo.gate.thepay.cz/7d2a18667eb0e6c6019df43b0e005a00d70e1bf74352134b2c7fd98927289f5d/state', '2025-03-17 13:15:31');
+(421, 242584483, 'thePay', b'0', 9490, 0, b'0', 'https://demo.gate.thepay.cz/7d2a18667eb0e6c6019df43b0e005a00d70e1bf74352134b2c7fd98927289f5d/pay', 'https://demo.gate.thepay.cz/7d2a18667eb0e6c6019df43b0e005a00d70e1bf74352134b2c7fd98927289f5d/state', '2025-03-17 13:15:31'),
+(422, 1445409172, 'thePay', b'0', 30720, 0, b'1', 'https://demo.gate.thepay.cz/31ee41fb3a00fed37e2c8e4721ad8905ac616ba240b9f618e18ccd30a83a3c31/pay', 'https://demo.gate.thepay.cz/31ee41fb3a00fed37e2c8e4721ad8905ac616ba240b9f618e18ccd30a83a3c31/state', '2025-03-21 09:58:26');
 
 -- --------------------------------------------------------
 
@@ -870,21 +874,21 @@ CREATE TABLE `Variants` (
   `itemId` int(11) NOT NULL,
   `name` varchar(256) NOT NULL,
   `addedPrice` int(11) NOT NULL,
-  `isExclusive` bit(1) NOT NULL
+  `isExclusive` bit(1) NOT NULL,
+  `removed` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `Variants`
 --
 
-INSERT INTO `Variants` (`id`, `itemId`, `name`, `addedPrice`, `isExclusive`) VALUES
-(1, 2, 'random2/1', 157, b'1'),
-(2, 2, 'random', 500, b'1'),
-(3, 17, 'ketchup', 500, b'1'),
-(4, 17, 'mustard', 500, b'1'),
-(5, 17, 'mustard2.. idk what to call this', 500, b'0'),
-(6, 23, 'super secret variant', 321654987, b'0'),
-(7, 2, 'test', 750, b'0');
+INSERT INTO `Variants` (`id`, `itemId`, `name`, `addedPrice`, `isExclusive`, `removed`, `created_at`, `updated_at`) VALUES
+(2, 2, 'random', 500, b'1', 0, NULL, NULL),
+(3, 17, 'ketchup', 500, b'1', 0, NULL, NULL),
+(4, 17, 'mustard', 500, b'1', 0, NULL, NULL),
+(5, 17, 'mustard2.. idk what to call this', 500, b'0', 0, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -962,25 +966,25 @@ ALTER TABLE `Allergens`
 -- AUTO_INCREMENT for table `Categories`
 --
 ALTER TABLE `Categories`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `Items`
 --
 ALTER TABLE `Items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `Orders`
 --
 ALTER TABLE `Orders`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4513;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4514;
 
 --
 -- AUTO_INCREMENT for table `Payments`
 --
 ALTER TABLE `Payments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=422;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=423;
 
 --
 -- AUTO_INCREMENT for table `Temp`
@@ -1004,7 +1008,7 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT for table `Variants`
 --
 ALTER TABLE `Variants`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- Constraints for dumped tables

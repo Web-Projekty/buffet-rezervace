@@ -51,6 +51,7 @@ enum Error: string {
     ############################ Database ############################
     case QueryFailed = 'Query from database has failed';
     case OrderIdNotFound = 'Order id not found';
+    case DatabaseConnectionFailed = 'Database connection failed';
 
     ############################ Ws Channels ############################
     case NonexistentChannel = 'Channel doesn\'t exist';
@@ -73,6 +74,7 @@ enum Error: string {
     case ItemIdNotFound = 'Item id not found';
     case MissingItemId = 'Item id is missing';
     case ItemNotFound = 'Item not found';
+    case ItemUpdateFailed = 'Item update failed';
 
     ############################ Variants ############################
     case VariantCreationFailed = 'Variant creation failed';
@@ -92,6 +94,12 @@ enum Error: string {
 
     ############################ General ############################
     case GeneralError = 'Oops something has gone wrong';
+
+    ############################ Images ############################
+    case InvalidDirectory = 'Invalid directory';
+    case ImageWriteFailed = 'Image write failed';
+    case ImageReadFailed = 'Image read failed';
+    case ImageUploadFailed = 'Image upload failed';
 
     ############################ ThePay ############################
     case ThePayError = 'ThePay error';

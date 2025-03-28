@@ -1,0 +1,79 @@
+services:
+    # PHP and Apache Web Server
+    web:
+        build:
+            context: ./../.
+            dockerfile: Dockerfile
+        container_name: php-apache_dev
+        volumes:
+            - ./../buffet-api:/var/www/html
+            - ./../conf/:/var/www/html/conf/:rw
+
+        ports:
+            - "80:80" # Access Apache via http://localhost:8080
+        depends_on:
+            - db
+        environment:
+            - APACHE_DOCUMENT_ROOT=/var/www/html
+        command:
+            [
+                "bash",
+                "-c",
+                "mkdir -p ./logs && cp ./src/WebSockets/apache.conf
+                /etc/apache2/sites-available/000-default.conf && composer install && supervisord -c
+                ./src/WebSockets/supervisor.conf && usermod -a -G root www-data && chown -R www-data:www-data
+                /var/www/html/conf && apache2-foreground",
+            ]
+        networks:
+            - buffet-network
+
+    # MariaDB Database Service
+    db:
+        image: mariadb:latest
+        container_name: mariadb_dev
+        environment:
+            MYSQL_ROOT_PASSWORD: prestizniBuffet2305
+            MYSQL_DATABASE: buffet
+            MYSQL_USER: buffet
+            MYSQL_PASSWORD: prestizniBuffet2305
+        volumes:
+            - db_data_dev:/var/lib/mysql
+            - ../sql:/docker-entrypoint-initdb.d/
+       # ports:
+       #   - "3306:3306"
+        networks:
+            - buffet-network
+
+    # phpMyAdmin for managing MariaDB
+    # phpmyadmin:
+    #     image: phpmyadmin/phpmyadmin
+    #     container_name: phpmyadmin_dev
+    #     environment:
+    #         PMA_HOST: db
+    #         MYSQL_ROOT_PASSWORD: prestizniBuffet2305
+    #     ports:
+    #         - "8081:80" # Access phpMyAdmin via http://localhost:8081
+    #     depends_on:
+    #         - db
+    #     networks:
+    #         - buffet-network
+
+    # Node.js for React.js development (optional)
+    # frontend:
+    #     image: node:latest
+    #     container_name: react-app_dev
+    #     working_dir: /usr/src/app
+    #     volumes:
+    #         - ./../buffet-app:/usr/src/app
+    #     ports:
+    #         - "3000:3000" # Access React app via http://localhost:3000
+    #     command: ["bash", "-c", "npm install && npm run dev"] # Runs `npm dev start` to serve the React app
+    #     depends_on:
+    #         - web
+
+networks:
+    buffet-network:
+        driver: bridge
+
+volumes:
+    db_data_dev:

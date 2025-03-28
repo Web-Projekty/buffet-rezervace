@@ -33,8 +33,10 @@ use Carbon\Carbon;
 use Carbon\CarbonTimeZone;
 use DateException;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ServerRequestInterface as RequestInterface;
 use RuntimeException;
 use TypeError;
@@ -48,13 +50,17 @@ class BuffetApi
      *
      * Handles api request calls
      *
-     * @param  RequestInterface  $request
-     * @param  ResponseInterface $html
-     * @return ResponseInterface html code
+     * @param  ServerRequestInterface $request
+     * @param  ResponseInterface      $html
+     * @return ResponseInterface      html code
      */
 
-    function main(RequestInterface $request, ResponseInterface $html): ResponseInterface
+    public ServerRequestInterface $requestInterface;
+
+    function main(ServerRequestInterface $request, ResponseInterface $html): ResponseInterface
     {
+        $this->requestInterface = $request;
+
         try {
             $response = $this->handleApiCall();
         } catch (SettingsException $e) {
@@ -117,6 +123,7 @@ class BuffetApi
     {
         if (!$request) {
             $request = $this->getPostJson();
+
         } else {
             $request = json_decode($request, true);
         }
@@ -182,6 +189,9 @@ class BuffetApi
             case "updatePassword":
                 return $this->handleUpdatePassword($response);
 
+            case "verifyPassword":
+                return $this->handleVerifyPassword($response);
+
             case "updateSetting":
                 return $this->handleUpdateSetting($response);
 
@@ -211,6 +221,10 @@ class BuffetApi
 
             case "removeCategory":
                 return $this->handleRemoveCategory($response);
+
+            case "uploadImage":
+                return $this->handleUploadImage($response);
+
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
@@ -297,9 +311,12 @@ class BuffetApi
         $response->setPayloadKeys(["data"]);
 
         $queryResult = null;
-        $categories = CategoryModel::getAll()->toArray();
+        $categories = CategoryModel::getAll();
+        $removedCategories = $categories->where("removed", "=", 1)->pluck("id")->toArray();
+
         $backendUrl = EnvReader::getEnvProperty(Settings::UrlBackend);
 
+        $categories = $categories->where("removed", "=", 0)->toArray();
         foreach ($categories as &$category) {
             $category["image"] = $backendUrl . "/image/categories/" . $category["id"];
         }
@@ -312,7 +329,12 @@ class BuffetApi
                 return $response->setError(Error::QueryFailed);
             }
         } else {
-            if (!$queryResult = ItemModel::getAll()) {
+            try {
+                $queryResult = ItemModel::query()->where("removed", "=", 0)->get();
+            } catch (\Exception $e) {
+                return $response->setError(Error::QueryFailed);
+            }
+            if ($queryResult->isEmpty()) {
                 return $response->setError(Error::QueryFailed);
             }
         }
@@ -321,16 +343,20 @@ class BuffetApi
 
         // adding category list
 
-        $response->addPayload("categoryList", $categories);
+        $response->addPayload("categoryList", array_values($categories));
+
+        $queryResult = $queryResult->filter(
+            function ($item) use ($removedCategories) {return !in_array($item["category"], $removedCategories);}, );
+        //var_dump($queryResult->toArray());
 
         $array = $queryResult->toArray();
 
-        for ($i = 0; $i < sizeof($array); $i++) {
+        foreach ($array as $i => $value) {
             $id = $array[$i]["id"];
 
             $array[$i]["variants"] = [];
             if (!$variants->where("itemId", "=", $id)->isEmpty()) {
-                $array[$i]["variants"] = array_merge($array[$i]["variants"], $variants->where("itemId", "=", $id)->toArray());
+                $array[$i]["variants"] = array_merge($array[$i]["variants"], $variants->where("itemId", "=", $id)->where("removed", "=", 0)->toArray());
             }
             // parse allergens
             $alergenList = [];
@@ -346,7 +372,7 @@ class BuffetApi
 
         }
 
-        $response->setPayload("data", $array);
+        $response->setPayload("data", array_values($array));
 
         // paging info
 
@@ -846,6 +872,32 @@ class BuffetApi
     }
 
     /**
+     * @param ApiResponse $response
+     */
+    function handleVerifyPassword(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["password", "token"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        $password = $response->getRequestByKey("password");
+
+        if (!password_verify($password, UserModel::getPasswordById($uid))) {
+            return $response->setError(Error::WrongPassword);
+        }
+
+        return $response->setSuccess(Success::PasswordVerified);
+    }
+
+    /**
      * @param  ApiResponse   $response
      * @return ApiResponse
      */
@@ -927,7 +979,39 @@ class BuffetApi
             }
         }
         if (!empty($itemParameters)) {
-            ItemModel::query()->where("id", $itemId)->update($itemParameters);
+            try {
+                ItemModel::query()->where("id", $itemId)->update($itemParameters);
+            } catch (QueryException $e) {
+                return $response->setError(Error::ItemUpdateFailed);
+            }
+        }
+
+        if ($response->hasRequestByKey("variants")) {
+            /**
+             * @var array{array{name:string,itemId:int,addedPrice:int,isExclusive:bool}}
+             */
+            $variants = $response->getRequestByKey("variants");
+
+            foreach ($variants as $variant) {
+                // @phpstan-ignore function.alreadyNarrowedType
+                if (empty($variant["name"]) || empty($variant["addedPrice"]) || !is_bool($variant["isExclusive"])) {
+                    return $response->setError(Error::InvalidVariant);
+                }
+            }
+            VariantModel::query()->where("itemId", $itemId)->update(["removed" => true]);
+            foreach ($variants as $variant) {
+                $removedVariant = VariantModel::query()->where("itemId", $itemId)->where("name", $variant["name"])->where("addedPrice", $variant["addedPrice"])->where("isExclusive", $variant["isExclusive"]);
+                if ($removedVariant->exists()) {
+                    $removedVariant->update(["removed" => false]);
+                } else {
+                    VariantModel::query()->insert([
+                        "name" => $variant["name"],
+                        "itemId" => $itemId,
+                        "addedPrice" => $variant["addedPrice"],
+                        "isExclusive" => $variant["isExclusive"]
+                    ]);
+                }
+            }
         }
 
         return $response->setSuccess(Success::ItemUpdated);
@@ -964,7 +1048,8 @@ class BuffetApi
             return $response->setError(Error::ItemNotFound);
         }
 
-        ItemModel::query()->where("id", $itemId)->delete();
+        ItemModel::query()->where("id", $itemId)->update(["removed" => true]);
+        VariantModel::query()->where("itemId", $itemId)->update(["removed" => true]);
 
         return $response->setSuccess(Success::ItemRemoved);
     }
@@ -975,7 +1060,7 @@ class BuffetApi
      */
     function handleCreateItem(ApiResponse $response): ApiResponse
     {
-        $response->setRequestKeys(array_merge(["token"], ItemModel::getColumns()));
+        $response->setRequestKeys(array_merge(["token", "variants"], ItemModel::getColumns()));
 
         if (!$response->hasRequestKeys()) {
             return $response;
@@ -997,12 +1082,38 @@ class BuffetApi
         $itemParameters = [];
         foreach (ItemModel::getColumns() as $column) {
             if ($response->hasRequestByKey($column)) {
-                $itemParameters["$column"] = $response->getRequestByKey($column);
+                if ($column == "allergens") {
+                    if (!json_validate($response->getRequestByKey($column)) || !is_array(json_decode($response->getRequestByKey($column)))) {
+                        return $response->setError(Error::InvalidJson);
+                    }
+                }
+                $itemParameters[$column] = $response->getRequestByKey($column);
             } else {
                 return $response;
             }
         }
-        ItemModel::query()->create($itemParameters);
+
+        /**
+         * @var array{array{name:string,itemId:int,addedPrice:int,isExclusive:bool}}
+         */
+        $variants = $response->getRequestByKey("variants");
+        foreach ($variants as $variant) {
+            // @phpstan-ignore function.alreadyNarrowedType
+            if (empty($variant["name"]) || empty($variant["addedPrice"]) || !is_bool($variant["isExclusive"])) {
+                return $response->setError(Error::InvalidVariant);
+            }
+        }
+
+        $newItem = ItemModel::query()->create($itemParameters);
+
+        $newId = $newItem->getAttribute("id");
+
+        $response->setPayload("newId", $newId);
+
+        foreach ($variants as $variant) {
+            $variant["itemId"] = $newId;
+            VariantModel::query()->create($variant);
+        }
 
         return $response->setSuccess(Success::ItemCreated);
     }
@@ -1132,7 +1243,7 @@ class BuffetApi
             return $response->setError(Error::VariantNotFound);
         }
 
-        VariantModel::query()->where("id", $variantId)->delete();
+        VariantModel::query()->where("id", $variantId)->update(["removed" => true]);
 
         return $response->setSuccess(Success::VaraintRemoved);
     }
@@ -1365,6 +1476,47 @@ class BuffetApi
     }
 
     /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
+    function handleUploadImage(ApiResponse $response): ApiResponse
+    {
+        $response->setRequestKeys(["token", "imageId", "directory"]);
+
+        $jwt = new JWTApi;
+
+        $jwt->validateToken($response);
+
+        $uid = $jwt->decodeToken($response)->sub ?? 0;
+
+        if ($response->hasFailed()) {
+            return $response;
+        }
+
+        if (!$response->hasRequestKeys()) {
+            return $response->setError(Error::MissingPayloadKeys);
+        }
+
+        if (!UserModel::isAdmin($uid)) {
+            return $response->setError(Error::Unauthorized);
+        }
+
+        $imageId = (int) $response->getRequestByKey("imageId");
+        $directory = (string) $response->getRequestByKey("directory");
+        $allowedCategories = ["categories", "items", "variants"];
+
+        if (!in_array($directory, $allowedCategories, true)) {
+            return $response->setError(Error::InvalidDirectory);
+        }
+
+        $imageUploader = new ImageUploader;
+
+        $imageUploader->uploadImage($this->requestInterface, $imageId, $directory, $response);
+
+        return $response->setSuccess(Success::ImageUploaded);
+    }
+
+    /**
      * @param  ApiResponse   $reponse
      * @return ApiResponse
      */
@@ -1420,11 +1572,22 @@ class BuffetApi
  *
  * @return array<mixed> decoded json from POST raw data
  */
-
     function getPostJson()
     {
-        $post = file_get_contents('php://input');
-        $json = json_decode($post, true);
-        return $json;
+        $request = $this->requestInterface;
+        //$data = $request->getParsedBody();
+
+        if ($request->getUploadedFiles()) {
+            $data = $request->getParsedBody();
+        } else {
+            $data = (array) json_decode($request->getBody()->getContents(), true);
+        }
+        /**
+         * @deprecated legacy code
+         */
+        /*$post = file_get_contents('php://input');
+        $json = json_decode($post, true);*/
+
+        return $data;
     }
 }
