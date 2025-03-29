@@ -13,8 +13,6 @@ use ThePay\ApiClient\Model\PaymentMethod;
 
 class PaymentModel extends Model
 {
-    const CREATED_AT = 'dateCreated';
-    const UPDATED_AT = null;
     /**
      * @var string
      */
@@ -33,6 +31,11 @@ class PaymentModel extends Model
         'thePayUrl',
         'thePayDetailsUrl'
     ];
+
+    /**
+     * @var bool
+     */
+    public $timestamps = true;
 
     /**
      * @param  PaymentMethods $type
@@ -69,7 +72,7 @@ class PaymentModel extends Model
         $paymentId = $paymentQuery->first()->toArray();
 
         $order = OrderModel::query()->where("paymentId", "=", $paymentId)->get()->toArray();
-        
+
         //error_log(ob_get_clean());
         #error_log($orderId);
         if ($paymentQuery->get()->count() === 0) {
@@ -77,8 +80,7 @@ class PaymentModel extends Model
         }
         $paymentQuery->update(['paid' => 1]);
 
-
-        WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => ["data"=> $order]]));
+        WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => ["data" => $order]]));
     }
 
     public static function getTableName(): string

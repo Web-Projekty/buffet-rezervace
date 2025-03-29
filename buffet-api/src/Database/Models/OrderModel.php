@@ -15,8 +15,6 @@ use Illuminate\Database\QueryException;
 
 class OrderModel extends Model
 {
-    const CREATED_AT = 'dateCreated';
-    const UPDATED_AT = null;
     // Specify the table if it's not the pluralized form of the class name
     /**
      * @var string
