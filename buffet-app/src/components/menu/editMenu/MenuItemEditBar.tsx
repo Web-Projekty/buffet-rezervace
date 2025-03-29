@@ -67,7 +67,6 @@ const MenuItemEditBar = ({
   const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
 
   const handleSave = async () => {
-    handleClose();
     try {
       const formatPrice = (value: string) =>
         Number((Number(value.replace(",", ".")) * 100).toFixed(0));
@@ -102,6 +101,7 @@ const MenuItemEditBar = ({
           await uploadImage(token, menuItemId, "items", imageFile);
         }
 
+        handleClose();
         toast.success("Položka byla úspěšně vytvořena");
         refetch();
         return;
@@ -121,6 +121,7 @@ const MenuItemEditBar = ({
         await uploadImage(token, menuItem.id, "items", imageFile);
       }
 
+      handleClose();
       toast.success("Položka byla úspěšně upravena");
       refetch();
     } catch (error) {
@@ -136,13 +137,15 @@ const MenuItemEditBar = ({
 
   const handleRemove = async () => {
     if (!menuItem) return;
-    handleClose();
 
     const { error } = await removeMenuItem(token, menuItem.id);
 
     if (error) {
-      console.log("Error deleting item");
+      toast.error("Položku se nepodařilo smazat");
+      return;
     }
+    handleClose();
+    toast.success("Položka byla úspěšně smazána");
     refetch();
   };
 
@@ -375,12 +378,14 @@ const MenuItemEditBar = ({
           >
             Zrušit
           </Button>
-          <Button
-            className="m-auto border-red-400 bg-red-400 hover:bg-red-500"
-            onClick={confirmDelete ? handleRemove : handleConfirmDelete}
-          >
-            {confirmDelete ? "Opravdu smazat?" : "Smazat"}
-          </Button>
+          {menuItem !== null ? (
+            <Button
+              className="m-auto border-red-400 bg-red-400 hover:bg-red-500"
+              onClick={confirmDelete ? handleRemove : handleConfirmDelete}
+            >
+              {confirmDelete ? "Opravdu smazat?" : "Smazat"}
+            </Button>
+          ) : null}
           <Button className="m-auto" onClick={handleSave}>
             Uložit
           </Button>
