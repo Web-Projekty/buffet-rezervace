@@ -76,6 +76,8 @@ docker_build:
         - docker version
         - docker info
         #- docker load < /home/php-image.tar
+        - date > buffet-api/build_date
+        - cat buffet-api/build_date
         - cd scripts
         - npm --version
         - composer diagnose
