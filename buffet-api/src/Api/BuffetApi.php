@@ -76,6 +76,30 @@ class BuffetApi
 
         $html->getBody()->write((string) $JsonOut);
 
+        $headFile = __DIR__ . "/../../.git/HEAD";
+        $fileStream = fopen($headFile, "r");
+
+        $HEAD = fread($fileStream, filesize($headFile));
+        fclose($fileStream);
+        $HEAD = explode(" ", $HEAD);
+
+        $refFile = __DIR__ . "/../../.git/" . trim($HEAD[1]);
+
+        if (file_exists($refFile)) {
+            $modifiedTimestamp = filemtime($refFile);
+            $lastModified = Carbon::createFromTimestamp($modifiedTimestamp)->setTimezone(CarbonTimeZone::create(EnvReader::getEnvProperty(Settings::Timezone)))->format('Y-m-d H:i:s');
+            $fileStream = fopen($refFile, "r");
+            $commitId = fread($fileStream, filesize($refFile));
+            fclose($fileStream);
+        }
+
+        if (isset($commitId)) {
+            $html = $html->withAddedHeader("Dev-commit-id", trim($commitId));
+        }
+        if (isset($lastModified) && Carbon::createFromFormat('Y-m-d H:i:s', $lastModified)->isValid()) {
+            $html = $html->withAddedHeader("Dev-last-commit", $lastModified);
+        }
+
         return $html->withHeader('Content-type', 'application/json');
     }
 
