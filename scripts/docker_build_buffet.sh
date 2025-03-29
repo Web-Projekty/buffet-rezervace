@@ -1,16 +1,16 @@
 #!/bin/bash
 docker builder prune -f
 cd ..
-# cd buffet-app
-# echo 'Installing npm packges:' && npm install && npm run build
-# cd ..
+cd buffet-app
+echo 'Installing npm packges:' && npm install && npm run build
+cd ..
 
-# cd buffet-api
-# echo 'Installing compooser packges:' && composer install --no-dev --optimize-autoloader
-# cd ..
+cd buffet-api
+echo 'Installing compooser packges:' && composer install --no-dev --optimize-autoloader
+cd ..
 
-# rm -rf buffet-api/dist
-# cp -r buffet-app/dist buffet-api
+rm -rf buffet-api/dist
+cp -r buffet-app/dist buffet-api
 
 # old build
 # docker build -t wlczak/buffet:latest . 
