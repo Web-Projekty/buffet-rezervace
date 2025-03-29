@@ -162,7 +162,7 @@ const MenuItemEditBar = ({
     field: keyof Variant,
     value: string,
   ) => {
-    console.log(variantId, field, value);
+    //console.log(variantId, field, value);
     setItemVariants((prev) =>
       prev.map((variant) =>
         variant.id === variantId ? { ...variant, [field]: value } : variant,
