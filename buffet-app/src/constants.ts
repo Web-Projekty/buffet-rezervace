@@ -18,7 +18,7 @@ export const CREDITS_ENABLED = false;
 
 export const CART_LOCAL_STORAGE_KEY: string = "cartItems";
 
-export const FETCH_URL: string = "https://wlczak.vlastas.cc/backend/api";
+export const FETCH_URL: string = window.location.protocol + "//" + window.location.host + "/api/";
 
 export const WEBSOCKET_URL = (channel: string): string =>
   window.location.protocol === "https:"

@@ -14,6 +14,7 @@ enum Settings: string {
 
     case IsProd = 'IS_PRODUCTION';
     case ImageCacheTime = 'IMAGE_CACHE_TIME';
+    case ImageUploadQuality = 'IMAGE_UPLOAD_QUALITY';
     case OrderDateLimitMax = 'ORDER_DATE_LIMIT_MAX';
 
     ##### ThePay #####
