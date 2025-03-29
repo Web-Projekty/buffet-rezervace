@@ -4,6 +4,8 @@ services:
         image: wlczak/buffet:latest
         pull_policy: always
         container_name: php-apache
+        environment:
+            TZ: Europe/Prague
         volumes:
             #- ./buffet-api:/var/www/html
             - ./conf/:/var/www/html/conf/:rw
@@ -20,6 +22,7 @@ services:
         image: mariadb:latest
         container_name: mariadb
         environment:
+            TZ: Europe/Prague
             MYSQL_ROOT_PASSWORD: prestizniBuffet2305
             MYSQL_DATABASE: buffet
             MYSQL_USER: buffet

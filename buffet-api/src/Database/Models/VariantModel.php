@@ -21,7 +21,7 @@ class VariantModel extends Model
     /**
      * @var array<string>
      */
-    protected $fillable = ['itemId', 'name', 'addedPrice', 'isExclusive'];
+    protected $fillable = ['itemId', 'name', 'addedPrice', 'isExclusive', "created_at", "updated_at"];
 
     // Optionally, disable timestamps if the table doesn't have them
 
@@ -54,7 +54,7 @@ class VariantModel extends Model
                 'name' => $name,
                 'addedPrice' => $addedPrice,
                 'isExclusive' => $isExclusive
-            ]);
+            ])->save();
 
         } catch (\Illuminate\Database\QueryException) {
             return false;
