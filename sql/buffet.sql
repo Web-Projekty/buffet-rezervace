@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 29, 2025 at 04:25 PM
+-- Generation Time: Mar 29, 2025 at 04:30 PM
 -- Server version: 11.7.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -122,7 +122,7 @@ CREATE TABLE `Orders` (
   `endTime` time NOT NULL,
   `pickUpId` varchar(4) NOT NULL,
   `paymentId` int(11) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
+  `dateCreated` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -130,7 +130,7 @@ CREATE TABLE `Orders` (
 -- Dumping data for table `Orders`
 --
 
-INSERT INTO `Orders` (`id`, `userId`, `status`, `pickupDate`, `items`, `startTime`, `endTime`, `pickUpId`, `paymentId`, `created_at`, `updated_at`) VALUES
+INSERT INTO `Orders` (`id`, `userId`, `status`, `pickupDate`, `items`, `startTime`, `endTime`, `pickUpId`, `paymentId`, `dateCreated`, `updated_at`) VALUES
 (4213, 6, 'waiting', '2025-01-16', '[{\"id\":7,\"quantity\":2,\"variants\":[]},{\"id\":15,\"quantity\":3,\"variants\":[]},{\"id\":4,\"quantity\":1,\"variants\":[]},{\"id\":19,\"quantity\":1,\"variants\":[]}]', '09:40:00', '09:45:00', '730', 105, '2025-01-16 18:29:33', NULL),
 (4223, 6, 'storno', '2025-01-16', '[{\"id\":7,\"quantity\":2,\"variants\":[]},{\"id\":15,\"quantity\":3,\"variants\":[]},{\"id\":4,\"quantity\":1,\"variants\":[]},{\"id\":19,\"quantity\":1,\"variants\":[]}]', '09:20:00', '09:25:00', '839', 115, '2025-01-16 19:50:23', NULL),
 (4224, 6, 'storno', '2025-01-16', '[{\"id\":1,\"quantity\":1,\"variants\":[]},{\"id\":2,\"quantity\":1,\"variants\":[]},{\"id\":3,\"quantity\":1,\"variants\":[]}]', '11:25:00', '11:30:00', '907', 116, '2025-01-16 20:27:40', NULL),
@@ -352,7 +352,7 @@ CREATE TABLE `Payments` (
   `paid` bit(1) NOT NULL DEFAULT b'0',
   `thePayUrl` varchar(512) DEFAULT NULL,
   `thePayDetailsUrl` varchar(512) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
+  `dateCreated` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -360,7 +360,7 @@ CREATE TABLE `Payments` (
 -- Dumping data for table `Payments`
 --
 
-INSERT INTO `Payments` (`id`, `thePayId`, `type`, `useCredits`, `totalAmount`, `creditsAmount`, `paid`, `thePayUrl`, `thePayDetailsUrl`, `created_at`, `updated_at`) VALUES
+INSERT INTO `Payments` (`id`, `thePayId`, `type`, `useCredits`, `totalAmount`, `creditsAmount`, `paid`, `thePayUrl`, `thePayDetailsUrl`, `dateCreated`, `updated_at`) VALUES
 (101, 121025713, 'thePay', b'0', 7900, 0, b'1', 'https://demo.gate.thepay.cz/6b4bbc3ff0495eec810ebe1722038912a6f301e624d6010d13dcb3d633535879/pay', 'https://demo.gate.thepay.cz/6b4bbc3ff0495eec810ebe1722038912a6f301e624d6010d13dcb3d633535879/state', '2025-01-16 15:25:42', '0000-00-00 00:00:00'),
 (102, 1867797027, 'thePay', b'0', 7900, 0, b'1', 'https://demo.gate.thepay.cz/164caed839035a431aef27fd93f8dbafcaf29184c2fa136881ad9b0bca5309c6/pay', 'https://demo.gate.thepay.cz/164caed839035a431aef27fd93f8dbafcaf29184c2fa136881ad9b0bca5309c6/state', '2025-01-16 15:51:54', '0000-00-00 00:00:00'),
 (103, 1986760029, 'thePay', b'0', 7900, 0, b'1', 'https://demo.gate.thepay.cz/ecbc6122891314eda96256750f5c81a9fbb62a3b892fa6fbc032d4e0f90be841/pay', 'https://demo.gate.thepay.cz/ecbc6122891314eda96256750f5c81a9fbb62a3b892fa6fbc032d4e0f90be841/state', '2025-01-16 15:52:26', '0000-00-00 00:00:00'),
@@ -529,7 +529,7 @@ INSERT INTO `Payments` (`id`, `thePayId`, `type`, `useCredits`, `totalAmount`, `
 (266, 1476466524, 'thePay', b'0', 8900, 0, b'1', 'https://demo.gate.thepay.cz/cc0699f3ad417d420936e09e62d4cde6537e50dff75003caeab016c4175ecc4d/pay', 'https://demo.gate.thepay.cz/cc0699f3ad417d420936e09e62d4cde6537e50dff75003caeab016c4175ecc4d/state', '2025-02-15 18:36:37', '0000-00-00 00:00:00'),
 (267, 1958613145, 'thePay', b'0', 8900, 0, b'1', 'https://demo.gate.thepay.cz/6cf16cb1bca977e81f657aeabb0fde3add90420685d660e449c09742ac3965af/pay', 'https://demo.gate.thepay.cz/6cf16cb1bca977e81f657aeabb0fde3add90420685d660e449c09742ac3965af/state', '2025-02-17 11:37:19', '0000-00-00 00:00:00'),
 (268, 1041738613, 'thePay', b'0', 8900, 0, b'1', 'https://demo.gate.thepay.cz/8051d456eb7db752ed58a61c730d74bb32cde5353f52592f132dbadb80d589f1/pay', 'https://demo.gate.thepay.cz/8051d456eb7db752ed58a61c730d74bb32cde5353f52592f132dbadb80d589f1/state', '2025-02-17 12:18:44', '0000-00-00 00:00:00');
-INSERT INTO `Payments` (`id`, `thePayId`, `type`, `useCredits`, `totalAmount`, `creditsAmount`, `paid`, `thePayUrl`, `thePayDetailsUrl`, `created_at`, `updated_at`) VALUES
+INSERT INTO `Payments` (`id`, `thePayId`, `type`, `useCredits`, `totalAmount`, `creditsAmount`, `paid`, `thePayUrl`, `thePayDetailsUrl`, `dateCreated`, `updated_at`) VALUES
 (269, 1793699236, 'thePay', b'0', 6900, 0, b'1', 'https://demo.gate.thepay.cz/77ef27a982db9abedbe24bb4f95c5499f8d2e58a3578fdc44aa38d09f1de9ab9/pay', 'https://demo.gate.thepay.cz/77ef27a982db9abedbe24bb4f95c5499f8d2e58a3578fdc44aa38d09f1de9ab9/state', '2025-02-17 14:57:03', '0000-00-00 00:00:00'),
 (270, 1707687329, 'thePay', b'0', 9900, 0, b'1', 'https://demo.gate.thepay.cz/d02db9cff9d9c175360f88be17585c026eef8089c3491a753496f9adcf11cb71/pay', 'https://demo.gate.thepay.cz/d02db9cff9d9c175360f88be17585c026eef8089c3491a753496f9adcf11cb71/state', '2025-02-17 16:26:20', '0000-00-00 00:00:00'),
 (271, 275037065, 'thePay', b'0', 6900, 0, b'1', 'https://demo.gate.thepay.cz/b895a62f602e408466243b20b85ebf11760f2f1ab81be7d3e1ed225d43f7df7e/pay', 'https://demo.gate.thepay.cz/b895a62f602e408466243b20b85ebf11760f2f1ab81be7d3e1ed225d43f7df7e/state', '2025-02-17 16:49:51', '0000-00-00 00:00:00'),
