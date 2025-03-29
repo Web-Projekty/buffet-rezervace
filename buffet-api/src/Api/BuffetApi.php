@@ -76,23 +76,6 @@ class BuffetApi
 
         $html->getBody()->write((string) $JsonOut);
 
-        $headFile = __DIR__ . "/../../.git/HEAD";
-        $fileStream = fopen($headFile, "r");
-
-        $HEAD = fread($fileStream, filesize($headFile));
-        fclose($fileStream);
-        $HEAD = explode(" ", $HEAD);
-
-        $refFile = __DIR__ . "/../../.git/" . trim($HEAD[1]);
-
-        if (file_exists($refFile)) {
-            $modifiedTimestamp = filemtime($refFile);
-            $lastModified = Carbon::createFromTimestamp($modifiedTimestamp)->setTimezone(CarbonTimeZone::create(EnvReader::getEnvProperty(Settings::Timezone)))->format('Y-m-d H:i:s');
-            $fileStream = fopen($refFile, "r");
-            $commitId = fread($fileStream, filesize($refFile));
-            fclose($fileStream);
-        }
-
         $build_file = __DIR__ . "/../../build_date";
 
         if (file_exists($build_file)) {
@@ -104,6 +87,23 @@ class BuffetApi
 
             $html = $html->withAddedHeader("Build-date", $buildDate);
         } else {
+            $headFile = __DIR__ . "/../../.git/HEAD";
+            $fileStream = fopen($headFile, "r");
+
+            $HEAD = fread($fileStream, filesize($headFile));
+            fclose($fileStream);
+            $HEAD = explode(" ", $HEAD);
+
+            $refFile = __DIR__ . "/../../.git/" . trim($HEAD[1]);
+
+            if (file_exists($refFile)) {
+                $modifiedTimestamp = filemtime($refFile);
+                $lastModified = Carbon::createFromTimestamp($modifiedTimestamp)->setTimezone(CarbonTimeZone::create(EnvReader::getEnvProperty(Settings::Timezone)))->format('Y-m-d H:i:s');
+                $fileStream = fopen($refFile, "r");
+                $commitId = fread($fileStream, filesize($refFile));
+                fclose($fileStream);
+            }
+
             if (isset($commitId)) {
                 $html = $html->withAddedHeader("Dev-commit-id", trim($commitId));
             }
