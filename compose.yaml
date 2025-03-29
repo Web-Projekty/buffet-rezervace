@@ -4,6 +4,8 @@ services:
         image: wlczak/buffet:latest
         pull_policy: always
         container_name: php-apache
+        environment:
+            - TZ=Europe/Prague
         volumes:
             #- ./buffet-api:/var/www/html
             - ./conf/:/var/www/html/conf/:rw
