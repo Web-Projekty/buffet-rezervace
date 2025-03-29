@@ -28,7 +28,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# # Install apache mods
+# Install apache mods
 RUN a2enmod rewrite proxy proxy_http proxy_wstunnel
 
 # Set the working directory inside the container
