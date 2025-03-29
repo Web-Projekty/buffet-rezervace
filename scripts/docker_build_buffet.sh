@@ -11,7 +11,9 @@ cd ..
 
 rm -rf buffet-api/dist
 cp -r buffet-app/dist buffet-api
-# docker build -t wlczak/buffet:latest .
+
+# old build
+# docker build -t wlczak/buffet:latest . 
 
 ### Using new docker builder
 echo ${DOCKER_TOKEN} | docker login --username wlczak --password-stdin
