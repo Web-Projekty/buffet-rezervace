@@ -4,6 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-08ZFSSMWG7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+
+        gtag("config", "G-08ZFSSMWG7");
+    </script>
+
     <title>Image Upload</title>
     <style>
         body {
@@ -75,7 +88,10 @@
                 body: formData
             })
                 .then(response => response.text())
-                .then(data => console.log('File uploaded successfully: ' + data))
+                .then(data => {
+                    console.log('File uploaded successfully: ' + data)
+                    gtag("event", "upload_image", { "event_category": "image_upload", "status": JSON.parse(data).status });
+                })
                 .catch(error => console.log('Error uploading file: ' + error));
         }
 
