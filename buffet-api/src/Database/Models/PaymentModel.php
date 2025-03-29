@@ -13,6 +13,7 @@ use ThePay\ApiClient\Model\PaymentMethod;
 
 class PaymentModel extends Model
 {
+    const CREATED_AT = 'dateCreated';
     /**
      * @var string
      */
