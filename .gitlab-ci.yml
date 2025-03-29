@@ -76,7 +76,6 @@ docker_build:
         - docker version
         - docker info
         #- docker load < /home/php-image.tar
-        - pwd
         - date > build_date
         - cd scripts
         - npm --version
