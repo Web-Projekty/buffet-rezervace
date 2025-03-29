@@ -411,7 +411,9 @@ export const uploadImage = async (
       },
     });
 
-    return data;
+    return {
+      error: data.status !== "success",
+    };
   } catch {
     throw new Error("Chyba při nahrávání obrázku.");
   }

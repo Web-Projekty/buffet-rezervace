@@ -98,7 +98,16 @@ const MenuItemEditBar = ({
         }
 
         if (imageFile) {
-          await uploadImage(token, menuItemId, "items", imageFile);
+          const { error } = await uploadImage(
+            token,
+            menuItemId,
+            "items",
+            imageFile,
+          );
+
+          if (error) {
+            toast.error("Obrázek se nepodařilo nahrát");
+          }
         }
 
         handleClose();
@@ -118,7 +127,17 @@ const MenuItemEditBar = ({
       }
 
       if (imageFile) {
-        await uploadImage(token, menuItem.id, "items", imageFile);
+        const { error } = await uploadImage(
+          token,
+          menuItem.id,
+          "items",
+          imageFile,
+        );
+
+        if (error) {
+          toast.error("Obrázek se nepodařilo nahrát");
+          return;
+        }
       }
 
       handleClose();

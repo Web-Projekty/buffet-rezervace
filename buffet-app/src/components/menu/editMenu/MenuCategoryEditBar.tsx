@@ -57,7 +57,16 @@ const MenuCategoryEditBar = ({
       }
 
       if (imageFile) {
-        await uploadImage(token, categoryId, "categories", imageFile);
+        const { error } = await uploadImage(
+          token,
+          categoryId,
+          "categories",
+          imageFile,
+        );
+
+        if (error) {
+          toast.error("Obrázek se nepodařilo nahrát");
+        }
       }
 
       toast.success("Kategorie byla úspěšně vytvořena");
@@ -76,7 +85,17 @@ const MenuCategoryEditBar = ({
     }
 
     if (imageFile) {
-      await uploadImage(token, category.id, "categories", imageFile);
+      const { error } = await uploadImage(
+        token,
+        category.id,
+        "categories",
+        imageFile,
+      );
+
+      if (error) {
+        toast.error("Obrázek se nepodařilo nahrát");
+        return;
+      }
     }
 
     toast.success("Kategorie byla úspěšně upravena");
