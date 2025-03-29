@@ -5,31 +5,31 @@ FROM php:8.3-apache-bookworm
 #FROM mcr.microsoft.com/devcontainers/php:8.3
 
 # Enable Apache rewrite module
-RUN a2enmod rewrite
+# RUN a2enmod rewrite
 
-# Install composer
-RUN apt-get update && apt-get install -y git unzip zip curl supervisor
+# # Install composer
+# RUN apt-get update && apt-get install -y git unzip zip curl supervisor
 
-# Install necessary PHP extensions
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+# # Install necessary PHP extensions
+# RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-#PHP GD
-RUN apt-get install -y \
-		libfreetype-dev \
-		libjpeg62-turbo-dev \
-		libpng-dev \
-        libpng-dev \
-        libwebp-dev \
-        libgd-dev
+# #PHP GD
+# RUN apt-get install -y \
+# 		libfreetype-dev \
+# 		libjpeg62-turbo-dev \
+# 		libpng-dev \
+#         libpng-dev \
+#         libwebp-dev \
+#         libgd-dev
 
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-&& docker-php-ext-install -j$(nproc) gd
+# RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+# && docker-php-ext-install -j$(nproc) gd
 
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# # Install composer
+# RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install apache mods
-RUN a2enmod rewrite proxy proxy_http proxy_wstunnel
+# # Install apache mods
+# RUN a2enmod rewrite proxy proxy_http proxy_wstunnel
 
 # Set the working directory inside the container
 WORKDIR /var/www/html
