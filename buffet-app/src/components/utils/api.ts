@@ -58,6 +58,7 @@ export type OrdersApi = {
   items: MenuItem[];
   itemsCount: number;
   status: "success" | "error";
+  variants: Variant[];
 };
 
 export const getMenu = async (): Promise<MenuApi> => {
@@ -97,6 +98,7 @@ export const getOrders = async (
       items: data.payload.items as MenuItem[],
       itemsCount: data.payload.itemsCount as number,
       status: data.status,
+      variants: data.payload.variants as Variant[],
     };
   } catch {
     throw new Error("Chyba při načítání objednávek.");
