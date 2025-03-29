@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 27, 2025 at 05:01 PM
+-- Generation Time: Mar 29, 2025 at 04:10 PM
 -- Server version: 11.7.2-MariaDB-ubu2404
 -- PHP Version: 8.2.27
 
@@ -45,16 +45,18 @@ CREATE TABLE `Categories` (
   `name` varchar(256) NOT NULL,
   `image` varchar(256) NOT NULL DEFAULT '',
   `description` varchar(1024) NOT NULL,
-  `removed` tinyint(1) NOT NULL DEFAULT 0
+  `removed` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `Categories`
 --
 
-INSERT INTO `Categories` (`id`, `name`, `image`, `description`, `removed`) VALUES
-(1, 'Fastfood', 'https://wlczak.vlastas.cc/backend/image/categories/1', 'Něco rychlého k snědku', 0),
-(2, 'Vegetariánské', '', 'Zdravá a vyvážená bezmasá strava', 0);
+INSERT INTO `Categories` (`id`, `name`, `image`, `description`, `removed`, `created_at`, `updated_at`) VALUES
+(1, 'Fastfood', '', 'Něco rychlého k snědku', 0, NULL, NULL),
+(2, 'Vegetariánské', '', 'Zdravá a vyvážená bezmasá strava', 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
