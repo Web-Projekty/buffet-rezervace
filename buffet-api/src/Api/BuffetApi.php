@@ -93,11 +93,23 @@ class BuffetApi
             fclose($fileStream);
         }
 
-        if (isset($commitId)) {
-            $html = $html->withAddedHeader("Dev-commit-id", trim($commitId));
-        }
-        if (isset($lastModified) && Carbon::createFromFormat('Y-m-d H:i:s', $lastModified)->isValid()) {
-            $html = $html->withAddedHeader("Dev-last-commit", $lastModified);
+        $build_file = __DIR__ . "/../../../build_date";
+
+        if (file_exists($build_file)) {
+            $fileStream = fopen($build_file, "r");
+            $buildDate = trim(fread($fileStream, filesize($build_file)));
+            fclose($fileStream);
+
+            $buildDate = Carbon::createFromFormat('D M d H:i:s e Y', $buildDate)->setTimezone(CarbonTimeZone::create(EnvReader::getEnvProperty(Settings::Timezone)))->format('D M d H:i:s e Y');
+
+            $html = $html->withAddedHeader("Build-date", $buildDate);
+        } else {
+            if (isset($commitId)) {
+                $html = $html->withAddedHeader("Dev-commit-id", trim($commitId));
+            }
+            if (isset($lastModified) && Carbon::createFromFormat('Y-m-d H:i:s', $lastModified)->isValid()) {
+                $html = $html->withAddedHeader("Dev-last-commit", $lastModified);
+            }
         }
 
         return $html->withHeader('Content-type', 'application/json');
