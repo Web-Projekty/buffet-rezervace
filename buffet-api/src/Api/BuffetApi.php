@@ -1004,7 +1004,7 @@ class BuffetApi
                 if ($removedVariant->exists()) {
                     $removedVariant->update(["removed" => false]);
                 } else {
-                    VariantModel::query()->insert([
+                    VariantModel::query()->create([
                         "name" => $variant["name"],
                         "itemId" => $itemId,
                         "addedPrice" => $variant["addedPrice"],
