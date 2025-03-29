@@ -93,7 +93,7 @@ class BuffetApi
             fclose($fileStream);
         }
 
-        $build_file = __DIR__ . "/../../../build_date";
+        $build_file = __DIR__ . "/../../build_date";
 
         if (file_exists($build_file)) {
             $fileStream = fopen($build_file, "r");
