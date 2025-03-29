@@ -76,12 +76,31 @@ class BuffetApi
 
         $html->getBody()->write((string) $JsonOut);
 
-        var_dump($HEAD = shell_exec('cd .git && cat HEAD'));
+        $headFile = __DIR__ . "/../../.git/HEAD";
+        $fileStream = fopen($headFile, "r");
 
-        var_dump($HEAD = explode(" ", $HEAD));
-        var_dump(shell_exec("cat .git/" . $HEAD[1] . " && pwd"));
-       // var_dump("cat .git/" . $HEAD[1] . " && pwd");
-        return $html->withHeader('Content-type', 'application/json')->withAddedHeader("Test", "Test");
+        $HEAD = fread($fileStream, filesize($headFile));
+        fclose($fileStream);
+        $HEAD = explode(" ", $HEAD);
+
+        $refFile = __DIR__ . "/../../.git/" . trim($HEAD[1]);
+
+        if (file_exists($refFile)) {
+            $modifiedTimestamp = filemtime($refFile);
+            $lastModified = Carbon::createFromTimestamp($modifiedTimestamp)->setTimezone(CarbonTimeZone::create(EnvReader::getEnvProperty(Settings::Timezone)))->format('Y-m-d H:i:s');
+            $fileStream = fopen($refFile, "r");
+            $commitId = fread($fileStream, filesize($refFile));
+            fclose($fileStream);
+        }
+
+        if (isset($commitId)) {
+            $html = $html->withAddedHeader("Dev-commit-id", trim($commitId));
+        }
+        if (isset($lastModified) && Carbon::createFromFormat('Y-m-d H:i:s', $lastModified)->isValid()) {
+            $html = $html->withAddedHeader("Dev-last-commit", $lastModified);
+        }
+
+        return $html->withHeader('Content-type', 'application/json');
     }
 
     /**
