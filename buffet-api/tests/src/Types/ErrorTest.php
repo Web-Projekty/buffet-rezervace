@@ -5,6 +5,8 @@ declare (strict_types = 1);
 namespace Buffet\Tests\Types;
 
 use Buffet\Types\Error;
+use Buffet\Types\Settings;
+use Buffet\Utils\EnvWriter;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
@@ -19,6 +21,7 @@ class ErrorTest extends TestCase
     protected function setUp(): void
     {
         $this->errorList = Error::cases();
+        EnvWriter::write(Settings::IsProd, "false");
     }
 
     #[TestDox('All Error cases have values')]
@@ -29,16 +32,26 @@ class ErrorTest extends TestCase
             $this->assertNotNull($error->value);
             $this->assertNotNull($error);
         }
+
     }
 
     #[TestDox("TestGetValueMethod")]
     public function testGetValue(): void
     {
+        EnvWriter::write(Settings::IsProd, "false");
         foreach ($this->errorList as $error) {
             $this->assertIsString($error->getValue());
             $this->assertNotNull($error->getValue());
             $this->assertSame($error->value, $error->getValue());
         }
+
+        EnvWriter::write(Settings::IsProd, "true");
+        foreach ($this->errorList as $error) {
+            $this->assertIsString($error->getValue());
+            $this->assertNotNull($error->getValue());
+            $this->assertSame(Error::DefaultError->value, $error->getValue());
+        }
+
     }
 
     // add isProd implementation
