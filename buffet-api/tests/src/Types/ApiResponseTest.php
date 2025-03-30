@@ -188,5 +188,11 @@ class ApiResponseTest extends TestCase
         $this->assertTrue($this->apiResponse->hasFailed());
         $this->assertEquals(Helper::getErrorResponse(Error::StatusPending), $this->apiResponse->__toString());
     }
+    public function testStatus():void{
+        $this->apiResponse->setStatus(true);
+        $this->assertEquals(ApiStatus::Success, $this->apiResponse->getStatus());
 
+        $this->apiResponse->setStatus(false);
+        $this->assertEquals(ApiStatus::Failed, $this->apiResponse->getStatus());
+    }
 }
