@@ -6,10 +6,12 @@ namespace Buffet\Types\Tests;
 
 use Buffet\Types\Exceptions\NegativeValueException;
 use Buffet\Types\Time;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 class TimeTest extends TestCase
 {
+    #[TestDox("Test constructor and fixFormat method")]
     public function testConstructorAndFixFormat(): void
     {
         $time = new Time(23, 59, 61);
@@ -18,6 +20,7 @@ class TimeTest extends TestCase
         $this->assertEquals(1, $time->second);
     }
 
+    #[TestDox("Test setTime with negative value throws exception")]
     public function testSetTimeWithNegativeValueThrowsException(): void
     {
         $this->expectException(NegativeValueException::class);
@@ -25,6 +28,7 @@ class TimeTest extends TestCase
         $time->setTime(-1, 0, 0);
     }
 
+    #[TestDox("Test add method")]
     public function testAdd(): void
     {
         $time = new Time(1, 59, 30);
@@ -34,6 +38,7 @@ class TimeTest extends TestCase
         $this->assertEquals(15, $time->second);
     }
 
+    #[TestDox("Test addTime method")]
     public function testAddTime(): void
     {
         $time1 = new Time(2, 30, 30);
@@ -44,6 +49,7 @@ class TimeTest extends TestCase
         $this->assertEquals(10, $time1->second);
     }
 
+    #[TestDox("Test getValue method")]
     public function testGetValue(): void
     {
         $time = new Time(1, 1, 1);
@@ -52,6 +58,7 @@ class TimeTest extends TestCase
         $this->assertEquals(1, $time->getValue('h'));
     }
 
+    #[TestDox("Test format method")]
     public function testFormat(): void
     {
         $time = new Time(3, 5, 7);
@@ -60,6 +67,7 @@ class TimeTest extends TestCase
         $this->assertEquals('03', $time->format('h'));
     }
 
+    #[TestDox("Test isBiggerThan and isSmallerThan methods")]
     public function testIsBiggerThanAndIsSmallerThan(): void
     {
         $time1 = new Time(2, 0, 0);
@@ -68,6 +76,7 @@ class TimeTest extends TestCase
         $this->assertFalse($time1->isSmallerThan($time2));
     }
 
+    #[TestDox("Test diff method")]
     public function testDiff(): void
     {
         $time1 = new Time(3, 30, 30);
@@ -77,6 +86,7 @@ class TimeTest extends TestCase
         $this->assertEquals(4515, $time1->diff($time2, 's'));
     }
 
+    #[TestDox("Test fromString method")]
     public function testFromString(): void
     {
         $time = Time::fromString("12:34:56");
@@ -90,12 +100,14 @@ class TimeTest extends TestCase
         $this->assertEquals(0, $time2->second);
     }
 
+    #[TestDox("Test __toString method")]
     public function testToString(): void
     {
         $time = new Time(8, 5, 5);
         $this->assertEquals('8:5:5', (string) $time);
     }
 
+    #[TestDox("Test setTime with fixFormat method")]
     public function testSetTimeFixFormat(): void
     {
         $time = new Time(0, 0, 0);
@@ -105,18 +117,21 @@ class TimeTest extends TestCase
         $this->assertEquals(20, $time->second);
     }
 
+    #[TestDox("Test getValue with default unit")]
     public function testGetValueDefault(): void
     {
         $time = new Time(1, 2, 3);
         $this->assertEquals(0, $time->getValue("invalid"));
     }
 
+    #[TestDox("Test format with default return")]
     public function testFormatDefaultReturn(): void
     {
         $time = new Time(9, 8, 7);
         $this->assertEquals("09:08:07", $time->format("invalid"));
     }
 
+    #[TestDox("Test diff with default return")]
     public function testDiffDefaultReturn(): void
     {
         $time1 = new Time(5, 30, 15);
@@ -124,6 +139,7 @@ class TimeTest extends TestCase
         $this->assertEquals(0, $time1->diff($time2, "invalid"));
     }
 
+    #[TestDox("Test fixFormat with negative values")]
     public function testFixFormatNegativeValues(): void
     {
         $time = new Time(0, 1, -75);
