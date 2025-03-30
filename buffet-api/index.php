@@ -6,6 +6,8 @@ use Buffet\Api\ImageUploader;
 use Buffet\Types\Exceptions\SettingsException;
 use Buffet\Types\Settings;
 use Buffet\Utils\EnvReader;
+use Carbon\Carbon;
+use Carbon\CarbonTimeZone;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\HttpNotFoundException;
@@ -97,17 +99,65 @@ $paymentApi->getPaymentInfo($payment['thePayId']);
  * @todo remove
  */
 // CORS Middleware (DO NOT!!!! LEAVE IN FINAL RELEASE)
-$corsMiddleware = function ($request, $handler) {
-    $response = $handler->handle($request);
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-        ->withHeader('Access-Control-Allow-Credentials', 'true'); // If needed
+if (!$isProd) {
+    $corsMiddleware = function ($request, $handler) {
+        $response = $handler->handle($request);
+        return $response
+            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+            ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+            ->withHeader('Access-Control-Allow-Credentials', 'true'); // If needed
+    };
+    $app->add($corsMiddleware);
+
+}
+
+$headerMiddleware = function ($request, $handler) {
+    $html = $handler->handle($request);
+    $build_file = __DIR__ . "/../../build_date";
+    if (file_exists($build_file)) {
+        $fileStream = fopen($build_file, "r");
+        $buildDate = trim(fread($fileStream, filesize($build_file)));
+        fclose($fileStream);
+
+        $buildDate = Carbon::createFromFormat('D M d H:i:s e Y', $buildDate)->setTimezone(CarbonTimeZone::create(EnvReader::getEnvProperty(Settings::Timezone)))->format('D M d H:i:s e Y');
+
+        $html = $html->withAddedHeader("Build-date", $buildDate);
+        $html = $html->withAddedHeader("Image-version", "production");
+
+    } else {
+        $headFile = __DIR__ . "/.git/HEAD";
+        $fileStream = fopen($headFile, "r");
+
+        $HEAD = fread($fileStream, filesize($headFile));
+        fclose($fileStream);
+        $HEAD = explode(" ", $HEAD);
+
+        $refFile = __DIR__ . "/.git/" . trim($HEAD[1]);
+
+        if (file_exists($refFile)) {
+            $modifiedTimestamp = filemtime($refFile);
+            $lastModified = Carbon::createFromTimestamp($modifiedTimestamp)->setTimezone(CarbonTimeZone::create(EnvReader::getEnvProperty(Settings::Timezone)))->format('Y-m-d H:i:s');
+            $fileStream = fopen($refFile, "r");
+            $commitId = fread($fileStream, filesize($refFile));
+            fclose($fileStream);
+        }
+
+        if (isset($commitId)) {
+            $html = $html->withAddedHeader("Dev-commit-id", trim($commitId));
+        }
+        if (isset($lastModified) && Carbon::createFromFormat('Y-m-d H:i:s', $lastModified)->isValid()) {
+            $html = $html->withAddedHeader("Dev-last-commit", $lastModified);
+        }
+        $html = $html->withAddedHeader("Image-version", "development");
+    }
+
+    return $html;
 };
 
+$app->add($headerMiddleware);
+
 // Add middleware to your Slim app
-$app->add($corsMiddleware);
 
 $app->post('/api', [BuffetApi::class, 'main']);
 $app->post('/api/', [BuffetApi::class, 'main']);

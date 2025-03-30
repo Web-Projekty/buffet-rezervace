@@ -57,7 +57,7 @@ class ImageProvider
      * @param  $args
      * @return string
      */
-    function getFilePath(string $urlPath, RequestInterface $request): string
+    function getFilePath(string $urlPath, ?RequestInterface $request): string
     {
         $supportedFormats = ["jpg", "png", "svg", "webp"];
         $fileFound = false;
@@ -80,16 +80,23 @@ class ImageProvider
         }
 
         if (!$fileFound) {
-            $path = $dir . "default";
+            if ($request != null) {
 
-            foreach ($supportedFormats as $format) {
-                if (file_exists($path . "." . $format)) {
-                    $path .= "." . $format;
-                    $fileFound = true;
-                    break;
+                $path = $dir . "default";
+
+                foreach ($supportedFormats as $format) {
+                    if (file_exists($path . "." . $format)) {
+                        $path .= "." . $format;
+                        $fileFound = true;
+                        break;
+                    }
                 }
+            } else {
+                $path = "";
             }
-
+        }
+        if ($request == null) {
+            return $path;
         }
         return $fileFound ? $path : throw (new HttpNotFoundException($request, "file not found: " . $path));
     }
