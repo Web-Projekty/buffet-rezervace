@@ -415,7 +415,17 @@ class BuffetApi
                 $isKDS = false;
             }
             if ($isKDS) {
-                $orders = OrderModel::getAll()->where("paid", "=", 1)->where("status", "=", OrderStatus::Sent->value)->orWhere("status", "=", OrderStatus::Preparing->value)->orWhere("status", "=", OrderStatus::Waiting->value);
+                $orders = OrderModel::getAll()->where(function ($query) {
+                    $query->where("paid", "=", 1)
+                        ->orWhere("status", "=", OrderStatus::Sent->value)
+                        ->orWhere("status", "=", OrderStatus::Preparing->value)
+                        ->orWhere("status", "=", OrderStatus::Waiting->value);
+                })
+                    ->orWhere(function ($query) {
+                        $query->where("paid", "=", 0)
+                            ->where("type", "=", PaymentMethods::Cash->value);
+                    });
+
                 //error_log($orders->toSql());
             } else {
                 $orders = OrderModel::getAll();
@@ -427,12 +437,12 @@ class BuffetApi
 
         if ($page > 0 && $itemsCount > 0) {
             if (!$orders->get()->isEmpty()) {
-                $ordersForUpdate = $orders->select(["$paymentTableName.thePayId", "$paymentTableName.paid", "$orderTableName.status"])->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page)->items();
+                $ordersForUpdate = $orders->select(["$paymentTableName.thePayId", "$paymentTableName.paid", "$orderTableName.status", "$paymentTableName.type"])->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page)->items();
 
                 $adminToken = JWTApi::getAdminToken();
 
                 foreach ($ordersForUpdate as $order) {
-                    if (!$order->paid && in_array($order->status, [OrderStatus::Sent->value, OrderStatus::Preparing->value, OrderStatus::Waiting->value])) {
+                    if (!$order->paid && in_array($order->status, [OrderStatus::Sent->value, OrderStatus::Preparing->value, OrderStatus::Waiting->value]) && $order->type === PaymentMethods::ThePay->value) {
                         $msg = [
                             "requestType" => "updatePayment",
                             "token" => $adminToken,
@@ -445,7 +455,7 @@ class BuffetApi
 
                 }
 
-                $orders = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl"]);
+                $orders = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl", "$paymentTableName.type"]);
 
                 $paginate = $orders->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
                 $response->setPayload("itemsCount", $paginate->total());
@@ -456,7 +466,7 @@ class BuffetApi
             }
         } else {
             $response->setPayload("itemsCount", $orders->count($orderTableName . ".id"));
-            $ordersArray = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl"])->get()->toArray();
+            $ordersArray = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl", "$paymentTableName.type", "$paymentTableName.id as payId"])->get()->toArray();
         }
 
         $itemIds = [];
@@ -647,6 +657,10 @@ class BuffetApi
                 return $response->setError(Error::ThePayError);
             } catch (PaymentCreationException $e) {
                 return $response->setError(Error::PaymentCreationError);
+            } catch (ValueError $e) {
+                return $response->setError(Error::PaymentTypeError);
+            } catch (TypeError $e) {
+                return $response->setError(Error::PaymentTypeError);
             } catch (Exception $e) {
                 switch ($e->getCode()) {
                     case 1:
@@ -671,9 +685,10 @@ class BuffetApi
         $response->setPayload("url", $order["url"]);
 
         $order["items"] = json_decode($order["items"]);
+        $order["pickupDate"] = $pickUpDate;
 
         if ($paymentMethod == PaymentMethods::Cash->value) {
-            WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => ["data" => $order]]));
+            WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => ["data" => [0 => $order]]]));
         }
 
         return $response->setStatus(true)->setSuccess(Success::OrderCreated);
@@ -797,26 +812,39 @@ class BuffetApi
         $paymentId = (int) $response->getRequestByKey("paymentId");
         $type = $response->getRequestByKey("type");
 
-        if ($type !== "state_changed") {
-            return $response->setError(Error::InvalidType);
-        }
-        $paymentApi = new PaymentApi;
+        switch ($type) {
 
-        if ($paymentId !== 0 && $paymentApi->isPaid($paymentId)) {
+            case "state_changed":
 
-            try {
-                PaymentModel::setPaid($paymentId);
-            } catch (\Exception $e) {
-                if ($e->getCode() === 1) {
-                    return $response->setError(Error::PaymentNotFound);
+                $paymentApi = new PaymentApi;
+
+                if ($paymentId !== 0 && $paymentApi->isPaid($paymentId)) {
+
+                    try {
+                        // use thePayId
+                        PaymentModel::setPaidThePay($paymentId);
+                    } catch (\Exception $e) {
+                        if ($e->getCode() === 1) {
+                            return $response->setError(Error::PaymentNotFound);
+                        }
+                    }
+
+                } else {
+                    return $response->setError(Error::InvalidPaymentId);
                 }
-            }
 
-        } else {
-            return $response->setError(Error::InvalidPaymentId);
+                return $response->setSuccess(Success::PaymentUpdated);
+            case "cash":
+                try {
+                    //use id
+                    PaymentModel::setPaidCash($paymentId);
+                } catch (\Exception $e) {
+                    return $response->setError(Error::PaymentTypeError);
+                }
+                return $response->setSuccess(Success::PaymentUpdated);
+            default:
+                return $response->setError(Error::InvalidType);
         }
-
-        return $response->setSuccess(Success::PaymentUpdated);
     }
 
     /**

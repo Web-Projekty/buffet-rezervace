@@ -146,7 +146,7 @@ class OrderModel extends Model
 
         $price = $itemApi->countItemPrice($items);
 
-        $paymentId = $paymentApi->createPayment($price, PaymentMethods::ThePay);
+        $paymentId = $paymentApi->createPayment($price, PaymentMethods::from($paymentMethod));
         if ($paymentId == 0) {
             throw new PaymentCreationException();
         }
@@ -175,7 +175,6 @@ class OrderModel extends Model
 
         $orderArray['url'] = PaymentModel::query()->find($paymentId)->toArray()['thePayUrl'];
         return $orderArray;
-
     }
 
     /**
