@@ -647,6 +647,10 @@ class BuffetApi
                 return $response->setError(Error::ThePayError);
             } catch (PaymentCreationException $e) {
                 return $response->setError(Error::PaymentCreationError);
+            } catch (ValueError $e) {
+                return $response->setError(Error::PaymentTypeError);
+            } catch (TypeError $e) {
+                return $response->setError(Error::PaymentTypeError);
             } catch (Exception $e) {
                 switch ($e->getCode()) {
                     case 1:

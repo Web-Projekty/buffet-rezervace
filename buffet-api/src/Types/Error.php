@@ -107,6 +107,7 @@ enum Error: string {
     case InvalidType = 'Invalid type';
     case InvalidPaymentId = 'Invalid payment id';
     case PaymentNotFound = 'Payment not found';
+    case PaymentTypeError = 'Payment type error';
     /**
      * @return string
      */
