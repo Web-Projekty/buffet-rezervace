@@ -95,4 +95,50 @@ class TimeTest extends TestCase
         $time = new Time(8, 5, 5);
         $this->assertEquals('8:5:5', (string) $time);
     }
+
+    public function testSetTimeFixFormat(): void
+    {
+        $time = new Time(0, 0, 0);
+        $time->setTime(25, 70, 80);
+        $this->assertEquals(2, $time->hour);
+        $this->assertEquals(11, $time->minute);
+        $this->assertEquals(20, $time->second);
+    }
+
+    public function testGetValueDefault(): void
+    {
+        $time = new Time(1, 2, 3);
+        $this->assertEquals(0, $time->getValue("invalid"));
+    }
+
+    public function testFormatDefaultReturn(): void
+    {
+        $time = new Time(9, 8, 7);
+        $this->assertEquals("09:08:07", $time->format("invalid"));
+    }
+
+    public function testDiffDefaultReturn(): void
+    {
+        $time1 = new Time(5, 30, 15);
+        $time2 = new Time(3, 20, 10);
+        $this->assertEquals(0, $time1->diff($time2, "invalid"));
+    }
+
+    public function testFixFormatNegativeValues(): void
+    {
+        $time = new Time(0, 0, -75);
+        $this->assertEquals(22, $time->hour);
+        $this->assertEquals(58, $time->minute);
+        $this->assertEquals(45, $time->second);
+
+        $time->setTime(0, -90, 0);
+        $this->assertEquals(22, $time->hour);
+        $this->assertEquals(30, $time->minute);
+        $this->assertEquals(0, $time->second);
+
+        $time->setTime(-26, 0, 0);
+        $this->assertEquals(22, $time->hour);
+        $this->assertEquals(0, $time->minute);
+        $this->assertEquals(0, $time->second);
+    }
 }
