@@ -4,7 +4,9 @@ declare (strict_types = 1);
 
 namespace Buffet\Tests\Types;
 
+use Buffet\Types\Settings;
 use Buffet\Types\Success;
+use Buffet\Utils\EnvWriter;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
@@ -19,6 +21,7 @@ class SucessTest extends TestCase
     protected function setUp(): void
     {
         $this->sucessList = Success::cases();
+        EnvWriter::write(Settings::IsProd, "false");
     }
 
     #[TestDox('All Error cases have values')]
@@ -34,10 +37,18 @@ class SucessTest extends TestCase
     #[TestDox("TestGetValueMethod")]
     public function testGetValue(): void
     {
+        EnvWriter::write(Settings::IsProd, "false");
         foreach ($this->sucessList as $sucess) {
             $this->assertIsString($sucess->getValue());
             $this->assertNotNull($sucess->getValue());
             $this->assertSame($sucess->value, $sucess->getValue());
+        }
+
+        EnvWriter::write(Settings::IsProd, "true");
+        foreach ($this->sucessList as $sucess) {
+            $this->assertIsString($sucess->getValue());
+            $this->assertNotNull($sucess->getValue());
+            $this->assertSame(Success::DefaultSuccess->value, $sucess->getValue());
         }
     }
 
