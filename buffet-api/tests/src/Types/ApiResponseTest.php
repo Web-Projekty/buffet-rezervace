@@ -155,16 +155,17 @@ class ApiResponseTest extends TestCase
 
     public function testToStringHandlesMissingRequestKeys(): void
     {
-        EnvWriter::write(Settings::IsProd, "false");
-        // Simulate a scenario where request keys are missing
-        $this->expectException(Exception::class);
+        EnvWriter::write(Settings::IsProd, "true");
+        // Simulate that request keys are required but missing
         $this->apiResponse->setRequestKeys(['key1']);
-        $this->apiResponse->__toString(); // Call __toString to trigger error
+        $this->apiResponse->request = []; // Empty request to simulate missing keys
+
+        // Call __toString to trigger error for missing request keys
+        $this->apiResponse->__toString();
 
         // Assert that the error for missing request keys was set
         $this->assertTrue($this->apiResponse->hasFailed());
         $this->assertEquals(Helper::getErrorResponse(Error::MissingRequestKeys), $this->apiResponse->__toString());
-        EnvWriter::write(Settings::IsProd, "true");
     }
 
     public function testToStringHandlesMissingPayloadKeys(): void
