@@ -8,6 +8,7 @@ use Buffet\Types\Error;
 use Buffet\Types\Settings;
 use Buffet\Types\Success;
 use Buffet\Utils\EnvWriter;
+use Buffet\Utils\Helper;
 use PHPUnit\Framework\TestCase;
 
 class ApiResponseTest extends TestCase
@@ -118,7 +119,7 @@ class ApiResponseTest extends TestCase
     public function testRequireRequestTypeWithMissingRequestType(): void
     {
         EnvWriter::write(Settings::IsProd, "false");
-        
+
         $this->apiResponse->setRequestKeys(['key1']);
         $this->apiResponse->setRequestByKey('key1', 'value1');
         $this->apiResponse->hasRequestKeys();
@@ -140,4 +141,49 @@ class ApiResponseTest extends TestCase
         $this->expectException(Exception::class);
         $this->apiResponse->hasRequestKeys();
     }
+
+    public function testToStringHandlesMissingRequestType(): void
+    {
+        $this->apiResponse->requireRequestType(true); // Make sure it's required
+        $this->apiResponse->request = [];             // Simulate missing requestType
+        $this->apiResponse->__toString();             // Call __toString to trigger error
+
+        // Assert that the error for missing requestType was set
+        $this->assertTrue($this->apiResponse->hasFailed());
+        $this->assertEquals(Helper::getErrorResponse(Error::MissingRequestType), $this->apiResponse->__toString());
+    }
+
+    public function testToStringHandlesMissingRequestKeys(): void
+    {
+        // Simulate a scenario where request keys are missing
+        $this->apiResponse->setRequestKeys(['key1']);
+        $this->apiResponse->__toString(); // Call __toString to trigger error
+
+        // Assert that the error for missing request keys was set
+        $this->assertTrue($this->apiResponse->hasFailed());
+        $this->assertEquals(Error::MissingRequestKeys, $this->apiResponse->getPayload('msg'));
+    }
+
+    public function testToStringHandlesMissingPayloadKeys(): void
+    {
+        // Simulate a scenario where payload keys are missing
+        $this->apiResponse->setPayloadKeys(['key1']);
+        $this->apiResponse->__toString(); // Call __toString to trigger error
+
+        // Assert that the error for missing payload keys was set
+        $this->assertTrue($this->apiResponse->hasFailed());
+        $this->assertEquals(Error::MissingPayloadKeys, $this->apiResponse->getPayload('msg'));
+    }
+
+    public function testToStringHandlesStatusPending(): void
+    {
+                                              // Simulate a pending status
+        $this->apiResponse->setStatus(false); // This sets the status to Pending
+        $this->apiResponse->__toString();     // Call __toString to trigger error
+
+        // Assert that the error for pending status was set
+        $this->assertTrue($this->apiResponse->hasFailed());
+        $this->assertEquals(Error::StatusPending, $this->apiResponse->getPayload('msg'));
+    }
+
 }
