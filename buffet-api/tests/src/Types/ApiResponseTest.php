@@ -155,13 +155,15 @@ class ApiResponseTest extends TestCase
 
     public function testToStringHandlesMissingRequestKeys(): void
     {
+        EnvWriter::write(Settings::IsProd, "false");
         // Simulate a scenario where request keys are missing
         $this->apiResponse->setRequestKeys(['key1']);
         $this->apiResponse->__toString(); // Call __toString to trigger error
 
         // Assert that the error for missing request keys was set
         $this->assertTrue($this->apiResponse->hasFailed());
-        $this->assertEquals(Error::MissingRequestKeys, $this->apiResponse->getPayload('msg'));
+        $this->assertEquals(Helper::getErrorResponse(Error::MissingRequestKeys), $this->apiResponse->__toString());
+        EnvWriter::write(Settings::IsProd, "true");
     }
 
     public function testToStringHandlesMissingPayloadKeys(): void
@@ -172,7 +174,7 @@ class ApiResponseTest extends TestCase
 
         // Assert that the error for missing payload keys was set
         $this->assertTrue($this->apiResponse->hasFailed());
-        $this->assertEquals(Error::MissingPayloadKeys, $this->apiResponse->getPayload('msg'));
+        $this->assertEquals(Helper::getErrorResponse(Error::MissingPayloadKeys), $this->apiResponse->__toString());
     }
 
     public function testToStringHandlesStatusPending(): void
@@ -183,7 +185,7 @@ class ApiResponseTest extends TestCase
 
         // Assert that the error for pending status was set
         $this->assertTrue($this->apiResponse->hasFailed());
-        $this->assertEquals(Error::StatusPending, $this->apiResponse->getPayload('msg'));
+        $this->assertEquals(Helper::getErrorResponse(Error::StatusPending), $this->apiResponse->__toString());
     }
 
 }
