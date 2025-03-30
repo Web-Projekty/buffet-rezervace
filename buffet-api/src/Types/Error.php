@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace Buffet\Types;
 
+use Buffet\Utils\EnvReader;
+
 enum Error: string {
     ############################ Api ############################
     // api methods
@@ -124,7 +126,7 @@ enum Error: string {
      */
     private function isProd(): bool
     {
-        $isProd = false;
+        $isProd = EnvReader::getEnvProperty(Settings::IsProd);
         return $isProd;
     }
 }
