@@ -437,12 +437,12 @@ class BuffetApi
 
         if ($page > 0 && $itemsCount > 0) {
             if (!$orders->get()->isEmpty()) {
-                $ordersForUpdate = $orders->select(["$paymentTableName.thePayId", "$paymentTableName.paid", "$orderTableName.status"])->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page)->items();
+                $ordersForUpdate = $orders->select(["$paymentTableName.thePayId", "$paymentTableName.paid", "$orderTableName.status", "$paymentTableName.type"])->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page)->items();
 
                 $adminToken = JWTApi::getAdminToken();
 
                 foreach ($ordersForUpdate as $order) {
-                    if (!$order->paid && in_array($order->status, [OrderStatus::Sent->value, OrderStatus::Preparing->value, OrderStatus::Waiting->value])) {
+                    if (!$order->paid && in_array($order->status, [OrderStatus::Sent->value, OrderStatus::Preparing->value, OrderStatus::Waiting->value]) && $order->type === PaymentMethods::ThePay->value) {
                         $msg = [
                             "requestType" => "updatePayment",
                             "token" => $adminToken,
@@ -466,7 +466,7 @@ class BuffetApi
             }
         } else {
             $response->setPayload("itemsCount", $orders->count($orderTableName . ".id"));
-            $ordersArray = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl", "$paymentTableName.type"])->get()->toArray();
+            $ordersArray = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl", "$paymentTableName.type", "$paymentTableName.id as payId"])->get()->toArray();
         }
 
         $itemIds = [];
