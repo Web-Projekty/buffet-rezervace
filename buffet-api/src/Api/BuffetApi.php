@@ -812,26 +812,39 @@ class BuffetApi
         $paymentId = (int) $response->getRequestByKey("paymentId");
         $type = $response->getRequestByKey("type");
 
-        if ($type !== "state_changed") {
-            return $response->setError(Error::InvalidType);
-        }
-        $paymentApi = new PaymentApi;
+        switch ($type) {
 
-        if ($paymentId !== 0 && $paymentApi->isPaid($paymentId)) {
+            case "state_changed":
 
-            try {
-                PaymentModel::setPaid($paymentId);
-            } catch (\Exception $e) {
-                if ($e->getCode() === 1) {
-                    return $response->setError(Error::PaymentNotFound);
+                $paymentApi = new PaymentApi;
+
+                if ($paymentId !== 0 && $paymentApi->isPaid($paymentId)) {
+
+                    try {
+                        // use thePayId
+                        PaymentModel::setPaidThePay($paymentId);
+                    } catch (\Exception $e) {
+                        if ($e->getCode() === 1) {
+                            return $response->setError(Error::PaymentNotFound);
+                        }
+                    }
+
+                } else {
+                    return $response->setError(Error::InvalidPaymentId);
                 }
-            }
 
-        } else {
-            return $response->setError(Error::InvalidPaymentId);
+                return $response->setSuccess(Success::PaymentUpdated);
+            case "cash":
+                try {
+                    //use id
+                    PaymentModel::setPaidCash($paymentId);
+                } catch (\Exception $e) {
+                    return $response->setError(Error::PaymentTypeError);
+                }
+                return $response->setSuccess(Success::PaymentUpdated);
+            default:
+                return $response->setError(Error::InvalidType);
         }
-
-        return $response->setSuccess(Success::PaymentUpdated);
     }
 
     /**

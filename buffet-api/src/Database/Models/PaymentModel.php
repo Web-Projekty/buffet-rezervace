@@ -65,9 +65,13 @@ class PaymentModel extends Model
     /**
      * @param int $thePayId
      */
-    public static function setPaid(int $thePayId): void
+    public static function setPaidThePay(int $thePayId): void
     {
         $paymentQuery = PaymentModel::query()->where('thePayId', $thePayId);
+
+        if ($paymentQuery->where("type", "=", "thePay")->get()->count() === 0) {
+            throw new \Exception("Payment not found", 1);
+        }
 
         //ob_start();
         #var_dump($paymentId);
@@ -94,6 +98,17 @@ class PaymentModel extends Model
         $order[0]["pickupDate"] = $pickupDate;
 
         WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => ["data" => $order]]));
+    }
+
+    public static function setPaidCash(int $id): void
+    {
+        $paymentQuery = PaymentModel::query()->where('id', $id);
+
+        if ($paymentQuery->where("type", "=", "cash")->get()->count() === 0) {
+            throw new \Exception("Payment not found", 1);
+        }
+
+        $paymentQuery->update(['paid' => 1]);
     }
 
     public static function getTableName(): string
