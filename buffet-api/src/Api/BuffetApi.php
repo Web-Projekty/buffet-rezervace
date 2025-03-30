@@ -675,9 +675,10 @@ class BuffetApi
         $response->setPayload("url", $order["url"]);
 
         $order["items"] = json_decode($order["items"]);
+        $order["pickupDate"] = $pickUpDate;
 
         if ($paymentMethod == PaymentMethods::Cash->value) {
-            WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => ["data" => $order]]));
+            WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => ["data" => [0 => $order]]]));
         }
 
         return $response->setStatus(true)->setSuccess(Success::OrderCreated);
