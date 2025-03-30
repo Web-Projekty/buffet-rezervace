@@ -5,6 +5,8 @@ declare (strict_types = 1);
 namespace Buffet\Tests\Utils;
 
 use Buffet\Types\Error;
+use Buffet\Types\Settings;
+use Buffet\Utils\EnvWriter;
 use Buffet\Utils\Helper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
@@ -12,6 +14,10 @@ use PHPUnit\Framework\TestCase;
 
 class HelperTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        EnvWriter::write(Settings::IsProd, "false");
+    }
 
     /**
      * @return array<array<Error>>
