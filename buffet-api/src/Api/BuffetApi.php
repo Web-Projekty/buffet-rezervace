@@ -466,7 +466,7 @@ class BuffetApi
             }
         } else {
             $response->setPayload("itemsCount", $orders->count($orderTableName . ".id"));
-            $ordersArray = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl"])->get()->toArray();
+            $ordersArray = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl", "$paymentTableName.type"])->get()->toArray();
         }
 
         $itemIds = [];
