@@ -126,17 +126,17 @@ class TimeTest extends TestCase
 
     public function testFixFormatNegativeValues(): void
     {
-        $time = new Time(0, 0, -75);
+        $time = new Time(0, 1, -75);
         $this->assertEquals(22, $time->hour);
         $this->assertEquals(58, $time->minute);
         $this->assertEquals(45, $time->second);
 
-        $time->setTime(0, -90, 0);
-        $this->assertEquals(22, $time->hour);
+        $time = new Time(0, -90, 0);
+        $this->assertEquals(21, $time->hour);
         $this->assertEquals(30, $time->minute);
         $this->assertEquals(0, $time->second);
 
-        $time->setTime(-26, 0, 0);
+        $time = new Time(-26, 0, 0);
         $this->assertEquals(22, $time->hour);
         $this->assertEquals(0, $time->minute);
         $this->assertEquals(0, $time->second);
