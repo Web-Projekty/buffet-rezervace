@@ -182,7 +182,7 @@ class Time
     public static function fromString(string $time): Time
     {
         $time = explode(":", $time);
-        if (sizeof($time) <= 5) {
+        if (sizeof($time) === 2) {
             return new Time((int) $time[0], (int) $time[1]);
         }
         return new Time((int) $time[0], (int) $time[1], (int) $time[2]);
