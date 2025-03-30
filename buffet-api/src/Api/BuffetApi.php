@@ -427,11 +427,30 @@ class BuffetApi
 
         if ($page > 0 && $itemsCount > 0) {
             if (!$orders->get()->isEmpty()) {
+                $ordersForUpdate = $orders->select(["$paymentTableName.thePayId", "$paymentTableName.paid", "$orderTableName.status"])->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page)->items();
+
+                $adminToken = JWTApi::getAdminToken();
+
+                foreach ($ordersForUpdate as $order) {
+                    if (!$order->paid && in_array($order->status, [OrderStatus::Sent->value, OrderStatus::Preparing->value, OrderStatus::Waiting->value])) {
+                        $msg = [
+                            "requestType" => "updatePayment",
+                            "token" => $adminToken,
+                            "type" => "state_changed",
+                            "paymentId" => $order->thePayId
+                        ];
+
+                        error_log(HttpClient::post("http://localhost/api", json_encode($msg)));
+                    }
+
+                }
+
                 $orders = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl"]);
 
                 $paginate = $orders->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
                 $response->setPayload("itemsCount", $paginate->total());
                 $ordersArray = $paginate->items();
+
             } else {
                 return $response->setError(Error::QueryFailed);
             }
