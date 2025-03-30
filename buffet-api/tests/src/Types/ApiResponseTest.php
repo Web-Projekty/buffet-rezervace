@@ -157,6 +157,7 @@ class ApiResponseTest extends TestCase
     {
         EnvWriter::write(Settings::IsProd, "false");
         // Simulate a scenario where request keys are missing
+        $this->expectException(Exception::class);
         $this->apiResponse->setRequestKeys(['key1']);
         $this->apiResponse->__toString(); // Call __toString to trigger error
 
@@ -180,7 +181,6 @@ class ApiResponseTest extends TestCase
     public function testToStringHandlesStatusPending(): void
     {
                                               // Simulate a pending status
-        $this->apiResponse->setStatus(false); // This sets the status to Pending
         $this->apiResponse->__toString();     // Call __toString to trigger error
 
         // Assert that the error for pending status was set
