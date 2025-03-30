@@ -4,6 +4,9 @@ declare (strict_types = 1);
 
 namespace Buffet\Types;
 
+use Buffet\Utils\EnvReader;
+use Buffet\Utils\EnvWriter;
+
 enum Error: string {
     ############################ Api ############################
     // api methods
@@ -92,9 +95,6 @@ enum Error: string {
     case SettingsError = 'Settings error';
     case InvalidSetting = 'Invalid setting';
 
-    ############################ General ############################
-    case GeneralError = 'Oops something has gone wrong';
-
     ############################ Images ############################
     case InvalidDirectory = 'Invalid directory';
     case ImageWriteFailed = 'Image write failed';
@@ -108,13 +108,16 @@ enum Error: string {
     case InvalidPaymentId = 'Invalid payment id';
     case PaymentNotFound = 'Payment not found';
     case PaymentTypeError = 'Payment type error';
+
+    ############################ Default ############################
+    case DefaultError = 'Oops something has gone wrong';
     /**
      * @return string
      */
     public function getValue(): string
     {
         if ($this->isProd()) {
-            return "Oops something has gone wrong";
+            return self::DefaultError->value;
         }
         return $this->value ?? "Oops something has gone wrong (missing error message)";
     }
@@ -124,7 +127,8 @@ enum Error: string {
      */
     private function isProd(): bool
     {
-        $isProd = false;
+        
+        $isProd = EnvReader::getEnvProperty(Settings::IsProd);
         return $isProd;
     }
 }

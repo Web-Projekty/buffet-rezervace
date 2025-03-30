@@ -25,7 +25,7 @@ class ApiResponse
      */
     private array $payload = [];
 
-    private bool $requireRequestType = true;
+    public bool $requireRequestType = true;
 
     /**
      * @param array<mixed> $request
@@ -165,6 +165,14 @@ class ApiResponse
     }
 
     /**
+     * @return array<mixed>|null
+     */
+    public function getRequestKeys(): array | null
+    {
+        return $this->requestKeys ?? null;
+    }
+
+    /**
      * @param string $key
      * @param mixed  $value
      */
@@ -191,14 +199,11 @@ class ApiResponse
     }
 
     /**
-     * @return bool
+     * @return ApiStatus
      */
-    public function getStatus(): bool
+    public function getStatus(): ApiStatus
     {
-        if ($this->status === ApiStatus::Failed) {
-            return false;
-        }
-        return true;
+        return $this->status;
     }
 
     /**
