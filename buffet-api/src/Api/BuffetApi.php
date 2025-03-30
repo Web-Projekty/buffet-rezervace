@@ -741,7 +741,7 @@ class BuffetApi
                         return $response->setError(Error::InvalidPickupId);
 
                 }
-                return $response->setError(Error::GeneralError);
+                return $response->setError(Error::DefaultError);
             }
 
         } else { // user update
