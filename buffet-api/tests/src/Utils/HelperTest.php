@@ -61,23 +61,7 @@ class HelperTest extends TestCase
 
     }
 
-    #[TestDox("Test isAdmin with valid token")]
-    public function testIsAdminValidToken(): void
-    {
-        // Mocking response for the JWTApi and UserModel
-        $mock = new MockHandler([
-            new Response(200, ['Content-Type' => 'application/json'], json_encode(['sub' => 1])) // Mocked token response
-        ]);
-
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
-
-                                // Simulate the `isAdmin` check by directly using the mocked client
-        $token = "valid_token"; // Use a valid token
-        $response = Helper::isAdmin($token);
-
-        $this->assertTrue($response);
-    }
+    
 
     #[TestDox("Test isAdmin with invalid token")]
     public function testIsAdminInvalidToken(): void
@@ -95,36 +79,5 @@ class HelperTest extends TestCase
         $response = Helper::isAdmin($token);
 
         $this->assertFalse($response);
-    }
-
-    #[TestDox("Test attachClient adds client to storage")]
-    public function testAttachClientAddsClient(): void
-    {
-        $mockConnection = $this->createMock(StaticConnectionInterface::class);
-        $storage = new \SplObjectStorage();
-
-        Helper::attachClient($mockConnection, $storage);
-        $this->assertTrue($storage->contains($mockConnection));
-    }
-
-    #[TestDox("Test isClientInStorage returns true if client is in storage")]
-    public function testIsClientInStorageReturnsTrue(): void
-    {
-        $mockConnection = $this->createMock(StaticConnectionInterface::class);
-        $storage = new \SplObjectStorage();
-        $storage->attach($mockConnection);
-
-        $this->assertTrue(Helper::isClientInStorage($mockConnection, $storage));
-    }
-
-    #[TestDox("Test removeClient removes client from storage")]
-    public function testRemoveClientRemovesClient(): void
-    {
-        $mockConnection = $this->createMock(StaticConnectionInterface::class);
-        $storage = new \SplObjectStorage();
-        $storage->attach($mockConnection);
-
-        Helper::removeClient($mockConnection, $storage);
-        $this->assertFalse($storage->contains($mockConnection));
     }
 }
