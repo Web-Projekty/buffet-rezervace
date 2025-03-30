@@ -168,6 +168,11 @@ class OrderModel extends Model
 
         $orderArray['id'] = $order->getAttribute("id");
 
+        $orderArray['startTime'] = $startTime;
+        $orderArray['endTime'] = $endTime;
+        $orderArray['paymentMethod'] = $paymentMethod;
+        $orderArray['pickUpDate'] = $pickupDate;
+
         $orderArray['url'] = PaymentModel::query()->find($paymentId)->toArray()['thePayUrl'];
         return $orderArray;
 

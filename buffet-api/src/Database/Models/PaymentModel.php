@@ -9,6 +9,7 @@ use Buffet\Types\EventTypes;
 use Buffet\Types\PaymentMethods;
 use Buffet\Utils\WebsocketClient;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use ThePay\ApiClient\Model\PaymentMethod;
 
 class PaymentModel extends Model
@@ -74,12 +75,23 @@ class PaymentModel extends Model
 
         $order = OrderModel::query()->where("paymentId", "=", $paymentId)->get()->toArray();
 
+        //var_dump($order);
+
         //error_log(ob_get_clean());
         #error_log($orderId);
         if ($paymentQuery->get()->count() === 0) {
             throw new \Exception("Payment not found", 1);
         }
         $paymentQuery->update(['paid' => 1]);
+
+        /**
+         * @var Carbon $pickupDate
+         */
+
+        $pickupDate = OrderModel::query()->where("id", "=", $order[0]["id"])->first(["pickupDate"])->attributes["pickupDate"];
+
+        var_dump($order);
+        $order[0]["pickupDate"] = $pickupDate;
 
         WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => ["data" => $order]]));
     }
