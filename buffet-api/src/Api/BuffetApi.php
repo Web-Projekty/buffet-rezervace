@@ -415,7 +415,17 @@ class BuffetApi
                 $isKDS = false;
             }
             if ($isKDS) {
-                $orders = OrderModel::getAll()->where("paid", "=", 1)->where("status", "=", OrderStatus::Sent->value)->orWhere("status", "=", OrderStatus::Preparing->value)->orWhere("status", "=", OrderStatus::Waiting->value);
+                $orders = OrderModel::getAll()->where(function ($query) {
+                    $query->where("paid", "=", 1)
+                        ->orWhere("status", "=", OrderStatus::Sent->value)
+                        ->orWhere("status", "=", OrderStatus::Preparing->value)
+                        ->orWhere("status", "=", OrderStatus::Waiting->value);
+                })
+                    ->orWhere(function ($query) {
+                        $query->where("paid", "=", 0)
+                            ->where("type", "=", PaymentMethods::Cash->value);
+                    });
+
                 //error_log($orders->toSql());
             } else {
                 $orders = OrderModel::getAll();
