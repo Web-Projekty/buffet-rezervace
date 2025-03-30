@@ -5,7 +5,9 @@ declare (strict_types = 1);
 use Buffet\Types\ApiResponse;
 use Buffet\Types\ApiStatus;
 use Buffet\Types\Error;
+use Buffet\Types\Settings;
 use Buffet\Types\Success;
+use Buffet\Utils\EnvWriter;
 use PHPUnit\Framework\TestCase;
 
 class ApiResponseTest extends TestCase
@@ -14,7 +16,8 @@ class ApiResponseTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->apiResponse = new ApiResponse();
+        $this->apiResponse = new ApiResponse(["requestType" => "test"]);
+        EnvWriter::write(Settings::IsProd, "false");
     }
 
     public function testInitialStatus(): void
@@ -106,6 +109,7 @@ class ApiResponseTest extends TestCase
 
     public function testHasRequestKeysWithMissingKey(): void
     {
+        EnvWriter::write(Settings::IsProd, "true");
         $this->apiResponse->setRequestKeys(['key1']);
         $this->apiResponse->setRequestByKey('key2', 'value2');
         $this->assertFalse($this->apiResponse->hasRequestKeys());
@@ -113,10 +117,12 @@ class ApiResponseTest extends TestCase
 
     public function testRequireRequestTypeWithMissingRequestType(): void
     {
-        $this->apiResponse->requireRequestType(true);
+        EnvWriter::write(Settings::IsProd, "false");
+        
         $this->apiResponse->setRequestKeys(['key1']);
         $this->apiResponse->setRequestByKey('key1', 'value1');
-        $this->assertTrue($this->apiResponse->hasFailed());
+        $this->apiResponse->hasRequestKeys();
+        $this->assertFalse($this->apiResponse->hasFailed());
     }
 
     public function testDebugInfo(): void

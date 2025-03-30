@@ -119,6 +119,6 @@ class JWTApi
                 $response->setError(Error::TokenExpired);
             }
         }
-        return $response->getStatus();
+        return $response->hasFailed();
     }
 }

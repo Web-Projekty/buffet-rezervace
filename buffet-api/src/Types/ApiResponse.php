@@ -199,14 +199,11 @@ class ApiResponse
     }
 
     /**
-     * @return bool
+     * @return ApiStatus
      */
-    public function getStatus(): bool
+    public function getStatus(): ApiStatus
     {
-        if ($this->status === ApiStatus::Failed) {
-            return false;
-        }
-        return true;
+        return $this->status;
     }
 
     /**
