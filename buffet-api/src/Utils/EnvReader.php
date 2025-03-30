@@ -16,9 +16,10 @@ class EnvReader
 
     /**
      * @param Settings $needle
+     * @param bool $returnEmpty
      * @throws SettingsException
      */
-    public static function getEnvProperty(Settings $needle): string | bool | null
+    public static function getEnvProperty(Settings $needle, bool $returnEmpty = false): string|bool|null
     {
         if (!file_exists(self::$envPath)) {
             self::createEnv();
@@ -36,12 +37,15 @@ class EnvReader
 
             $value = trim($line[1] ?? "");
 
-            if ($needle->value == $key && $value != "") {
+            if ($needle->value == $key && ($value != "" || $returnEmpty) ) {
                 if ($value == "true") {
                     return true;
                 }
                 if ($value == "false") {
                     return false;
+                }
+                if($value == ""){
+                    return null;
                 }
                 return $value;
             }

@@ -16,7 +16,7 @@ use Illuminate\Database\QueryException;
 class OrderModel extends Model
 {
     const CREATED_AT = 'dateCreated';
-    const UPDATED_AT = null;
+
     // Specify the table if it's not the pluralized form of the class name
     /**
      * @var string
@@ -168,6 +168,11 @@ class OrderModel extends Model
         $orderArray = $order->toArray();
 
         $orderArray['id'] = $order->getAttribute("id");
+
+        $orderArray['startTime'] = $startTime;
+        $orderArray['endTime'] = $endTime;
+        $orderArray['paymentMethod'] = $paymentMethod;
+        $orderArray['pickUpDate'] = $pickupDate;
 
         $orderArray['url'] = PaymentModel::query()->find($paymentId)->toArray()['thePayUrl'];
         return $orderArray;
