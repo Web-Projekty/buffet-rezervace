@@ -455,7 +455,7 @@ class BuffetApi
 
                 }
 
-                $orders = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl"]);
+                $orders = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl", "$paymentTableName.type"]);
 
                 $paginate = $orders->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
                 $response->setPayload("itemsCount", $paginate->total());
