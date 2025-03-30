@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace Buffet\Types;
 
+use Buffet\Utils\EnvReader;
+
 enum Success: string {
     ############################ Api ############################
     // api methods
@@ -56,13 +58,16 @@ enum Success: string {
 
     ############################ Images ############################
     case ImageUploaded = 'Image uploaded successfully';
+
+    ############################ Default ############################
+    case DefaultSuccess = 'Api call finished successfully';
     /**
      * @return string
      */
     public function getValue(): string
     {
         if ($this->isProd()) {
-            return "Api call finished successfully";
+            return self::DefaultSuccess->value;
         }
         return $this->value ?? "Api call finished successfully (missing success message)";
     }
@@ -72,7 +77,7 @@ enum Success: string {
      */
     private function isProd(): bool
     {
-        $isProd = false;
+        $isProd = EnvReader::getEnvProperty(Settings::IsProd);
         return $isProd;
     }
 }
