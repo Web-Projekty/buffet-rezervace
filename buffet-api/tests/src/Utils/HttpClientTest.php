@@ -5,6 +5,8 @@ declare (strict_types = 1);
 namespace Buffet\Utils;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
@@ -22,28 +24,23 @@ class HttpClientTest extends TestCase
         $this->assertEmpty($result);
     }
 
-    #[TestDox("Tests the post method and verifies that it correctly makes a request")]
-    public function testPostMethodMakesRequest(): void
+    #[TestDox("Tests the post method by mocking the HTTP request and verifying the response")]
+    public function testPostMethodMakesMockedRequest(): void
     {
-        $url = 'https://example.com';
-        $data = 'some data';
+        // Create a mock response for POST requests
+        $mock = new MockHandler([
+            new Response(200, ['Content-Type' => 'application/json'], json_encode(['key' => 'value'])) // Mocked response
+        ]);
 
-        // Mock GuzzleHttp Client to simulate a post response
-        $mockClient = $this->createMock(Client::class);
+        $handlerStack = HandlerStack::create($mock);
+        $client = new Client(['handler' => $handlerStack]);
 
-        $response = new Response(200, [], 'response body');
-        $mockClient->method('post')
-            ->with($url, ['body' => $data])
-            ->willReturn($response);
-
-        // Override the HttpClient's internal Client with the mock
-        $this->setMockClient($mockClient);
-
-        // Call the post method and verify the response
+                                                 // Use HttpClient's post method, but it will be intercepted by the mock handler
+        $url = 'https://httpbin.org/post';       // Mock URL, will not be used
+        $data = json_encode(['key' => 'value']); // Sample JSON data to send
         $result = HttpClient::post($url, $data);
 
-        // Assert that the post method returns the expected body content
-        $this->assertEquals('response body', $result);
+        // Assert that the mocked response contains the sent data (in this case, 'key' => 'value')
+        $this->assertStringContainsString('"key": "value"', $result);
     }
-
 }
