@@ -25,7 +25,7 @@ class ApiResponse
      */
     private array $payload = [];
 
-    private bool $requireRequestType = true;
+    public bool $requireRequestType = true;
 
     /**
      * @param array<mixed> $request

@@ -36,18 +36,16 @@ class ApiResponseTest extends TestCase
 
     public function testSetError(): void
     {
-        $error = Error::DefaultError;
-        $this->apiResponse->setError($error);
+        $this->apiResponse->setError(Error::DefaultError);
         $this->assertTrue($this->apiResponse->hasFailed());
-        $this->assertSame($error->getValue(), $this->apiResponse->getPayload('msg'));
+        $this->assertSame(Error::DefaultError->getValue(), $this->apiResponse->getPayload('msg'));
     }
 
     public function testSetSuccess(): void
     {
-        $success = new Success('Success message');
-        $this->apiResponse->setSuccess($success);
+        $this->apiResponse->setSuccess(Success::DefaultSuccess);
         $this->assertFalse($this->apiResponse->hasFailed());
-        $this->assertSame($success->getValue(), $this->apiResponse->getPayload('msg'));
+        $this->assertSame(Success::DefaultSuccess->getValue(), $this->apiResponse->getPayload('msg'));
     }
 
     public function testRequireRequestType(): void
@@ -90,21 +88,20 @@ class ApiResponseTest extends TestCase
 
     public function testHasFailed(): void
     {
-        $error = new Error('Some error');
-        $this->apiResponse->setError($error);
+        $this->apiResponse->setError(Error::DefaultError);
         $this->assertTrue($this->apiResponse->hasFailed());
     }
 
     public function testToStringWithError(): void
     {
-        $this->apiResponse->setError(new Error('Error occurred'));
-        $this->assertStringContainsString('Error occurred', $this->apiResponse->__toString());
+        $this->apiResponse->setError(Error::DefaultError);
+        $this->assertStringContainsString(Error::DefaultError->getValue(), $this->apiResponse->__toString());
     }
 
     public function testToStringWithSuccess(): void
     {
-        $this->apiResponse->setSuccess(new Success('Success message'));
-        $this->assertStringContainsString('Success message', $this->apiResponse->__toString());
+        $this->apiResponse->setSuccess(Success::DefaultSuccess);
+        $this->assertStringContainsString(Success::DefaultSuccess->getValue(), $this->apiResponse->__toString());
     }
 
     public function testHasRequestKeysWithMissingKey(): void
