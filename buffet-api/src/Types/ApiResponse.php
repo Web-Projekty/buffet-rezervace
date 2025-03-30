@@ -165,6 +165,14 @@ class ApiResponse
     }
 
     /**
+     * @return array<mixed>|null
+     */
+    public function getRequestKeys(): array | null
+    {
+        return $this->requestKeys ?? null;
+    }
+
+    /**
      * @param string $key
      * @param mixed  $value
      */
