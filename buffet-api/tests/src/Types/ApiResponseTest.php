@@ -180,8 +180,8 @@ class ApiResponseTest extends TestCase
 
     public function testToStringHandlesStatusPending(): void
     {
-                                              // Simulate a pending status
-        $this->apiResponse->__toString();     // Call __toString to trigger error
+                                          // Simulate a pending status
+        $this->apiResponse->__toString(); // Call __toString to trigger error
 
         // Assert that the error for pending status was set
         $this->assertTrue($this->apiResponse->hasFailed());
