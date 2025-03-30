@@ -9,6 +9,7 @@ use Buffet\Types\Settings;
 use Buffet\Types\Success;
 use Buffet\Utils\EnvWriter;
 use Buffet\Utils\Helper;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 class ApiResponseTest extends TestCase
@@ -21,23 +22,27 @@ class ApiResponseTest extends TestCase
         EnvWriter::write(Settings::IsProd, "false");
     }
 
+    #[TestDox("Checks that the initial status is pending")]
     public function testInitialStatus(): void
     {
         $this->assertSame(ApiStatus::Pending, $this->apiResponse->getStatus());
     }
 
+    #[TestDox("Checks that addPayload adds payload to apiResponse")]
     public function testAddPayload(): void
     {
         $this->apiResponse->addPayload('key1', 'value1');
         $this->assertSame('value1', $this->apiResponse->getPayload('key1'));
     }
 
+    #[TestDox("Checks that setPayload sets payload to apiResponse")]
     public function testSetPayload(): void
     {
         $this->apiResponse->setPayload('key1', 'value2');
         $this->assertSame('value2', $this->apiResponse->getPayload('key1'));
     }
 
+    #[TestDox("Checks that setError sets the error to apiResponse")]
     public function testSetError(): void
     {
         $this->apiResponse->setError(Error::DefaultError);
@@ -45,6 +50,7 @@ class ApiResponseTest extends TestCase
         $this->assertSame(Error::DefaultError->getValue(), $this->apiResponse->getPayload('msg'));
     }
 
+    #[TestDox("Checks that setSuccess sets the success to apiResponse")]
     public function testSetSuccess(): void
     {
         $this->apiResponse->setSuccess(Success::DefaultSuccess);
@@ -52,30 +58,35 @@ class ApiResponseTest extends TestCase
         $this->assertSame(Success::DefaultSuccess->getValue(), $this->apiResponse->getPayload('msg'));
     }
 
+    #[TestDox("Checks that requireRequestType sets the flag")]
     public function testRequireRequestType(): void
     {
         $this->apiResponse->requireRequestType(true);
         $this->assertTrue($this->apiResponse->requireRequestType);
     }
 
+    #[TestDox("Checks that setRequestKeys sets the request keys")]
     public function testSetRequestKeys(): void
     {
         $this->apiResponse->setRequestKeys(['key1', 'key2']);
         $this->assertSame(['key1', 'key2'], $this->apiResponse->getRequestKeys());
     }
 
+    #[TestDox("Checks that setRequestByKey sets the request by key")]
     public function testSetRequestByKey(): void
     {
         $this->apiResponse->setRequestByKey('key1', 'value1');
         $this->assertSame('value1', $this->apiResponse->getRequestByKey('key1'));
     }
 
+    #[TestDox("Checks that setPayloadKeys sets the payload keys")]
     public function testSetPayloadKeys(): void
     {
         $this->apiResponse->setPayloadKeys(['key1']);
         $this->assertSame(['key1'], $this->apiResponse->getPayloadKeys());
     }
 
+    #[TestDox("Checks that hasRequestKeys checks if request keys are set")]
     public function testHasRequestKeys(): void
     {
         $this->apiResponse->setRequestKeys(['key1']);
@@ -83,6 +94,7 @@ class ApiResponseTest extends TestCase
         $this->assertTrue($this->apiResponse->hasRequestKeys());
     }
 
+    #[TestDox("Checks that hasPayloadKeys checks if payload keys are set")]
     public function testHasPayloadKeys(): void
     {
         $this->apiResponse->setPayloadKeys(['key1']);
@@ -90,24 +102,28 @@ class ApiResponseTest extends TestCase
         $this->assertTrue($this->apiResponse->hasPayloadKeys());
     }
 
+    #[TestDox("Checks that hasFailed checks if the status is failed")]
     public function testHasFailed(): void
     {
         $this->apiResponse->setError(Error::DefaultError);
         $this->assertTrue($this->apiResponse->hasFailed());
     }
 
+    #[TestDox("Checks that __toString returns the correct string for error")]
     public function testToStringWithError(): void
     {
         $this->apiResponse->setError(Error::DefaultError);
         $this->assertStringContainsString(Error::DefaultError->getValue(), $this->apiResponse->__toString());
     }
 
+    #[TestDox("Checks that __toString returns the correct string for success")]
     public function testToStringWithSuccess(): void
     {
         $this->apiResponse->setSuccess(Success::DefaultSuccess);
         $this->assertStringContainsString(Success::DefaultSuccess->getValue(), $this->apiResponse->__toString());
     }
 
+    #[TestDox("Checks that hasRequestKeys handles missing request key")]
     public function testHasRequestKeysWithMissingKey(): void
     {
         EnvWriter::write(Settings::IsProd, "true");
@@ -116,6 +132,7 @@ class ApiResponseTest extends TestCase
         $this->assertFalse($this->apiResponse->hasRequestKeys());
     }
 
+    #[TestDox("Checks that requireRequestType handles missing request type")]
     public function testRequireRequestTypeWithMissingRequestType(): void
     {
         EnvWriter::write(Settings::IsProd, "false");
@@ -126,6 +143,7 @@ class ApiResponseTest extends TestCase
         $this->assertFalse($this->apiResponse->hasFailed());
     }
 
+    #[TestDox("Checks that debugInfo returns the correct debug info")]
     public function testDebugInfo(): void
     {
         $this->apiResponse->setPayload('key1', 'value1');
@@ -134,6 +152,7 @@ class ApiResponseTest extends TestCase
         $this->assertArrayHasKey('payload', $debugInfo);
     }
 
+    #[TestDox("Checks that missing request keys throws an exception")]
     public function testMissingRequestKeysException(): void
     {
         $this->apiResponse->setRequestKeys(['key1']);
@@ -142,6 +161,7 @@ class ApiResponseTest extends TestCase
         $this->apiResponse->hasRequestKeys();
     }
 
+    #[TestDox("Checks that __toString handles missing request type")]
     public function testToStringHandlesMissingRequestType(): void
     {
         $this->apiResponse->requireRequestType(true); // Make sure it's required
@@ -153,6 +173,7 @@ class ApiResponseTest extends TestCase
         $this->assertEquals(Helper::getErrorResponse(Error::MissingRequestType), $this->apiResponse->__toString());
     }
 
+    #[TestDox("Checks that __toString handles missing request keys")]
     public function testToStringHandlesMissingRequestKeys(): void
     {
         EnvWriter::write(Settings::IsProd, "true");
@@ -168,6 +189,7 @@ class ApiResponseTest extends TestCase
         $this->assertEquals(Helper::getErrorResponse(Error::MissingRequestKeys), $this->apiResponse->__toString());
     }
 
+    #[TestDox("Checks that __toString handles missing payload keys")]
     public function testToStringHandlesMissingPayloadKeys(): void
     {
         // Simulate a scenario where payload keys are missing
@@ -179,6 +201,7 @@ class ApiResponseTest extends TestCase
         $this->assertEquals(Helper::getErrorResponse(Error::MissingPayloadKeys), $this->apiResponse->__toString());
     }
 
+    #[TestDox("Checks that __toString handles status pending")]
     public function testToStringHandlesStatusPending(): void
     {
                                           // Simulate a pending status
@@ -188,11 +211,46 @@ class ApiResponseTest extends TestCase
         $this->assertTrue($this->apiResponse->hasFailed());
         $this->assertEquals(Helper::getErrorResponse(Error::StatusPending), $this->apiResponse->__toString());
     }
-    public function testStatus():void{
+
+    #[TestDox("Checks that status setter works")]
+    public function testStatus(): void
+    {
         $this->apiResponse->setStatus(true);
         $this->assertEquals(ApiStatus::Success, $this->apiResponse->getStatus());
 
         $this->apiResponse->setStatus(false);
         $this->assertEquals(ApiStatus::Failed, $this->apiResponse->getStatus());
     }
+
+    public function testRemovePayload(): void
+    {
+        // Add a payload key-value pair
+        $this->apiResponse->addPayload('key1', 'value1');
+
+        // Assert that the payload has the key-value pair before removal
+        $this->assertEquals('value1', $this->apiResponse->getPayload('key1'));
+
+        // Remove the payload
+        $this->apiResponse->removePayload('key1');
+
+        // Assert that the payload no longer has the key after removal
+        $this->assertNull($this->apiResponse->getPayload('key1'));
+    }
+
+    public function testRemovePayloadWhenFailedStatus(): void
+    {
+
+        // Add a payload key-value pair
+        $this->apiResponse->addPayload('key1', 'value1');
+
+        // Set the status to failed
+        $this->apiResponse->setStatus(false);
+
+        // Try to remove the payload when the status is failed
+        $this->apiResponse->removePayload('key1');
+
+        // Assert that the payload still exists, as removal is skipped when the status is failed
+        $this->assertEquals('value1', $this->apiResponse->getPayload('key1'));
+    }
+
 }
