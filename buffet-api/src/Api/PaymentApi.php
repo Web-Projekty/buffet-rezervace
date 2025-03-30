@@ -8,6 +8,7 @@ use Buffet\Database\Models\PaymentModel;
 use Buffet\Types\PaymentMethods;
 use Buffet\Types\Settings;
 use Buffet\Utils\EnvReader;
+use Buffet\Utils\WebsocketClient;
 use ThePay\ApiClient\Model\CreatePaymentParams;
 use ThePay\ApiClient\TheClient;
 
@@ -65,6 +66,7 @@ class PaymentApi
         $url = null;
         switch ($paymentMethod) {
 
+            case PaymentMethods::Cash:
             case PaymentMethods::ThePay:
                 $currency = EnvReader::getEnvProperty(Settings::PaymentCurrency);
                 $stringUid = strval(rand(0, 2147483640)); // has to be unique for each transaction
