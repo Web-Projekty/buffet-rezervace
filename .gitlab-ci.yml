@@ -46,7 +46,7 @@ phpunit-coverage:
         - composer install
         - chown -R 1000:1000 conf/
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
-    coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+    coverage: '/^\s*Methods:\s*\d+.\d+\%/'
 
 frontend-build-test:
     stage: Frontend Build Test
