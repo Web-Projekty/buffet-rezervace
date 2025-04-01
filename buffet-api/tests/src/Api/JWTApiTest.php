@@ -5,8 +5,10 @@ use Buffet\Api\JWTApi;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\Types\Settings;
+use Buffet\Utils\EnvReader;
 use Buffet\Utils\EnvWriter;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use PHPUnit\Framework\TestCase;
 
 final class JWTApiTest extends TestCase
@@ -16,6 +18,7 @@ final class JWTApiTest extends TestCase
     protected function setUp(): void
     {
         EnvWriter::write(Settings::IsProd, "false");
+        EnvWriter::write(Settings::JWTKey, "testing_key");
         $this->jwtApi = new JWTApi();
     }
 
@@ -29,10 +32,11 @@ final class JWTApiTest extends TestCase
             'name' => 'testuser',
             'admin' => false
         ];
-        $token = JWT::encode($payload, 'example_key', 'HS384');
+        $token = JWT::encode($payload, EnvReader::getEnvProperty(Settings::JWTKey), 'HS384');
         $_SERVER['HTTP_HOST'] = 'localhost';
         $response = new ApiResponse(['token' => $token]);
         $result = $this->jwtApi->decodeToken($response);
+        var_dump((string) $result);
         $this->assertInstanceOf(stdClass::class, $result);
         $this->assertEquals(1, $result->sub);
         $this->assertEquals('testuser', $result->name);
@@ -64,7 +68,7 @@ final class JWTApiTest extends TestCase
             'name' => 'user2',
             'admin' => false
         ];
-        $token = JWT::encode($payload, 'example_key', 'HS384');
+        $token = JWT::encode($payload, EnvReader::getEnvProperty(Settings::JWTKey), 'HS384');
         $_SERVER['HTTP_HOST'] = 'localhost';
         $response = new ApiResponse(['token' => $token]);
         $result = $this->jwtApi->validateToken($response);
@@ -82,7 +86,7 @@ final class JWTApiTest extends TestCase
             'name' => 'user3',
             'admin' => false
         ];
-        $token = JWT::encode($payload, 'example_key', 'HS384');
+        $token = JWT::encode($payload, EnvReader::getEnvProperty(Settings::JWTKey), 'HS384');
         $_SERVER['HTTP_HOST'] = 'localhost';
         $response = new ApiResponse(['token' => $token]);
         $this->jwtApi->validateToken($response);
@@ -100,7 +104,7 @@ final class JWTApiTest extends TestCase
             'name' => 'user4',
             'admin' => false
         ];
-        $token = JWT::encode($payload, 'example_key', 'HS384');
+        $token = JWT::encode($payload, EnvReader::getEnvProperty(Settings::JWTKey), 'HS384');
         $_SERVER['HTTP_HOST'] = 'production.com';
         $response = new ApiResponse(['token' => $token]);
         $this->jwtApi->validateToken($response);
@@ -118,11 +122,32 @@ final class JWTApiTest extends TestCase
             'name' => 'user5',
             'admin' => false
         ];
-        $token = JWT::encode($payload, 'example_key', 'HS384');
+        $token = JWT::encode($payload, EnvReader::getEnvProperty(Settings::JWTKey), 'HS384');
         $_SERVER['HTTP_HOST'] = 'localhost';
         $response = new ApiResponse(['token' => $token]);
         $this->jwtApi->validateToken($response);
         $this->assertTrue($response->hasFailed());
         $this->assertEquals(Error::UnexpectedValue->getValue(), $response->getPayload('msg'));
+    }
+
+    public function testGetToken(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $uid = 10;
+        $username = 'testuser10';
+        $token = $this->jwtApi->getToken($uid, $username);
+        $decoded = JWT::decode($token, new Key(EnvReader::getEnvProperty(Settings::JWTKey), 'HS384'));
+        $this->assertEquals('localhost', $decoded->iss);
+        $this->assertEquals($uid, $decoded->sub);
+        $this->assertEquals($username, $decoded->name);
+    }
+
+    public function testGetAdminToken(): void
+    {
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $token = JWTApi::getAdminToken();
+        $decoded = JWT::decode($token, new Key(EnvReader::getEnvProperty(Settings::JWTKey), 'HS384'));
+        $this->assertEquals('localhost', $decoded->iss);
+        $this->assertTrue($decoded->admin);
     }
 }
