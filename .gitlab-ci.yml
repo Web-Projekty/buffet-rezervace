@@ -49,6 +49,7 @@ phpunit-coverage:
         - cd buffet-api
         - composer install
         - chown -R 1000:1000 conf/
+        - rm test-db/database.sqlite
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
 
