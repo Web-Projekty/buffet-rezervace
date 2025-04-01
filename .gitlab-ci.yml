@@ -49,8 +49,6 @@ phpunit-coverage:
         - cd buffet-api
         - composer install
         - chown -R 1000:1000 conf/
-        - apk add tree
-        - tree
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
 
