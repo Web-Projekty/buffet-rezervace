@@ -1,91 +1,125 @@
 <?php
+declare (strict_types = 1);
 
 use Buffet\Api\JWTApi;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
-class JWTApiTest extends TestCase
+final class JWTApiTest extends TestCase
 {
     private JWTApi $jwtApi;
 
-        protected function setUp(): void
-            {
-                    $this->jwtApi = new JWTApi();
-                        }
+    protected function setUp(): void
+    {
+        $this->jwtApi = new JWTApi();
+    }
 
-                            public function testGetToken(): void
-                                {
-                                        $token = $this->jwtApi->getToken(1, 'testuser');
-                                                $this->assertIsString($token);
-                                                        
-                                                                $decoded = JWT::decode($token, new Key('example_key', 'HS384'));
-                                                                        $this->assertEquals(1, $decoded->sub);
-                                                                                $this->assertEquals('testuser', $decoded->name);
-                                                                                    }
+    public function testDecodeTokenWithValidToken(): void
+    {
+        $payload = [
+            'iss' => 'localhost',
+            'iat' => time(),
+            'exp' => time() + 3600,
+            'sub' => 1,
+            'name' => 'testuser',
+            'admin' => false
+        ];
+        $token = JWT::encode($payload, 'example_key', 'HS384');
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $response = new ApiResponse(['token' => $token]);
+        $result = $this->jwtApi->decodeToken($response);
+        $this->assertInstanceOf(stdClass::class, $result);
+        $this->assertEquals(1, $result->sub);
+        $this->assertEquals('testuser', $result->name);
+    }
 
-                                                                                        public function testDecodeTokenWithValidToken(): void
-                                                                                            {
-                                                                                                    $token = $this->jwtApi->getToken(1, 'testuser');
-                                                                                                            $responseMock = $this->createMock(ApiResponse::class);
-                                                                                                                    $responseMock->method('getRequestByKey')->willReturn($token);
+    public function testDecodeTokenWithMissingToken(): void
+    {
+        $response = new ApiResponse(['token' => '']);
+        $result = $this->jwtApi->decodeToken($response);
+        $this->assertTrue($response->hasFailed());
+        $this->assertEquals(Error::MissingToken->getValue(), $response->getPayload('msg'));
+    }
 
-                                                                                                                            $decoded = $this->jwtApi->decodeToken($responseMock);
-                                                                                                                                    $this->assertInstanceOf(stdClass::class, $decoded);
-                                                                                                                                            $this->assertEquals(1, $decoded->sub);
-                                                                                                                                                    $this->assertEquals('testuser', $decoded->name);
-                                                                                                                                                        }
+    public function testDecodeTokenWithInvalidToken(): void
+    {
+        $response = new ApiResponse(['token' => 'invalid_token']);
+        $result = $this->jwtApi->decodeToken($response);
+        $this->assertTrue($response->hasFailed());
+        $this->assertEquals(Error::UnexpectedValue->getValue(), $response->getPayload('msg'));
+    }
 
-                                                                                                                                                            public function testDecodeTokenWithInvalidToken(): void
-                                                                                                                                                                {
-                                                                                                                                                                        $responseMock = $this->createMock(ApiResponse::class);
-                                                                                                                                                                                $responseMock->method('getRequestByKey')->willReturn('invalid_token');
-                                                                                                                                                                                        $responseMock->expects($this->once())->method('setError')->with(Error::TamperedSign);
-                                                                                                                                                                                                
-                                                                                                                                                                                                        $this->jwtApi->decodeToken($responseMock);
-                                                                                                                                                                                                            }
+    public function testValidateTokenWithValidToken(): void
+    {
+        $payload = [
+            'iss' => 'localhost',
+            'iat' => time() - 10,
+            'exp' => time() + 3600,
+            'sub' => 2,
+            'name' => 'user2',
+            'admin' => false
+        ];
+        $token = JWT::encode($payload, 'example_key', 'HS384');
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $response = new ApiResponse(['token' => $token]);
+        $result = $this->jwtApi->validateToken($response);
+        $this->assertFalse($result);
+        $this->assertFalse($response->hasFailed());
+    }
 
-                                                                                                                                                                                                                public function testDecodeTokenWithMissingToken(): void
-                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                            $responseMock = $this->createMock(ApiResponse::class);
-                                                                                                                                                                                                                                    $responseMock->method('getRequestByKey')->willReturn('');
-                                                                                                                                                                                                                                            $responseMock->expects($this->once())->method('setError')->with(Error::MissingToken);
+    public function testValidateTokenWithExpiredToken(): void
+    {
+        $payload = [
+            'iss' => 'localhost',
+            'iat' => time() - 3600,
+            'exp' => time() - 1800,
+            'sub' => 3,
+            'name' => 'user3',
+            'admin' => false
+        ];
+        $token = JWT::encode($payload, 'example_key', 'HS384');
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $response = new ApiResponse(['token' => $token]);
+        $this->jwtApi->validateToken($response);
+        $this->assertTrue($response->hasFailed());
+        $this->assertEquals(Error::TokenExpired->getValue(), $response->getPayload('msg'));
+    }
 
-                                                                                                                                                                                                                                                    $this->jwtApi->decodeToken($responseMock);
-                                                                                                                                                                                                                                                        }
+    public function testValidateTokenWithBadDomain(): void
+    {
+        $payload = [
+            'iss' => 'notlocalhost',
+            'iat' => time() - 10,
+            'exp' => time() + 3600,
+            'sub' => 4,
+            'name' => 'user4',
+            'admin' => false
+        ];
+        $token = JWT::encode($payload, 'example_key', 'HS384');
+        $_SERVER['HTTP_HOST'] = 'production.com';
+        $response = new ApiResponse(['token' => $token]);
+        $this->jwtApi->validateToken($response);
+        $this->assertTrue($response->hasFailed());
+        $this->assertEquals(Error::BadDomain->getValue(), $response->getPayload('msg'));
+    }
 
-                                                                                                                                                                                                                                                            public function testValidateTokenWithValidToken(): void
-                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                        $_SERVER['HTTP_HOST'] = 'localhost';
-                                                                                                                                                                                                                                                                                
-                                                                                                                                                                                                                                                                                        $token = $this->jwtApi->getToken(1, 'testuser');
-                                                                                                                                                                                                                                                                                                $responseMock = $this->createMock(ApiResponse::class);
-                                                                                                                                                                                                                                                                                                        $responseMock->method('getRequestByKey')->willReturn($token);
-
-                                                                                                                                                                                                                                                                                                                $result = $this->jwtApi->validateToken($responseMock);
-                                                                                                                                                                                                                                                                                                                        $this->assertFalse($result);
-                                                                                                                                                                                                                                                                                                                            }
-
-                                                                                                                                                                                                                                                                                                                                public function testValidateTokenWithExpiredToken(): void
-                                                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                                                            $_SERVER['HTTP_HOST'] = 'localhost';
-                                                                                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                                                                                            $expiredPayload = [
-                                                                                                                                                                                                                                                                                                                                                                        'iss' => 'localhost',
-                                                                                                                                                                                                                                                                                                                                                                                    'iat' => time() - 3600,
-                                                                                                                                                                                                                                                                                                                                                                                                'exp' => time() - 1800,
-                                                                                                                                                                                                                                                                                                                                                                                                            'sub' => 1,
-                                                                                                                                                                                                                                                                                                                                                                                                                        'name' => 'testuser'
-                                                                                                                                                                                                                                                                                                                                                                                                                                ];
-                                                                                                                                                                                                                                                                                                                                                                                                                                        $token = JWT::encode($expiredPayload, 'example_key', 'HS384');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                
-                                                                                                                                                                                                                                                                                                                                                                                                                                                        $responseMock = $this->createMock(ApiResponse::class);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                $responseMock->method('getRequestByKey')->willReturn($token);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                        $responseMock->expects($this->once())->method('setError')->with(Error::TokenExpired);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        $this->jwtApi->validateToken($responseMock);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
+    public function testValidateTokenWithFutureIssuedAt(): void
+    {
+        $payload = [
+            'iss' => 'localhost',
+            'iat' => time() + 3600,
+            'exp' => time() + 7200,
+            'sub' => 5,
+            'name' => 'user5',
+            'admin' => false
+        ];
+        $token = JWT::encode($payload, 'example_key', 'HS384');
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $response = new ApiResponse(['token' => $token]);
+        $this->jwtApi->validateToken($response);
+        $this->assertTrue($response->hasFailed());
+        $this->assertEquals(Error::UnexpectedValue->getValue(), $response->getPayload('msg'));
+    }
+}

@@ -51,6 +51,7 @@ phpunit-coverage:
         - chown -R 1000:1000 conf/
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
     coverage: '/^\s*Classes:\s*\d+.\d+\%/'
+    #coverage: '/^\s*Lines:\s*\d+.\d+\%/'
 
 frontend-build-test:
     stage: Frontend Build Test
