@@ -37,7 +37,7 @@ class DatabaseManager
             $this->capsule->addConnection([
                 'driver' => 'sqlite',
                 'url' => null,
-                'database' => __DIR__ . '/database.sqlite',
+                'database' => '/var/www/html/test-db/database.sqlite',
                 'prefix' => '',
                 'foreign_key_constraints' => false
             ]);
