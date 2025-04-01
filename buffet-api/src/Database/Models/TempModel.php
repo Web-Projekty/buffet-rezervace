@@ -4,6 +4,8 @@ declare (strict_types = 1);
 
 namespace Buffet\Database\Models;
 
+use Buffet\Types\Settings;
+use Buffet\Utils\EnvReader;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -95,6 +97,12 @@ class TempModel extends Model
                     "available" => ($tempRow["orderCount"] < $tempRow["orderLimit"])
                 ];
 
+                $startDateTime = Carbon::createFromFormat("Y-m-d H:i:s", $tempRow["date"] . " " . $tempRow["startTime"]);
+                if ($startDateTime->subDays((int) EnvReader::getEnvProperty(Settings::OrderDateLimitMin))->isPast()) {
+                    //var_dump($startTime->format("Y-m-d H:i:s"));
+                    $timeslot["available"] = false;
+                }
+
                 if ($timeslot["available"]) {
                     $availableDate = true;
                     $availableHour = true;
@@ -127,7 +135,14 @@ class TempModel extends Model
             $availableDate = false;
 
         }
-
+        //var_dump($out);
+        for ($i = 0; $i < sizeof($out); $i++) {
+            if ($out[$i]["available"] == false) {
+                unset($out[$i]);
+                //var_dump($value);
+            }
+        }
+        $out = array_values($out);
         //var_dump($out);
         return $out;
 

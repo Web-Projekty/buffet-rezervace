@@ -72,6 +72,7 @@ enum Error: string {
     case MissingItems = 'Items are missing';
     case OrderCreationError = 'Order creation error';
     case MissingStatus = 'Status is missing';
+    case OrderTooLate = 'Order is too late';
 
     ############################ Items ############################
     case ItemIdNotFound = 'Item id not found';
