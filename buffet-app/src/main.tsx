@@ -59,77 +59,95 @@ const router = createBrowserRouter([
         path: "/",
         index: true,
         element: (
-          <Suspense fallback={<Fallback />}>
-            <Menu />
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
+              <Menu />
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/menu/edit",
         element: (
           <RequireAuth requireAdmin={true}>
-            <Suspense fallback={<Fallback />}>
-              <MenuEdit />
-            </Suspense>
+            <ErrorBoundary>
+              <Suspense fallback={<Fallback />}>
+                <MenuEdit />
+              </Suspense>
+            </ErrorBoundary>
           </RequireAuth>
         ),
       },
       {
         path: "/allergens",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <Allergens />
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
+              <Allergens />
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/account",
         element: (
           <RequireAuth requireAdmin={false} fallbackPath="/login">
-            <Suspense fallback={<Fallback />}>
-              <Dashboard />
-            </Suspense>
+            <ErrorBoundary>
+              <Suspense fallback={<Fallback />}>
+                <Dashboard />
+              </Suspense>
+            </ErrorBoundary>
           </RequireAuth>
         ),
       },
       {
         path: "/login",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <Login />
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
+              <Login />
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/register",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <Register />
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
+              <Register />
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/cart",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <CartPurchase />
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
+              <CartPurchase />
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/return",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <SuccessOrder />
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
+              <SuccessOrder />
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
       {
         path: "/*",
         element: (
-          <Suspense fallback={<Fallback />}>
-            <PageNotFound />
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<Fallback />}>
+              <PageNotFound />
+            </Suspense>
+          </ErrorBoundary>
         ),
       },
     ],

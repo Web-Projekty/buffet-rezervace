@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo } from "react";
-import { Order, Variant } from "../../../types";
+import { Order } from "../../../types";
 import useOrders from "../../../hooks/useOrders";
 import Loading from "../../ui/Loading";
 import { Fallback } from "../../../main";
@@ -41,7 +41,10 @@ const getCurrentStep = (order: Order | null): number => {
 };
 
 const OrderTracking = () => {
-  const { latestOrder, isLoading, items, error, refetch } = useOrders(1, 1);
+  const { latestOrder, isLoading, items, error, refetch, variants } = useOrders(
+    1,
+    1,
+  );
 
   const currentStep: number = useMemo(
     () => (latestOrder ? getCurrentStep(latestOrder) : -1),
@@ -54,7 +57,7 @@ const OrderTracking = () => {
 
   const mappedItems =
     items && latestOrder?.items
-      ? mapItemsWithOrders(latestOrder?.items, items, [] as Variant[])
+      ? mapItemsWithOrders(latestOrder?.items, items, variants ?? [])
       : [];
 
   const timeText = latestOrder
