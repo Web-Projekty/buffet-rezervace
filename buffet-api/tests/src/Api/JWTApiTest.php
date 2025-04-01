@@ -4,6 +4,7 @@ declare (strict_types = 1);
 use Buffet\Api\JWTApi;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\Utils\EnvWriter;
 use Firebase\JWT\JWT;
 use PHPUnit\Framework\TestCase;
 
@@ -13,6 +14,7 @@ final class JWTApiTest extends TestCase
 
     protected function setUp(): void
     {
+        EnvWriter::write(Settings::IsProd, "false");
         $this->jwtApi = new JWTApi();
     }
 
