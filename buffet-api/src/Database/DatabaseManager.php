@@ -7,8 +7,6 @@ namespace Buffet\Database;
 use Buffet\Database\CredentialsManager;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
-use Buffet\Types\Settings;
-use Buffet\Utils\EnvReader;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 class DatabaseManager
@@ -30,6 +28,27 @@ class DatabaseManager
 
     public function setupConnection(): void
     {
+        if (isset($GLOBALS["is_testing"])) {
+            $GLOBALS["is_testing"] = false;
+        }
+
+        if ($GLOBALS["is_testing"]) {
+            // Eloquent ORM Capsule setup
+            $this->capsule->addConnection([
+                'driver' => 'sqlite',
+                'url' => null,
+                'database' => __DIR__ . '/database.sqlite',
+                'prefix' => '',
+                'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true)
+            ]);
+            
+
+            // Make the Capsule instance available globally via static methods
+            $this->capsule->setAsGlobal();
+
+            // Setup the Eloquent ORM
+            $this->capsule->bootEloquent();
+        }
         $creds = $this->credentialsManager->getCredentials();
         if ($creds['success'] == true) {
             // Eloquent ORM Capsule setup
