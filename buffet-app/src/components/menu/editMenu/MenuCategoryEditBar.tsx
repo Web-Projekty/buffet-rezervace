@@ -5,7 +5,12 @@ import MenuItemEditInput from "./MenuItemEditInput";
 import { onImageChange } from "../../utils/utils";
 import { motion } from "framer-motion";
 import { slideInAnimation } from "../../../animations";
-import { createCategory, updateCategory, uploadImage } from "../../utils/api";
+import {
+  createCategory,
+  removeCategory,
+  updateCategory,
+  uploadImage,
+} from "../../utils/api";
 import { useUser } from "../../../hooks/useUser";
 import ImageInput from "../../ui/ImageInput";
 import toast from "react-hot-toast";
@@ -33,6 +38,8 @@ const MenuCategoryEditBar = ({
     Category["description"]
   >(category?.description || "");
 
+  const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
+
   const handleSave = async () => {
     handleClose();
 
@@ -50,7 +57,16 @@ const MenuCategoryEditBar = ({
       }
 
       if (imageFile) {
-        await uploadImage(token, categoryId, "categories", imageFile);
+        const { error } = await uploadImage(
+          token,
+          categoryId,
+          "categories",
+          imageFile,
+        );
+
+        if (error) {
+          toast.error("Obrázek se nepodařilo nahrát");
+        }
       }
 
       toast.success("Kategorie byla úspěšně vytvořena");
@@ -69,15 +85,43 @@ const MenuCategoryEditBar = ({
     }
 
     if (imageFile) {
-      await uploadImage(token, category.id, "categories", imageFile);
+      const { error } = await uploadImage(
+        token,
+        category.id,
+        "categories",
+        imageFile,
+      );
+
+      if (error) {
+        toast.error("Obrázek se nepodařilo nahrát");
+        return;
+      }
     }
 
     toast.success("Kategorie byla úspěšně upravena");
     refetch();
   };
 
+  const handleRemove = async () => {
+    if (!category) return;
+
+    const { error } = await removeCategory(token, category.id);
+
+    if (error) {
+      toast.error("Kategorii se nepodařilo smazat");
+      return;
+    }
+    handleClose();
+    toast.success("Kategorie byla úspěšně smazána");
+    refetch();
+  };
+
   const handleClose = () => {
     handleBarOpen();
+  };
+
+  const handleConfirmDelete = () => {
+    setConfirmDelete(true);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,6 +172,14 @@ const MenuCategoryEditBar = ({
           >
             Zrušit
           </Button>
+          {category !== null ? (
+            <Button
+              className="m-auto border-red-400 bg-red-400 hover:bg-red-500"
+              onClick={confirmDelete ? handleRemove : handleConfirmDelete}
+            >
+              {confirmDelete ? "Opravdu smazat?" : "Smazat"}
+            </Button>
+          ) : null}
           <Button
             className="m-auto"
             onClick={handleSave}
