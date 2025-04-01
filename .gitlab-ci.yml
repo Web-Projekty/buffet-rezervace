@@ -16,7 +16,9 @@ phpstan:
     artifacts:
         reports:
             codequality: buffet-api/phpstan-result.json
-
+    rules: 
+        - if: '$CI_COMMIT_BRANCH == "main"'
+        
 # Job to run PHPUnit tests and generate the coverage output
 phpunit:
     stage: Tests
