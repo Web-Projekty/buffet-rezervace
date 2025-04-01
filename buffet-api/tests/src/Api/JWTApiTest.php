@@ -12,17 +12,7 @@ class JWTApiTest extends TestCase
 {
         private JWTApi $jwtApi;
 
-            protected function setUp(): void
-                {
-                            $this->jwtApi = new JWTApi();
-                }
-
-                    public function testGetToken(): void
-                        {
-                                    $token = $this->jwtApi->getToken(1, 'testuser');
-                                            $this->assertIsString($token);
-                                                    
-                                                            $decoded = JWT::decode($token, new Key('example_key', 'HS384'));
+            prot                                $decoded = JWT::decode($token, new Key('example_key', 'HS384'));
                                                                     $this->assertEquals(1, $decoded->sub);
                                                                             $this->assertEquals('testuser', $decoded->name);
                         }
@@ -30,24 +20,12 @@ class JWTApiTest extends TestCase
                             public function testDecodeTokenWithValidToken(): void
                                 {
                                             $token = $this->jwtApi->getToken(1, 'testuser');
-                                                    $responseMock = $this->createMock(ApiResponse::class);
-                                                            $responseMock->method('getRequestByKey')->willReturn($token);
-
-                                                                    $decoded = $this->jwtApi->decodeToken($responseMock);
-                                                                            $this->assertInstanceOf(stdClass::class, $decoded);
-                                                                                    $this->assertEquals(1, $decoded->sub);
-                                                                                            $this->assertEquals('testuser', $decoded->name);
-                                }
+                                                    $responseMock = $this->createMock(ApiResp                               $responseMockoken($responseMock);tInstanceOf(stdClass::class, $
 
                                     public function testDecodeTokenWithInvalidToken(): void
                                         {
                                                     $responseMock = $this->createMock(ApiResponse::class);
-                                                            $responseMock->method('getRequestByKey')->willReturn('invalid_token');
-                                                                    $responseMock->expects($this->once())->method('setError')->with(Error::TamperedSign);
-                                                                            
-                                                                                    $this->jwtApi->decodeToken($responseMock);
-                                        }
-
+                
                                             public function testDecodeTokenWithMissingToken(): void
                                                 {
                                                             $responseMock = $this->createMock(ApiResponse::class);
