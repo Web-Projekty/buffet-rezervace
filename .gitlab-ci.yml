@@ -50,6 +50,8 @@ phpunit-coverage:
         - composer install
         - chown -R 1000:1000 conf/
         - rm test-db/database.sqlite
+        - touch test-db/database.sqlite
+        - sqlite3 test-db/database.sqlite < test-db/testing.db
         - ./vendor/bin/phpunit tests --testdox --colors=never --coverage-text
     coverage: '/^\s*Lines:\s*\d+.\d+\%/'
 
