@@ -22,6 +22,7 @@ const useOrders = (itemsCount: "all" | number, page?: number) => {
     error,
     isLoading,
     refetch,
+    variants: data?.variants,
   };
 };
 
