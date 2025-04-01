@@ -24,6 +24,13 @@ class UserModel extends Model
     // Optionally, disable timestamps if the table doesn't have them
 
     /**
+     * @var array<string>
+     */
+    protected $casts = [
+        'isAdmin' => 'boolean'
+    ];
+
+    /**
      * @var bool
      */
     public $timestamps = true;
