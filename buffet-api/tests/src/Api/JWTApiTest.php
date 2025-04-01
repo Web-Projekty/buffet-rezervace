@@ -2,6 +2,7 @@
 declare (strict_types = 1);
 
 use Buffet\Api\JWTApi;
+use Buffet\Database\DatabaseManager;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
 use Buffet\Types\Settings;
@@ -20,6 +21,14 @@ final class JWTApiTest extends TestCase
         EnvWriter::write(Settings::IsProd, "false");
         EnvWriter::write(Settings::JWTKey, "testing_key");
         $this->jwtApi = new JWTApi();
+
+        EnvWriter::write(Settings::IsProd, "false");
+        if (!isset($GLOBALS["is_db_setupped"])) {
+            $dbMan = new DatabaseManager(new ApiResponse());
+            $GLOBALS["is_testing"] = true;
+            $dbMan->setupConnection();
+            $GLOBALS["is_db_setupped"] = true;
+        }
     }
 
     public function testDecodeTokenWithValidToken(): void
