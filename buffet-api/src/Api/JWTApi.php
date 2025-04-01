@@ -35,7 +35,7 @@ class JWTApi
     {
         $isAdmin = UserModel::isAdmin($uid);
 
-        $key = 'example_key';
+        $key = EnvReader::getEnvProperty(Settings::JWTKey);
         $payload = [
             'iss' => $_SERVER['HTTP_HOST'],
             'iat' => time(),
