@@ -51,7 +51,7 @@ class EnvReader
             }
         }
         self::createEnv();
-        var_dump("missing." . $needle->value);
+        error_log("missing." . $needle->value);
         throw new SettingsException("The key " . $needle->value . " does not exist in the env file");
     }
 
