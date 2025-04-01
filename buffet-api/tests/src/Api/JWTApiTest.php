@@ -4,6 +4,7 @@ declare (strict_types = 1);
 use Buffet\Api\JWTApi;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\Types\Settings;
 use Buffet\Utils\EnvWriter;
 use Firebase\JWT\JWT;
 use PHPUnit\Framework\TestCase;
