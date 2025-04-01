@@ -36,7 +36,6 @@ final class JWTApiTest extends TestCase
         $_SERVER['HTTP_HOST'] = 'localhost';
         $response = new ApiResponse(['token' => $token]);
         $result = $this->jwtApi->decodeToken($response);
-        var_dump((string) $result);
         $this->assertInstanceOf(stdClass::class, $result);
         $this->assertEquals(1, $result->sub);
         $this->assertEquals('testuser', $result->name);
