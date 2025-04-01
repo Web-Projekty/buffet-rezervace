@@ -114,7 +114,7 @@ if (!$isProd) {
 
 $headerMiddleware = function ($request, $handler) {
     $html = $handler->handle($request);
-    $build_file = __DIR__ . "/../../build_date";
+    $build_file = __DIR__ . "/build_date";
     if (file_exists($build_file)) {
         $fileStream = fopen($build_file, "r");
         $buildDate = trim(fread($fileStream, filesize($build_file)));
