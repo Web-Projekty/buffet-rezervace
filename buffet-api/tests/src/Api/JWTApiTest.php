@@ -89,7 +89,7 @@ class JWTApiTest extends TestCase
                                                                                                                                                     $this->jwtApi->validateToken($responseMock);
                                                                 }
 }
-                                                                                            ]
+                                                                                            
                                                                 }
                                                         }
                                                 }
