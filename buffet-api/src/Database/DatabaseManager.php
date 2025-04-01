@@ -28,7 +28,7 @@ class DatabaseManager
 
     public function setupConnection(): void
     {
-        if (isset($GLOBALS["is_testing"])) {
+        if (!isset($GLOBALS["is_testing"])) {
             $GLOBALS["is_testing"] = false;
         }
 
