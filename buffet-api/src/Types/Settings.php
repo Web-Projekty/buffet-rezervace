@@ -16,6 +16,7 @@ enum Settings: string {
     case ImageCacheTime = 'IMAGE_CACHE_TIME';
     case ImageUploadQuality = 'IMAGE_UPLOAD_QUALITY';
     case OrderDateLimitMax = 'ORDER_DATE_LIMIT_MAX';
+    case OrderDateLimitMin = 'ORDER_DATE_LIMIT_MIN';
 
     ##### ThePay #####
     case ThePayApiPass = 'THEPAY_API_PASS';

@@ -641,6 +641,11 @@ class BuffetApi
             $limit = TimeslotModel::getLimit($startTime, $endTime);
         }
 
+        $startDateTime = Carbon::createFromFormat("Y-m-d H:i", $pickUpDate . " " . $startTime);
+        if ($startDateTime->subDays((int) EnvReader::getEnvProperty(Settings::OrderDateLimitMin))->isPast()) {
+            return $response->setError(Error::OrderTooLate);
+        }
+
         // order creation logic
         if ($isAdmin) {
             return $response->setError(Error::CannotOrderAsAdmin);
