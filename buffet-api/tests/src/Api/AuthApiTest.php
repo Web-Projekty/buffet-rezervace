@@ -17,6 +17,7 @@ final class AuthApiTest extends TestCase
     {
         // Clean up the users table before each test if available.
         EnvWriter::write(Settings::IsProd, "false");
+        EnvWriter::write(Settings::JWTKey, "super_secret_key");
         if (!isset($GLOBALS["is_db_setupped"])) {
             $dbMan = new DatabaseManager(new ApiResponse());
             $GLOBALS["is_testing"] = true;
