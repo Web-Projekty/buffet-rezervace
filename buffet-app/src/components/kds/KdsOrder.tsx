@@ -64,7 +64,7 @@ const KdsOrder = ({ order, items, variants }: KdsOrderProps) => {
           </p>
         </div>
         <div className="w-full px-4 py-2">
-          <OrderItems mappedItems={mappedItems} />
+          <OrderItems mappedItems={mappedItems} isPaid={Boolean(order.paid)} />
         </div>
       </div>
       <div className="px-4 py-2">{renderButtons()}</div>

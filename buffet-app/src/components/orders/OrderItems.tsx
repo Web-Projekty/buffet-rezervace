@@ -6,9 +6,10 @@ import { twMerge } from "tailwind-merge";
 type OrderItemsProps = {
   mappedItems: MappedOrderItem[];
   className?: string;
+  isPaid?: boolean;
 };
 
-const OrderItems = ({ mappedItems, className }: OrderItemsProps) => {
+const OrderItems = ({ mappedItems, className, isPaid }: OrderItemsProps) => {
   return (
     <div className={twMerge("flex flex-col gap-2", className)}>
       <ul className="flex flex-col">
