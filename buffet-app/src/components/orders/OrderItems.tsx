@@ -18,7 +18,7 @@ const OrderItems = ({ mappedItems, className, isPaid }: OrderItemsProps) => {
         })}
       </ul>
       <hr className="w-full" />
-      <OrderPrice items={mappedItems} />
+      <OrderPrice items={mappedItems} isPaid={isPaid} />
     </div>
   );
 };
