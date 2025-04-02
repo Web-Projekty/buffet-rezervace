@@ -29,6 +29,9 @@ phpunit:
         - cd buffet-api
         - composer install
         - chown -R 1000:1000 conf/
+        - rm test-db/database.sqlite
+        - touch test-db/database.sqlite
+        - sqlite3 test-db/database.sqlite < test-db/testing.db
         - ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-html tests/result
           --display-deprecations --display-phpunit-deprecations --fail-on-deprecation
           --fail-on-phpunit-deprecation
