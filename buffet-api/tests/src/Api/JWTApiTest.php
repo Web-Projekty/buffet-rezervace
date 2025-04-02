@@ -1,6 +1,7 @@
 <?php
 declare (strict_types = 1);
 
+use Buffet\Api\AuthApi;
 use Buffet\Api\JWTApi;
 use Buffet\Database\DatabaseManager;
 use Buffet\Types\ApiResponse;
@@ -153,6 +154,21 @@ final class JWTApiTest extends TestCase
     public function testGetAdminToken(): void
     {
         $_SERVER['HTTP_HOST'] = 'localhost';
+        $userApi = new AuthApi();
+
+        $data = [
+            "username" => "uniqueUser",
+            "password" => "password123",
+            "confirmPassword" => "password123",
+            "fullName" => "Unique User",
+            "tel" => "123456789",
+            "email" => "unique@example.com",
+            'isAdmin' => 1
+        ];
+        $response = new ApiResponse($data);
+        $authApi = new AuthApi();
+        $authApi->register($response,isAdmin:1);
+
         $token = JWTApi::getAdminToken();
         $decoded = JWT::decode($token, new Key(EnvReader::getEnvProperty(Settings::JWTKey), 'HS384'));
         $this->assertEquals('localhost', $decoded->iss);

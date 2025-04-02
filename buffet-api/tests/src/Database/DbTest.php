@@ -24,6 +24,6 @@ class DbTest extends TestCase
 
     public function testDbSetup(): void
     {
-        $this->assertSame(UserModel::query()->first()->toArray()["email"], "admin@buffet.vlastas.cc");
+        $this->assertSame("success@example.com",UserModel::query()->first()->toArray()["email"]);
     }
 }
