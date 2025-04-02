@@ -38,7 +38,11 @@ class TempModel extends Model
 
     public static function resetAutoIncrement(): void
     {
-        TempModel::query()->getConnection()->statement('ALTER TABLE Temp AUTO_INCREMENT = 1;');
+        if (isset($GLOBALS["is_testing"]) && $GLOBALS["is_testing"]) {
+            TempModel::query()->getConnection()->statement('UPDATE sqlite_sequence SET seq = 0 WHERE name="Temp";');
+        } else {
+            TempModel::query()->getConnection()->statement('ALTER TABLE Temp AUTO_INCREMENT = 1;');
+        }
     }
 
     /**
