@@ -53,7 +53,7 @@ const KdsOrders = () => {
         // ) : error ? (
         //   <p className="text-center text-4xl text-white">{error}</p>
         <div className="flex flex-row items-start justify-between">
-          <div className="grid grid-cols-2 grid-rows-2 items-start gap-2 md:grid-cols-3">
+          <div className="grid grid-cols-2 grid-rows-2 gap-2 md:grid-cols-3">
             {renderPendingOrders()}
           </div>
           <div className="flex flex-col gap-2">
