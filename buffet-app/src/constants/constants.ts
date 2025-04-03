@@ -1,7 +1,7 @@
-import coins from "./assets/images/coins.svg";
-import wallet from "./assets/images/wallet.svg";
-import creditCart from "./assets/images/creditCard.svg";
-import thePay from "./assets/images/thePay.svg";
+import coins from "../assets/images/coins.svg";
+import wallet from "../assets/images/wallet.svg";
+import creditCart from "../assets/images/creditCard.svg";
+import thePay from "../assets/images/thePay.svg";
 import { PaymentMethod } from "../types/types";
 
 export const MAX_ITEMS: number = 5;
