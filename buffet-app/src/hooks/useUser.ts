@@ -37,7 +37,7 @@ export const useUser = (): UseUserReturn => {
   const token: string | null = extractToken(header);
   const signOut = useSignOut();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const isAdmin: boolean = user?.isAdmin || false;
   const fullName: string = user?.fullName || "";
