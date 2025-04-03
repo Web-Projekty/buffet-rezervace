@@ -1,6 +1,5 @@
 import {
   Activity,
-  Banknote,
   Coins,
   Database,
   HandCoins,
@@ -25,12 +24,10 @@ const userButtons: DashboardButton[] = [
 
 const adminButtons: DashboardButton[] = [
   { icon: User, name: "Profil" },
-  { icon: Menu, name: "Přehled" },
   { icon: Coins, name: "Systém" },
   { icon: Database, name: "Databáze" },
   { icon: Activity, name: "Provoz" },
   { icon: HandCoins, name: "Platby" },
-  { icon: Banknote, name: "Účetnictví" },
 ];
 
 type DashboardButtonsProps = {

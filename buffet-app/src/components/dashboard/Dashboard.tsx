@@ -10,19 +10,18 @@ const AccountInformation = lazy(() => import("./AccountInformation"));
 const DashboardButtons = lazy(() => import("./DashboardButtons"));
 
 export type Page =
-  | "Přehled"
   | "Historie"
   | "Profil"
+  | "Přehled"
   | "Kredity"
-  // | "Systém"
+  | "Systém"
   | "Databáze"
   | "Provoz"
   | "Platby";
-// | "Účetnictví";
 
 const Dashboard = () => {
   const { isAdmin, logout } = useUser();
-  const [searchParams, setSearchParams] = useSearchParams("Přehled");
+  const [searchParams, setSearchParams] = useSearchParams("Systém");
 
   const handlePageChange = (page: Page) => {
     setSearchParams({ page: removeDiacritics(page) });
@@ -34,26 +33,28 @@ const Dashboard = () => {
 
   const page = useMemo(() => {
     const pageParam = searchParams.get("page");
-    const normalizedPage = pageParam ? pageParam.toLowerCase() : "prehled";
+    const normalizedPage = pageParam
+      ? pageParam.toLowerCase()
+      : isAdmin
+        ? "system"
+        : "prehled";
     switch (normalizedPage) {
-      case "prehled":
-        return "Přehled";
       case "historie":
         return "Historie";
+      case "prehled":
+        return "Přehled";
       case "profil":
         return "Profil";
       case "kredity":
         return "Kredity";
-      // case "system":
-      //   return "Systém";
+      case "system":
+        return "Systém";
       case "databaze":
         return "Databáze";
       case "provoz":
         return "Provoz";
       case "platby":
         return "Platby";
-      // case "ucetnictvi":
-      //   return "Účetnictví";
     }
   }, [searchParams]);
 
