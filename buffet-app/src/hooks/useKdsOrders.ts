@@ -31,14 +31,43 @@ export const useKdsOrders = () => {
       // onMessage
       (message) => {
         if (message.eventType === "createOrder") {
-          const parseOrderItems =
-            typeof message.payload.data[0].items === "string"
-              ? JSON.parse(message.payload.data[0].items)
-              : message.payload.data[0].items;
+          const incomingOrder = message.payload.data[0];
+          if (incomingOrder) {
+            incomingOrder.items =
+              typeof incomingOrder.items === "string"
+                ? JSON.parse(incomingOrder.items)
+                : incomingOrder.items;
 
-          message.payload.data[0].items = parseOrderItems;
+            setOrders((prevOrders) => {
+              const existingOrderIndex = prevOrders.findIndex(
+                (order) => order.id === incomingOrder.id,
+              );
 
-          setOrders((prevOrders) => [...prevOrders, ...message.payload.data]);
+              if (existingOrderIndex !== -1) {
+                const existingOrder = prevOrders[existingOrderIndex];
+
+                if (!existingOrder.paid && incomingOrder.paid) {
+                  console.log(
+                    `Order ${incomingOrder.id} payment status updated to paid`,
+                  );
+
+                  return [
+                    ...prevOrders.slice(0, existingOrderIndex),
+                    incomingOrder,
+                    ...prevOrders.slice(existingOrderIndex + 1),
+                  ];
+                }
+
+                console.log(
+                  `Order ${incomingOrder.id} already exists, no payment update needed`,
+                );
+                return prevOrders;
+              }
+
+              // If it's a new order, add it to the list
+              return [...prevOrders, incomingOrder];
+            });
+          }
         } else if (message.eventType === "updateOrder") {
           setOrders((prevOrders) => {
             if (!message.payload.data.length) return prevOrders;
