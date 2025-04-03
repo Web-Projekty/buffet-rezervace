@@ -49,7 +49,7 @@ phpunit-coverage:
     image: wlczak/buffet-test-prebuild:latest
     script:
         - echo $ENV_CONFIG >> conf/.env
-        - echo $ENV_CONFIG
+        - cat {$ENV_CONFIG}
         - cp -r conf/ buffet-api/
         - cd buffet-api
         - composer install
