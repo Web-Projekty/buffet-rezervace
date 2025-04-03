@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Category, MenuItem as MenuItemType } from "../../types";
+import { Category, MenuItem as MenuItemType } from "../../types/types";
 import HorizontalPaging from "../ui/HorizontalPaging";
 import MenuItem from "./MenuItem";
 

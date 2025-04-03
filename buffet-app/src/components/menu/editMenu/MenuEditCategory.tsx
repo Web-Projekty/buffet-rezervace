@@ -1,5 +1,5 @@
 import { Pen } from "lucide-react";
-import { Category } from "../../../types";
+import { Category } from "../../../types/types";
 
 type MenuEditCategoryProps = {
   category: Category;

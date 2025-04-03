@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { Category } from "../../../types";
+import { Category } from "../../../types/types";
 import Button from "../../ui/Button";
 import MenuItemEditInput from "./MenuItemEditInput";
-import { onImageChange } from "../../utils/utils";
+import { onImageChange } from "../../../utils/utils";
 import { motion } from "framer-motion";
-import { slideInAnimation } from "../../../animations";
+import { slideInAnimation } from "../../../animations/animations";
 import {
   createCategory,
   removeCategory,
   updateCategory,
   uploadImage,
-} from "../../utils/api";
+} from "../../../utils/api";
 import { useUser } from "../../../hooks/useUser";
 import ImageInput from "../../ui/ImageInput";
 import toast from "react-hot-toast";

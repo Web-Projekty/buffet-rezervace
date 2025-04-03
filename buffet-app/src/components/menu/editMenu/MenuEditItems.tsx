@@ -1,4 +1,4 @@
-import { Category, MenuItem } from "../../../types";
+import { Category, MenuItem } from "../../../types/types";
 import MenuItemAdd from "./MenuItemAdd";
 import MenuItemEdit from "./MenuItemEdit";
 

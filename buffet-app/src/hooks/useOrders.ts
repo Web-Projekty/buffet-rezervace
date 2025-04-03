@@ -1,6 +1,6 @@
 import { useUser } from "./useUser";
 import { useQuery } from "@tanstack/react-query";
-import { getOrders, OrdersApi } from "../components/utils/api";
+import { getOrders, OrdersApi } from "../utils/api";
 
 const useOrders = (itemsCount: "all" | number, page?: number) => {
   const { token } = useUser();

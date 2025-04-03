@@ -1,10 +1,10 @@
 import { lazy, Suspense, useEffect, useMemo } from "react";
-import { Order } from "../../../types";
+import { Order } from "../../../types/types";
 import useOrders from "../../../hooks/useOrders";
 import Loading from "../../ui/Loading";
 import { Fallback } from "../../../main";
 import OrderItems from "../../orders/OrderItems";
-import { mapItemsWithOrders } from "../../utils/utils";
+import { mapItemsWithOrders } from "../../../utils/utils";
 import FetchError from "../../error/FetchError";
 import { Link } from "react-router-dom";
 import Button from "../../ui/Button";

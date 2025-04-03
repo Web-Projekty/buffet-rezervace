@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { fadeInAnimation } from "../../animations";
+import { fadeInAnimation } from "../../animations/animations";
 import { twMerge } from "tailwind-merge";
 
 type HorizontalPagingProps = {

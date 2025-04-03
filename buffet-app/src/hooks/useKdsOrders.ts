@@ -1,7 +1,7 @@
-import { MenuItem, Order, OrderItem, Variant } from "../types";
+import { MenuItem, Order, OrderItem, Variant } from "../types/types";
 import { useUser } from "./useUser";
 import { useEffect, useState, useMemo, useRef } from "react";
-import { WebSocketService } from "../components/utils/webSockets";
+import { WebSocketService } from "../utils/webSockets";
 
 export const useKdsOrders = () => {
   const { token } = useUser();

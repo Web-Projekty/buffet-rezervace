@@ -1,5 +1,5 @@
-import { Allergen } from "../../types";
-import { allergens as AllergensList } from "../../allergens";
+import { Allergen } from "../../types/types";
+import { allergens as AllergensList } from "../../data/allergens";
 
 type ItemAllergensProps = {
   allergens: Allergen[];

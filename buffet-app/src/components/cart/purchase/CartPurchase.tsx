@@ -3,12 +3,17 @@ import useCart from "../../../store/CartStore";
 import Button from "../../ui/Button";
 import { Fallback } from "../../../main";
 import { useUser } from "../../../hooks/useUser";
-import { Date as DateType, Hour, Minute, PaymentMethod } from "../../../types";
-import { createOrder } from "../../utils/api";
-import { parseSelectedTime } from "../../utils/utils";
+import {
+  Date as DateType,
+  Hour,
+  Minute,
+  PaymentMethod,
+} from "../../../types/types";
+import { createOrder } from "../../../utils/api";
+import { parseSelectedTime } from "../../../utils/utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { toastMessages } from "../../utils/toastMessages";
+import { toastMessages } from "../../../utils/toastMessages";
 
 const CartReservationCalendar = lazy(() => import("./CartReservationCalendar"));
 const CartPurchaseMethods = lazy(() => import("./CartPurchaseMethods"));

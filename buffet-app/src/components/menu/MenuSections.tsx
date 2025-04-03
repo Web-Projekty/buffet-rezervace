@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { MutableRefObject } from "react";
-import { menuItemShowAnimation } from "../../animations";
-import { Category, MenuItem } from "../../types";
+import { menuItemShowAnimation } from "../../animations/animations";
+import { Category, MenuItem } from "../../types/types";
 import MenuItems from "./MenuItems";
 
 type MenuSectionsProps = {

@@ -1,4 +1,4 @@
-import { allergens } from "../../allergens";
+import { allergens } from "../../data/allergens";
 import Allergen from "./Allergen";
 
 const Allergens = () => {

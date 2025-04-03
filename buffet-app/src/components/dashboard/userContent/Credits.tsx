@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
-import { CREDITS_ENABLED } from "../../../constants";
+import { CREDITS_ENABLED } from "../../../constants/constants";
 
 const Credits = () => {
   const [coupon, setCoupon] = useState<string>("");

@@ -1,6 +1,6 @@
 import { CartItem } from "../../store/CartStore";
-import { MappedOrderItem } from "../../types";
-import { formatCurrency, getVariantsPrice } from "../utils/utils";
+import { MappedOrderItem } from "../../types/types";
+import { formatCurrency, getVariantsPrice } from "../../utils/utils";
 
 type OrderPriceProps = {
   items: CartItem[] | MappedOrderItem[];

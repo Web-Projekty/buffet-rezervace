@@ -1,11 +1,11 @@
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { extractToken, handleResponse } from "../components/utils/utils";
+import { extractToken, handleResponse } from "../utils/utils";
 import useAuthUser from "react-auth-kit/hooks/useAuthUser";
-import { User } from "../types";
-import { toastMessages } from "../components/utils/toastMessages";
-import { updateUserData, updateUserPassword } from "../components/utils/api";
+import { User } from "../types/types";
+import { toastMessages } from "../utils/toastMessages";
+import { updateUserData, updateUserPassword } from "../utils/api";
 import { ProfileFormDataType } from "../components/dashboard/Profile";
-import { removeTokenExpiration } from "../components/utils/auth";
+import { removeTokenExpiration } from "../utils/auth";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -13,7 +13,7 @@ import { useState } from "react";
 import {
   changePasswordSchema,
   changeUserDataSchema,
-} from "../components/utils/validation";
+} from "../utils/validation";
 import { z } from "zod";
 
 type UseUserReturn = {

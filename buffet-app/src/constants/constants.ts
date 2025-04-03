@@ -2,7 +2,7 @@ import coins from "./assets/images/coins.svg";
 import wallet from "./assets/images/wallet.svg";
 import creditCart from "./assets/images/creditCard.svg";
 import thePay from "./assets/images/thePay.svg";
-import { PaymentMethod } from "./types";
+import { PaymentMethod } from "../types/types";
 
 export const MAX_ITEMS: number = 5;
 
@@ -18,7 +18,9 @@ export const CREDITS_ENABLED = false;
 
 export const CART_LOCAL_STORAGE_KEY: string = "cartItems";
 
-export const FETCH_URL: string = window.location.protocol + "//" + window.location.host + "/api/";
+export const FETCH_URL: string = "https://wlczak.vlastas.cc/backend/api";
+
+// export const FETCH_URL: string = window.location.protocol + "//" + window.location.host + "/api/";
 
 export const WEBSOCKET_URL = (channel: string): string =>
   window.location.protocol === "https:"

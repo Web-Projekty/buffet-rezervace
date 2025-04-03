@@ -1,5 +1,5 @@
 import useCart, { CartItem } from "../../store/CartStore";
-import { formatCurrency } from "../utils/utils";
+import { formatCurrency } from "../../utils/utils";
 
 type ItemPriceProps = {
   id: CartItem["id"];

@@ -2,10 +2,10 @@ import { useState } from "react";
 import axios from "axios";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FETCH_URL } from "../constants";
-import { setTokenExpiration } from "../components/utils/auth";
+import { FETCH_URL } from "../constants/constants";
+import { setTokenExpiration } from "../utils/auth";
 import toast from "react-hot-toast";
-import { toastMessages } from "../components/utils/toastMessages";
+import { toastMessages } from "../utils/toastMessages";
 
 type UseLoginReturn = {
   loading: boolean;

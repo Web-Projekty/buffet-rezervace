@@ -5,7 +5,7 @@ import Button from "../../ui/Button";
 import { RegisterData, useRegister } from "../../../hooks/useRegister";
 import Input from "../../ui/Input";
 import { useUser } from "../../../hooks/useUser";
-import { slideInRightAnimation } from "../../../animations";
+import { slideInRightAnimation } from "../../../animations/animations";
 
 const Register = () => {
   const { user } = useUser();

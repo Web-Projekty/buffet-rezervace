@@ -1,5 +1,5 @@
-import { paymentMethods } from "../../../constants";
-import { PaymentMethod } from "../../../types";
+import { paymentMethods } from "../../../constants/constants";
+import { PaymentMethod } from "../../../types/types";
 import CartPurchaseMethod from "./CartPurchaseMethod";
 
 type CartPurchaseMethodsProps = {

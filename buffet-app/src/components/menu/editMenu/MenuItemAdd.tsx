@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { menuItemShowAnimation } from "../../../animations";
+import { menuItemShowAnimation } from "../../../animations/animations";
 import { Plus } from "lucide-react";
 
 type MenuItemAddProps = {

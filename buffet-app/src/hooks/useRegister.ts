@@ -1,12 +1,12 @@
 import axios from "axios";
-import { FETCH_URL } from "../constants";
+import { FETCH_URL } from "../constants/constants";
 import { useState } from "react";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useNavigate } from "react-router-dom";
 import { UserData } from "./useLogin";
 import toast from "react-hot-toast";
-import { toastMessages } from "../components/utils/toastMessages";
-import { registerSchema } from "../components/utils/validation";
+import { toastMessages } from "../utils/toastMessages";
+import { registerSchema } from "../utils/validation";
 import { z } from "zod";
 
 export type RegisterData = {

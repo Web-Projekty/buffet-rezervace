@@ -1,9 +1,9 @@
 import { AnimatePresence } from "framer-motion";
 import { lazy, Suspense, useCallback } from "react";
-import { ORDERS_PER_PAGE } from "../../../constants";
+import { ORDERS_PER_PAGE } from "../../../constants/constants";
 import { useBackendPaging } from "../../../hooks/useBackendPaging";
 import { Fallback } from "../../../main";
-import { OrdersData } from "../../../types";
+import { OrdersData } from "../../../types/types";
 import Order from "../../orders/Order";
 import Loading from "../../ui/Loading";
 import PagingButtons from "../../ui/PagingButtons";

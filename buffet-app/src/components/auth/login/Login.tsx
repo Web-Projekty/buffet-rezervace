@@ -5,7 +5,7 @@ import Button from "../../ui/Button";
 import { useLogin } from "../../../hooks/useLogin";
 import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { useUser } from "../../../hooks/useUser";
-import { slideInRightAnimation } from "../../../animations";
+import { slideInRightAnimation } from "../../../animations/animations";
 
 type LoginFormData = {
   username: string;

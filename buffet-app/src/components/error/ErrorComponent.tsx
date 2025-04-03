@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Button from "../ui/Button";
 import Logo from "../../assets/images/logo.svg";
 import { motion } from "framer-motion";
-import { fadeInAnimation } from "../../animations";
+import { fadeInAnimation } from "../../animations/animations";
 import { twMerge } from "tailwind-merge";
 
 type Error = {

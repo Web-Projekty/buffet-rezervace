@@ -1,5 +1,5 @@
 import { HandleStatusReturn } from "../../hooks/useOrder";
-import { MappedOrderItem, OrderStatus } from "../../types";
+import { MappedOrderItem, OrderStatus } from "../../types/types";
 import OrderButton from "./OrderButton";
 import OrderItems from "./OrderItems";
 

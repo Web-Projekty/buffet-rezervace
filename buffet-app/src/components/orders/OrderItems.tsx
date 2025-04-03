@@ -1,4 +1,4 @@
-import { MappedOrderItem } from "../../types";
+import { MappedOrderItem } from "../../types/types";
 import OrderPrice from "./OrderPrice";
 import OrderItem from "./OrderItem";
 import { twMerge } from "tailwind-merge";

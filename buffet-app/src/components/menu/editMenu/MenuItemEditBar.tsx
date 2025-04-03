@@ -1,22 +1,22 @@
 import { useState } from "react";
-import { Allergen, Category, MenuItem, Variant } from "../../../types";
+import { Allergen, Category, MenuItem, Variant } from "../../../types/types";
 import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import MenuItemEditInput from "./MenuItemEditInput";
-import { allergens } from "../../../allergens";
+import { allergens } from "../../../data/allergens";
 import ToggleSwitch from "../../ui/ToggleSwitch";
-import { onImageChange } from "../../utils/utils";
+import { onImageChange } from "../../../utils/utils";
 import { motion } from "framer-motion";
-import { slideInAnimation } from "../../../animations";
+import { slideInAnimation } from "../../../animations/animations";
 import {
   createMenuItem,
   removeMenuItem,
   updateMenuItem,
   uploadImage,
-} from "../../utils/api";
+} from "../../../utils/api";
 import { useUser } from "../../../hooks/useUser";
 import ImageInput from "../../ui/ImageInput";
-import { itemSchema } from "../../utils/validation";
+import { itemSchema } from "../../../utils/validation";
 import { z } from "zod";
 import toast from "react-hot-toast";
 

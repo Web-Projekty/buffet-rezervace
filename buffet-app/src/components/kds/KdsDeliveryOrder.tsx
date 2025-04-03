@@ -1,6 +1,6 @@
 import { useOrder } from "../../hooks/useOrder";
 import { useUser } from "../../hooks/useUser";
-import { Order, OrderItem } from "../../types";
+import { Order, OrderItem } from "../../types/types";
 import OrderItems from "../orders/OrderItems";
 import Button from "../ui/Button";
 import { ChevronLeft } from "lucide-react";

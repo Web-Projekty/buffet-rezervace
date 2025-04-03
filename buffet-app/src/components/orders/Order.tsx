@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { OrderItem, Order as OrderType, Variant } from "../../types";
+import { OrderItem, Order as OrderType, Variant } from "../../types/types";
 import { ChevronLeft } from "lucide-react";
 import { useOrder } from "../../hooks/useOrder";
 import OrderDetails from "./OrderDetails";

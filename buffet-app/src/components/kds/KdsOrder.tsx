@@ -1,4 +1,4 @@
-import { Order, OrderItem, Variant } from "../../types";
+import { Order, OrderItem, Variant } from "../../types/types";
 import Button from "../ui/Button";
 import { useOrder } from "../../hooks/useOrder";
 import OrderItems from "../orders/OrderItems";

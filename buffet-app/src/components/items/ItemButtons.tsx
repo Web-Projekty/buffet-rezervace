@@ -1,8 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { MinusCircle, PlusCircle } from "lucide-react";
-import { scaleUpAnimation, tapScaleAnimation } from "../../animations";
+import {
+  scaleUpAnimation,
+  tapScaleAnimation,
+} from "../../animations/animations";
 import useCart from "../../store/CartStore";
-import { MenuItem } from "../../types";
+import { MenuItem } from "../../types/types";
 
 type ItemButtonsProps = {
   item: MenuItem;
