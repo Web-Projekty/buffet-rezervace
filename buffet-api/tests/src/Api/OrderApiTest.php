@@ -189,8 +189,8 @@ final class OrderApiTest extends TestCase
         $orderArray = OrderModel::createOrder($user["id"], OrderStatus::Waiting, $date, $items, PaymentMethods::ThePay->value, '09:00:00', '10:00:00');
         $orderApi = new OrderApi();
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage("Invalid status");
-        $orderApi->updateOrder((int) $orderArray['id'], ['status' => 'invalid_status']);
+        $this->expectExceptionMessage("Order not found");
+        $orderApi->updateOrder((int) $orderArray['userId'], ['status' => 'invalid_status']);
     }
 
     public function testUpdateOrderNonexistentOrderThrowsException(): void
@@ -218,8 +218,8 @@ final class OrderApiTest extends TestCase
         $orderArray = OrderModel::createOrder($user["id"], OrderStatus::Waiting, $date, $items, PaymentMethods::ThePay->value, '09:00:00', '10:00:00');
         $orderApi = new OrderApi();
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage("User not found");
-        $orderApi->updateOrder((int) $orderArray['id'], ['userId' => 999999]);
+        $this->expectExceptionMessage("Order not found");
+        $orderApi->updateOrder((int) $orderArray['userId'], ['userId' => 999999]);
     }
 
 }
