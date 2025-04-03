@@ -14,11 +14,11 @@ export type Page =
   | "Historie"
   | "Profil"
   | "Kredity"
-  | "Systém"
+  // | "Systém"
   | "Databáze"
   | "Provoz"
-  | "Platby"
-  | "Účetnictví";
+  | "Platby";
+// | "Účetnictví";
 
 const Dashboard = () => {
   const { isAdmin, logout } = useUser();
@@ -44,16 +44,16 @@ const Dashboard = () => {
         return "Profil";
       case "kredity":
         return "Kredity";
-      case "system":
-        return "Systém";
+      // case "system":
+      //   return "Systém";
       case "databaze":
         return "Databáze";
       case "provoz":
         return "Provoz";
       case "platby":
         return "Platby";
-      case "ucetnictvi":
-        return "Účetnictví";
+      // case "ucetnictvi":
+      //   return "Účetnictví";
     }
   }, [searchParams]);
 
