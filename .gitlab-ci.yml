@@ -39,8 +39,8 @@ phpunit:
         paths:
             - buffet-api/tests/result/
         expire_in: 7 days
-    #rules: 
-    #    - if: '$CI_COMMIT_BRANCH == "main"'
+    rules: 
+        - if: '$CI_COMMIT_BRANCH == "main"'
 
 # Job to extract the coverage percentage from the PHPUnit output
 phpunit-coverage:
