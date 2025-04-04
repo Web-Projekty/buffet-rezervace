@@ -108,12 +108,12 @@ docker_build:
     #rules:
     #    - if: '$CI_COMMIT_BRANCH == "main"'
     cache:
-        key: docker
-        paths:
-        - /var/lib/docker
-        key: npm
-        paths:
-        - buffet-app/node_modules/
-        key: composer
-        paths:
-        - buffet-api/vendor
+        - key: docker
+          paths:
+            - /var/lib/docker
+        - key: npm
+          paths:
+            - buffet-app/node_modules/
+        - key: composer
+          paths:
+            - buffet-api/vendor
