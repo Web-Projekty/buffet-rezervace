@@ -95,6 +95,7 @@ class PaymentModel extends Model
         $pickupDate = OrderModel::query()->where("id", "=", $order[0]["id"])->first(["pickupDate"])->attributes["pickupDate"];
 
         var_dump($order);
+        $order[0]["paid"] = true;
         $order[0]["pickupDate"] = $pickupDate;
 
         WebsocketClient::send("kds", json_encode(["requestType" => "publish", "token" => JWTApi::getAdminToken(), "eventType" => EventTypes::CreateOrder, "payload" => ["data" => $order]]));
