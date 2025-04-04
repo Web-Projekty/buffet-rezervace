@@ -61,6 +61,10 @@ frontend-build-test:
         - cd buffet-app
         - npm install
         - npm run build
+    cache:
+        key: npm
+        paths:
+        - node_modules/
 
 docker_build:
     stage: Docker Image Build
