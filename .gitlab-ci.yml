@@ -16,8 +16,6 @@ phpstan:
     artifacts:
         reports:
             codequality: buffet-api/phpstan-result.json
-    rules: 
-        - if: '$CI_COMMIT_BRANCH == "main"'
         
 # Job to run PHPUnit tests and generate the coverage output
 phpunit:
@@ -39,8 +37,6 @@ phpunit:
         paths:
             - buffet-api/tests/result/
         expire_in: 7 days
-    rules: 
-        - if: '$CI_COMMIT_BRANCH == "main"'
 
 # Job to extract the coverage percentage from the PHPUnit output
 phpunit-coverage:
@@ -65,8 +61,6 @@ frontend-build-test:
         - cd buffet-app
         - npm install
         - npm run build
-    rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
 
 docker_build:
     stage: Docker Image Build
