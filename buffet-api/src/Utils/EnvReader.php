@@ -15,11 +15,11 @@ class EnvReader
     private static string $envPath = __DIR__ . "/../../conf/.env";
 
     /**
-     * @param Settings $needle
-     * @param bool $returnEmpty
+     * @param  Settings            $needle
+     * @param  bool                $returnEmpty
      * @throws SettingsException
      */
-    public static function getEnvProperty(Settings $needle, bool $returnEmpty = false): string|bool|null
+    public static function getEnvProperty(Settings $needle, bool $returnEmpty = false): string | bool | null
     {
         if (!file_exists(self::$envPath)) {
             self::createEnv();
@@ -37,20 +37,21 @@ class EnvReader
 
             $value = trim($line[1] ?? "");
 
-            if ($needle->value == $key && ($value != "" || $returnEmpty) ) {
+            if ($needle->value == $key && ($value != "" || $returnEmpty)) {
                 if ($value == "true") {
                     return true;
                 }
                 if ($value == "false") {
                     return false;
                 }
-                if($value == ""){
+                if ($value == "") {
                     return null;
                 }
                 return $value;
             }
         }
         self::createEnv();
+        //error_log("missing." . $needle->value);
         throw new SettingsException("The key " . $needle->value . " does not exist in the env file");
     }
 

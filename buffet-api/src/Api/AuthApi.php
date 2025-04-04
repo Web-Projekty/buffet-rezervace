@@ -21,7 +21,7 @@ class AuthApi
      * @return ApiResponse Api response
      */
 
-    function register(ApiResponse $response): ApiResponse
+    function register(ApiResponse $response, int $isAdmin = 0): ApiResponse
     {
         $username = $response->getRequestByKey("username");
         $password = $response->getRequestByKey("password");
@@ -53,7 +53,7 @@ class AuthApi
             return $response;
         }
 
-        if (UserModel::createUser(username: $username, password: $passwordHashed, fullName: $fullName, tel: $tel, email: $email)) {
+        if (UserModel::createUser(username: $username, password: $passwordHashed, fullName: $fullName, tel: $tel, email: $email, isAdmin: $isAdmin)) {
             return $response->setSuccess(Success::Registration);
         }
 

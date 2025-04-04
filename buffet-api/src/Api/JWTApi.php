@@ -7,6 +7,8 @@ namespace Buffet\Api;
 use Buffet\Database\Models\UserModel;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
+use Buffet\Types\Settings;
+use Buffet\Utils\EnvReader;
 use DomainException;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
@@ -33,7 +35,7 @@ class JWTApi
     {
         $isAdmin = UserModel::isAdmin($uid);
 
-        $key = 'example_key';
+        $key = EnvReader::getEnvProperty(Settings::JWTKey);
         $payload = [
             'iss' => $_SERVER['HTTP_HOST'],
             'iat' => time(),
@@ -71,7 +73,7 @@ class JWTApi
     function decodeToken(ApiResponse $response): ApiResponse | stdClass
     {
         $token = (string) $response->getRequestByKey('token');
-        $key = 'example_key';
+        $key = EnvReader::getEnvProperty(Settings::JWTKey);
         if ($token == "") {
             return $response->setError(Error::MissingToken);
         }

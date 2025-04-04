@@ -9,7 +9,8 @@ RUN apk add --no-cache \
     libzip-dev \
     oniguruma-dev \
     autoconf \
-    build-base
+    build-base \
+    sqlite
 
 # Install PHP extensions
 RUN apk add --no-cache php83-mysqli

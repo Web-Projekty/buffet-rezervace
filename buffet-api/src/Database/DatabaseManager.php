@@ -7,8 +7,6 @@ namespace Buffet\Database;
 use Buffet\Database\CredentialsManager;
 use Buffet\Types\ApiResponse;
 use Buffet\Types\Error;
-use Buffet\Types\Settings;
-use Buffet\Utils\EnvReader;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 class DatabaseManager
@@ -30,18 +28,18 @@ class DatabaseManager
 
     public function setupConnection(): void
     {
-        $creds = $this->credentialsManager->getCredentials();
-        if ($creds['success'] == true) {
+        if (!isset($GLOBALS["is_testing"])) {
+            $GLOBALS["is_testing"] = false;
+        }
+
+        if ($GLOBALS["is_testing"]) {
             // Eloquent ORM Capsule setup
             $this->capsule->addConnection([
-                'driver' => 'mysql',
-                'host' => $creds['db_host'] . ":" . $creds["db_port"],
-                'database' => $creds['db_name'],
-                'username' => $creds['db_user'],
-                'password' => $creds['db_pass'],
-                'charset' => 'utf8mb4',
-                'collation' => 'utf8mb4_czech_ci',
-                'prefix' => ''
+                'driver' => 'sqlite',
+                'url' => null,
+                'database' => __DIR__.'/../../test-db/database.sqlite',
+                'prefix' => '',
+                'foreign_key_constraints' => false
             ]);
 
             // Make the Capsule instance available globally via static methods
@@ -50,7 +48,28 @@ class DatabaseManager
             // Setup the Eloquent ORM
             $this->capsule->bootEloquent();
         } else {
-            $this->response->setError(Error::FailedDecrypt);
+            $creds = $this->credentialsManager->getCredentials();
+            if ($creds['success'] == true) {
+                // Eloquent ORM Capsule setup
+                $this->capsule->addConnection([
+                    'driver' => 'mysql',
+                    'host' => $creds['db_host'] . ":" . $creds["db_port"],
+                    'database' => $creds['db_name'],
+                    'username' => $creds['db_user'],
+                    'password' => $creds['db_pass'],
+                    'charset' => 'utf8mb4',
+                    'collation' => 'utf8mb4_czech_ci',
+                    'prefix' => ''
+                ]);
+
+                // Make the Capsule instance available globally via static methods
+                $this->capsule->setAsGlobal();
+
+                // Setup the Eloquent ORM
+                $this->capsule->bootEloquent();
+            } else {
+                $this->response->setError(Error::FailedDecrypt);
+            }
         }
     }
 }
