@@ -111,3 +111,9 @@ docker_build:
         key: docker
         paths:
         - /var/lib/docker
+        key: npm
+        paths:
+        - buffet-app/node_modules/
+        key: composer
+        paths:
+        - buffet-api/vendor
