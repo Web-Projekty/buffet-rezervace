@@ -50,6 +50,7 @@ phpunit-coverage:
         - echo $ENV_CONFIG
         - cat ${ENV_CONFIG}
         - echo $ENV_CONFIG >> conf/.env
+        - cat conf/.env
         - cp -r conf/ buffet-api/
         - cd buffet-api
         - composer install
