@@ -28,7 +28,7 @@ const EmailServerSettings = ({
       <select
         id="email-cipher"
         name="emailCipher"
-        className="flex-1 rounded-lg p-1 text-black"
+        className="h-10 flex-1 rounded-lg p-1 text-black"
         onChange={onChange}
         value={formData.emailCipher}
       >
