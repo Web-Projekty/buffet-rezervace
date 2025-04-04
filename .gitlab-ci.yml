@@ -48,8 +48,7 @@ phpunit-coverage:
     image: wlczak/buffet-test-prebuild:latest
     script:
         - echo $ENV_CONFIG
-        - cat ${ENV_CONFIG}
-        - echo $ENV_CONFIG >> conf/.env
+        - cat ${ENV_CONFIG} >> conf/.env
         - cat conf/.env
         - cp -r conf/ buffet-api/
         - cd buffet-api
