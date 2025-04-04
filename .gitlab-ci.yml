@@ -61,6 +61,7 @@ frontend-build-test:
         - cd buffet-app
         - npm install
         - npm run build
+        - echo "cache should work now"
     cache:
         key: npm
         paths:
