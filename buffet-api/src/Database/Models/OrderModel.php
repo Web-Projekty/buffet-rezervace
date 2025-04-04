@@ -128,14 +128,14 @@ class OrderModel extends Model
     }
 
     /**
-     * @param  int                                                                                                                                           $userId
-     * @param  OrderStatus                                                                                                                                   $status
-     * @param  string                                                                                                                                        $pickupDate
-     * @param  array<array{id:int,quantity:int,variants:array<int>}>                                                                                         $items
-     * @param  string                                                                                                                                        $paymentMethod
-     * @param  string                                                                                                                                        $startTime
-     * @param  string                                                                                                                                        $endTime
-     * @return array{userId:int,status:int,pickupDate:string,items:string,startTime:string,endTime:string,pickUpId:string,paymentMethod:string,url:string}
+     * @param  int                                                                                                                                                     $userId
+     * @param  OrderStatus                                                                                                                                             $status
+     * @param  string                                                                                                                                                  $pickupDate
+     * @param  array<array{id:int,quantity:int,variants:array<int>}>                                                                                                   $items
+     * @param  string                                                                                                                                                  $paymentMethod
+     * @param  string                                                                                                                                                  $startTime
+     * @param  string                                                                                                                                                  $endTime
+     * @return array{userId:int,status:int,pickupDate:string,items:string,startTime:string,endTime:string,pickUpId:string,paymentMethod:string,url:string,paid:bool}
      */
     public static function createOrder(int $userId, OrderStatus $status, string $pickupDate, array $items, string $paymentMethod, string $startTime, string $endTime): array
     {
@@ -174,6 +174,7 @@ class OrderModel extends Model
         $orderArray['pickUpDate'] = $pickupDate;
 
         $orderArray['url'] = PaymentModel::query()->find($paymentId)->toArray()['thePayUrl'];
+        $orderArray['paid'] = PaymentModel::query()->find($paymentId)->toArray()['paid'];
         return $orderArray;
     }
 
