@@ -5,6 +5,7 @@ declare (strict_types = 1);
 namespace Buffet\Types;
 
 use Buffet\Types\Exceptions\NegativeValueException;
+use DateException;
 
 class Time
 {
@@ -182,6 +183,9 @@ class Time
     public static function fromString(string $time): Time
     {
         $time = explode(":", $time);
+        if (sizeof($time) == 1) {
+            throw new DateException();
+        }
         if (sizeof($time) === 2) {
             return new Time((int) $time[0], (int) $time[1]);
         }

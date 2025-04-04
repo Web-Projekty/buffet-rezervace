@@ -5,6 +5,7 @@ namespace Buffet\Types;
 
 enum Settings: string {
     case DecryptKey = 'DECRYPT_KEY';
+    case JWTKey = 'JWT_KEY';
 
     case DBHost = "DB_HOST";
     case DBPort = "DB_PORT";

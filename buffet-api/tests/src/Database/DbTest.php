@@ -1,0 +1,29 @@
+<?php
+
+declare (strict_types = 1);
+
+use Buffet\Database\DatabaseManager;
+use Buffet\Database\Models\UserModel;
+use Buffet\Types\ApiResponse;
+use Buffet\Types\Settings;
+use Buffet\Utils\EnvWriter;
+use PHPUnit\Framework\TestCase;
+
+class DbTest extends TestCase
+{
+    protected function setUp(): void
+    {
+        EnvWriter::write(Settings::IsProd, "false");
+        if (!isset($GLOBALS["is_db_setupped"])) {
+            $dbMan = new DatabaseManager(new ApiResponse());
+            $GLOBALS["is_testing"] = true;
+            $dbMan->setupConnection();
+            $GLOBALS["is_db_setupped"] = true;
+        }
+    }
+
+    public function testDbSetup(): void
+    {
+        $this->assertSame("success@example.com",UserModel::query()->first()->toArray()["email"]);
+    }
+}

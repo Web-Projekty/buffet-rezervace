@@ -21,7 +21,7 @@ class VariantModel extends Model
     /**
      * @var array<string>
      */
-    protected $fillable = ['itemId', 'name', 'addedPrice', 'isExclusive', "created_at", "updated_at"];
+    protected $fillable = ['id', 'itemId', 'name', 'addedPrice', 'isExclusive', "created_at", "updated_at"];
 
     // Optionally, disable timestamps if the table doesn't have them
 
@@ -77,7 +77,7 @@ class VariantModel extends Model
     /**
      * @param array<int> $variantIds
      */
-    public static function getByIdArray(array $variantIds) : Collection
+    public static function getByIdArray(array $variantIds): Collection
     {
         $query = self::query();
         foreach ($variantIds as $variantId) {

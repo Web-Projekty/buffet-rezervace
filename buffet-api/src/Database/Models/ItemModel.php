@@ -21,7 +21,7 @@ class ItemModel extends Model
     /**
      * @var array<string>
      */
-    protected $fillable = ['name', 'price', 'description', 'allergens', 'category'];
+    protected $fillable = ['name', 'price', 'description', 'allergens', 'category', 'image'];
 
     /**
      * @var bool
