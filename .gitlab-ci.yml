@@ -105,8 +105,8 @@ docker_build:
         - npm --version
         - composer diagnose
         - sh docker_build_buffet.sh
-    #rules:
-    #    - if: '$CI_COMMIT_BRANCH == "main"'
+    rules:
+        - if: '$CI_COMMIT_BRANCH == "main"'
     cache:
         - key: docker
           paths:
