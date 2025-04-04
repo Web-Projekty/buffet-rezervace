@@ -22,7 +22,7 @@ phpunit:
     stage: Tests
     image: wlczak/buffet-test-prebuild:latest
     script:
-        - echo ${ENV_CONFIG} >> conf/.env
+        - cat ${ENV_CONFIG} >> conf/.env
         - cp -r conf/ buffet-api/
         - cd buffet-api
         - composer install
