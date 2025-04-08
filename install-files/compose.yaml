@@ -1,0 +1,43 @@
+services:
+    # PHP and Apache Web Server
+    web:
+        image: wlczak/buffet:latest
+        pull_policy: always
+        container_name: buffet-web
+        environment:
+            TZ: Europe/Prague
+        volumes:
+            - ./conf/:/var/www/html/conf/:rw
+        ports:
+            - "{ENV_PORT}:80"
+        depends_on:
+            - db
+
+    # MariaDB Database Service
+    db:
+        image: mariadb:latest
+        container_name: buffet-db
+        environment:
+            MYSQL_ROOT_PASSWORD: {DB_ROOT_PASSWORD}
+            MYSQL_DATABASE: buffet
+            MYSQL_USER: {DB_USERNAME}
+            MYSQL_PASSWORD: {DB_PASSWORD}
+        volumes:
+            - db_data:/var/lib/mysql
+            - ./sql:/docker-entrypoint-initdb.d/
+        #ports:
+        #  - "3306:3306"
+
+    # Uptime Kuma Monitoring Service
+    kuma:
+        image: louislam/uptime-kuma:1
+        container_name: buffet-kuma
+        restart: always
+        volumes:
+            - uptime_kuma:/app/data
+        ports:
+            - "{DCKR_KUMA_PORT}:3001"
+
+volumes:
+    db_data:
+    uptime_kuma:
