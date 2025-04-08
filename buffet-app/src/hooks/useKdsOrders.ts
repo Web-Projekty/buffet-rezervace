@@ -47,24 +47,15 @@ export const useKdsOrders = () => {
                 const existingOrder = prevOrders[existingOrderIndex];
 
                 if (!existingOrder.paid && incomingOrder.paid) {
-                  console.log(
-                    `Order ${incomingOrder.id} payment status updated to paid`,
-                  );
-
                   return [
                     ...prevOrders.slice(0, existingOrderIndex),
                     incomingOrder,
                     ...prevOrders.slice(existingOrderIndex + 1),
                   ];
                 }
-
-                console.log(
-                  `Order ${incomingOrder.id} already exists, no payment update needed`,
-                );
                 return prevOrders;
               }
 
-              // If it's a new order, add it to the list
               return [...prevOrders, incomingOrder];
             });
           }
@@ -81,12 +72,10 @@ export const useKdsOrders = () => {
               ...prevOrders.slice(index + 1),
             ];
           });
-          console.log("Order updated:", message.payload.data);
         } else {
           setOrders(message.payload.data);
           setItems(message.payload.items ? message.payload.items : []);
           setVariants(message.payload.variants ? message.payload.variants : []);
-          console.log("Set all new orders:", message.payload);
         }
       },
       // onOpen
@@ -124,7 +113,14 @@ export const useKdsOrders = () => {
               if (a.status === "preparing" && b.status === "sent") return -1;
               if (a.status === "sent" && b.status === "preparing") return 1;
 
-              return a.pickupDate.localeCompare(b.pickupDate);
+              const dateTimeA = new Date(
+                `${a.pickupDate}T${a.startTime}`,
+              ).getTime();
+              const dateTimeB = new Date(
+                `${b.pickupDate}T${b.startTime}`,
+              ).getTime();
+
+              return dateTimeA - dateTimeB;
             })
         : [],
     [orders],
@@ -135,7 +131,16 @@ export const useKdsOrders = () => {
       orders
         ? orders
             .filter((order) => order.status === "waiting")
-            .sort((b, a) => a.pickupDate.localeCompare(b.pickupDate))
+            .sort((a, b) => {
+              const dateTimeA = new Date(
+                `${a.pickupDate}T${a.startTime}`,
+              ).getTime();
+              const dateTimeB = new Date(
+                `${b.pickupDate}T${b.startTime}`,
+              ).getTime();
+
+              return dateTimeA - dateTimeB;
+            })
         : [],
     [orders],
   );
