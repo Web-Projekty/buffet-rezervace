@@ -84,6 +84,7 @@ jobs:
                   touch test-db/database.sqlite
                   sqlite3 test-db/database.sqlite < test-db/testing.db
                   ./vendor/bin/phpunit tests --coverage-clover clover.xml
+                  tree
             - name: Coverage Check
               uses: docker://ghcr.io/ericsizemore/phpunit-coverage-check-action
               with:
