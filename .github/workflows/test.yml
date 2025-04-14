@@ -61,13 +61,6 @@ jobs:
                   key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
                   restore-keys: |
                       ${{ runner.os }}-php-
-    write_config:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Write secret to file
-              run: |
-                 echo "${{ secrets.ENV_CONFIG }}" > config.txt
-                 cat config.txt
     phpunit:
         runs-on: ubuntu-latest
         container:
