@@ -83,9 +83,9 @@ jobs:
             - name: Coverage Check
               uses: docker://ghcr.io/ericsizemore/phpunit-coverage-check-action
               with:
+                  threshold: 100
                   relative_dir: ./buffet-api
                   clover_file: "clover.xml"
-                  threshold: 100
             - name: Upload PHPUnit Coverage HTML
               uses: actions/upload-artifact@v4
               with:
