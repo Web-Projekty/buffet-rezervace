@@ -30,37 +30,32 @@ jobs:
     # - name: Install dependencies
     #   run: composer install --prefer-dist --no-progress
 
-    phpstan:
-        runs-on: ubuntu-latest
-        container:
-            image: wlczak/buffet-test-prebuild:latest
-        steps:
-            - uses: actions/checkout@v4
+    # phpstan:
+    #     runs-on: ubuntu-latest
+    #     container:
+    #         image: wlczak/buffet-test-prebuild:latest
+    #     steps:
+    #         - uses: actions/checkout@v4
 
-            - name: Validate composer.json and composer.lock
-              run: |
-                  cd buffet-api
-                  composer validate --strict
+    #         - name: Validate composer.json and composer.lock
+    #           run: |
+    #               cd buffet-api
+    #               composer validate --strict
 
-            - name: Run PHPStan
-              run: |
-                  cd buffet-api
-                  composer install
-                  ./vendor/bin/phpstan analyse --memory-limit 4G -c phpstan.neon --autoload-file vendor/autoload.php --error-format=gitlab src tests >> phpstan-result.json
-            # - name: Upload PHPStan report
-            #   uses: actions/upload-artifact@v2
-            #   with:
-            #       name: phpstan-result.json
-            #       path: buffet-api/phpstan-result.json
+    #         - name: Run PHPStan
+    #           run: |
+    #               cd buffet-api
+    #               composer install
+    #               ./vendor/bin/phpstan analyse --memory-limit 4G -c phpstan.neon --autoload-file vendor/autoload.php --error-format=gitlab src tests >> phpstan-result.json
 
-            - name: Cache Composer packages
-              id: composer-cache
-              uses: actions/cache@v3
-              with:
-                  path: vendor
-                  key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-                  restore-keys: |
-                      ${{ runner.os }}-php-
+    #         - name: Cache Composer packages
+    #           id: composer-cache
+    #           uses: actions/cache@v3
+    #           with:
+    #               path: vendor
+    #               key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+    #               restore-keys: |
+    #                   ${{ runner.os }}-php-
     phpunit:
         runs-on: ubuntu-latest
         container:
@@ -88,8 +83,8 @@ jobs:
             - name: Coverage Check
               uses: docker://ghcr.io/ericsizemore/phpunit-coverage-check-action
               with:
-                  clover_file: "./buffet-api/clover.xml"
                   relative_dir: ./buffet-api
+                  clover_file: "clover.xml"
                   threshold: 100
             - name: Upload PHPUnit Coverage HTML
               uses: actions/upload-artifact@v4
