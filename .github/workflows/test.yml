@@ -96,14 +96,15 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - name: Build Frontend
+              
               uses: actions/cache@v3
               with:
                   path: buffet-app/node_modules
                   key: npm-${{ hashFiles('**/package-lock.json') }}
-                  run: |
-                      cd buffet-app
-                      npm install
-                      npm run build
+            - run: |
+                  cd buffet-app
+                  npm install
+                  npm run build
             - name: Cache node modules
               uses: actions/cache@v3
               with:
