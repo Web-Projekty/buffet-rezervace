@@ -65,7 +65,9 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Write secret to file
-              run: echo "${{ secrets.CONFIG_FILE }}" > config.txt
+              run: |
+                 echo "${{ secrets.CONFIG_FILE }}" > config.txt
+                 cat config.txt
     phpunit:
         runs-on: ubuntu-latest
         container:
