@@ -75,12 +75,6 @@ jobs:
                   touch test-db/database.sqlite
                   sqlite3 test-db/database.sqlite < test-db/testing.db
                   ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-html tests/result --display-deprecations --display-phpunit-deprecations --fail-on-deprecation --fail-on-phpunit-deprecation
-                  rm -f test-db/database.sqlite
-                  touch test-db/database.sqlite
-                  sqlite3 test-db/database.sqlite < test-db/testing.db
-                  ./vendor/bin/phpunit tests --coverage-clover clover.xml
-                  tree
-                  mv clover.xml ../
             - name: Upload PHPUnit Coverage HTML
               uses: actions/upload-artifact@v4
               with:
