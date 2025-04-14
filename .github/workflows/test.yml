@@ -61,14 +61,19 @@ jobs:
                   key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
                   restore-keys: |
                       ${{ runner.os }}-php-
+    write_config:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Write secret to file
+              run: echo "${{ secrets.CONFIG_FILE }}" > config.txt
     phpunit:
         runs-on: ubuntu-latest
         container:
             image: wlczak/buffet-test-prebuild:latest
         steps:
             - uses: actions/checkout@v4
-              env: 
-                ENV_CONFIG: ${{ secrets.ENV_CONFIG }}
+              env:
+                  ENV_CONFIG: ${{ secrets.ENV_CONFIG }}
             - name: Run PHPUnit Tests
               run: |
                   echo "${ENV_CONFIG}"
