@@ -67,10 +67,12 @@ jobs:
             image: wlczak/buffet-test-prebuild:latest
         steps:
             - uses: actions/checkout@v4
+              env: 
+                ENV_CONFIG: ${{ secrets.ENV_CONFIG }}
             - name: Run PHPUnit Tests
               run: |
                   cat ${ENV_CONFIG} >> conf/.env
-                  echo ${ENV_CONFIG} 
+                  echo ${ENV_CONFIG}
                   cp -r conf/ buffet-api/
                   cd buffet-api
                   composer install
