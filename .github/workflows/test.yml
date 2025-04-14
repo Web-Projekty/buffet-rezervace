@@ -36,6 +36,8 @@ jobs:
     container:
       image: wlczak/buffet-test-prebuild:latest
     steps:
+    - uses: actions/checkout@v4
+    
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
 
@@ -48,7 +50,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-php-
 
-    - uses: actions/checkout@v4
     - name: Run PHPStan
       run: |
           cd buffet-api
