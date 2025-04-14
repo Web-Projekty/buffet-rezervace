@@ -80,7 +80,7 @@ jobs:
                   touch test-db/database.sqlite
                   sqlite3 test-db/database.sqlite < test-db/testing.db
                   ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-html tests/result --display-deprecations --display-phpunit-deprecations --fail-on-deprecation --fail-on-phpunit-deprecation
-                  ./vendor/bin/phpunit --coverage-clover clover.xml
+                  ./vendor/bin/phpunit tests --coverage-clover clover.xml
             - name: Coverage Check
               uses: docker://ghcr.io/ericsizemore/phpunit-coverage-check-action
               with:
