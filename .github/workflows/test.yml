@@ -8,28 +8,62 @@ on:
     branches:
       - '**'
 
+permissions:
+  contents: read
+
 jobs:
+
+    # steps:
+    # - uses: actions/checkout@v4
+
+    # - name: Validate composer.json and composer.lock
+    #   run: composer validate --strict
+
+    # - name: Cache Composer packages
+    #   id: composer-cache
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: vendor
+    #     key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-php-
+
+    # - name: Install dependencies
+    #   run: composer install --prefer-dist --no-progress
+  
   phpstan:
     runs-on: ubuntu-latest
     container:
       image: wlczak/buffet-test-prebuild:latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Run PHPStan
-        run: |
+    - name: Validate composer.json and composer.lock
+      run: composer validate --strict
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - uses: actions/checkout@v4
+    - name: Run PHPStan
+      run: |
           cd buffet-api
           composer install
           ./vendor/bin/phpstan analyse --memory-limit 4G -c phpstan.neon --autoload-file vendor/autoload.php --error-format=gitlab src tests >> phpstan-result.json
-      - name: Upload PHPStan report
-        uses: actions/upload-artifact@v2
-        with:
-          name: phpstan-result.json
-          path: buffet-api/phpstan-result.json
-      - name: Cache composer dependencies
-        uses: actions/cache@v2
-        with:
-          path: buffet-api/vendor
-          key: composer-${{ hashFiles('**/composer.lock') }}
+    - name: Upload PHPStan report
+      uses: actions/upload-artifact@v2
+      with:
+        name: phpstan-result.json
+        path: buffet-api/phpstan-result.json
+    - name: Cache composer dependencies
+      uses: actions/cache@v2
+      with:
+        path: buffet-api/vendor
+        key: composer-${{ hashFiles('**/composer.lock') }}
 
   # phpunit:
   #   runs-on: ubuntu-latest
