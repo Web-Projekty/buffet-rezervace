@@ -66,6 +66,7 @@ phpunit-coverage:
         paths:
         - buffet-api/vendor
 
+# Test frontend build
 frontend-build-test:
     stage: Frontend Build Test
     image: node:latest
