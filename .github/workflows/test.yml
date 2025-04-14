@@ -61,33 +61,36 @@ jobs:
                   key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
                   restore-keys: |
                       ${{ runner.os }}-php-
-    # phpunit:
-    #   runs-on: ubuntu-latest
-    #   container:
-    #     image: wlczak/buffet-test-prebuild:latest
-    #   steps:
-    #     - uses: actions/checkout@v2
-    #     - name: Run PHPUnit Tests
-    #       run: |
-    #         cat ${ENV_CONFIG} >> conf/.env
-    #         cp -r conf/ buffet-api/
-    #         cd buffet-api
-    #         composer install
-    #         chown -R 1000:1000 conf/
-    #         rm -f test-db/database.sqlite
-    #         touch test-db/database.sqlite
-    #         sqlite3 test-db/database.sqlite < test-db/testing.db
-    #         ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-html tests/result --display-deprecations --display-phpunit-deprecations --fail-on-deprecation --fail-on-phpunit-deprecation
-    #     - name: Upload PHPUnit Coverage HTML
-    #       uses: actions/upload-artifact@v2
-    #       with:
-    #         name: phpunit-coverage-html
-    #         path: buffet-api/tests/result/
-    #     - name: Cache composer dependencies
-    #       uses: actions/cache@v2
-    #       with:
-    #         path: buffet-api/vendor
-    #         key: composer-${{ hashFiles('**/composer.lock') }}
+    phpunit:
+        runs-on: ubuntu-latest
+        container:
+            image: wlczak/buffet-test-prebuild:latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Run PHPUnit Tests
+              run: |
+                  cat ${ENV_CONFIG} >> conf/.env
+                  cp -r conf/ buffet-api/
+                  cd buffet-api
+                  composer install
+                  chown -R 1000:1000 conf/
+                  rm -f test-db/database.sqlite
+                  touch test-db/database.sqlite
+                  sqlite3 test-db/database.sqlite < test-db/testing.db
+                  ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-html tests/result --display-deprecations --display-phpunit-deprecations --fail-on-deprecation --fail-on-phpunit-deprecation
+            - name: Upload PHPUnit Coverage HTML
+              uses: actions/upload-artifact@v2
+              with:
+                  name: phpunit-coverage-html
+                  path: buffet-api/tests/result/
+            - name: Cache Composer packages
+              id: composer-cache
+              uses: actions/cache@v3
+              with:
+                  path: vendor
+                  key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-php-
 
     # phpunit-coverage:
     #   runs-on: ubuntu-latest
