@@ -78,8 +78,8 @@ jobs:
                   ENV_CONFIG: ${{ secrets.ENV_CONFIG }}
             - name: Run PHPUnit Tests
               run: |
-                  echo "${ENV_CONFIG}"
-                  echo "${ENV_CONFIG}" >> conf/.env
+                  echo "${{ secrets.ENV_CONFIG }}"
+                  echo "${{ secrets.ENV_CONFIG }}" >> conf/.env
                   cp -r conf/ buffet-api/
                   cd buffet-api
                   composer install
