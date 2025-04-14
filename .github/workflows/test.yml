@@ -1,0 +1,135 @@
+name: CI Pipeline
+
+on:
+    push:
+        branches:
+            - "**"
+    pull_request:
+        branches:
+            - "**"
+
+permissions:
+    contents: read
+
+jobs:
+    phpstan:
+        runs-on: ubuntu-latest
+        container:
+            image: wlczak/buffet-test-prebuild:latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Validate composer.json and composer.lock
+              run: |
+                  cd buffet-api
+                  composer validate --strict
+            - name: Cache Composer packages
+              id: composer-cache
+              uses: actions/cache@v3
+              with:
+                  path: buffet-api/vendor
+                  key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-php-
+            - name: Run PHPStan
+              run: |
+                  cd buffet-api
+                  composer install
+                  ./vendor/bin/phpstan analyse --memory-limit 4G -c phpstan.neon --autoload-file vendor/autoload.php --error-format=gitlab src tests >> phpstan-result.json
+
+    phpunit:
+        runs-on: ubuntu-latest
+        container:
+            image: wlczak/buffet-test-prebuild:latest
+        steps:
+            - uses: actions/checkout@v4
+              env:
+                  ENV_CONFIG: ${{ secrets.ENV_CONFIG }}
+
+            - name: Cache Composer packages
+              id: composer-cache
+              uses: actions/cache@v3
+              with:
+                  path: buffet-api/vendor
+                  key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-php-
+            - name: Run PHPUnit Tests
+              run: |
+                  echo "${{ secrets.ENV_CONFIG }}" >> conf/.env
+                  cp -r conf/ buffet-api/
+                  cd buffet-api
+                  composer install
+                  chown -R 1000:1000 conf/
+                  rm -f test-db/database.sqlite
+                  touch test-db/database.sqlite
+                  sqlite3 test-db/database.sqlite < test-db/testing.db
+                  ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-html tests/result --display-deprecations --display-phpunit-deprecations --fail-on-deprecation --fail-on-phpunit-deprecation
+            - name: Upload PHPUnit Coverage HTML
+              uses: actions/upload-artifact@v4
+              with:
+                  name: phpunit-coverage-html
+                  path: buffet-api/tests/result/
+
+    frontend-build-test:
+        runs-on: ubuntu-latest
+        container:
+            image: node:latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Cache node modules
+
+              uses: actions/cache@v3
+              with:
+                  path: buffet-app/node_modules
+                  key: npm-${{ hashFiles('**/package-lock.json') }}
+            - name: Build frontend
+              run: |
+                  cd buffet-app
+                  npm install
+                  npm run build
+
+    # docker_build:
+    #     # sadasdif: github.ref == 'refs/heads/main'
+    #     runs-on: ubuntu-latest
+    #     container:
+    #         image: wlczak/buffet-builder:latest
+    #         options: --pull always
+    #     env:
+    #         DOCKER_DRIVER: overlay2
+    #         DOCKER_TLS_CERTDIR: ""
+    #     services:
+    #         docker:
+    #             image: docker:27.3.1-dind
+    #             options: --tls=false
+    #     steps:
+    #         - uses: actions/checkout@v4
+    #         - name: Check Docker version and info
+    #           run: |
+    #               docker version
+    #               docker info
+    #         - name: Create build date
+    #           run: |
+    #               date > buffet-api/build_date
+    #               cat buffet-api/build_date
+    #         - name: Cache node modules
+    #           uses: actions/cache@v3
+    #           with:
+    #               path: buffet-app/node_modules
+    #               key: npm-${{ hashFiles('**/package-lock.json') }}
+    #         - name: Cache composer dependencies
+    #           uses: actions/cache@v3
+    #           with:
+    #               path: buffet-api/vendor
+    #               key: composer-${{ hashFiles('**/composer.lock') }}
+    #         - name: Execute Docker build script
+    #           run: |
+    #               cd scripts
+    #               npm --version
+    #               composer diagnose
+    #               sh docker_build_buffet.sh
+    # - name: Cache Docker data
+    #   uses: actions/cache@v3
+    #   with:
+    #       path: /var/lib/docker
+    #       key: docker
