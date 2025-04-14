@@ -86,7 +86,7 @@ jobs:
               with:
                   threshold: 100
                   relative_dir: ./buffet-api
-                  clover_file: "buffet-api/clover.xml"
+                  clover_file: "clover.xml"
             - name: Upload PHPUnit Coverage HTML
               uses: actions/upload-artifact@v4
               with:
