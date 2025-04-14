@@ -95,21 +95,17 @@ jobs:
             image: node:latest
         steps:
             - uses: actions/checkout@v4
-            - name: Build Frontend
-              
+            - name: Cache node modules
+
               uses: actions/cache@v3
               with:
                   path: buffet-app/node_modules
                   key: npm-${{ hashFiles('**/package-lock.json') }}
-            - run: |
+            - name: Build frontend
+              run: |
                   cd buffet-app
                   npm install
                   npm run build
-            - name: Cache node modules
-              uses: actions/cache@v3
-              with:
-                  path: buffet-app/node_modules
-                  key: npm-${{ hashFiles('**/package-lock.json') }}
 
     # docker_build:
     #   if: github.ref == 'refs/heads/main'
