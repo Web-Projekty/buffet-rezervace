@@ -79,7 +79,7 @@ jobs:
                   sqlite3 test-db/database.sqlite < test-db/testing.db
                   ./vendor/bin/phpunit tests --testdox --colors=always --coverage-text --coverage-html tests/result --display-deprecations --display-phpunit-deprecations --fail-on-deprecation --fail-on-phpunit-deprecation
             - name: Upload PHPUnit Coverage HTML
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v4
               with:
                   name: phpunit-coverage-html
                   path: buffet-api/tests/result/
