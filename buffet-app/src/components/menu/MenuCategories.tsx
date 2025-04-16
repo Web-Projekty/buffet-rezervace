@@ -1,4 +1,4 @@
-import { Category } from "../../types";
+import { Category } from "../../types/types";
 import HorizontalPaging from "../ui/HorizontalPaging";
 import MenuCategory from "./MenuCategory";
 

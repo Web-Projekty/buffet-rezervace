@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Order, OrderItem, OrderStatus, Variant } from "../types";
-import { updateOrder } from "../components/utils/api";
-import { formatDate, mapItemsWithOrders } from "../components/utils/utils";
+import { Order, OrderItem, OrderStatus, Variant } from "../types/types";
+import { updateOrder } from "../utils/api";
+import { formatDate, mapItemsWithOrders } from "../utils/utils";
 import toast from "react-hot-toast";
-import { toastMessages } from "../components/utils/toastMessages";
+import { toastMessages } from "../utils/toastMessages";
 
 export type HandleStatusReturn = {
   order: Order;

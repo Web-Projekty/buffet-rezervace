@@ -1,4 +1,4 @@
-import { MappedOrderItem } from "../../types";
+import { MappedOrderItem } from "../../types/types";
 import OrderPrice from "./OrderPrice";
 import OrderItem from "./OrderItem";
 import { twMerge } from "tailwind-merge";
@@ -6,9 +6,10 @@ import { twMerge } from "tailwind-merge";
 type OrderItemsProps = {
   mappedItems: MappedOrderItem[];
   className?: string;
+  isPaid?: boolean;
 };
 
-const OrderItems = ({ mappedItems, className }: OrderItemsProps) => {
+const OrderItems = ({ mappedItems, className, isPaid }: OrderItemsProps) => {
   return (
     <div className={twMerge("flex flex-col gap-2", className)}>
       <ul className="flex flex-col">
@@ -17,7 +18,7 @@ const OrderItems = ({ mappedItems, className }: OrderItemsProps) => {
         })}
       </ul>
       <hr className="w-full" />
-      <OrderPrice items={mappedItems} />
+      <OrderPrice items={mappedItems} isPaid={isPaid} />
     </div>
   );
 };

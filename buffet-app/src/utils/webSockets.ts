@@ -1,4 +1,4 @@
-import { WEBSOCKET_URL } from "../../constants";
+import { WEBSOCKET_URL } from "../constants/constants";
 
 type WebSocketMessage = {
   requestType: string;

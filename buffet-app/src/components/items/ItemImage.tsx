@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Allergen } from "../../types";
+import { Allergen } from "../../types/types";
 import LazyImage from "../ui/LazyImage";
 import { AnimatePresence, motion } from "framer-motion";
 import ItemAllergensInfo from "./ItemAllergensInfo";

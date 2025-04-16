@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
-import { MappedOrderItem } from "../../types";
-import { formatCurrency, getVariantsPrice } from "../utils/utils";
+import { MappedOrderItem } from "../../types/types";
+import { formatCurrency, getVariantsPrice } from "../../utils/utils";
 
 type OrderItemProps = {
   item: MappedOrderItem;

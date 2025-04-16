@@ -6,12 +6,10 @@ const Profile = lazy(() => import("./Profile"));
 const OrderTracking = lazy(() => import("./userContent/OrderTracking"));
 const OrderHistory = lazy(() => import("./userContent/OrderHistory"));
 const Credits = lazy(() => import("./userContent/Credits"));
-const AdminOverview = lazy(() => import("./adminContent/AdminOverview"));
 const AdminSystem = lazy(() => import("./adminContent/AdminSystem"));
 const AdminDatabase = lazy(() => import("./adminContent/AdminDatabase"));
 const AdminService = lazy(() => import("./adminContent/AdminService"));
 const AdminPayments = lazy(() => import("./adminContent/AdminPayments"));
-const AdminAccounting = lazy(() => import("./adminContent/AdminAccounting"));
 const PageNotFound = lazy(() => import("../error/PageNotFound"));
 
 type DashboardContentProps = {
@@ -25,12 +23,10 @@ type Pages = {
 
 const adminPages: Pages = {
   Profil: <Profile />,
-  Přehled: <AdminOverview />,
   Systém: <AdminSystem />,
   Databáze: <AdminDatabase />,
   Provoz: <AdminService />,
   Platby: <AdminPayments />,
-  Účetnictví: <AdminAccounting />,
 };
 
 const userPages: Pages = {

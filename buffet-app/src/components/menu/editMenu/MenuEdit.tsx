@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useState } from "react";
-import { Category, MenuItem as MenuItemType } from "../../../types";
+import { Category, MenuItem as MenuItemType } from "../../../types/types";
 import ErrorComponent from "../../error/ErrorComponent";
 import Loading from "../../ui/Loading";
 import useMenu from "../../../hooks/useMenu";

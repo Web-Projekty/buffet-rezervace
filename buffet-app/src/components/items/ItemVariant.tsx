@@ -1,6 +1,6 @@
 import { CartItem, CartItems } from "../../store/CartStore";
-import { Variant } from "../../types";
-import { formatCurrency } from "../utils/utils";
+import { Variant } from "../../types/types";
+import { formatCurrency } from "../../utils/utils";
 
 type ItemVariantProps = {
   id: CartItem["id"];

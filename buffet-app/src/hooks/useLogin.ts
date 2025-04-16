@@ -2,10 +2,10 @@ import { useState } from "react";
 import axios from "axios";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FETCH_URL } from "../constants";
-import { setTokenExpiration } from "../components/utils/auth";
+import { FETCH_URL } from "../constants/constants";
+import { setTokenExpiration } from "../utils/auth";
 import toast from "react-hot-toast";
-import { toastMessages } from "../components/utils/toastMessages";
+import { toastMessages } from "../utils/toastMessages";
 
 type UseLoginReturn = {
   loading: boolean;
@@ -27,6 +27,18 @@ export type UserData = {
   class: string;
 };
 
+type LoginResponse = {
+  status: string;
+  payload: {
+    token: string;
+    username: string;
+    fullName: string;
+    email: string;
+    isAdmin: boolean;
+    class: string;
+  };
+};
+
 export const useLogin = (loginData: LoginData): UseLoginReturn => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -39,10 +51,10 @@ export const useLogin = (loginData: LoginData): UseLoginReturn => {
   const login = async (url?: string) => {
     try {
       setLoading(true);
-      const { data } = await axios.post(FETCH_URL, loginData);
+      const { data } = await axios.post<LoginResponse>(FETCH_URL, loginData);
 
       const success: boolean = data.status === "success";
-      const isAdmin = data.payload.isAdmin === 1;
+      const isAdmin = data.payload.isAdmin;
 
       if (success) {
         signIn({

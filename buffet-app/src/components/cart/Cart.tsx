@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
 import useCart from "../../store/CartStore";
 import { useNavigate } from "react-router-dom";
-import { scaleUpAnimation } from "../../animations";
+import { scaleUpAnimation } from "../../animations/animations";
 import EmptyCart from "./EmptyCart";
 import CartItem from "./CartItem";
 import Button from "../ui/Button";
 import toast from "react-hot-toast";
-import { toastMessages } from "../utils/toastMessages";
+import { toastMessages } from "../../utils/toastMessages";
 import { useEffect } from "react";
 
 type CartProps = {

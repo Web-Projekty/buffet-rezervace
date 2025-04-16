@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { scaleUpAnimation } from "../../animations";
+import { scaleUpAnimation } from "../../animations/animations";
 import { useUser } from "../../hooks/useUser";
 
 const AccountInformation = () => {

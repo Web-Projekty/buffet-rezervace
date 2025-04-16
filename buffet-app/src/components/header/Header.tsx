@@ -4,7 +4,7 @@ import SchoolLogo from "../../assets/images/logo-white_alfa.png";
 import Navbar from "../nav/Navbar";
 import { useEffect, useState } from "react";
 import { motion, useAnimation } from "framer-motion";
-import { fadeInAnimation } from "../../animations";
+import { fadeInAnimation } from "../../animations/animations";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);

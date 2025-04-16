@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import HorizontalPaging from "../../ui/HorizontalPaging";
-import { getTimeSlots, TimeSlotsApi } from "../../utils/api";
-import { Date as DateType, Hour, Minute } from "../../../types";
+import { getTimeSlots, TimeSlotsApi } from "../../../utils/api";
+import { Date as DateType, Hour, Minute } from "../../../types/types";
 import Loading from "../../ui/Loading";
 import FetchError from "../../error/FetchError";
 import { useQuery } from "@tanstack/react-query";

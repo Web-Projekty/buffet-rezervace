@@ -1,6 +1,11 @@
 import toast from "react-hot-toast";
-import { MappedOrderItem, OrderItem, OrderItems, Variant } from "../../types";
-import { CartItem } from "../../store/CartStore";
+import {
+  MappedOrderItem,
+  OrderItem,
+  OrderItems,
+  Variant,
+} from "../types/types";
+import { CartItem } from "../store/CartStore";
 
 export const formatCurrency = (number: number): string => {
   return new Intl.NumberFormat("cs-CZ", {

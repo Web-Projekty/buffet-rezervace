@@ -1,4 +1,4 @@
-import { CartItem } from "./store/CartStore";
+import { CartItem } from "../store/CartStore";
 
 export type User = {
   id: number;

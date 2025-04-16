@@ -1,7 +1,7 @@
-import { MenuItem, Order, OrderItem, Variant } from "../types";
+import { MenuItem, Order, OrderItem, Variant } from "../types/types";
 import { useUser } from "./useUser";
 import { useEffect, useState, useMemo, useRef } from "react";
-import { WebSocketService } from "../components/utils/webSockets";
+import { WebSocketService } from "../utils/webSockets";
 
 export const useKdsOrders = () => {
   const { token } = useUser();
@@ -31,14 +31,34 @@ export const useKdsOrders = () => {
       // onMessage
       (message) => {
         if (message.eventType === "createOrder") {
-          const parseOrderItems =
-            typeof message.payload.data[0].items === "string"
-              ? JSON.parse(message.payload.data[0].items)
-              : message.payload.data[0].items;
+          const incomingOrder = message.payload.data[0];
+          if (incomingOrder) {
+            incomingOrder.items =
+              typeof incomingOrder.items === "string"
+                ? JSON.parse(incomingOrder.items)
+                : incomingOrder.items;
 
-          message.payload.data[0].items = parseOrderItems;
+            setOrders((prevOrders) => {
+              const existingOrderIndex = prevOrders.findIndex(
+                (order) => order.id === incomingOrder.id,
+              );
 
-          setOrders((prevOrders) => [...prevOrders, ...message.payload.data]);
+              if (existingOrderIndex !== -1) {
+                const existingOrder = prevOrders[existingOrderIndex];
+
+                if (!existingOrder.paid && incomingOrder.paid) {
+                  return [
+                    ...prevOrders.slice(0, existingOrderIndex),
+                    incomingOrder,
+                    ...prevOrders.slice(existingOrderIndex + 1),
+                  ];
+                }
+                return prevOrders;
+              }
+
+              return [...prevOrders, incomingOrder];
+            });
+          }
         } else if (message.eventType === "updateOrder") {
           setOrders((prevOrders) => {
             if (!message.payload.data.length) return prevOrders;
@@ -52,12 +72,10 @@ export const useKdsOrders = () => {
               ...prevOrders.slice(index + 1),
             ];
           });
-          console.log("Order updated:", message.payload.data);
         } else {
           setOrders(message.payload.data);
           setItems(message.payload.items ? message.payload.items : []);
           setVariants(message.payload.variants ? message.payload.variants : []);
-          console.log("Set all new orders:", message.payload);
         }
       },
       // onOpen
@@ -95,7 +113,14 @@ export const useKdsOrders = () => {
               if (a.status === "preparing" && b.status === "sent") return -1;
               if (a.status === "sent" && b.status === "preparing") return 1;
 
-              return a.pickupDate.localeCompare(b.pickupDate);
+              const dateTimeA = new Date(
+                `${a.pickupDate}T${a.startTime}`,
+              ).getTime();
+              const dateTimeB = new Date(
+                `${b.pickupDate}T${b.startTime}`,
+              ).getTime();
+
+              return dateTimeA - dateTimeB;
             })
         : [],
     [orders],
@@ -106,7 +131,16 @@ export const useKdsOrders = () => {
       orders
         ? orders
             .filter((order) => order.status === "waiting")
-            .sort((b, a) => a.pickupDate.localeCompare(b.pickupDate))
+            .sort((a, b) => {
+              const dateTimeA = new Date(
+                `${a.pickupDate}T${a.startTime}`,
+              ).getTime();
+              const dateTimeB = new Date(
+                `${b.pickupDate}T${b.startTime}`,
+              ).getTime();
+
+              return dateTimeA - dateTimeB;
+            })
         : [],
     [orders],
   );

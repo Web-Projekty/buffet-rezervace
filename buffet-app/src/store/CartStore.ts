@@ -1,13 +1,13 @@
 import { create } from "zustand";
-import { MenuItem, Variant } from "../types";
+import { MenuItem, Variant } from "../types/types";
 import {
   CART_LOCAL_STORAGE_KEY,
   MAX_ITEMS,
   MAX_ITEMS_CART,
-} from "../constants";
-import { getItem, removeItem, setItem } from "../components/utils/localStorage";
+} from "../constants/constants";
+import { getItem, removeItem, setItem } from "../utils/localStorage";
 import toast from "react-hot-toast";
-import { toastMessages } from "../components/utils/toastMessages";
+import { toastMessages } from "../utils/toastMessages";
 import { showCartItemToast } from "../components/ui/CustomToasts";
 
 export type CartItem = MenuItem & {

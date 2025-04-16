@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { RequestData } from "../types";
-import { FETCH_URL } from "../constants";
+import { RequestData } from "../types/types";
+import { FETCH_URL } from "../constants/constants";
 import { useUser } from "./useUser";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";

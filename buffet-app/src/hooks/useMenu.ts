@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { Category, MenuItem } from "../types";
+import { Category, MenuItem } from "../types/types";
 import { useQuery } from "@tanstack/react-query";
-import { getMenu, MenuApi } from "../components/utils/api";
+import { getMenu, MenuApi } from "../utils/api";
 
 type UseMenuReturn = {
   categories: Category[];

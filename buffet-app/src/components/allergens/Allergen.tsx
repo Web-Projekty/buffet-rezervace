@@ -1,5 +1,5 @@
-import { scaleUpAnimation } from "../../animations";
-import { Allergen as AllergenType } from "../../types";
+import { scaleUpAnimation } from "../../animations/animations";
+import { Allergen as AllergenType } from "../../types/types";
 import { motion } from "framer-motion";
 
 type AlergenProps = {

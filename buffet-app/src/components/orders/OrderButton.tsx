@@ -1,4 +1,4 @@
-import { OrderStatus } from "../../types";
+import { OrderStatus } from "../../types/types";
 import Button from "../ui/Button";
 import { useUser } from "../../hooks/useUser";
 import { HandleStatusReturn } from "../../hooks/useOrder";

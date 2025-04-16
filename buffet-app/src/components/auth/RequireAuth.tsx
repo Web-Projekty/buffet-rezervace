@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { useUser } from "../../hooks/useUser";
-import { isTokenExpired } from "../utils/auth";
+import { isTokenExpired } from "../../utils/auth";
 
 type ProtectedRouteProps = {
   children: ReactNode;

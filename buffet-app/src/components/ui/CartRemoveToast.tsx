@@ -1,7 +1,7 @@
 import { ShoppingCartIcon, Undo } from "lucide-react";
 import { CartItems } from "../../store/CartStore";
-import { MenuItem } from "../../types";
-import { toastMessages } from "../utils/toastMessages";
+import { MenuItem } from "../../types/types";
+import { toastMessages } from "../../utils/toastMessages";
 
 export type CartItemToastProps = {
   item: MenuItem;

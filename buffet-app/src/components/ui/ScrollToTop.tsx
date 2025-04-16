@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronUp } from "lucide-react";
 import { useEffect, useState } from "react";
-import { scrollToTopShowAnimation } from "../../animations";
+import { scrollToTopShowAnimation } from "../../animations/animations";
 
 const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);

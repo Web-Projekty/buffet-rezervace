@@ -2,7 +2,7 @@ import { lazy, Suspense, useMemo } from "react";
 import { Fallback } from "../../main";
 import { useSearchParams } from "react-router-dom";
 import Button from "../ui/Button";
-import { removeDiacritics } from "../utils/utils";
+import { removeDiacritics } from "../../utils/utils";
 import { useUser } from "../../hooks/useUser";
 import DashboardContent from "./DashboardContent";
 
@@ -10,19 +10,18 @@ const AccountInformation = lazy(() => import("./AccountInformation"));
 const DashboardButtons = lazy(() => import("./DashboardButtons"));
 
 export type Page =
-  | "Přehled"
   | "Historie"
   | "Profil"
+  | "Přehled"
   | "Kredity"
   | "Systém"
   | "Databáze"
   | "Provoz"
-  | "Platby"
-  | "Účetnictví";
+  | "Platby";
 
 const Dashboard = () => {
   const { isAdmin, logout } = useUser();
-  const [searchParams, setSearchParams] = useSearchParams("Přehled");
+  const [searchParams, setSearchParams] = useSearchParams("Systém");
 
   const handlePageChange = (page: Page) => {
     setSearchParams({ page: removeDiacritics(page) });
@@ -34,12 +33,16 @@ const Dashboard = () => {
 
   const page = useMemo(() => {
     const pageParam = searchParams.get("page");
-    const normalizedPage = pageParam ? pageParam.toLowerCase() : "prehled";
+    const normalizedPage = pageParam
+      ? pageParam.toLowerCase()
+      : isAdmin
+        ? "system"
+        : "prehled";
     switch (normalizedPage) {
-      case "prehled":
-        return "Přehled";
       case "historie":
         return "Historie";
+      case "prehled":
+        return "Přehled";
       case "profil":
         return "Profil";
       case "kredity":
@@ -52,8 +55,6 @@ const Dashboard = () => {
         return "Provoz";
       case "platby":
         return "Platby";
-      case "ucetnictvi":
-        return "Účetnictví";
     }
   }, [searchParams]);
 
