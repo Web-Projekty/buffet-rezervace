@@ -32,6 +32,7 @@ jobs:
 
       - name: Install ESLint
         run: |
+          cd buffet-app
           npm install eslint@8.10.0
           npm install @microsoft/eslint-formatter-sarif@3.1.0
 
@@ -48,5 +49,5 @@ jobs:
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: eslint-results.sarif
+          sarif_file: buffet-app/eslint-results.sarif
           wait-for-processing: true
