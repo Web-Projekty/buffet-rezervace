@@ -1,5 +1,6 @@
 {
     "name": "spseplzen/buffet-rezervace-api",
+    "version":"v1.0.0",
     "description": "",
     "type": "webapp",
     "require": {
