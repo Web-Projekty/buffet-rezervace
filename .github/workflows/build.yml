@@ -10,6 +10,11 @@ jobs:
         steps:
             - uses: actions/checkout@v5
 
+            - name: Create build file
+              run: |
+                  date > buffet-api/build_date
+                  cat buffet-api/build_date
+
             - uses: docker/setup-buildx-action@v3
 
             - name: Log in to Docker Hub
