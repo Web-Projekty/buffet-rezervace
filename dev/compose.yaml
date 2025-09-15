@@ -22,7 +22,7 @@ services:
                 "bash",
                 "-c",
                 "mkdir -p ./logs && cp ./src/WebSockets/apache.conf
-                /etc/apache2/sites-available/000-default.conf && composer install && supervisord -c
+                /etc/apache2/sites-available/000-default.conf && supervisord -c
                 ./src/WebSockets/supervisor.conf && usermod -a -G root www-data && chown -R www-data:www-data
                 /var/www/html/conf && apache2-foreground",
             ]
