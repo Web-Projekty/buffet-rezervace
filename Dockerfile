@@ -1,12 +1,25 @@
+FROM node:latest AS node
+
+WORKDIR /build
+
+# Copy the contents of the frontend (React app) to the container
+COPY ./buffet-app/ /build/
+
+# Install dependencies
+RUN npm install
+
+# Build the React app
+RUN npm run build
+
 FROM php:8.3-apache-bookworm AS composer
 
-WORKDIR /var/www/html
+WORKDIR /build
 
 # Install Composer
 RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Copy the contents of the backend (PHP app) to the container
-COPY ./buffet-api/ /var/www/html/
+COPY ./buffet-api/ /build/
 
 RUN composer install --no-interaction
 
@@ -47,7 +60,11 @@ WORKDIR /var/www/html
 # Copy PHP configuration
 COPY buffet-api/php.ini /usr/local/etc/php/php.ini
 
-COPY --from=composer --chown=www-data:www-data /var/www/html/ /var/www/html/
+# Copy backend with composer packages
+COPY --from=composer --chown=www-data:www-data /build/ /var/www/html/
+
+# Copy built React app
+COPY --from=node --chown=www-data:www-data /build/dist/ /var/www/html/dist/
 
 # Run the post-create script
 #RUN bash .devcontainer/start.sh d
