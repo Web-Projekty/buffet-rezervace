@@ -15,6 +15,9 @@ FROM php:8.3-apache-bookworm AS composer
 
 WORKDIR /build
 
+# Install tools
+RUN apt-get update && apt-get install -y git
+
 # Install Composer
 RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
