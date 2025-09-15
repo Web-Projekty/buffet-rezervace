@@ -14,7 +14,7 @@ jobs:
               run: |
                   date > buffet-api/build_date
                   cat buffet-api/build_date
-                  
+
             - name: Set up QEMU
               uses: docker/setup-qemu-action@v3
 
@@ -33,6 +33,7 @@ jobs:
                   context: .
                   file: ./Dockerfile
                   push: true
+                  platforms: linux/amd64,linux/arm64
                   tags: ${{ secrets.DOCKERHUB_USERNAME }}/buffet:latest
                   cache-from: type=gha
                   cache-to: type=gha,mode=max
