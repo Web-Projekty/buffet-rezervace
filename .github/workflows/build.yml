@@ -12,7 +12,7 @@ jobs:
 
             - name: Create build file
               run: |
-                  date > buffet-api/build_date
+                  TZ="Europe/Prague" date > buffet-api/build_date
                   cat buffet-api/build_date
 
             - name: Set up QEMU
