@@ -16,13 +16,16 @@ FROM php:8.3-apache-bookworm AS composer
 WORKDIR /build
 
 # Install tools
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git unzip
 
 # Install Composer
 RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Copy the contents of the backend (PHP app) to the container
 COPY ./buffet-api/ /build/
+
+# Copy PHP configuration
+COPY buffet-api/php.ini /usr/local/etc/php/php.ini
 
 RUN composer install --no-interaction
 
