@@ -1,0 +1,26 @@
+name: ESLint
+
+on:
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["*"]
+
+jobs:
+    eslint:
+        name: Run eslint scanning
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Cache node modules
+
+              uses: actions/cache@v3
+              with:
+                  path: buffet-app/node_modules
+                  key: npm-${{ hashFiles('**/package-lock.json') }}
+
+            - name: Install dependencies
+              run: |
+                  cd buffet-app
+                  npm install --include=dev
+                  npm run lint
