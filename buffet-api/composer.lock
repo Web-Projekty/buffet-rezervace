@@ -4734,16 +4734,16 @@
         },
         {
             "name": "thepay/api-client",
-            "version": "v2.1.0",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ThePay/api-client.git",
-                "reference": "1ae5de9a37e6642b52e25cb11186c6a9f1804309"
+                "reference": "88646d931c5d8354172eb5cc6550d0a365cf19a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ThePay/api-client/zipball/1ae5de9a37e6642b52e25cb11186c6a9f1804309",
-                "reference": "1ae5de9a37e6642b52e25cb11186c6a9f1804309",
+                "url": "https://api.github.com/repos/ThePay/api-client/zipball/88646d931c5d8354172eb5cc6550d0a365cf19a0",
+                "reference": "88646d931c5d8354172eb5cc6550d0a365cf19a0",
                 "shasum": ""
             },
             "require": {
@@ -4772,9 +4772,9 @@
             "description": "API client for ThePay - payment gate API",
             "support": {
                 "issues": "https://github.com/ThePay/api-client/issues",
-                "source": "https://github.com/ThePay/api-client/tree/v2.1.0"
+                "source": "https://github.com/ThePay/api-client/tree/v2.2.0"
             },
-            "time": "2024-02-27T11:20:56+00:00"
+            "time": "2025-08-05T09:42:09+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -6563,10 +6563,10 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.6.0"
 }
