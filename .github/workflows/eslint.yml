@@ -5,10 +5,12 @@ on:
         branches: ["main"]
     pull_request:
         branches: ["*"]
+    merge_group:
+        branches: ["main"]
 
 jobs:
     eslint:
-        name: Run eslint scanning
+        name: eslint
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
