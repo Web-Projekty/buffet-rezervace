@@ -2,6 +2,8 @@ services:
     # PHP and Apache Web Server
     web:
         image: wlczak/buffet:latest
+        labels:
+            - com.centurylinklabs.watchtower.enable=true
         pull_policy: always
         container_name: php-apache
         environment:

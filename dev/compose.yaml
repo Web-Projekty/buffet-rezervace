@@ -4,7 +4,7 @@ services:
         build:
             context: ./../.
             dockerfile: Dockerfile
-        container_name: php-apache_dev
+        container_name: php-apache
         volumes:
             - ./../buffet-api:/var/www/html/:rw
             - ./../conf/:/var/www/html/conf/:rw
@@ -22,7 +22,7 @@ services:
                 "bash",
                 "-c",
                 "mkdir -p ./logs && cp ./src/WebSockets/apache.conf
-                /etc/apache2/sites-available/000-default.conf && composer install && supervisord -c
+                /etc/apache2/sites-available/000-default.conf && supervisord -c
                 ./src/WebSockets/supervisor.conf && usermod -a -G root www-data && chown -R www-data:www-data
                 /var/www/html/conf && apache2-foreground",
             ]
@@ -32,7 +32,7 @@ services:
     # MariaDB Database Service
     db:
         image: mariadb:latest
-        container_name: mariadb_dev
+        container_name: mariadb
         environment:
             MYSQL_ROOT_PASSWORD: prestizniBuffet2305
             MYSQL_DATABASE: buffet
@@ -49,7 +49,7 @@ services:
     # phpMyAdmin for managing MariaDB
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
-        container_name: phpmyadmin_dev
+        container_name: phpmyadmin
         environment:
             PMA_HOST: db
             MYSQL_ROOT_PASSWORD: prestizniBuffet2305
@@ -63,7 +63,7 @@ services:
     # Node.js for React.js development (optional)
     frontend:
         image: node:latest
-        container_name: react-app_dev
+        container_name: react-app
         working_dir: /usr/src/app
         volumes:
             - ./../buffet-app:/usr/src/app
