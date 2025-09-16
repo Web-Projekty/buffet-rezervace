@@ -7,6 +7,8 @@ on:
     pull_request:
         branches:
             - "**"
+    merge_group:
+        branches: ["main"]
 
 permissions:
     contents: read
