@@ -66,6 +66,8 @@ WORKDIR /var/www/html
 # Copy PHP configuration
 COPY buffet-api/php.ini /usr/local/etc/php/php.ini
 
+COPY buffet-api/src/WebSockets/apache.conf /etc/apache2/sites-available/000-default.conf
+
 # Copy backend with composer packages
 COPY --from=composer --chown=www-data:www-data /build/ /var/www/html/
 
@@ -75,4 +77,4 @@ COPY --from=node --chown=www-data:www-data /build/dist/ /var/www/html/dist/
 # Run the post-create script
 #RUN bash .devcontainer/start.sh d
 
-CMD ["bash", "-c", "mkdir -p ./logs && cp ./src/WebSockets/apache.conf /etc/apache2/sites-available/000-default.conf && supervisord -c ./src/WebSockets/supervisor.conf && usermod -a -G root www-data && chown -R www-data:www-data /var/www/html/conf && chown -R www-data:www-data /var/www/html/img && apache2-foreground"]
+CMD ["bash", "-c", "mkdir -p ./logs && supervisord -c ./src/WebSockets/supervisor.conf && apache2-foreground"]
