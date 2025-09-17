@@ -28,7 +28,6 @@ jobs:
 
             - name: Run PHPStan
               run: |
-                  cd buffet-api
                   composer install
                   ./vendor/bin/phpstan analyse --memory-limit 4G -c phpstan.neon --autoload-file vendor/autoload.php --error-format=gitlab src tests >> phpstan-result.json
 
