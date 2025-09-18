@@ -8,7 +8,6 @@ use Buffet\Database\Models\PaymentModel;
 use Buffet\Types\PaymentMethods;
 use Buffet\Types\Settings;
 use Buffet\Utils\EnvReader;
-use Buffet\Utils\WebsocketClient;
 use ThePay\ApiClient\Model\CreatePaymentParams;
 use ThePay\ApiClient\TheClient;
 
@@ -81,8 +80,10 @@ class PaymentApi
                 $detailsUrl = $response->getPaymentDetailUrl();
                 $response->getPaymentDetailUrl();
                 return PaymentModel::addPayment(paymentId: (int) $stringUid, type: $paymentMethod, useCredits: false, totalAmount: $amount, thePayUrl: $url, thePayDetailsUrl: $detailsUrl);
+
+            default:
+                return 0;
         }
-        return 0;
     }
 
     /**
