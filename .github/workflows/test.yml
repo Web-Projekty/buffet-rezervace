@@ -19,25 +19,18 @@ jobs:
         container:
             image: wlczak/buffet-test-prebuild:latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
 
             - name: Validate composer.json and composer.lock
               run: |
                   cd buffet-api
                   composer validate --strict
-            - name: Cache Composer packages
-              id: composer-cache
-              uses: actions/cache@v3
-              with:
-                  path: buffet-api/vendor
-                  key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-                  restore-keys: |
-                      ${{ runner.os }}-php-
+
             - name: Run PHPStan
               run: |
                   cd buffet-api
                   composer install
-                  ./vendor/bin/phpstan analyse --memory-limit 4G -c phpstan.neon --autoload-file vendor/autoload.php --error-format=gitlab src tests >> phpstan-result.json
+                  ./vendor/bin/phpstan analyse --memory-limit 4G -c phpstan.neon --autoload-file vendor/autoload.php --error-format=github src tests
 
     phpunit:
         runs-on: ubuntu-latest

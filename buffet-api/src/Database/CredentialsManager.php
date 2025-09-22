@@ -48,7 +48,7 @@ class CredentialsManager
 
         $userH = $json->{'db_user'};
         $passH = $json->{'db_pass'};
-        if (empty($key) || $key == null) {
+        if (empty($key) || !is_string($key)) {
             return ['success' => false];
             //return $this->response->setError(Error::FailedDecrypt);
         }
