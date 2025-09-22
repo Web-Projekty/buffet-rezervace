@@ -4,8 +4,19 @@ updates:
       directory: "/buffet-api/" # Location of package manifests
       schedule:
           interval: "weekly"
+      cooldown:
+        default-days: 30
+        semver-major-days: 30
+        semver-minor-days: 14
+        semver-patch-days: 7
+
 
     - package-ecosystem: "npm" # See documentation for possible values
       directory: "/buffet-app/" # Location of package manifests
       schedule:
           interval: "weekly"
+      cooldown:
+        default-days: 30
+        semver-major-days: 30
+        semver-minor-days: 14
+        semver-patch-days: 7
