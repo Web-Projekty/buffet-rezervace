@@ -14,7 +14,7 @@
     "email": "ptakondrej@seznam.cz"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.67.1",
+    "@tanstack/react-query": "^5.87.4",
     "axios": "^1.12.0",
     "framer-motion": "^11.5.4",
     "js-cookie": "^3.0.5",
