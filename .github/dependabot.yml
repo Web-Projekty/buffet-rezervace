@@ -4,6 +4,8 @@ updates:
       directory: "/buffet-api/" # Location of package manifests
       schedule:
           interval: "weekly"
+          day: "monday"
+          time: "08:00"
       cooldown:
         default-days: 60
         semver-major-days: 60
@@ -15,6 +17,8 @@ updates:
       directory: "/buffet-app/" # Location of package manifests
       schedule:
           interval: "weekly"
+          day: "monday"
+          time: "08:00"
       cooldown:
         default-days: 60
         semver-major-days: 60
