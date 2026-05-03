@@ -4,7 +4,7 @@ services:
         build:
             context: ./../.
             dockerfile: Dockerfile
-        container_name: php-apache
+        container_name: php-apache_dev
         volumes:
             - ./../buffet-api:/var/www/html/:rw
             - ./../conf/:/var/www/html/conf/:rw
@@ -32,7 +32,7 @@ services:
     # MariaDB Database Service
     db:
         image: mariadb:latest
-        container_name: mariadb
+        container_name: mariadb_dev
         environment:
             MYSQL_ROOT_PASSWORD: prestizniBuffet2305
             MYSQL_DATABASE: buffet
@@ -49,7 +49,7 @@ services:
     # phpMyAdmin for managing MariaDB
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
-        container_name: phpmyadmin
+        container_name: phpmyadmin_dev
         environment:
             PMA_HOST: db
             MYSQL_ROOT_PASSWORD: prestizniBuffet2305
@@ -63,7 +63,7 @@ services:
     # Node.js for React.js development (optional)
     frontend:
         image: node:latest
-        container_name: react-app
+        container_name: react-app_dev
         working_dir: /usr/src/app
         volumes:
             - ./../buffet-app:/usr/src/app
