@@ -20,7 +20,7 @@ final class JWTApiTest extends TestCase
     protected function setUp(): void
     {
         EnvWriter::write(Settings::IsProd, "false");
-        EnvWriter::write(Settings::JWTKey, "testing_key");
+        EnvWriter::write(Settings::JWTKey, "testing_key_5156195919198198198156251565616565asdas1d56q1d981as98d1as6d1qw68dw");
         $this->jwtApi = new JWTApi();
 
         EnvWriter::write(Settings::IsProd, "false");
