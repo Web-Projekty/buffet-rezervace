@@ -5,6 +5,7 @@ buffet-api/.env
 buffet-api/logs
 buffet-api/src/Database/.env
 buffet-api/vendor
+buffet-api/test-db/database.sqlite
 
 ### frontend ###
 conf/.env
