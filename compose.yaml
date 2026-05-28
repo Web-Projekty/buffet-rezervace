@@ -1,59 +1,57 @@
 services:
-    # PHP and Apache Web Server
-    web:
-        image: wlczak/buffet:latest
-        labels:
-            - com.centurylinklabs.watchtower.enable=true
-        pull_policy: always
-        container_name: php-apache
-        environment:
-            TZ: Europe/Prague
-        volumes:
-            #- ./buffet-api:/var/www/html
-            - ./conf/:/var/www/html/conf/:rw
-        ports:
-            - "8080:80" # Access Apache via http://localhost:8080
-        depends_on:
-            - db
-        networks:
-            - buffet-network
-        #command: ["bash", "-c", "mkdir -p ./logs && cp ./src/WebSockets/apache.conf /etc/apache2/sites-available/000-default.conf && composer install && supervisord -c ./src/WebSockets/supervisor.conf && usermod -a -G root www-data && chown -R www-data:www-data /var/www/html/conf && apache2-foreground"]
+  # PHP and Apache Web Server
+  web:
+    image: wlczak/buffet:latest
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    pull_policy: always
+    container_name: php-apache
+    environment:
+      TZ: Europe/Prague
+    volumes:
+      #- ./buffet-api:/var/www/html
+      - ./conf/:/var/www/html/conf/:rw
+    ports:
+      - "8080:80" # Access Apache via http://localhost:8080
+    networks:
+      - buffet-network
+    #command: ["bash", "-c", "mkdir -p ./logs && cp ./src/WebSockets/apache.conf /etc/apache2/sites-available/000-default.conf && composer install && supervisord -c ./src/WebSockets/supervisor.conf && usermod -a -G root www-data && chown -R www-data:www-data /var/www/html/conf && apache2-foreground"]
 
-    # MariaDB Database Service
-    db:
-        image: mariadb:latest
-        container_name: mariadb
-        environment:
-            TZ: Europe/Prague
-            MYSQL_ROOT_PASSWORD: prestizniBuffet2305
-            MYSQL_DATABASE: buffet
-            MYSQL_USER: buffet
-            MYSQL_PASSWORD: prestizniBuffet2305
-        volumes:
-            - db_data:/var/lib/mysql
-            - ./sql:/docker-entrypoint-initdb.d/
-        #ports:
-        #  - "3306:3306"
-        networks:
-            - buffet-network
+  # MariaDB Database Service
+  db:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      TZ: Europe/Prague
+      MYSQL_ROOT_PASSWORD: prestizniBuffet2305
+      MYSQL_DATABASE: buffet
+      MYSQL_USER: buffet
+      MYSQL_PASSWORD: prestizniBuffet2305
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d/
+    #ports:
+    #  - "3306:3306"
+    networks:
+      - buffet-network
 
-    # phpMyAdmin for managing MariaDB
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        container_name: phpmyadmin
-        environment:
-            PMA_HOST: db
-            MYSQL_ROOT_PASSWORD: prestizniBuffet2305
-        ports:
-            - "8081:80" # Access phpMyAdmin via http://localhost:8081
-        depends_on:
-            - db
-        networks:
-            - buffet-network
+  # phpMyAdmin for managing MariaDB
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: prestizniBuffet2305
+    ports:
+      - "8081:80" # Access phpMyAdmin via http://localhost:8081
+    depends_on:
+      - db
+    networks:
+      - buffet-network
 
 networks:
-    buffet-network:
-        driver: bridge
+  buffet-network:
+    driver: bridge
 
 volumes:
-    db_data:
+  db_data:
