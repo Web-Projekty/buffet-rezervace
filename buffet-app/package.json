@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.67.1",
-    "axios": "^1.15.2",
+    "axios": "^1.16.0",
     "framer-motion": "^11.5.4",
     "js-cookie": "^3.0.7",
     "jwt-decode": "^4.0.0",
