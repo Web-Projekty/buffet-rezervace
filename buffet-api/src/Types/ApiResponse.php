@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Buffet\Types;
 
@@ -31,8 +31,7 @@ class ApiResponse
      * @param array<mixed> $request
      */
     public function __construct(public ?array $request = []) // allows for request to be null
-    {
-    }
+    {}
 
     /**
      * @param string $key
@@ -46,7 +45,6 @@ class ApiResponse
         if (!key_exists($key, $this->payload)) {
             $this->payload[$key] = $payload;
         }
-
     }
 
     /**
@@ -62,10 +60,10 @@ class ApiResponse
     }
 
     /**
-     * @param  string $key
+     * @param  ?string $key
      * @return mixed  $payload
      */
-    public function getPayload(string $key = null)
+    public function getPayload(?string $key = null)
     {
         if (!$key) {
             return $this->payload;
