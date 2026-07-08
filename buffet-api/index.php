@@ -109,7 +109,6 @@ if (!$isProd) {
             ->withHeader('Access-Control-Allow-Credentials', 'true'); // If needed
     };
     $app->add($corsMiddleware);
-
 }
 
 $headerMiddleware = function ($request, $handler) {
@@ -124,7 +123,6 @@ $headerMiddleware = function ($request, $handler) {
 
         $html = $html->withAddedHeader("Build-date", $buildDate);
         $html = $html->withAddedHeader("Image-version", "production");
-
     } else {
         $headFile = __DIR__ . "/.git/HEAD";
         $fileStream = fopen($headFile, "r");

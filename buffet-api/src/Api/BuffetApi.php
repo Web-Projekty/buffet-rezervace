@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Buffet\Api;
 
@@ -116,14 +116,13 @@ class BuffetApi
      *
      * Calls specified requestType methods
      *
-     * @param  string      $request
+     * @param  ?string      $request
      * @return ApiResponse API response
      */
-    function handleApiCall(string $request = null): ApiResponse
+    function handleApiCall(?string $request = null): ApiResponse
     {
         if (!$request) {
             $request = $this->getPostJson();
-
         } else {
             $request = json_decode($request, true);
         }
@@ -228,17 +227,16 @@ class BuffetApi
             case null:
             default:
                 return $response->setError(Error::NonExistentMethod);
-
         }
     }
 
-/**
- * API handler for token verify
- *
- *
- * @param  ApiResponse $response API request
- * @return ApiResponse API response
- */
+    /**
+     * API handler for token verify
+     *
+     *
+     * @param  ApiResponse $response API request
+     * @return ApiResponse API response
+     */
 
     function handleVerify(ApiResponse $response): ApiResponse
     {
@@ -261,13 +259,13 @@ class BuffetApi
         return $response->setSuccess(Success::Verification);
     }
 
-/**
- * API handler for user registration
- *
- *
- * @param  ApiResponse $response API request
- * @return ApiResponse API response
- */
+    /**
+     * API handler for user registration
+     *
+     *
+     * @param  ApiResponse $response API request
+     * @return ApiResponse API response
+     */
 
     function handleRegister(ApiResponse $response): ApiResponse
     {
@@ -281,13 +279,13 @@ class BuffetApi
         return $response;
     }
 
-/**
- * API handler for user login
- *
- *
- * @param  ApiResponse $response API request
- * @return ApiResponse API response with JWT token
- */
+    /**
+     * API handler for user login
+     *
+     *
+     * @param  ApiResponse $response API request
+     * @return ApiResponse API response with JWT token
+     */
 
     function handleLogin(ApiResponse $response): ApiResponse
     {
@@ -346,7 +344,10 @@ class BuffetApi
         $response->addPayload("categoryList", array_values($categories));
 
         $queryResult = $queryResult->filter(
-            function ($item) use ($removedCategories) {return !in_array($item["category"], $removedCategories);}, );
+            function ($item) use ($removedCategories) {
+                return !in_array($item["category"], $removedCategories);
+            },
+        );
         //var_dump($queryResult->toArray());
 
         $array = $queryResult->toArray();
@@ -369,7 +370,6 @@ class BuffetApi
             $array[$i]["allergens"] = $alergenList;
 
             $array[$i]["image"] = $backendUrl . "/image/items/" . $array[$i]['id'];
-
         }
 
         $response->setPayload("data", array_values($array));
@@ -430,7 +430,6 @@ class BuffetApi
             } else {
                 $orders = OrderModel::getAll();
             }
-
         } else {
             $orders = OrderModel::getByUser((int) $uid);
         }
@@ -452,7 +451,6 @@ class BuffetApi
 
                         error_log(HttpClient::post("http://localhost/api", json_encode($msg)));
                     }
-
                 }
 
                 $orders = $orders->select(["$orderTableName.*", "$paymentTableName.totalAmount", "$paymentTableName.paid", "$paymentTableName.thePayDetailsUrl", "$paymentTableName.type"]);
@@ -460,7 +458,6 @@ class BuffetApi
                 $paginate = $orders->orderBy($orderTableName . ".dateCreated", "desc")->paginate(perPage: $itemsCount, page: $page);
                 $response->setPayload("itemsCount", $paginate->total());
                 $ordersArray = $paginate->items();
-
             } else {
                 return $response->setError(Error::QueryFailed);
             }
@@ -492,7 +489,7 @@ class BuffetApi
             unset($order["thePayUrl"]);
 
             $order["items"] = json_decode($order["items"]);
-//            var_dump($order["items"]);
+            //var_dump($order["items"]);
             foreach ($order["items"] as &$item) {
                 //var_dump((array) $item->variants);
                 $variantIds = array_merge($variantIds, (array) $item->variants);
@@ -744,11 +741,9 @@ class BuffetApi
                         return $response->setError(Error::UserNotFound);
                     case 4:
                         return $response->setError(Error::InvalidPickupId);
-
                 }
                 return $response->setError(Error::DefaultError);
             }
-
         } else { // user update
             $order = OrderModel::query()->where("id", $orderId);
             $orderItems = $order->get()->toArray()[0];
@@ -770,7 +765,6 @@ class BuffetApi
             } else {
                 return $response->setError(Error::MissingStatus);
             }
-
         }
 
         $updatedOrder = OrderModel::getById($orderId);
@@ -833,7 +827,6 @@ class BuffetApi
                             return $response->setError(Error::PaymentNotFound);
                         }
                     }
-
                 } else {
                     return $response->setError(Error::InvalidPaymentId);
                 }
@@ -889,10 +882,10 @@ class BuffetApi
         return $response->setStatus(true)->setSuccess(Success::UserUpdated);
     }
 
-/**
- * @param  ApiResponse   $response
- * @return ApiResponse
- */
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
     function handleUpdatePassword(ApiResponse $response): ApiResponse
     {
         $response->setRequestKeys(["token", "password", "newPassword"]);
@@ -992,10 +985,10 @@ class BuffetApi
         return $response->setSuccess(Success::SettingUpdated);
     }
 
-/**
- * @param  ApiResponse   $response
- * @return ApiResponse
- */
+    /**
+     * @param  ApiResponse   $response
+     * @return ApiResponse
+     */
 
     function handleUpdateItem(ApiResponse $response): ApiResponse
     {
@@ -1381,8 +1374,7 @@ class BuffetApi
      */
 
     function handleUpdateCategory(ApiResponse $response): ApiResponse
-    {
-        {
+    { {
             $response->setRequestKeys(["token", "categoryId"]);
 
             if (!$response->hasRequestKeys()) {
@@ -1581,13 +1573,13 @@ class BuffetApi
         return $reponse->setStatus(true);
     }
 
-/**
- * API handler for data transit testing
- *
- *
- * @param  ApiResponse $response API request
- * @return ApiResponse copy of the request
- */
+    /**
+     * API handler for data transit testing
+     *
+     *
+     * @param  ApiResponse $response API request
+     * @return ApiResponse copy of the request
+     */
 
     function handleTest(ApiResponse $response): ApiResponse
     {
@@ -1600,13 +1592,13 @@ class BuffetApi
         return $response;
     }
 
-/**
- * Utility function for checking if all keys are present and carry data
- * @deprecated
- * @param  array<mixed> $request API request
- * @param  array<mixed> $members list of all the required members
- * @return bool|error   if members missing kills the process and sends error otherwise true
- */
+    /**
+     * Utility function for checking if all keys are present and carry data
+     * @deprecated
+     * @param  array<mixed> $request API request
+     * @param  array<mixed> $members list of all the required members
+     * @return bool|error   if members missing kills the process and sends error otherwise true
+     */
 
     function hasAllMembers($request, $members)
     {
@@ -1620,13 +1612,13 @@ class BuffetApi
         return true;
     }
 
-/**
- * Utility function for retrieving data
- *
- * Retrieves json data from POST method raw data and returns decode json
- *
- * @return array<mixed> decoded json from POST raw data
- */
+    /**
+     * Utility function for retrieving data
+     *
+     * Retrieves json data from POST method raw data and returns decode json
+     *
+     * @return array<mixed> decoded json from POST raw data
+     */
     function getPostJson()
     {
         $request = $this->requestInterface;
