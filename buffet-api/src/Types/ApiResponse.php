@@ -167,7 +167,7 @@ class ApiResponse
      */
     public function getRequestKeys(): array | null
     {
-        return $this->requestKeys ?? null;
+        return count($this->requestKeys) > 0 ? $this->requestKeys : null;
     }
 
     /**
@@ -184,7 +184,7 @@ class ApiResponse
      */
     public function getPayloadKeys(): array | null
     {
-        return $this->payloadKeys ?? null;
+        return count($this->payloadKeys) ? $this->payloadKeys : null;
     }
 
     /**
