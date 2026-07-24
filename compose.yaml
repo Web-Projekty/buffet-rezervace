@@ -19,7 +19,7 @@ services:
 
   # MariaDB Database Service
   db:
-    image: mariadb:latest
+    image: mariadb:lts
     container_name: mariadb
     environment:
       TZ: Europe/Prague

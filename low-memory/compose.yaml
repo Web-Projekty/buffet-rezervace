@@ -29,7 +29,7 @@ services:
 
     # MariaDB Database Service
     db:
-        image: mariadb:latest
+        image: mariadb:lts
         container_name: mariadb_dev
         environment:
             MYSQL_ROOT_PASSWORD: prestizniBuffet2305
