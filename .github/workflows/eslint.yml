@@ -27,7 +27,11 @@ jobs:
           npm install --include=dev
 
       - name: Run npm package audit
-        run: npm audit
+        run: |
+          cd buffet-app
+          npm audit
 
       - name: Run lint
-        run: npm run lint
+        run: |
+          cd buffet-app
+          npm run lint
