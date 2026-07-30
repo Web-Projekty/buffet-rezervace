@@ -62,7 +62,7 @@ services:
 
     # Node.js for React.js development (optional)
     frontend:
-        image: node:latest
+        image: node:22.23.2
         container_name: react-app_dev
         working_dir: /usr/src/app
         volumes:

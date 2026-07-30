@@ -4,7 +4,7 @@ import App from "./App.tsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthProvider from "react-auth-kit";
-import createStore from "react-auth-kit/createStore";
+import createAuthStore from "react-auth-kit/store/createAuthStore";
 import { UserData } from "./hooks/useLogin.ts";
 import Loading from "./components/ui/Loading.tsx";
 import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
@@ -38,9 +38,8 @@ export const Fallback = () => (
   </div>
 );
 
-const store = createStore<UserData>({
+const store = createAuthStore<UserData>("cookie", {
   authName: "_auth",
-  authType: "cookie",
   cookieDomain: window.location.hostname,
   cookieSecure: window.location.protocol === "https:",
 });
