@@ -1,4 +1,4 @@
-FROM node:latest AS node
+FROM node:22.23.2 AS node
 
 WORKDIR /build
 

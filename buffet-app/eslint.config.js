@@ -24,6 +24,9 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       "react-hooks/exhaustive-deps": "off",
+      // These compiler-oriented checks are not yet applicable to this codebase.
+      "react-hooks/static-components": "off",
+      "react-hooks/set-state-in-effect": "off",
     },
   },
 );
