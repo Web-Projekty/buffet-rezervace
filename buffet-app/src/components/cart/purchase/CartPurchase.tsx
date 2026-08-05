@@ -11,7 +11,7 @@ import {
 } from "../../../types/types";
 import { createOrder } from "../../../utils/api";
 import { parseSelectedTime } from "../../../utils/utils";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { toastMessages } from "../../../utils/toastMessages";
 

@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, type ReactNode } from "react";
 import { Fallback } from "../../main";
 import { Page } from "./Dashboard";
 
@@ -18,7 +18,7 @@ type DashboardContentProps = {
 };
 
 type Pages = {
-  [key: string]: JSX.Element;
+  [key: string]: ReactNode;
 };
 
 const adminPages: Pages = {

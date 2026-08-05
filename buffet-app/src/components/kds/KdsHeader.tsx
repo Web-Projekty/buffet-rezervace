@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import DateComponent from "../ui/DateComponent";
 import TimeComponent from "../ui/TimeComponent";
 import { ChevronLeft } from "lucide-react";

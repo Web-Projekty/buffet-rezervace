@@ -7,7 +7,7 @@ import { updateUserData, updateUserPassword } from "../utils/api";
 import { ProfileFormDataType } from "../components/dashboard/Profile";
 import { removeTokenExpiration } from "../utils/auth";
 import useSignOutExport from "react-auth-kit/hooks/useSignOut";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { unwrapDefault } from "../utils/unwrapDefault";
 import toast from "react-hot-toast";
 import { useState } from "react";

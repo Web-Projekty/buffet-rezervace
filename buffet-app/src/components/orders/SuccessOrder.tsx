@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router";
 import { Check } from "lucide-react";
 import PageNotFound from "../error/PageNotFound";
 

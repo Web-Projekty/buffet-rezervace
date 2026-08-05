@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import Button from "../ui/Button";
 import Logo from "../../assets/images/logo.svg";
 import { motion } from "framer-motion";
