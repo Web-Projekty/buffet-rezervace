@@ -53,8 +53,5 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.44.1",
     "vite": "^8.0.16"
-  },
-  "allowScripts": {
-    "sharp@0.34.5": true
   }
 }

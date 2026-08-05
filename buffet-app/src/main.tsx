@@ -3,13 +3,14 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AuthProvider from "react-auth-kit";
-import createAuthStore from "react-auth-kit/store/createAuthStore";
+import AuthProviderExport from "react-auth-kit";
+import createAuthStoreExport from "react-auth-kit/store/createAuthStore";
 import { UserData } from "./hooks/useLogin.ts";
 import Loading from "./components/ui/Loading.tsx";
 import ErrorBoundary from "./components/error/ErrorBoundary.tsx";
 import RequireAuth from "./components/auth/RequireAuth.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { unwrapDefault } from "./utils/unwrapDefault.ts";
 
 const Menu = lazy(() => import("./components/menu/Menu.tsx"));
 const MenuEdit = lazy(() => import("./components/menu/editMenu/MenuEdit.tsx"));
@@ -37,6 +38,9 @@ export const Fallback = () => (
     <Loading size={30} />
   </div>
 );
+
+const createAuthStore = unwrapDefault(createAuthStoreExport);
+const AuthProvider = unwrapDefault(AuthProviderExport);
 
 const store = createAuthStore<UserData>("cookie", {
   authName: "_auth",

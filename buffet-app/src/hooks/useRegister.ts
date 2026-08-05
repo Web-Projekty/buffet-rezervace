@@ -1,13 +1,16 @@
 import axios from "axios";
 import { FETCH_URL } from "../constants/constants";
 import { useState } from "react";
-import useSignIn from "react-auth-kit/hooks/useSignIn";
+import useSignInExport from "react-auth-kit/hooks/useSignIn";
 import { useNavigate } from "react-router-dom";
+import { unwrapDefault } from "../utils/unwrapDefault";
 import { UserData } from "./useLogin";
 import toast from "react-hot-toast";
 import { toastMessages } from "../utils/toastMessages";
 import { registerSchema } from "../utils/validation";
 import { z } from "zod";
+
+const useSignIn = unwrapDefault(useSignInExport);
 
 export type RegisterData = {
   fullName: string;

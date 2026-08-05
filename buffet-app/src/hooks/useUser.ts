@@ -1,13 +1,14 @@
-import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import useAuthHeaderExport from "react-auth-kit/hooks/useAuthHeader";
 import { extractToken, handleResponse } from "../utils/utils";
-import useAuthUser from "react-auth-kit/hooks/useAuthUser";
+import useAuthUserExport from "react-auth-kit/hooks/useAuthUser";
 import { User } from "../types/types";
 import { toastMessages } from "../utils/toastMessages";
 import { updateUserData, updateUserPassword } from "../utils/api";
 import { ProfileFormDataType } from "../components/dashboard/Profile";
 import { removeTokenExpiration } from "../utils/auth";
-import useSignOut from "react-auth-kit/hooks/useSignOut";
+import useSignOutExport from "react-auth-kit/hooks/useSignOut";
 import { useNavigate } from "react-router-dom";
+import { unwrapDefault } from "../utils/unwrapDefault";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import {
@@ -15,6 +16,10 @@ import {
   changeUserDataSchema,
 } from "../utils/validation";
 import { z } from "zod";
+
+const useAuthHeader = unwrapDefault(useAuthHeaderExport);
+const useAuthUser = unwrapDefault(useAuthUserExport);
+const useSignOut = unwrapDefault(useSignOutExport);
 
 type UseUserReturn = {
   user: User | null;

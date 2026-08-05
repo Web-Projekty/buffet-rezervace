@@ -1,9 +1,12 @@
 import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 
-import useSignOut from "react-auth-kit/hooks/useSignOut";
+import useSignOutExport from "react-auth-kit/hooks/useSignOut";
 import { useUser } from "../../hooks/useUser";
+import { unwrapDefault } from "../../utils/unwrapDefault";
 import { isTokenExpired } from "../../utils/auth";
+
+const useSignOut = unwrapDefault(useSignOutExport);
 
 type ProtectedRouteProps = {
   children: ReactNode;
