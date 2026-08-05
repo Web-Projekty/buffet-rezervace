@@ -29,8 +29,8 @@ jobs:
       - name: Run npm package audit
         run: |
           cd buffet-app
-          npm audit
-
+          npm run audit:security
+      # runs a custom script which excludes acknowledged vulnerabilities from the report
       - name: Run lint
         run: |
           cd buffet-app
