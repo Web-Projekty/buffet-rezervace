@@ -1,5 +1,5 @@
 import { User } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router";
 
 type AccountButtonProps = {
   type?: "navbar" | "menu";

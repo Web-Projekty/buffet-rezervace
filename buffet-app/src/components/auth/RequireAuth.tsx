@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate } from "react-router";
 
 import useSignOutExport from "react-auth-kit/hooks/useSignOut";
 import { useUser } from "../../hooks/useUser";

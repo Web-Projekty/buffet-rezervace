@@ -2,7 +2,7 @@ import { lazy, StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router";
 import AuthProviderExport from "react-auth-kit";
 import createAuthStoreExport from "react-auth-kit/store/createAuthStore";
 import { UserData } from "./hooks/useLogin.ts";

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import Logo from "../../assets/images/logo.svg";
 import SchoolLogo from "../../assets/images/logo-white_alfa.png";
 import Navbar from "../nav/Navbar";

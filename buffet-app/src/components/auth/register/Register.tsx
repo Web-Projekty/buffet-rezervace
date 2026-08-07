@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router";
 import Button from "../../ui/Button";
 import { RegisterData, useRegister } from "../../../hooks/useRegister";
 import Input from "../../ui/Input";

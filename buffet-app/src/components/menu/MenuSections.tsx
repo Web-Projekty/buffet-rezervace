@@ -20,7 +20,9 @@ const MenuSections = ({ categories, menuItems, refs }: MenuSectionsProps) => {
         <section
           className="mt-5 flex flex-col gap-3"
           key={category.id}
-          ref={(el) => (refs.current[category.id] = el)}
+          ref={(el) => {
+            refs.current[category.id] = el;
+          }}
         >
           <div className="flex flex-col items-center gap-2 md:flex-row md:justify-between md:gap-0">
             <h1 className="text-4xl font-bold text-white">{category.name}</h1>

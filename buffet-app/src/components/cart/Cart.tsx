@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import useCart from "../../store/CartStore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { scaleUpAnimation } from "../../animations/animations";
 import EmptyCart from "./EmptyCart";
 import CartItem from "./CartItem";

@@ -6,7 +6,7 @@ import { Fallback } from "../../../main";
 import OrderItems from "../../orders/OrderItems";
 import { mapItemsWithOrders } from "../../../utils/utils";
 import FetchError from "../../error/FetchError";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import Button from "../../ui/Button";
 
 const ProgressTracker = lazy(() => import("./OrderProgressTracker"));

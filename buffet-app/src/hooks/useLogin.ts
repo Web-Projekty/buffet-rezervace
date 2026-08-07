@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import useSignInExport from "react-auth-kit/hooks/useSignIn";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router";
 import { unwrapDefault } from "../utils/unwrapDefault";
 import { FETCH_URL } from "../constants/constants";
 import { setTokenExpiration } from "../utils/auth";

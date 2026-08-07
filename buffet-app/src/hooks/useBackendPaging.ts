@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router";
 import { RequestData } from "../types/types";
 import { FETCH_URL } from "../constants/constants";
 import { useUser } from "./useUser";
