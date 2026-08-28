@@ -34,8 +34,6 @@ jobs:
 
     phpunit:
         runs-on: ubuntu-latest
-        container:
-            image: wlczak/buffet-test-prebuild:latest
         steps:
             - uses: actions/checkout@v4
               env:
