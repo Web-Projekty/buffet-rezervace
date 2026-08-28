@@ -66,8 +66,6 @@ jobs:
 
   frontend-build-test:
     runs-on: ubuntu-latest
-    container:
-      image: node:22.23.2
     steps:
       - uses: actions/checkout@v4
       - name: Cache node modules
