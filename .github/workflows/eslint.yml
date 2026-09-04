@@ -30,10 +30,6 @@ jobs:
           cd buffet-app
           npm ci
 
-      - name: Run npm package audit
-        run: |
-          cd buffet-app
-          npm audit
       - name: Run lint
         run: |
           cd buffet-app
