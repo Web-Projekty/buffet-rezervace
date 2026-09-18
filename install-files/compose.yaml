@@ -3,7 +3,7 @@ services:
     web:
         image: wlczak/buffet:latest
         pull_policy: always
-        container_name: buffet-web
+        container_name: buffet_web
         environment:
             TZ: Europe/Prague
         volumes:
@@ -16,7 +16,7 @@ services:
     # MariaDB Database Service
     db:
         image: mariadb:lts
-        container_name: buffet-db
+        container_name: buffet_db
         environment:
             MYSQL_ROOT_PASSWORD: {DB_ROOT_PASSWORD}
             MYSQL_DATABASE: buffet
@@ -31,7 +31,7 @@ services:
     # Uptime Kuma Monitoring Service
     kuma:
         image: louislam/uptime-kuma:1
-        container_name: buffet-kuma
+        container_name: buffet_kuma
         restart: always
         volumes:
             - uptime_kuma:/app/data

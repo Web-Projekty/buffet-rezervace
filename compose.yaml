@@ -7,7 +7,7 @@ services:
     labels:
       - com.centurylinklabs.watchtower.enable=true
     pull_policy: always
-    container_name: php-apache
+    container_name: buffet_web
     environment:
       TZ: Europe/Prague
     volumes:
@@ -22,7 +22,7 @@ services:
   # MariaDB Database Service
   db:
     image: mariadb:lts
-    container_name: mariadb
+    container_name: buffet_db
     environment:
       TZ: Europe/Prague
       MYSQL_ROOT_PASSWORD: prestizniBuffet2305
@@ -40,7 +40,7 @@ services:
   # phpMyAdmin for managing MariaDB
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
+    container_name: buffet_phpmyadmin
     environment:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: prestizniBuffet2305
