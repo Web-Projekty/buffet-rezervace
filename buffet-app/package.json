@@ -29,7 +29,7 @@
     "react-dom": "^19.2.7",
     "react-hot-toast": "^2.5.2",
     "react-lazy-load-image-component": "^1.6.3",
-    "react-router": "8.3.0",
+    "react-router": "8.3.1",
     "tailwind-merge": "^3.0.2",
     "zod": "^3.24.2",
     "zustand": "^5.0.8"
@@ -45,7 +45,7 @@
     "eslint": "^10.8.0",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.3",
-    "globals": "^17.11.0",
+    "globals": "^17.12.0",
     "postcss": "^8.4.45",
     "prettier": "^3.9.4",
     "prettier-plugin-tailwindcss": "^0.6.6",
