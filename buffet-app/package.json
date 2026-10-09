@@ -19,7 +19,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.67.1",
     "axios": "^1.20.0",
-    "framer-motion": "^12.43.0",
+    "framer-motion": "^13.0.0",
     "js-cookie": "^3.0.8",
     "jwt-decode": "^4.0.0",
     "ldrs": "^1.0.2",
