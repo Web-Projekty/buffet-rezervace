@@ -125,25 +125,18 @@ $headerMiddleware = function ($request, $handler) {
         $html = $html->withAddedHeader("Image-version", "production");
     } else {
         $headFile = __DIR__ . "/.git/HEAD";
-        $fileStream = fopen($headFile, "r");
-
-        $HEAD = fread($fileStream, filesize($headFile));
-        fclose($fileStream);
+        $HEAD = is_file($headFile) ? trim((string) file_get_contents($headFile)) : "";
         $HEAD = explode(" ", $HEAD);
 
-        $refFile = __DIR__ . "/.git/" . trim($HEAD[1]);
+        $refFile = isset($HEAD[1]) ? __DIR__ . "/.git/" . trim($HEAD[1]) : null;
 
-        if (file_exists($refFile)) {
+        if ($refFile !== null && is_file($refFile)) {
             $modifiedTimestamp = filemtime($refFile);
             $lastModified = Carbon::createFromTimestamp($modifiedTimestamp)->setTimezone(CarbonTimeZone::create(EnvReader::getEnvProperty(Settings::Timezone)))->format('Y-m-d H:i:s');
-            $fileStream = fopen($refFile, "r");
-            $commitId = fread($fileStream, filesize($refFile));
-            fclose($fileStream);
+            $commitId = trim((string) file_get_contents($refFile));
         }
 
-        if (isset($commitId)) {
-            $html = $html->withAddedHeader("Dev-commit-id", trim($commitId));
-        }
+        $html = $html->withAddedHeader("Dev-commit-id", !empty($commitId) ? $commitId : "dev");
         if (isset($lastModified) && Carbon::createFromFormat('Y-m-d H:i:s', $lastModified)->isValid()) {
             $html = $html->withAddedHeader("Dev-last-commit", $lastModified);
         }

@@ -40,7 +40,7 @@ export const changePasswordSchema = (token: string) =>
           const isValid = await verifyPassword(token, oldPassword);
           if (!isValid.validPassword) {
             ctx.addIssue({
-              code: z.ZodIssueCode.custom,
+              code: "custom",
               message: "Špatné heslo",
             });
           }

@@ -145,7 +145,7 @@ const MenuItemEditBar = ({
       refetch();
     } catch (error) {
       if (error instanceof z.ZodError) {
-        error.errors.forEach((err) => {
+        error.issues.forEach((err) => {
           toast.error(err.message);
         });
         return;
