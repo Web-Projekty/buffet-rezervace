@@ -27,7 +27,8 @@ COPY ./buffet-api/ /build/
 # Copy PHP configuration
 COPY buffet-api/php.ini /usr/local/etc/php/php.ini
 
-RUN composer install --no-interaction
+# Production dependencies only (no phpunit/phpstan)
+RUN composer install --no-interaction --no-dev --optimize-autoloader
 
 # Use PHP 8.3 as the base image
 FROM php:8.3-apache-bookworm
@@ -35,27 +36,30 @@ FROM php:8.3-apache-bookworm
 # Původní php image s devcontainery
 #FROM mcr.microsoft.com/devcontainers/php:8.3
 
-# Enable Apache rewrite module
-RUN a2enmod rewrite
-
-# Install tools
-RUN apt-get update && apt-get install -y git unzip zip curl supervisor
-
-# Install necessary PHP extensions
-RUN docker-php-ext-install mysqli pdo pdo_mysql
-
-#PHP GD dependencies
-RUN apt-get install -y \
-		libfreetype-dev \
-		libjpeg62-turbo-dev \
-		libpng-dev \
+# Install supervisor + PHP extensions in one layer. The -dev packages are only
+# needed to compile GD, so they are purged afterwards; the runtime libraries
+# stay. apt lists are removed so they don't end up in the image.
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        supervisor \
+        libfreetype6 \
+        libjpeg62-turbo \
+        libpng16-16 \
+        libwebp7; \
+    savedAptMark="$(apt-mark showmanual)"; \
+    apt-get install -y --no-install-recommends \
+        libfreetype-dev \
+        libjpeg62-turbo-dev \
         libpng-dev \
-        libwebp-dev \
-        libgd-dev
-
-# Configure and install PHP GD
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-&& docker-php-ext-install -j$(nproc) gd
+        libwebp-dev; \
+    docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp; \
+    docker-php-ext-install -j"$(nproc)" gd mysqli pdo pdo_mysql; \
+    apt-mark auto '.*' > /dev/null; \
+    apt-mark manual $savedAptMark > /dev/null; \
+    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+    rm -rf /var/lib/apt/lists/*; \
+    php -r 'exit(function_exists("imagewebp") && function_exists("imagecreatefromjpeg") && extension_loaded("pdo_mysql") ? 0 : 1);'
 
 # Install apache mods
 RUN a2enmod rewrite proxy proxy_http proxy_wstunnel
